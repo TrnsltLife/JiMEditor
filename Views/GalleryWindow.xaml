@@ -32,7 +32,7 @@
 						</Button>
 					</WrapPanel>-->
 
-					<ItemsControl x:Name="items" Padding="5" ItemsSource="{Binding tileObserver}">
+					<ItemsControl x:Name="items" Padding="5" MinHeight="700" ItemsSource="{Binding tileObserver}">
 						<ItemsControl.ItemsPanel>
 							<ItemsPanelTemplate>
 								<WrapPanel IsItemsHost="True" />
