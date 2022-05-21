@@ -212,11 +212,12 @@ namespace JiME
 			hexColors[4] = new SolidColorBrush( Colors.DarkOrange );
 
 			//create gallery tiles
-			tileSourceA = new ImageSource[22];
-			tileSourceB = new ImageSource[22];
 			int[] ids = LoadTiles().ToArray();
+			int tileCount = ids.Length;
+			tileSourceA = new ImageSource[tileCount];
+			tileSourceB = new ImageSource[tileCount];
 
-			for ( int i = 0; i < 22; i++ )
+			for ( int i = 0; i < tileCount; i++ )
 			{
 				//A
 				tileSourceA[i] = new BitmapImage( new Uri( $"pack://application:,,,/JiME;component/Assets/TilesA/{ids[i]}.png" ) );

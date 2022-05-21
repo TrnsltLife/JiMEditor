@@ -14,6 +14,7 @@ namespace JiME.Views
 	{
 		int _page, _maxSelect;
 		string _selectedTiles, _max;
+
 		public ObservableCollection<GalleryTile> tileObserver { get; set; }
 		public Scenario scenario { get; set; }
 		public int maxSelect
@@ -51,7 +52,7 @@ namespace JiME.Views
 		public Tuple<int, string>[] selectedData;
 
 		bool side = true;//true=A, false=B
-		int tileCount = 22;
+		int tileCount = 0;
 		GalleryTile[] galleryTiles;
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -69,6 +70,7 @@ namespace JiME.Views
 
 			tileObserver = new ObservableCollection<GalleryTile>();
 
+			tileCount = Utils.tileSourceA.Length;
 			galleryTiles = new GalleryTile[tileCount];
 			int[] ids = Utils.LoadTiles().ToArray();
 			for ( int i = 0; i < tileCount; i++ )
@@ -102,8 +104,9 @@ namespace JiME.Views
 
 		private void right_Click( object sender, RoutedEventArgs e )
 		{
-			page = Math.Min( page + 1, 6 );
-			if ( page == 6 )
+			var maxPage = (tileCount + 4) / 4;
+			page = Math.Min( page + 1, maxPage );
+			if ( page == maxPage )
 				right.IsEnabled = false;
 			left.IsEnabled = true;
 			UpdateGallery();
@@ -129,7 +132,7 @@ namespace JiME.Views
 
 			tileObserver.Clear();
 			int start = ( page - 1 ) * 4;
-			for ( int i = start; i < Math.Min( start + 4, tileCount ); i++ )
+			for ( int i = start; i < Math.Min(start + 4, tileCount); i++ )
 			{
 				tileObserver.Add( galleryTiles[i] );
 			}
