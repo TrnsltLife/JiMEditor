@@ -313,10 +313,26 @@ namespace JiME
 						if ( item == "A" )
 						{
 							hexDictionary.Add( data.id, data );
+
+							/*
+							//Print out the mirror image coordinates that can be used for hextilesB
+							string oords = String.Join(" ",
+								HexTileData.Mirror(
+									HexTileData.ExtractCoords(data.coords)
+								));
+							Console.WriteLine(dataB.id + ": " + dataB.coords);
+							*/
 						}
 						else
 						{
 							hexDictionaryB.Add( data.id, data );
+							/*
+                            if (hexDictionaryB[data.id].width != hexDictionary[data.id].width ||
+								hexDictionaryB[data.id].height != hexDictionary[data.id].height)
+                            {
+								Console.WriteLine(data.id + ": width=" + hexDictionary[data.id].width + ", height=" + hexDictionary[data.id].height);
+                            }
+							*/
 						}
 					}
 				}

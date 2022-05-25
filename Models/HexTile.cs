@@ -61,7 +61,10 @@ namespace JiME
 		[JsonIgnore]
 		public bool useGraphic;
 
-		//Rect originalPathRect = Rect.Empty;
+		public static bool printRect = false;
+		public Path rectPathShape;
+		public static bool printPivot = false;
+		public Path pivotPathShape;
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -114,7 +117,6 @@ namespace JiME
 			//dims 64 x 55.4256256
 			// distance between hextiles = 55.425626
 
-			//hexPathShape = framework.FindResource( "hexpath" ) as Path;
 			hexPathShape = new Path();
 			hexPathShape.Stroke = Brushes.White;
 			hexPathShape.StrokeThickness = 2;
@@ -126,12 +128,13 @@ namespace JiME
 			else
 				hexdata = Utils.hexDictionaryB[idNumber];
 
-			//store the FIRST hexagon position (hexRoot) that makes up the tile
+			//store the FIRST hexagon position (hexRoot) that makes up the tile (searching top to bottom from left to right)
 			//hexRoot is needed by companion app to calculate offsets
-			string[] s = hexdata.coords.Split( ' ' )[0].Split( ',' );
-			hexRoot = new Vector( double.Parse( s[0] ), double.Parse( s[1] ) );
-			//local coords, example: (0,1)
-			Point[] hexPositions = HexTileData.ParseCoords( hexdata.coords );
+			Point[] hexPoints = HexTileData.ExtractCoords(hexdata.coords);
+			hexRoot = new Vector(hexPoints[0].X, hexPoints[0].Y);
+
+			//local coords, example: (0,1) translated to canvas coords
+			Point[] hexPositions = HexTileData.ConvertCoords( String.Join(" ", hexPoints )); //Use hexPoints because it is sorted from top to bottom, left to right
 			Point center = hexPositions[0];
 			PathFigure[] hexfigures = new PathFigure[hexdata.tileCount];
 			for ( int i = 0; i < hexfigures.Length; i++ )
@@ -142,10 +145,37 @@ namespace JiME
 					angle );
 				hexfigures[i] = BuildRegularPolygon( hexPositions[i], 32, 6, 0 );
 			}
-			//for ( int i = 0; i < hexPositions.Length; i++ )
-			//	Debug.Log( hexPositions[i] );
 			hexPathShape.Data = new PathGeometry( hexfigures );
 			hexPathShape.DataContext = this;
+
+
+			if (printRect)
+			{
+				//Rectangle for verifying proper size of HexTileData width and height
+				rectPathShape = new Path();
+				rectPathShape.Stroke = Brushes.White;
+				rectPathShape.StrokeThickness = 2;
+				rectPathShape.Fill = new SolidColorBrush(Color.FromRgb(70, 70, 74));
+				PathFigure[] rectfigures = new PathFigure[1];
+				int rectOffsetY = -28; // -28 * (int)hexPoints[0].Y;
+				rectfigures[0] = BuildRectangle(new Point(0, 0), Utils.hexDictionary[idNumber].width, Utils.hexDictionary[idNumber].height);
+				rectPathShape.Data = new PathGeometry(rectfigures);
+				rectPathShape.DataContext = this;
+			}
+
+			if (printPivot)
+			{
+				//Pivot center for rotation - debug display
+				pivotPathShape = new Path();
+				pivotPathShape.Stroke = Brushes.Magenta;
+				pivotPathShape.StrokeThickness = 2;
+				pivotPathShape.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+				PathFigure[] pivotfigures = new PathFigure[1];
+				pivotfigures[0] = BuildRectangle(new Point(-1, -1), 3, 3);
+				pivotPathShape.Data = new PathGeometry(pivotfigures);
+				pivotPathShape.DataContext = this;
+			}
+
 
 			//Debug.Log( "POS:" + position );
 			//Debug.Log( "hexpos:" + hexPositions[0] );
@@ -175,6 +205,24 @@ namespace JiME
 			tileImage.Width = Math.Ceiling( tileImage.Source.Width );
 			tileImage.Height = Math.Ceiling( tileImage.Source.Height );
 			tileImage.IsHitTestVisible = false;
+		}
+
+		PathFigure BuildRectangle( Point c, double width, double height )
+        {
+			LineSegment[] segments = new LineSegment[5];
+			Point cur = c;
+			Point startPoint = cur;
+			cur.X += width;
+			segments[0] = new LineSegment(new Point(cur.X, cur.Y), true);
+			cur.Y += height;
+            segments[1] = new LineSegment(new Point(cur.X, cur.Y), true);
+			cur.X -= width;
+			segments[2] = new LineSegment(new Point(cur.X, cur.Y), true);
+			cur.Y -= height;
+			segments[3] = new LineSegment(new Point(cur.X, cur.Y), true);
+			segments[4] = new LineSegment(startPoint, true);
+			PathFigure figure = new PathFigure(startPoint, segments, false);
+			return figure;
 		}
 
 		PathFigure BuildRegularPolygon( Point c, double r, int numSides, double offsetDegree )
@@ -240,13 +288,16 @@ namespace JiME
 		/// </summary>
 		void Update()
 		{
+			//Apply translation to the hexPathShape
 			hexPathShape.RenderTransformOrigin = new Point( 0, 0 );
-			TranslateTransform tf = new TranslateTransform( position.X, position.Y );
+			TranslateTransform tf = new TranslateTransform(position.X, position.Y);
 
-			TransformGroup grp = new TransformGroup();
-			grp.Children.Add( tf );
-			hexPathShape.RenderTransform = grp;
+			TransformGroup hexgrp = new TransformGroup();
+			hexgrp.Children.Add( tf );
+			hexPathShape.RenderTransform = hexgrp;
 
+
+			//Apply scale, translation, and rotation to the tile image
 			//get size dimensions of PATH object
 			Vector dims;
 			if ( tileSide == "A" )
@@ -261,162 +312,43 @@ namespace JiME
 			else
 				scale = dims.Y / 512;
 
-			TransformGroup tilegrp = new TransformGroup();
+			TransformGroup imggrp = new TransformGroup();
 
 			ScaleTransform scaleTransform = new ScaleTransform( scale, scale );
 
+			float imgTranslateX = (float)position.X - 32f;
+			float imgTranslateY = (float)position.Y - 27.7128128f;
+			TranslateTransform translateTransform = new TranslateTransform(imgTranslateX, imgTranslateY);
+			//Console.WriteLine("imgTranslate: " + imgTranslateX + "," + imgTranslateY);
+
 			RotateTransform rotateTransform = new RotateTransform( angle );
-			rotateTransform.CenterX = 32f;
-			rotateTransform.CenterY = 55.4256256f;
-			if ( hexRoot.X != 0 )
-				rotateTransform.CenterX = 64f * ( hexRoot.X );
-			if ( hexRoot.Y != 1 )
+			rotateTransform.CenterX = position.X + (hexRoot.X * 32f);
+			rotateTransform.CenterY = position.Y + (hexRoot.Y * 27.7128128f);
+			//Console.WriteLine("rotateCenter: " + rotateTransform.CenterX + "," + rotateTransform.CenterY);
+
+			imggrp.Children.Add( scaleTransform );
+			imggrp.Children.Add( translateTransform );
+			imggrp.Children.Add(rotateTransform);
+			tileImage.RenderTransform = imggrp;
+
+			if (printRect)
 			{
-				rotateTransform.CenterY = 55.4256256f * ( hexRoot.Y - 2 );
+				TransformGroup rectgrp = new TransformGroup();
+				rectgrp.Children.Add(translateTransform);
+				rectgrp.Children.Add(rotateTransform);
+				rectPathShape.RenderTransform = rectgrp;
 			}
 
-			//if ( p.y != 1 )
-			//	tilefix = new Vector3( 0, 0, -.4330127f * ( p.y - 1f ) );
-			//if ( p.x != 0 )
-			//	tilefix = new Vector3( p.x * .75f, 0, 0 );
-			var modified = tileSide == "A" ? HandleSpecialCaseA( rotateTransform ) : HandleSpecialCaseB( rotateTransform );
-
-			float yoffset = modified.Item2;
-			TranslateTransform translateTransform = new TranslateTransform( position.X - 32f, position.Y - ( 27.7128128f + yoffset ) );
-
-			tilegrp.Children.Add( scaleTransform );
-			tilegrp.Children.Add( rotateTransform );
-			tilegrp.Children.Add( translateTransform );
-
-			tileImage.RenderTransform = tilegrp;
+			if (printPivot)
+			{
+				TransformGroup pivotgrp = new TransformGroup();
+				TranslateTransform pivottf = new TranslateTransform(rotateTransform.CenterX, rotateTransform.CenterY);
+				pivotgrp.Children.Add(pivottf);
+				pivotPathShape.RenderTransform = pivotgrp;
+			}
 
 			//dims 64 x 55.4256256
 			//27.7128128
-		}
-
-		Tuple<RotateTransform, float> HandleSpecialCaseA( RotateTransform rotateTransform )
-		{
-			float yoffset = 0;
-
-			if ( idNumber == 201 )
-			{
-				yoffset = -27.7128128f;
-				rotateTransform.CenterY = 27.7128128f;
-			}
-			else if ( idNumber == 205 )
-			{
-				yoffset = -27.7128128f;
-				rotateTransform.CenterX = 64f * ( hexRoot.X ) - 16;
-				rotateTransform.CenterY = 27.7128128f;
-			}
-			else if ( idNumber == 206 )
-			{
-				rotateTransform.CenterY = 27.7128128f * 5f;
-			}
-			else if ( idNumber == 207 )
-			{
-				yoffset = -27.7128128f;
-				rotateTransform.CenterY = 27.7128128f;
-			}
-			else if ( idNumber == 209 )
-			{
-				rotateTransform.CenterY = 27.7128128f * 3f;
-			}
-			else if ( idNumber == 304 )
-			{
-				rotateTransform.CenterY = 27.7128128f * 4f;
-			}
-			else if ( idNumber == 305 )
-			{
-				yoffset = -27.7128128f;
-				rotateTransform.CenterY = 27.7128128f;
-			}
-			else if ( idNumber == 307 )
-			{
-				yoffset = -27.7128128f;
-				rotateTransform.CenterY = 27.7128128f;
-			}
-			else if ( idNumber == 400 )
-			{
-				yoffset = -27.7128128f;
-				rotateTransform.CenterY = 27.7128128f;
-			}
-
-			return new Tuple<RotateTransform, float>( rotateTransform, yoffset );
-		}
-
-		Tuple<RotateTransform, float> HandleSpecialCaseB( RotateTransform rotateTransform )
-		{
-			float yoffset = 0;
-
-			if ( idNumber == 200 )
-			{
-				rotateTransform.CenterY = 27.7128128f * 5f;
-			}
-			else if ( idNumber == 201 )
-			{
-				yoffset = -27.7128128f;
-				rotateTransform.CenterY = 27.7128128f * 3f;
-			}
-			else if ( idNumber == 204 )
-			{
-				yoffset = -27.7128128f;
-				rotateTransform.CenterY = 27.7128128f;
-			}
-			else if ( idNumber == 205 )
-			{
-				yoffset = -27.7128128f;
-				rotateTransform.CenterY = 27.7128128f;
-			}
-			else if ( idNumber == 206 )
-			{
-				rotateTransform.CenterY = 27.7128128f * 2f;
-			}
-			else if ( idNumber == 207 )
-			{
-				rotateTransform.CenterY = 27.7128128f * 2f;
-			}
-			else if ( idNumber == 209 )
-			{
-				rotateTransform.CenterY = 27.7128128f * 2f;
-			}
-			else if ( idNumber == 302 )
-			{
-				rotateTransform.CenterY = 27.7128128f * 5f;
-			}
-			else if ( idNumber == 303 )
-			{
-				rotateTransform.CenterY = 27.7128128f * 4f;
-			}
-			else if ( idNumber == 304 )
-			{
-				rotateTransform.CenterY = 27.7128128f * 1f;
-			}
-			else if ( idNumber == 305 )
-			{
-				yoffset = -27.7128128f;
-				rotateTransform.CenterY = 27.7128128f * 4f;
-			}
-			else if ( idNumber == 306 )
-			{
-				rotateTransform.CenterY = 27.7128128f * 3f;
-			}
-			else if ( idNumber == 307 )
-			{
-				yoffset = -27.7128128f;
-				rotateTransform.CenterY = 27.7128128f * 2f;
-			}
-			else if ( idNumber == 308 )
-			{
-				rotateTransform.CenterY = 27.7128128f * 1f;
-			}
-			else if ( idNumber == 400 )
-			{
-				yoffset = -27.7128128f;
-				rotateTransform.CenterY = 27.7128128f * 5f;
-			}
-
-			return new Tuple<RotateTransform, float>( rotateTransform, yoffset );
 		}
 
 		public void Select()
@@ -424,6 +356,10 @@ namespace JiME
 			hexPathShape.Stroke = new SolidColorBrush( Colors.Red );
 			Canvas.SetZIndex( hexPathShape, 100 );
 			Canvas.SetZIndex( tileImage, 101 );
+			if (printRect)
+				Canvas.SetZIndex(rectPathShape, 100);
+			if(printPivot)
+				Canvas.SetZIndex(pivotPathShape, 102);
 		}
 
 		public void Unselect()
@@ -473,6 +409,8 @@ namespace JiME
 			//4,57.7128128
 			canvas.Children.Remove( hexPathShape );
 			canvas.Children.Remove( tileImage );
+			if(printRect)
+				canvas.Children.Remove(rectPathShape);
 			angle += amount;
 			angle %= 360;
 			Rehydrate( canvas );

@@ -54,7 +54,7 @@
 				<ColumnDefinition Width="auto"/>
 			</Grid.ColumnDefinitions>
 
-			<Canvas x:Name="canvas" MouseUp="Canvas_MouseUp" MouseMove="Canvas_MouseMove" Width="512" Height="512" HorizontalAlignment="Left" VerticalAlignment="Top" MouseLeftButtonDown="canvas_MouseLeftButtonDown">
+			<Canvas x:Name="canvas" MouseUp="Canvas_MouseUp" MouseMove="Canvas_MouseMove" Width="512" Height="512" HorizontalAlignment="Left" VerticalAlignment="Top" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseWheel="canvas_MouseWheel">
 				<!--<Image Source="/JiME;component/Assets/TilesA/101.png" />-->
 				<!--<Path Style="{StaticResource hex}"/>
 				<Path Style="{StaticResource hex}">

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -109,10 +110,7 @@ namespace JiME.Views
 					selected.Rotate( -60, canvas );
 				else if ( e.Key == Key.Delete )
 				{
-					scenario.globalTilePool.Add( selected.idNumber );
-					canvas.Children.Remove( selected.hexPathShape );
-					canvas.Children.Remove( selected.tileImage );
-					chapter.RemoveTile( selected );
+					RemoveTile(selected, true);
 					selected = null;
 					//sort list
 					TileSorter sorter = new TileSorter();
@@ -141,9 +139,12 @@ namespace JiME.Views
 			hex.useGraphic = scenario.useTileGraphics;
 			hex.ChangeColor( color );
 			chapter.AddTile( hex );
-			canvas.Children.Add( hex.hexPathShape );
+			if(HexTile.printRect)
+				canvas.Children.Add( hex.hexPathShape );
 			if ( scenario.useTileGraphics )
 				canvas.Children.Add( hex.tileImage );
+			if (HexTile.printPivot)
+				canvas.Children.Add(hex.pivotPathShape);
 			selected = hex;
 			selected.Select();
 			radioA.IsChecked = selected.tileSide == "A";
@@ -156,10 +157,7 @@ namespace JiME.Views
 		{
 			if ( selected != null )
 			{
-				scenario.globalTilePool.Add( selected.idNumber );
-				canvas.Children.Remove( selected.hexPathShape );
-				canvas.Children.Remove( selected.tileImage );
-				chapter.RemoveTile( selected );
+				RemoveTile(selected, true);
 				selected = null;
 				//sort list
 				TileSorter sorter = new TileSorter();
@@ -169,6 +167,17 @@ namespace JiME.Views
 				foreach ( int s in foo )
 					scenario.globalTilePool.Add( s );
 				tilePool.SelectedIndex = 0;
+			}
+		}
+
+		private void RemoveTile(HexTile tile, bool affectScenarioAndChapter)
+        {
+			canvas.Children.Remove(tile.hexPathShape);
+			canvas.Children.Remove(tile.tileImage);
+			if (affectScenarioAndChapter)
+			{
+				scenario.globalTilePool.Add(tile.idNumber);
+				chapter.RemoveTile(tile);
 			}
 		}
 
@@ -263,14 +272,24 @@ namespace JiME.Views
 			}
 		}
 
+		private void canvas_MouseWheel( object sender, MouseWheelEventArgs e )
+        {
+			if ( selected != null )
+            {
+				if (e.Delta > 0)
+					selected.Rotate(60, canvas);
+				else if (e.Delta < 0)
+					selected.Rotate(-60, canvas);
+            }
+        }
+
 		private void radioA_Click( object sender, RoutedEventArgs e )
 		{
 			if ( selected != null )
 			{
 				if ( selected.tileSide == "A" )
 					return;
-				canvas.Children.Remove( selected.hexPathShape );
-				canvas.Children.Remove( selected.tileImage );
+				RemoveTile(selected, false);
 				selected.ChangeTileSide( "A", canvas );
 			}
 		}
@@ -281,8 +300,7 @@ namespace JiME.Views
 			{
 				if ( selected.tileSide == "B" )
 					return;
-				canvas.Children.Remove( selected.hexPathShape );
-				canvas.Children.Remove( selected.tileImage );
+				RemoveTile(selected, false);
 				selected.ChangeTileSide( "B", canvas );
 			}
 		}
