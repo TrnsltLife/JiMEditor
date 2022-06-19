@@ -1,8 +1,13 @@
-﻿using System;
+﻿using JiME.Models;
+using System;
 using System.ComponentModel;
+using System.Linq;
 
 namespace JiME
 {
+	/// <summary>
+	/// cf. https://boardgamegeek.com/thread/2469108/demystifying-enemies-project-documenting-enemy-sta
+	/// </summary>
 	public class Monster : INotifyPropertyChanged, ICommonData
 	{
 		string _dataName, _bonuses;
@@ -233,7 +238,12 @@ namespace JiME
 			}
 		}
 
-		public static string[] monsterNames = { "Ruffian", "Goblin Scout", "Orc Hunter", "Orc Marauder", "Warg", "Hill Troll", "Wight" };
+		//public static string[] monsterNames = { "Ruffian", "Goblin Scout", "Orc Hunter", "Orc Marauder", "Warg", "Hill Troll", "Wight" };
+		public static string[] monsterNames = (Collection.CORE_SET.MonsterNames)
+			.Concat(Collection.VILLAINS_OF_ERIADOR.MonsterNames).ToArray()
+			.Concat(Collection.SHADOWED_PATHS.MonsterNames).ToArray()
+			.Concat(Collection.DWELLERS_IN_DARKNESS.MonsterNames).ToArray()
+			.Concat(Collection.SPREADING_WAR.MonsterNames).ToArray();
 
 		public event PropertyChangedEventHandler PropertyChanged;
 

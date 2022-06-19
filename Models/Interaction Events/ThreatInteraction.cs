@@ -55,7 +55,8 @@ namespace JiME
 			interactionType = InteractionType.Threat;
 
 			triggerDefeatedName = "None";
-			includedEnemies = new bool[7].Fill( true );
+			includedEnemies = new bool[27].Fill( false );
+			for (int i = 0; i < 7; i++) { includedEnemies[i] = true; }
 			basePoolPoints = 10;
 			difficultyBias = DifficultyBias.Medium;
 

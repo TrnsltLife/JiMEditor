@@ -82,11 +82,13 @@
     <Compile Include="Common\ErrorChecker.cs" />
     <Compile Include="Common\FileManager.cs" />
     <Compile Include="Common\HexTileData.cs" />
+    <Compile Include="Common\CollectionConverter.cs" />
     <Compile Include="Common\InteractionConverter.cs" />
     <Compile Include="Common\TextBook.cs" />
     <Compile Include="Common\TileConverter.cs" />
     <Compile Include="Models\BattleTile.cs" />
     <Compile Include="Models\Campaign.cs" />
+    <Compile Include="Models\Collection.cs" />
     <Compile Include="Models\HexTile.cs" />
     <Compile Include="Models\Chapter.cs" />
     <Compile Include="Models\Interaction Events\BranchInteraction.cs" />

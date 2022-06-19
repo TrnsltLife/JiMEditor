@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System;
+using JiME.Models;
 
 namespace JiME.Views
 {
@@ -124,6 +125,31 @@ namespace JiME.Views
 				campaignNotice.Visibility = Visibility.Visible;
 				campaignGUID.Text = scenario.campaignGUID.ToString();
 			}
+
+			//collections
+			foreach(var collection in scenario.collectionObserver)
+            {
+				if(collection == Collection.CORE_SET)
+                {
+					coreSetCB.IsChecked = true;
+                }
+				else if(collection == Collection.VILLAINS_OF_ERIADOR)
+                {
+					villainsOfEriadorCB.IsChecked = true;
+                }
+				else if(collection == Collection.SHADOWED_PATHS)
+                {
+					shadowedPathsCB.IsChecked = true;
+                }
+				else if(collection == Collection.DWELLERS_IN_DARKNESS)
+                {
+					dwellersInDarknessCB.IsChecked = true;
+                }
+				else if(collection == Collection.SPREADING_WAR)
+                {
+					spreadingWarCB.IsChecked = true;
+                }
+            }
 		}
 
 		void UpdateThreatPanel()
@@ -353,6 +379,27 @@ namespace JiME.Views
 			if ( te.ShowDialog() == true )
 			{
 				scenario.specialInstructions = te.textBookController.pages[0];
+			}
+		}
+
+		private void collection_Click( object sender, RoutedEventArgs e )
+        {
+			CheckBox checkbox = (CheckBox)sender;
+			string name = checkbox.Content as string;
+			bool? check = checkbox.IsChecked;
+
+			Collection collection = Collection.FromName(name);
+			
+			if(!check.GetValueOrDefault(false))
+			{
+				//TODO Do a warning that we're removing a Collection and for them to remove tiles and monsters that use it.
+				//TODO List Tile Maps and Events that use the Collection we're disabling.
+				//TODO Automatically remove Collection resources from Tile Maps and Events.
+				scenario.collectionObserver.Remove(collection);
+			}
+            else
+			{
+				scenario.collectionObserver.Add(collection);
 			}
 		}
 	}

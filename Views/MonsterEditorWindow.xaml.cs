@@ -1,4 +1,8 @@
-﻿using System.Linq;
+﻿using JiME.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -9,6 +13,7 @@ namespace JiME.Views
 	/// </summary>
 	public partial class MonsterEditorWindow : Window
 	{
+		public Scenario scenario { get; set; }
 		public Monster monster { get; set; }
 		public DefaultStats defaultStats { get; set; }
 
@@ -16,11 +21,19 @@ namespace JiME.Views
 		int Medium { get { return 3; } }
 		int Heavy { get { return 4; } }
 
-		public MonsterEditorWindow( Monster m = null )
+		List<RadioButton> coreSetList;
+		List<RadioButton> villainsOfEriadorList;
+		List<RadioButton> shadowedPathsList;
+		List<RadioButton> dwellersInDarknessList;
+		List<RadioButton> spreadingWarList;
+		List<RadioButton> allMonsterList;
+
+		public MonsterEditorWindow(Scenario s, Monster m = null )
 		{
 			InitializeComponent();
 			DataContext = this;
 
+			scenario = s;
 			cancelButton.Visibility = m == null ? Visibility.Visible : Visibility.Collapsed;
 			monster = m ?? new Monster( "" );
 
@@ -31,20 +44,66 @@ namespace JiME.Views
 			}
 			FillDefaultStats( monster.monsterType.ToString() );
 
+			//The order of the monsters in these lists is important to maintain unchanged because the order (0-26) tells the companion app which monster to use.
+			//The order also corresponds to the order in the MonsterType enum.
+			coreSetList = new List<RadioButton>() { ruffianRB, goblinScoutRB, orcHunterRB, orcMarauderRB, hungryWargRB, hillTrollRB, wightRB };
+			villainsOfEriadorList = new List<RadioButton>() { atarinRB, gulgotarRB, coalfangRB };
+			shadowedPathsList = new List<RadioButton>() { giantSpiderRB, pitGoblinRB, orcTaskmasterRB, shadowmanRB, namelessThingRB, caveTrollRB, balrogRB, spawnOfUngoliantRB };
+			dwellersInDarknessList = new List<RadioButton>() { supplicantOfMorgothRB, ursaRB, ollieRB };
+			spreadingWarList = new List<RadioButton>() { fellBeastRB, wargRiderRB, siegeEngineRB, warOliphauntRB, soldierRB, urukWarriorRB };
+			allMonsterList = new List<RadioButton>();
+			allMonsterList.AddRange(coreSetList);
+			allMonsterList.AddRange(villainsOfEriadorList);
+			allMonsterList.AddRange(shadowedPathsList);
+			allMonsterList.AddRange(dwellersInDarknessList);
+			allMonsterList.AddRange(spreadingWarList);
+
+			Dictionary<List<RadioButton>, Collection> checkboxCollectionMap =
+				new Dictionary<List<RadioButton>, Collection>() {
+					{coreSetList, Collection.CORE_SET},
+					{villainsOfEriadorList, Collection.VILLAINS_OF_ERIADOR},
+					{shadowedPathsList, Collection.SHADOWED_PATHS},
+					{dwellersInDarknessList, Collection.DWELLERS_IN_DARKNESS},
+					{spreadingWarList, Collection.SPREADING_WAR}
+			};
+
+			//monster type radio buttons
+			int index = 0;
+			foreach(var monsterRB in allMonsterList)
+            {
+				Console.WriteLine(index + " " + monsterRB.Content + " " + ((MonsterType)index).ToString());
+				monsterRB.IsChecked = monster.monsterType == (MonsterType)index;
+				index++;
+            }
+
+			//Enable/Disable Collections and their monsters based on the Collections enabled for this Scenario
+			foreach (KeyValuePair<List<RadioButton>, Collection> pair in checkboxCollectionMap)
+			{
+				if (scenario.IsCollectionEnabled(pair.Value))
+				{
+					foreach (var checkbox in pair.Key)
+					{
+						checkbox.IsEnabled = true;
+						checkbox.FontStyle = FontStyles.Normal;
+					}
+				}
+				else
+				{
+					foreach (var checkbox in pair.Key)
+					{
+						checkbox.IsChecked = false;
+						checkbox.IsEnabled = false;
+						checkbox.FontStyle = FontStyles.Italic;
+					}
+				}
+			}
+
 			//negated radio buttons
 			mightRB.IsChecked = monster.negatedBy == Ability.Might;
 			agilityRB.IsChecked = monster.negatedBy == Ability.Agility;
 			wisdomRB.IsChecked = monster.negatedBy == Ability.Wisdom;
 			spiritRB.IsChecked = monster.negatedBy == Ability.Spirit;
 			witRB.IsChecked = monster.negatedBy == Ability.Wit;
-			//monster type radio buttons
-			ruffianRB.IsChecked = monster.monsterType == MonsterType.Ruffian;
-			hunterRB.IsChecked = monster.monsterType == MonsterType.OrcHunter;
-			orcRB.IsChecked = monster.monsterType == MonsterType.OrcMarauder;
-			wargRB.IsChecked = monster.monsterType == MonsterType.Warg;
-			trollRB.IsChecked = monster.monsterType == MonsterType.HillTroll;
-			wightRB.IsChecked = monster.monsterType == MonsterType.Wight;
-			goblinRB.IsChecked = monster.monsterType == MonsterType.GoblinScout;
 		}
 
 		private void OkButton_Click( object sender, RoutedEventArgs e )
@@ -60,31 +119,16 @@ namespace JiME.Views
 
 		void TryClose()
 		{
-			if ( ruffianRB.IsChecked == true )
-				monster.monsterType = MonsterType.Ruffian;
-			else if ( hunterRB.IsChecked == true )
-				monster.monsterType = MonsterType.OrcHunter;
-			else if ( orcRB.IsChecked == true )
-				monster.monsterType = MonsterType.OrcMarauder;
-			else if ( wargRB.IsChecked == true )
-				monster.monsterType = MonsterType.Warg;
-			else if ( trollRB.IsChecked == true )
-				monster.monsterType = MonsterType.HillTroll;
-			else if ( wightRB.IsChecked == true )
-				monster.monsterType = MonsterType.Wight;
-			else if ( goblinRB.IsChecked == true )
-				monster.monsterType = MonsterType.GoblinScout;
-
-			if ( mightRB.IsChecked == true )
-				monster.negatedBy = Ability.Might;
-			else if ( agilityRB.IsChecked == true )
-				monster.negatedBy = Ability.Agility;
-			else if ( wisdomRB.IsChecked == true )
-				monster.negatedBy = Ability.Wisdom;
-			else if ( spiritRB.IsChecked == true )
-				monster.negatedBy = Ability.Spirit;
-			else if ( witRB.IsChecked == true )
-				monster.negatedBy = Ability.Wit;
+			int index = 0;
+			foreach (var monsterRB in allMonsterList)
+			{
+				if(monsterRB.IsChecked == true)
+                {
+					monster.monsterType = (MonsterType)index;
+					break;
+                };
+				index++;
+			}
 
 			if ( string.IsNullOrEmpty( nameTB.Text.Trim() ) )
 				monster.dataName = Monster.monsterNames[(int)monster.monsterType];
@@ -101,20 +145,19 @@ namespace JiME.Views
 			{
 				stats1.IsEnabled = false;
 				stats2.IsEnabled = false;
-				if ( ruffianRB.IsChecked == true )
-					monster.monsterType = MonsterType.Ruffian;
-				else if ( hunterRB.IsChecked == true )
-					monster.monsterType = MonsterType.OrcHunter;
-				else if ( orcRB.IsChecked == true )
-					monster.monsterType = MonsterType.OrcMarauder;
-				else if ( wargRB.IsChecked == true )
-					monster.monsterType = MonsterType.Warg;
-				else if ( trollRB.IsChecked == true )
-					monster.monsterType = MonsterType.HillTroll;
-				else if ( wightRB.IsChecked == true )
-					monster.monsterType = MonsterType.Wight;
-				else if ( goblinRB.IsChecked == true )
-					monster.monsterType = MonsterType.GoblinScout;
+
+				int index = 0;
+				foreach (var monsterRB in allMonsterList)
+				{
+					if (monsterRB.IsChecked == true)
+					{
+						monster.monsterType = (MonsterType)index;
+						break;
+					};
+					index++;
+				}
+
+				Console.WriteLine("FillDefaultStats: " + monster.monsterType.ToString());
 				FillDefaultStats( monster.monsterType.ToString() );
 			}
 			else
@@ -126,9 +169,24 @@ namespace JiME.Views
 
 		private void FillDefaultStats( string enemy )
 		{
-			defaultStats = Utils.defaultStats.Where( x => x.name == enemy ).First();
-			special.Text = defaultStats.special;
-			monster.specialAbility = defaultStats.special;
+			try
+			{
+				defaultStats = Utils.defaultStats.Where(x => x.name == enemy).First();
+				special.Text = defaultStats.special;
+				monster.specialAbility = defaultStats.special;
+			}
+			catch(InvalidOperationException e)
+            {
+				//TODO Set up the rest of the enemies in enemy-defaults.json and get rid of this
+				defaultStats = new DefaultStats();
+				defaultStats.name = enemy;
+				defaultStats.health = 5;
+				defaultStats.speed = "light";
+				defaultStats.damage = "light";
+				defaultStats.armor = 1;
+				defaultStats.sorcery = 0;
+				defaultStats.special = "";
+            }
 
 			if ( monster.defaultStats )
 			{
@@ -144,7 +202,11 @@ namespace JiME.Views
 		private void monsterType_Click( object sender, RoutedEventArgs e )
 		{
 			string enemy = ( (RadioButton)sender ).Content as string;
-			enemy = enemy.Replace( " ", "" );
+			Console.WriteLine("monsterType_Click enemy 1: " + enemy);
+			enemy = Regex.Replace(enemy, "x[0-9]+", ""); //replace unit count info
+			enemy = Regex.Replace(enemy, "of", "Of"); //replace lower case of
+			enemy = enemy.Replace(" ", ""); //replace spaces
+			Console.WriteLine("monsterType_Click enemy 2: " + enemy);
 			FillDefaultStats( enemy );
 		}
 	}

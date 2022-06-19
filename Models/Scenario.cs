@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JiME.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -194,6 +195,7 @@ namespace JiME
 		public ObservableCollection<TextBookData> resolutionObserver { get; set; }
 		public ObservableCollection<Threat> threatObserver { get; set; }
 		public ObservableCollection<Chapter> chapterObserver { get; set; }
+		public ObservableCollection<Collection> collectionObserver { get; set; }
 		public ObservableCollection<int> globalTilePool { get; set; }
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -216,6 +218,8 @@ namespace JiME
 			resolutionObserver = new ObservableCollection<TextBookData>();
 			threatObserver = new ObservableCollection<Threat>();
 			chapterObserver = new ObservableCollection<Chapter>();
+			collectionObserver = new ObservableCollection<Collection>();
+			collectionObserver.Add(Collection.CORE_SET);
 			globalTilePool = new ObservableCollection<int>( Utils.LoadTiles() );
 			scenarioEndStatus = new Dictionary<string, bool>();
 			Utils.LoadHexData();
@@ -239,6 +243,7 @@ namespace JiME
 			s.resolutionObserver = new ObservableCollection<TextBookData>( fm.resolutions );
 			s.threatObserver = new ObservableCollection<Threat>( fm.threats );
 			s.chapterObserver = new ObservableCollection<Chapter>( fm.chapters );
+			s.collectionObserver = new ObservableCollection<Collection>(fm.collections);
 			s.globalTilePool = new ObservableCollection<int>( fm.globalTiles );
 			s.introBookData = fm.introBookData;
 			s.threatMax = fm.threatMax;
@@ -324,6 +329,16 @@ namespace JiME
 			for ( int i = 0; i < 22; i++ )
 				wallTypes[i] = 0;//0=none, 1=wall, 2=river
 		}
+
+		public Boolean IsCollectionEnabled(Collection collection)
+        {
+			return collectionObserver.Contains(collection);
+        }
+
+		public Boolean IsCollectionEnabled(string name)
+        {
+			return IsCollectionEnabled(Collection.FromName(name));
+        }
 
 		public void WipeChapters()
 		{

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JiME"
         mc:Ignorable="d"
-        Title="Enemy Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
+        Title="Enemy Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" Width="750" Closing="Window_Closing">
 
 	<Window.Resources>
 		<Style TargetType="RadioButton">
@@ -48,6 +48,7 @@
 			<Border Style="{StaticResource callout}" Margin="0,5">
 				<StackPanel>
 					<TextBlock Text="Enemy Type:" Style="{StaticResource Heading}"/>
+					<!--
 					<StackPanel Orientation="Horizontal">
 						<RadioButton x:Name="ruffianRB" Content="Ruffian" Click="monsterType_Click"/>
 						<RadioButton x:Name="goblinRB" Content="Goblin Scout" Margin="20,0" Click="monsterType_Click"/>
@@ -57,6 +58,75 @@
 						<RadioButton x:Name="wightRB" Content="Wight" Click="monsterType_Click" Margin="20,0"/>
 						<RadioButton x:Name="trollRB" Content="Hill Troll" Click="monsterType_Click"/>
 					</StackPanel>
+					-->
+
+					<Grid Margin="0,5,0,10">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="auto"/>
+							<ColumnDefinition Width="auto"/>
+							<ColumnDefinition Width="auto"/>
+							<ColumnDefinition Width="auto"/>
+							<ColumnDefinition Width="*"/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="*"/>
+							<RowDefinition Height="*"/>
+							<RowDefinition Height="*"/>
+							<RowDefinition Height="*"/>
+							<RowDefinition Height="*"/>
+							<RowDefinition Height="*"/>
+							<RowDefinition Height="*"/>
+							<RowDefinition Height="*"/>
+						</Grid.RowDefinitions>
+
+						<!--Core Set-->
+						<Rectangle Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="DarkGreen" />
+						<TextBlock Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Text="Core Set:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="0" Grid.Column="1" x:Name="goblinScoutRB" Content="Goblin Scout x6" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="0" Grid.Column="2" x:Name="hillTrollRB" Content="Hill Troll x1" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="0" Grid.Column="3" x:Name="orcHunterRB" Content="Orc Hunter x3" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="0" Grid.Column="4" x:Name="orcMarauderRB" Content="Orc Marauder x3" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="1" Grid.Column="1" x:Name="ruffianRB" Content="Ruffian x6" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="1" Grid.Column="2" x:Name="hungryWargRB" Content="Hungry Warg x3" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="1" Grid.Column="3" x:Name="wightRB" Content="Wight x3" Foreground="White" Padding="0,0,5,0"/>
+
+						<!-- Villains of Eriador -->
+						<Rectangle Grid.Row="2" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="SaddleBrown" />
+						<TextBlock Grid.Row="2" Grid.RowSpan="2" Grid.Column="0" Text="Villains of Eriador:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="2" Grid.Column="1" x:Name="atarinRB" Content="Atarin x1" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="2" Grid.Column="2" x:Name="coalfangRB" Content="Coalfang x1" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="2" Grid.Column="3" x:Name="gulgotarRB" Content="Gulgotar x1" Foreground="White" Padding="0,0,5,0"/>
+
+						<!-- Shadowed Paths -->
+						<Rectangle Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="Black" />
+						<TextBlock Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Text="Shadowed Paths:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="3" Grid.Column="1" x:Name="balrogRB" Content="Balrog x1" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="3" Grid.Column="2" x:Name="caveTrollRB" Content="Cave Troll x2" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="3" Grid.Column="3" x:Name="giantSpiderRB" Content="Giant Spider x6" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="3" Grid.Column="4" x:Name="namelessThingRB" Content="Nameless Thing x3" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="4" Grid.Column="1" x:Name="orcTaskmasterRB" Content="Orc Taskmaster x6" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="4" Grid.Column="2" x:Name="pitGoblinRB" Content="Pit Goblin x6" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="4" Grid.Column="3" x:Name="shadowmanRB" Content="Shadowman x3" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="4" Grid.Column="4" x:Name="spawnOfUngoliantRB" Content="Spawn of Ungoliant x1" Foreground="White" Padding="0,0,5,0"/>
+
+						<!-- Dwellers in Darkness -->
+						<Rectangle Grid.Row="5" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="Purple" />
+						<TextBlock Grid.Row="5" Grid.RowSpan="2" Grid.Column="0" Text="Dwellers in Darkness:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="5" Grid.Column="1" x:Name="ollieRB" Content="Ollie x1" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="5" Grid.Column="2" x:Name="ursaRB" Content="Ursa x1" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="2" x:Name="supplicantOfMorgothRB" Content="Supplicant of Morgoth x1" Foreground="White" Padding="0,0,5,0"/>
+
+						<!-- Spreading War -->
+						<Rectangle Grid.Row="6" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="DarkRed" />
+						<TextBlock Grid.Row="6" Grid.RowSpan="2" Grid.Column="0" Text="Spreading War:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="6" Grid.Column="1" x:Name="fellBeastRB" Content="Fell Beast x3" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="6" Grid.Column="2" x:Name="siegeEngineRB" Content="Siege Engine x2" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="6" Grid.Column="3" x:Name="soldierRB" Content="Soldier x6" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="6" Grid.Column="4" x:Name="urukWarriorRB" Content="Uruk Warrior x6" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="7" Grid.Column="1" x:Name="warOliphauntRB" Content="War Oliphaunt x1" Foreground="White" Padding="0,0,5,0"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="7" Grid.Column="2" x:Name="wargRiderRB" Content="Warg Rider x3" Foreground="White" Padding="0,0,5,0"/>
+					</Grid>
+
 				</StackPanel>
 			</Border>
 

@@ -15,7 +15,17 @@ namespace JiME
 {
 	public enum ScenarioType { Journey, Battle }
 	public enum InteractionType { Text, Threat, StatTest, Decision, Branch, Darkness, MultiEvent, Persistent, Conditional, Dialog, Replace, Reward }
-	public enum MonsterType { Ruffian, GoblinScout, OrcHunter, OrcMarauder, Warg, HillTroll, Wight }
+	/// <summary>
+	/// The order of the monsters in this enum is important to maintain unchanged because the order (0-26) tells the companion app which monster to use.
+	/// The order for the first 7 (core set) was set by GlowPuff and is kept for backwards compatibility.
+	/// The order for the other sets is kept in the same order as the order in the original JiME engine, although not sharing the same enum int values.
+	/// </summary>
+	public enum MonsterType { Ruffian, GoblinScout, OrcHunter, OrcMarauder, Warg, HillTroll, Wight, //0 - 6
+							  Atarin, Gulgotar, Coalfang, //7-9
+							  GiantSpider, PitGoblin, OrcTaskmaster, Shadowman, NamelessThing, CaveTroll, Balrog, SpawnOfUngoliant, //10-17
+							  SupplicantOfMorgoth, Ursa, Ollie, //18-20
+							  FellBeast, WargRider, SiegeEngine, WarOliphaunt, Soldier, UrukWarrior //21-26
+	}
 	public enum TileType { Hex, Battle }
 	public enum ThreatAttributes { }//armor, elite, etc
 	public enum ProjectType { Standalone, Campaign }
@@ -23,7 +33,7 @@ namespace JiME
 	public enum EditorMode { Information, Threat, Decision, Test, Branch }
 	public enum Ability { Might, Agility, Wisdom, Spirit, Wit, None }
 	public enum TerrainToken { None, Pit, Mist, Barrels, Table, FirePit, Statue }
-	public enum TokenType { Search, Person, Threat, Darkness, Exploration, None }
+	public enum TokenType { Search, Person, Threat, Darkness, Exploration, DifficultTerrain, Fortified, None }
 	public enum PersonType { Human, Elf, Hobbit, Dwarf }
 	public enum HelpType { Token, Grouping, Enemies, Triggers }
 	public enum DifficultyBias { Light, Medium, Heavy }
@@ -161,8 +171,8 @@ namespace JiME
 		/// AKA "Engine Version" in the companion app
 		/// Update this number every time the file format changes with new features
 		/// </summary>
-		public static string formatVersion = "1.9";
-		public static string appVersion = "0.18-alpha";
+		public static string formatVersion = "1.10";
+		public static string appVersion = "0.20-alpha";
 		public static Dictionary<int, HexTileData> hexDictionary { get; set; } = new Dictionary<int, HexTileData>();
 		public static Dictionary<int, HexTileData> hexDictionaryB { get; set; } = new Dictionary<int, HexTileData>();
 		public static int tolerance = 25;
@@ -422,7 +432,7 @@ namespace JiME
 
 	public class SimulatorData
 	{
-		public bool[] includedEnemies = new bool[7];
+		public bool[] includedEnemies = new bool[27];
 		public DifficultyBias difficultyBias;
 		public float poolPoints;
 	}

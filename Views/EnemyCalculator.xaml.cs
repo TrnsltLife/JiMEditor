@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JiME.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -67,9 +68,18 @@ namespace JiME.Views
 			}
 		}
 
-		int[] MonsterCost = new int[7] { 3, 3, 6, 6, 7, 9, 7 };
-		int[] ModCost = new int[3] { 1, 2, 1 };
-		string[] modNames = new string[3] { "Large", "Bloodthirsty", "Armored" };
+        //int[] MonsterCost = new int[7] { 3, 3, 6, 6, 7, 9, 7 };
+        int[] MonsterCost = (Collection.CORE_SET.MonsterCosts)
+			.Concat(Collection.VILLAINS_OF_ERIADOR.MonsterCosts).ToArray()
+			.Concat(Collection.SHADOWED_PATHS.MonsterCosts).ToArray()
+			.Concat(Collection.DWELLERS_IN_DARKNESS.MonsterCosts).ToArray()
+			.Concat(Collection.SPREADING_WAR.MonsterCosts).ToArray();
+
+		//int[] ModCost = new int[3] { 1, 2, 1 };
+		//string[] modNames = new string[3] { "Large", "Bloodthirsty", "Armored" };
+		string[] modNames = new string[] { "Large", "Bloodthirsty", "Armored", "Huge", "Shrouded", "Terrifying", "Spike Armor", "Well-Equipped", "Veteran", "Wary", "Guarded", "Hardened", "Alert" };
+		int[] ModCost = new int[] { 3, 6, 4, 4, 7, 3, 6, 6, 10, 8, 9, 6, 10 };
+
 
 		public event PropertyChangedEventHandler PropertyChanged;
 

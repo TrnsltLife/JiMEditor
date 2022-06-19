@@ -157,7 +157,6 @@ namespace JiME
 				rectPathShape.StrokeThickness = 2;
 				rectPathShape.Fill = new SolidColorBrush(Color.FromRgb(70, 70, 74));
 				PathFigure[] rectfigures = new PathFigure[1];
-				int rectOffsetY = -28; // -28 * (int)hexPoints[0].Y;
 				rectfigures[0] = BuildRectangle(new Point(0, 0), Utils.hexDictionary[idNumber].width, Utils.hexDictionary[idNumber].height);
 				rectPathShape.Data = new PathGeometry(rectfigures);
 				rectPathShape.DataContext = this;

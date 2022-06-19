@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using Microsoft.Win32;
 using Newtonsoft.Json;
+using JiME.Models;
 
 namespace JiME
 {
@@ -45,6 +46,9 @@ namespace JiME
 		public List<TextBookData> resolutions { get; set; }
 		public List<Threat> threats { get; set; }
 		public List<Chapter> chapters { get; set; }
+		[JsonConverter(typeof(CollectionConverter))]
+		//[JsonIgnore]
+		public List<Collection> collections { get; set; } = new List<Collection>();
 		public List<int> globalTiles { get; set; }
 		public Dictionary<string, bool> scenarioEndStatus { get; set; } = new Dictionary<string, bool>();
 		public TextBookData introBookData { get; set; }
@@ -75,6 +79,7 @@ namespace JiME
 			resolutions = source.resolutionObserver.ToList();
 			threats = source.threatObserver.ToList();
 			chapters = source.chapterObserver.ToList();
+			collections = source.collectionObserver.ToList();
 			globalTiles = source.globalTilePool.ToList();
 			scenarioEndStatus = source.scenarioEndStatus;
 
@@ -286,7 +291,11 @@ namespace JiME
 					json = sr.ReadToEnd();
 				}
 
-				var c = JsonConvert.DeserializeObject<Campaign>( json, new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Populate } );
+				var c = JsonConvert.DeserializeObject<Campaign>( json, new JsonSerializerSettings { 
+					DefaultValueHandling = DefaultValueHandling.Populate,
+					//NullValueHandling = NullValueHandling.Ignore,
+					MissingMemberHandling = MissingMemberHandling.Ignore
+				} );
 				return c;
 			}
 			catch ( Exception e )

@@ -37,7 +37,7 @@
 			"special": ""
 		},
 		{
-			"name": "Warg",
+			"name": "HungryWarg",
 			"health": 8,
 			"speed": "heavy",
 			"damage": "medium",

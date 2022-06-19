@@ -3,6 +3,8 @@ using System.Windows.Controls;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using JiME.Models;
 
 namespace JiME.Views
 {
@@ -16,6 +18,13 @@ namespace JiME.Views
 		public Scenario scenario { get; set; }
 		public ThreatInteraction interaction { get; set; }
 		bool closing = false;
+
+		List<CheckBox> coreSetList;
+		List<CheckBox> villainsOfEriadorList;
+		List<CheckBox> shadowedPathsList;
+		List<CheckBox> dwellersInDarknessList;
+		List<CheckBox> spreadingWarList;
+		List<CheckBox> allMonsterList;
 
 		public event PropertyChangedEventHandler PropertyChanged;
 		bool _isThreatTriggered;
@@ -61,13 +70,64 @@ namespace JiME.Views
 
 			oldName = interaction.dataName;
 
-			rufCB.IsChecked = interaction.includedEnemies[0];
-			gobCB.IsChecked = interaction.includedEnemies[1];
-			huntCB.IsChecked = interaction.includedEnemies[2];
-			marCB.IsChecked = interaction.includedEnemies[3];
-			wargCB.IsChecked = interaction.includedEnemies[4];
-			hTrollCB.IsChecked = interaction.includedEnemies[5];
-			wightCB.IsChecked = interaction.includedEnemies[6];
+			//The order of the monsters in these lists is important to maintain unchanged because the order (0-26) tells the companion app which monster to use.
+			//The order also corresponds to the order in the MonsterType enum.
+			coreSetList = new List<CheckBox>() { ruffianCB, goblinScoutCB, orcHunterCB, orcMarauderCB, hungryWargCB, hillTrollCB, wightCB };
+			villainsOfEriadorList = new List<CheckBox>() { atarinCB, gulgotarCB, coalfangCB };
+			shadowedPathsList = new List<CheckBox>() { giantSpiderCB, pitGoblinCB, orcTaskmasterCB, shadowmanCB, namelessThingCB, caveTrollCB, balrogCB, spawnOfUngoliantCB };
+			dwellersInDarknessList = new List<CheckBox>() { supplicantOfMorgothCB, ursaCB, ollieCB };
+			spreadingWarList = new List<CheckBox>() { fellBeastCB, wargRiderCB, siegeEngineCB, warOliphauntCB, soldierCB, urukWarriorCB };
+
+			allMonsterList = new List<CheckBox>();
+			allMonsterList.AddRange(coreSetList);
+			allMonsterList.AddRange(villainsOfEriadorList);
+			allMonsterList.AddRange(shadowedPathsList);
+			allMonsterList.AddRange(dwellersInDarknessList);
+			allMonsterList.AddRange(spreadingWarList);
+
+			Dictionary<List<CheckBox>, Collection> checkboxCollectionMap =
+				new Dictionary<List<CheckBox>, Collection>() {
+					{coreSetList, Collection.CORE_SET},
+					{villainsOfEriadorList, Collection.VILLAINS_OF_ERIADOR},
+					{shadowedPathsList, Collection.SHADOWED_PATHS},
+					{dwellersInDarknessList, Collection.DWELLERS_IN_DARKNESS},
+					{spreadingWarList, Collection.SPREADING_WAR},
+
+					{new List<CheckBox>(){coreSetCB}, Collection.CORE_SET },
+					{new List<CheckBox>(){villainsOfEriadorCB}, Collection.VILLAINS_OF_ERIADOR },
+					{new List<CheckBox>(){shadowedPathsCB}, Collection.SHADOWED_PATHS },
+					{new List<CheckBox>(){dwellersInDarknessCB}, Collection.DWELLERS_IN_DARKNESS },
+					{new List<CheckBox>(){spreadingWarCB}, Collection.SPREADING_WAR }
+				};
+
+			int index = 0;
+			foreach (var monsterCheckbox in allMonsterList)
+            {
+				monsterCheckbox.IsChecked = interaction.includedEnemies[index];
+				index++;
+            }
+
+			//Enable/Disable Collections and their monsters based on the Collections enabled for this Scenario
+			foreach (KeyValuePair<List<CheckBox>, Collection> pair in checkboxCollectionMap)
+			{
+				if(scenario.IsCollectionEnabled(pair.Value))
+                {
+					foreach (var checkbox in pair.Key)
+					{
+						checkbox.IsEnabled = true;
+						checkbox.FontStyle = FontStyles.Normal;
+					}
+				}
+				else 
+				{
+					foreach(var checkbox in pair.Key)
+                    {
+						checkbox.IsChecked = false;
+						checkbox.IsEnabled = false;
+						checkbox.FontStyle = FontStyles.Italic;
+                    }
+                }
+            }
 
 			biasLight.IsChecked = interaction.difficultyBias == DifficultyBias.Light;
 			biasMedium.IsChecked = interaction.difficultyBias == DifficultyBias.Medium;
@@ -152,6 +212,10 @@ namespace JiME.Views
 				interaction.tokenType = TokenType.Darkness;
 			if ( threatRadio.IsChecked.HasValue && threatRadio.IsChecked.Value )
 				interaction.tokenType = TokenType.Threat;
+			if (terrainRadio.IsChecked.HasValue && terrainRadio.IsChecked.Value)
+				interaction.tokenType = TokenType.DifficultTerrain;
+			if (fortifiedRadio.IsChecked.HasValue && fortifiedRadio.IsChecked.Value)
+				interaction.tokenType = TokenType.Fortified;
 
 			if ( humanRadio.IsChecked == true )
 				interaction.personType = PersonType.Human;
@@ -164,13 +228,12 @@ namespace JiME.Views
 
 			scenario.UpdateEventReferences( oldName, interaction );
 
-			interaction.includedEnemies[0] = rufCB.IsChecked.Value;
-			interaction.includedEnemies[1] = gobCB.IsChecked.Value;
-			interaction.includedEnemies[2] = huntCB.IsChecked.Value;
-			interaction.includedEnemies[3] = marCB.IsChecked.Value;
-			interaction.includedEnemies[4] = wargCB.IsChecked.Value;
-			interaction.includedEnemies[5] = hTrollCB.IsChecked.Value;
-			interaction.includedEnemies[6] = wightCB.IsChecked.Value;
+			int index = 0;
+			foreach (var monsterCheckbox in allMonsterList)
+			{
+				interaction.includedEnemies[index] = monsterCheckbox.IsChecked.Value;
+				index++;
+			}
 
 			if ( biasLight.IsChecked == true )
 				interaction.difficultyBias = DifficultyBias.Light;
@@ -197,7 +260,7 @@ namespace JiME.Views
 
 		private void AddMonsterButton_Click( object sender, RoutedEventArgs e )
 		{
-			MonsterEditorWindow me = new MonsterEditorWindow();
+			MonsterEditorWindow me = new MonsterEditorWindow(scenario);
 			if ( me.ShowDialog() == true )
 			{
 				interaction.AddMonster( me.monster );
@@ -207,7 +270,7 @@ namespace JiME.Views
 		private void EditButton_Click( object sender, RoutedEventArgs e )
 		{
 			Monster m = ( (Button)sender ).DataContext as Monster;
-			MonsterEditorWindow me = new MonsterEditorWindow( m );
+			MonsterEditorWindow me = new MonsterEditorWindow(scenario, m);
 			me.ShowDialog();
 		}
 
@@ -269,6 +332,36 @@ namespace JiME.Views
 				personType.Visibility = Visibility.Collapsed;
 		}
 
+		private void collection_Click(object sender, RoutedEventArgs e)
+		{
+			CheckBox checkbox = ((CheckBox)sender);
+			string collection = checkbox.Content as string;
+			bool? check = checkbox.IsChecked;
+
+			List<CheckBox> monsterList = null;
+			if(collection.StartsWith("Core Set"))
+            {
+				monsterList = coreSetList;
+            }
+			else if(collection.StartsWith("Villains of Eriador"))
+            {
+				monsterList = villainsOfEriadorList;
+            }
+			else if(collection.StartsWith("Shadowed Paths"))
+            {
+				monsterList = shadowedPathsList;
+            }
+			else if(collection.StartsWith("Dwellers in Darkness"))
+            {
+				monsterList = dwellersInDarknessList;
+            }
+			else if(collection.StartsWith("Spreading War"))
+            {
+				monsterList = spreadingWarList;
+            }
+			monsterList.ForEach(it => it.IsChecked = check);
+		}
+
 		private void simulateBtn_Click( object sender, RoutedEventArgs e )
 		{
 			var sd = new SimulatorData()
@@ -277,13 +370,13 @@ namespace JiME.Views
 				difficultyBias = biasLight.IsChecked == true ? DifficultyBias.Light : ( biasMedium.IsChecked == true ? DifficultyBias.Medium : DifficultyBias.Heavy )
 			};
 
-			sd.includedEnemies[0] = rufCB.IsChecked.Value;
-			sd.includedEnemies[1] = gobCB.IsChecked.Value;
-			sd.includedEnemies[2] = huntCB.IsChecked.Value;
-			sd.includedEnemies[3] = marCB.IsChecked.Value;
-			sd.includedEnemies[4] = wargCB.IsChecked.Value;
-			sd.includedEnemies[5] = hTrollCB.IsChecked.Value;
-			sd.includedEnemies[6] = wightCB.IsChecked.Value;
+
+			int index = 0;
+			foreach (var monsterCheckbox in allMonsterList)
+			{
+				sd.includedEnemies[index] = monsterCheckbox.IsChecked.Value;
+				index++;
+			}
 
 			var sim = new EnemyCalculator( sd );
 			sim.ShowDialog();
