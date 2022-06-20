@@ -350,7 +350,10 @@
 
 								<!--Core Set-->
 								<Rectangle Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="DarkGreen" />
-								<CheckBox Click="collection_Click" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" x:Name="coreSetCB" Content="Core Set:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+								<StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+									<Image Source="/JiME;component/Assets/Collection-White-Ring.png" Height="15" Stretch="Uniform" Margin="2,0" />
+									<CheckBox Click="collection_Click" x:Name="coreSetCB" Content="Core Set:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+								</StackPanel>
 								<CheckBox Grid.Row="0" Grid.Column="1" x:Name="goblinScoutCB" Content="Goblin Scout x6 (4)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="0" Grid.Column="2" x:Name="hillTrollCB" Content="Hill Troll x1 (25)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="0" Grid.Column="3" x:Name="orcHunterCB" Content="Orc Hunter x3 (10)" Foreground="White" Padding="0,0,5,0"/>
@@ -361,14 +364,20 @@
 
 								<!-- Villains of Eriador -->
 								<Rectangle Grid.Row="2" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="SaddleBrown" />
-								<CheckBox Click="collection_Click" Grid.Row="2" Grid.RowSpan="2" Grid.Column="0" x:Name="villainsOfEriadorCB" Content="Villains of Eriador:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+								<StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
+									<Image Source="/JiME;component/Assets/Collection-White-Wolf.png" Height="15" Stretch="Uniform" Margin="2,0" />
+									<CheckBox Click="collection_Click" x:Name="villainsOfEriadorCB" Content="Villains of Eriador:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+								</StackPanel>
 								<CheckBox Grid.Row="2" Grid.Column="1" x:Name="atarinCB" Content="Atarin x1 (X)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="2" Grid.Column="2" x:Name="coalfangCB" Content="Coalfang x1 (X)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="2" Grid.Column="3" x:Name="gulgotarCB" Content="Gulgotar x1 (X)" Foreground="White" Padding="0,0,5,0"/>
 
 								<!-- Shadowed Paths -->
 								<Rectangle Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="Black" />
-								<CheckBox Click="collection_Click" Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" x:Name="shadowedPathsCB" Content="Shadowed Paths:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+								<StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="0">
+									<Image Source="/JiME;component/Assets/Collection-White-Web.png" Height="15" Stretch="Uniform" Margin="2,0" />
+									<CheckBox Click="collection_Click" x:Name="shadowedPathsCB" Content="Shadowed Paths:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+								</StackPanel>
 								<CheckBox Grid.Row="3" Grid.Column="1" x:Name="balrogCB" Content="Balrog x1 (X)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="3" Grid.Column="2" x:Name="caveTrollCB" Content="Cave Troll x2 (20)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="3" Grid.Column="3" x:Name="giantSpiderCB" Content="Giant Spider x6 (5)" Foreground="White" Padding="0,0,5,0"/>
@@ -380,14 +389,20 @@
 
 								<!-- Dwellers in Darkness -->
 								<Rectangle Grid.Row="5" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="Purple" />
-								<CheckBox Click="collection_Click" Grid.Row="5" Grid.RowSpan="2" Grid.Column="0" x:Name="dwellersInDarknessCB" Content="Dwellers in Darkness:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+								<StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="0">
+									<Image Source="/JiME;component/Assets/Collection-White-Crown.png" Height="15" Stretch="Uniform" Margin="2,0" />
+									<CheckBox Click="collection_Click" x:Name="dwellersInDarknessCB" Content="Dwellers in Darkness:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+								</StackPanel>
 								<CheckBox Grid.Row="5" Grid.Column="1" x:Name="ollieCB" Content="Ollie x1 (X)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="5" Grid.Column="2" x:Name="ursaCB" Content="Ursa x1 (X)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="2" x:Name="supplicantOfMorgothCB" Content="Supplicant of Morgoth x1 (X)" Foreground="White" Padding="0,0,5,0"/>
 
 								<!-- Spreading War -->
 								<Rectangle Grid.Row="6" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="DarkRed" />
-								<CheckBox Click="collection_Click" Grid.Row="6" Grid.RowSpan="2" Grid.Column="0" x:Name="spreadingWarCB" Content="Spreading War:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+								<StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="0">
+									<Image Source="/JiME;component/Assets/Collection-White-War.png" Height="15" Stretch="Uniform" Margin="2,0" />
+									<CheckBox Click="collection_Click" x:Name="spreadingWarCB" Content="Spreading War:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+								</StackPanel>
 								<CheckBox Grid.Row="6" Grid.Column="1" x:Name="fellBeastCB" Content="Fell Beast x3 (24)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="6" Grid.Column="2" x:Name="siegeEngineCB" Content="Siege Engine x2 (22)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="6" Grid.Column="3" x:Name="soldierCB" Content="Soldier x6 (8)" Foreground="White" Padding="0,0,5,0"/>

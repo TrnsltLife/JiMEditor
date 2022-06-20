@@ -87,6 +87,11 @@ namespace JiME
 		public ProjectType projectType { get; set; }
 		public string fileName { get; set; }
 		public string fileVersion { get; set; }
+		public string coreSetIcon { get; set; }
+		public string villainsOfEriadorIcon { get; set; }
+		public string shadowedPathsIcon { get; set; }
+		public string dwellersInDarknessIcon { get; set; }
+		public string spreadingWarIcon { get; set; }
 	}
 
 	public class CampaignItem

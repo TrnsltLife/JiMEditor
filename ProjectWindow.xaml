@@ -144,7 +144,14 @@
 										<ColumnDefinition Width="*"/>
 										<ColumnDefinition Width="auto"/>
 									</Grid.ColumnDefinitions>
-									<TextBlock Grid.Column="0" Text="{Binding projectType}" Foreground="White" FontSize="12" Margin="0,0"/>
+									<StackPanel Grid.Column="0" Orientation="Horizontal">
+										<TextBlock Text="{Binding projectType}" Foreground="White" FontSize="12" Margin="0,0"/>
+										<Image Margin="4,0,0,0" VerticalAlignment="Top" Source="{Binding coreSetIcon}" Height="15"/>
+										<Image Margin="4,0,0,0" VerticalAlignment="Top" Source="{Binding villainsOfEriadorIcon}" Height="15"/>
+										<Image Margin="4,0,0,0" VerticalAlignment="Top" Source="{Binding shadowedPathsIcon}" Height="15"/>
+										<Image Margin="4,0,0,0" VerticalAlignment="Top" Source="{Binding dwellersInDarknessIcon}" Height="15"/>
+										<Image Margin="4,0,4,0" VerticalAlignment="Top" Source="{Binding spreadingWarIcon}" Height="15"/>
+									</StackPanel>
 									<StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
 										<TextBlock Text="v." Foreground="White"/>
 										<TextBlock Grid.Column="1" Text="{Binding fileVersion}" Foreground="White" FontSize="12" Margin="0,0"/>

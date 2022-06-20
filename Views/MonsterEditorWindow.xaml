@@ -81,50 +81,65 @@
 
 						<!--Core Set-->
 						<Rectangle Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="DarkGreen" />
-						<TextBlock Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Text="Core Set:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="0" Grid.Column="1" x:Name="goblinScoutRB" Content="Goblin Scout x6" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="0" Grid.Column="2" x:Name="hillTrollRB" Content="Hill Troll x1" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="0" Grid.Column="3" x:Name="orcHunterRB" Content="Orc Hunter x3" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="0" Grid.Column="4" x:Name="orcMarauderRB" Content="Orc Marauder x3" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="1" Grid.Column="1" x:Name="ruffianRB" Content="Ruffian x6" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="1" Grid.Column="2" x:Name="hungryWargRB" Content="Hungry Warg x3" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="1" Grid.Column="3" x:Name="wightRB" Content="Wight x3" Foreground="White" Padding="0,0,5,0"/>
+						<StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+							<Image Source="/JiME;component/Assets/Collection-White-Ring.png" Height="15" Stretch="Uniform" Margin="2,0,2,0"/>
+							<TextBlock Text="Core Set:" FontWeight="Bold" Foreground="White" Margin="0,4,4,0"/>
+						</StackPanel>
+						<RadioButton Click="monsterType_Click" Grid.Row="0" Grid.Column="1" x:Name="goblinScoutRB" Content="Goblin Scout x6" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="0" Grid.Column="2" x:Name="hillTrollRB" Content="Hill Troll x1" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="0" Grid.Column="3" x:Name="orcHunterRB" Content="Orc Hunter x3" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="0" Grid.Column="4" x:Name="orcMarauderRB" Content="Orc Marauder x3" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="1" Grid.Column="1" x:Name="ruffianRB" Content="Ruffian x6" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="1" Grid.Column="2" x:Name="hungryWargRB" Content="Hungry Warg x3" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="1" Grid.Column="3" x:Name="wightRB" Content="Wight x3" Foreground="White"/>
 
 						<!-- Villains of Eriador -->
-						<Rectangle Grid.Row="2" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="SaddleBrown" />
-						<TextBlock Grid.Row="2" Grid.RowSpan="2" Grid.Column="0" Text="Villains of Eriador:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="2" Grid.Column="1" x:Name="atarinRB" Content="Atarin x1" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="2" Grid.Column="2" x:Name="coalfangRB" Content="Coalfang x1" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="2" Grid.Column="3" x:Name="gulgotarRB" Content="Gulgotar x1" Foreground="White" Padding="0,0,5,0"/>
+						<Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="SaddleBrown" />
+						<StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
+							<Image Source="/JiME;component/Assets/Collection-White-Wolf.png" Height="15" Stretch="Uniform" Margin="2,0,2,0"/>
+							<TextBlock Text="Villains of Eriador:" FontWeight="Bold" Foreground="White" Margin="0,4,4,0"/>
+						</StackPanel>
+						<RadioButton Click="monsterType_Click" Grid.Row="2" Grid.Column="1" x:Name="atarinRB" Content="Atarin x1" Foreground="White" />
+						<RadioButton Click="monsterType_Click" Grid.Row="2" Grid.Column="2" x:Name="coalfangRB" Content="Coalfang x1" Foreground="White" />
+						<RadioButton Click="monsterType_Click" Grid.Row="2" Grid.Column="3" x:Name="gulgotarRB" Content="Gulgotar x1" Foreground="White" />
 
 						<!-- Shadowed Paths -->
 						<Rectangle Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="Black" />
-						<TextBlock Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Text="Shadowed Paths:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="3" Grid.Column="1" x:Name="balrogRB" Content="Balrog x1" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="3" Grid.Column="2" x:Name="caveTrollRB" Content="Cave Troll x2" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="3" Grid.Column="3" x:Name="giantSpiderRB" Content="Giant Spider x6" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="3" Grid.Column="4" x:Name="namelessThingRB" Content="Nameless Thing x3" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="4" Grid.Column="1" x:Name="orcTaskmasterRB" Content="Orc Taskmaster x6" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="4" Grid.Column="2" x:Name="pitGoblinRB" Content="Pit Goblin x6" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="4" Grid.Column="3" x:Name="shadowmanRB" Content="Shadowman x3" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="4" Grid.Column="4" x:Name="spawnOfUngoliantRB" Content="Spawn of Ungoliant x1" Foreground="White" Padding="0,0,5,0"/>
+						<StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="0">
+							<Image Source="/JiME;component/Assets/Collection-White-Web.png" Height="15" Stretch="Uniform" Margin="2,0,2,0"/>
+							<TextBlock Text="Shadowed Paths:" FontWeight="Bold" Foreground="White" Margin="0,4,4,0"/>
+						</StackPanel>
+						<RadioButton Click="monsterType_Click" Grid.Row="3" Grid.Column="1" x:Name="balrogRB" Content="Balrog x1" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="3" Grid.Column="2" x:Name="caveTrollRB" Content="Cave Troll x2" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="3" Grid.Column="3" x:Name="giantSpiderRB" Content="Giant Spider x6" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="3" Grid.Column="4" x:Name="namelessThingRB" Content="Nameless Thing x3" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="4" Grid.Column="1" x:Name="orcTaskmasterRB" Content="Orc Taskmaster x6" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="4" Grid.Column="2" x:Name="pitGoblinRB" Content="Pit Goblin x6" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="4" Grid.Column="3" x:Name="shadowmanRB" Content="Shadowman x3" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="4" Grid.Column="4" x:Name="spawnOfUngoliantRB" Content="Spawn of Ungoliant x1" Foreground="White"/>
 
 						<!-- Dwellers in Darkness -->
 						<Rectangle Grid.Row="5" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="Purple" />
-						<TextBlock Grid.Row="5" Grid.RowSpan="2" Grid.Column="0" Text="Dwellers in Darkness:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="5" Grid.Column="1" x:Name="ollieRB" Content="Ollie x1" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="5" Grid.Column="2" x:Name="ursaRB" Content="Ursa x1" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="2" x:Name="supplicantOfMorgothRB" Content="Supplicant of Morgoth x1" Foreground="White" Padding="0,0,5,0"/>
+						<StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="0">
+							<Image Source="/JiME;component/Assets/Collection-White-Crown.png" Height="15" Stretch="Uniform" Margin="2,0,2,0"/>
+							<TextBlock Text="Dwellers in Darkness:" FontWeight="Bold" Foreground="White" Margin="0,4,4,0"/>
+						</StackPanel>
+						<RadioButton Click="monsterType_Click" Grid.Row="5" Grid.Column="1" x:Name="ollieRB" Content="Ollie x1" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="5" Grid.Column="2" x:Name="ursaRB" Content="Ursa x1" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="2" x:Name="supplicantOfMorgothRB" Content="Supplicant of Morgoth x1" Foreground="White"/>
 
 						<!-- Spreading War -->
 						<Rectangle Grid.Row="6" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="DarkRed" />
-						<TextBlock Grid.Row="6" Grid.RowSpan="2" Grid.Column="0" Text="Spreading War:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="6" Grid.Column="1" x:Name="fellBeastRB" Content="Fell Beast x3" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="6" Grid.Column="2" x:Name="siegeEngineRB" Content="Siege Engine x2" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="6" Grid.Column="3" x:Name="soldierRB" Content="Soldier x6" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="6" Grid.Column="4" x:Name="urukWarriorRB" Content="Uruk Warrior x6" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="7" Grid.Column="1" x:Name="warOliphauntRB" Content="War Oliphaunt x1" Foreground="White" Padding="0,0,5,0"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="7" Grid.Column="2" x:Name="wargRiderRB" Content="Warg Rider x3" Foreground="White" Padding="0,0,5,0"/>
+						<StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="0">
+							<Image Source="/JiME;component/Assets/Collection-White-War.png" Height="15" Stretch="Uniform" Margin="2,0,2,0"/>
+							<TextBlock Text="Spreading War:" FontWeight="Bold" Foreground="White" Margin="0,4,4,0"/>
+						</StackPanel>
+						<RadioButton Click="monsterType_Click" Grid.Row="6" Grid.Column="1" x:Name="fellBeastRB" Content="Fell Beast x3" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="6" Grid.Column="2" x:Name="siegeEngineRB" Content="Siege Engine x2" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="6" Grid.Column="3" x:Name="soldierRB" Content="Soldier x6" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="6" Grid.Column="4" x:Name="urukWarriorRB" Content="Uruk Warrior x6" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="7" Grid.Column="1" x:Name="warOliphauntRB" Content="War Oliphaunt x1" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="7" Grid.Column="2" x:Name="wargRiderRB" Content="Warg Rider x3" Foreground="White"/>
 					</Grid>
 
 				</StackPanel>
