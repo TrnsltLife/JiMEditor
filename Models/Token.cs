@@ -85,7 +85,16 @@ namespace JiME
 		public Ellipse tokenPathShape;
 		Point clickV;
 		Vector lastPos;
-		static SolidColorBrush[] fillColors = { Brushes.ForestGreen, Brushes.BlueViolet, Brushes.DarkRed, Brushes.Black, Brushes.Gray, Brushes.Gray };
+		static SolidColorBrush[] fillColors = { 
+			Brushes.ForestGreen, //Search
+			Brushes.BlueViolet, //Person
+			Brushes.DarkRed, //Threat
+			Brushes.Black, //Darkness
+			Brushes.Gray, //Exploration
+			Brushes.Yellow, //DifficultTerrain
+			Brushes.OrangeRed, //Fortified
+			Brushes.Gray //None
+		};
 
 		public Token( TokenType ttype )
 		{
