@@ -41,8 +41,8 @@ namespace JiME.Models
         public static readonly Collection DWELLERS_IN_DARKNESS = new Collection("Dwellers in Darkness", "Crown", "/JiME;component/Assets/Collection-White-Crown.png",
             new string[] { "Supplicant of Morgoth", "Ursa", "Ollie" },
             new int[] { 18, 19, 20 }, //monsterId
-            new int[] { 34, 28, 40 }, //monsterCost
             new int[] { 1, 1, 1 }, //monsterCount
+            new int[] { 34, 28, 40 }, //monsterCost
             new int[] { 1, 1, 1 }, //groupLimit
             new int[] { }, //tileId
             false, false
@@ -51,8 +51,8 @@ namespace JiME.Models
         public static readonly Collection SPREADING_WAR = new Collection("Spreading War", "War", "/JiME;component/Assets/Collection-White-War.png",
             new string[] { "Fell Beast", "Warg Rider",  "Siege Engine", "War Oliphaunt", "Soldier", "Uruk Warrior", },
             new int[] { 21, 22, 23, 24, 25, 26, }, //monsterId
-            new int[] { 3, 3, 2, 1, 6, 6, }, //monsterCost
-            new int[] { 24, 14, 22, 30, 8, 11, }, //monsterCount
+            new int[] { 3, 3, 2, 1, 6, 6, }, //monsterCount
+            new int[] { 24, 14, 22, 30, 8, 11, }, //monsterCost
             new int[] { 1, 3, 1, 1, 3, 3, }, //groupLimit
             new int[] {  }, //tileId
             true, true
