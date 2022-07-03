@@ -64,7 +64,7 @@ namespace JiME
 		[JsonIgnore]
 		private Collection _collection;
 		[JsonIgnore]
-		public Collection collection { get { if (_collection == null) { _collection = Collection.FromTileID(idNumber); } return _collection; } 
+		public Collection collection { get { if (_collection == null) { _collection = Collection.FromTileNumber(idNumber); } return _collection; } 
 									   set { _collection = value; } }
 		[JsonIgnore]
 		public string idNumberAndCollection { get { return "" + idNumber + collection.FontCharacter; } }
@@ -104,7 +104,7 @@ namespace JiME
 			flavorBookData.pages.Add( "" );
 			isStartTile = false;
 			triggerName = "None";
-			collection = Collection.FromTileID(idNumber);
+			collection = Collection.FromTileNumber(idNumber);
 
 			if ( !skipBuild )
 			{

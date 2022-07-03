@@ -106,7 +106,7 @@ namespace JiME.Models
             }
         }
 
-        public static Collection FromTileID(int tileId)
+        public static Collection FromTileNumber(int tileId)
         {
             if(Collection.CORE_SET.TileNumbers.Contains(tileId)) { return Collection.CORE_SET; }
             else if(Collection.SHADOWED_PATHS.TileNumbers.Contains(tileId)) { return Collection.SHADOWED_PATHS; }

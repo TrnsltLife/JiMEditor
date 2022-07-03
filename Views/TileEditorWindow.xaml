@@ -13,6 +13,7 @@
 		<local:TokenEventVisibility x:Key="tokenvis"/>
 		<local:TokenEnabled x:Key="tokenen"/>
 		<local:SideConverter x:Key="side"/>
+		<local:TileCollectionConverter x:Key="tileCollection"/>
 
 		<x:Array x:Key="tokenTypes" Type="core:String">
 			<core:String>None</core:String>
@@ -86,7 +87,13 @@
 										<ColumnDefinition Width="*"/>
 										<ColumnDefinition Width="auto"/>
 									</Grid.ColumnDefinitions>
-									<ComboBox Name="tilePool" ItemsSource="{Binding scenario.globalTilePool}" VerticalAlignment="Center" SelectedIndex="0"/>
+									<ComboBox Name="tilePool" ItemsSource="{Binding scenario.globalTilePool}" VerticalAlignment="Center" SelectedIndex="0" >
+										<ComboBox.ItemTemplate>
+											<DataTemplate>
+												<TextBlock Text="{Binding Converter={StaticResource tileCollection}}" FontFamily="/Assets/#LoTR JiME Icons"/>
+											</DataTemplate>
+										</ComboBox.ItemTemplate>
+									</ComboBox>
 									<Button Grid.Column="1" x:Name="addTileButton" Click="AddTileButton_Click" Background="MediumSeaGreen" Height="32" Width=" 32" Margin="5,0,0,0">
 										<Image Source="/JiME;component/Assets/add2.png"/>
 									</Button>
