@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 
@@ -198,6 +199,53 @@ namespace JiME
 		public ObservableCollection<Collection> collectionObserver { get; set; }
 		public ObservableCollection<int> globalTilePool { get; set; }
 
+		public ObservableCollection<int> filteredGlobalTilePool { get; set; }
+
+		private void AddCollectionChangedLambda()
+		{
+			globalTilePool.CollectionChanged += (object s, NotifyCollectionChangedEventArgs e) =>
+			{
+				if(e.Action == NotifyCollectionChangedAction.Add)
+                {
+					if (e.NewItems != null)
+					{
+						foreach (var item in e.NewItems)
+						{
+							if (collectionObserver.Contains(Collection.FromTileNumber((int)item)))
+							{
+								filteredGlobalTilePool.Add((int)item);
+							}
+						}
+					}
+				}
+				else if(e.Action == NotifyCollectionChangedAction.Remove)
+                {
+					if (e.OldItems != null)
+					{
+						foreach (var item in e.OldItems)
+						{
+							filteredGlobalTilePool.Remove((int)item);
+						}
+					}
+				}
+				else if(e.Action == NotifyCollectionChangedAction.Reset)
+                {
+					filteredGlobalTilePool.Clear();
+                }
+			};
+		}
+
+		public void RefilterGlobalTilePool()
+        {
+			filteredGlobalTilePool.Clear();
+			var newList = new ObservableCollection<int>(globalTilePool.Where(tileNumber => collectionObserver.Contains(Collection.FromTileNumber(tileNumber))).ToList());
+			filteredGlobalTilePool.Clear();
+			foreach (var item in newList)
+			{
+				filteredGlobalTilePool.Add(item);
+			}
+		}
+
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		public Scenario() : this( "Click Text To Edit Scenario Title" )
@@ -221,6 +269,8 @@ namespace JiME
 			collectionObserver = new ObservableCollection<Collection>();
 			collectionObserver.Add(Collection.CORE_SET);
 			globalTilePool = new ObservableCollection<int>( Utils.LoadTiles() );
+			filteredGlobalTilePool = new ObservableCollection<int>(globalTilePool.Where(tileNumber => collectionObserver.Contains(Collection.FromTileNumber(tileNumber))).ToList());
+			AddCollectionChangedLambda();
 			scenarioEndStatus = new Dictionary<string, bool>();
 			Utils.LoadHexData();
 		}
@@ -245,6 +295,8 @@ namespace JiME
 			s.chapterObserver = new ObservableCollection<Chapter>( fm.chapters );
 			s.collectionObserver = new ObservableCollection<Collection>(fm.collections);
 			s.globalTilePool = new ObservableCollection<int>( fm.globalTiles );
+			s.filteredGlobalTilePool = new ObservableCollection<int>(s.globalTilePool.Where(tileNumber => s.collectionObserver.Contains(Collection.FromTileNumber(tileNumber))).ToList());
+			s.AddCollectionChangedLambda();
 			s.introBookData = fm.introBookData;
 			s.threatMax = fm.threatMax;
 			s.threatNotUsed = fm.threatNotUsed;

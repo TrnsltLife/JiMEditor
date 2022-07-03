@@ -401,6 +401,8 @@ namespace JiME.Views
 			{
 				scenario.collectionObserver.Add(collection);
 			}
+
+			scenario.RefilterGlobalTilePool();
 		}
 	}
 }
