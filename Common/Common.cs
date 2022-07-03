@@ -92,6 +92,7 @@ namespace JiME
 		public string shadowedPathsIcon { get; set; }
 		public string dwellersInDarknessIcon { get; set; }
 		public string spreadingWarIcon { get; set; }
+		public string collectionIcons { get; set; }
 	}
 
 	public class CampaignItem

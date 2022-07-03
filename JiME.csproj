@@ -347,6 +347,10 @@
     <EmbeddedResource Include="Assets\hextilesA.json" />
     <EmbeddedResource Include="Assets\hextilesB.json" />
     <EmbeddedResource Include="Assets\enemy-defaults.json" />
+    <Resource Include="LoTR-JiME-Icons.ttf" />
+    <Resource Include="Assets\LoTR-JiME-Icons.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -273,11 +273,17 @@ namespace JiME
 				Scenario s = Load( fi.FullName );
 				if ( s != null )
 					items.Add( new ProjectItem() { Title = s.scenarioName, projectType = s.projectType, Date = s.saveDate, fileName = fi.Name, fileVersion = s.fileVersion,
-						coreSetIcon = s.IsCollectionEnabled(Collection.CORE_SET) ? Collection.CORE_SET.Icon : "",
-						villainsOfEriadorIcon = s.IsCollectionEnabled(Collection.VILLAINS_OF_ERIADOR) ? Collection.VILLAINS_OF_ERIADOR.Icon : "",
-						shadowedPathsIcon = s.IsCollectionEnabled(Collection.SHADOWED_PATHS) ? Collection.SHADOWED_PATHS.Icon : "",
-						dwellersInDarknessIcon = s.IsCollectionEnabled(Collection.DWELLERS_IN_DARKNESS) ? Collection.DWELLERS_IN_DARKNESS.Icon : "",
-						spreadingWarIcon = s.IsCollectionEnabled(Collection.SPREADING_WAR) ? Collection.SPREADING_WAR.Icon : ""
+						coreSetIcon = s.IsCollectionEnabled(Collection.CORE_SET) ? Collection.CORE_SET.FontCharacter : "",
+						villainsOfEriadorIcon = s.IsCollectionEnabled(Collection.VILLAINS_OF_ERIADOR) ? Collection.VILLAINS_OF_ERIADOR.FontCharacter : "",
+						shadowedPathsIcon = s.IsCollectionEnabled(Collection.SHADOWED_PATHS) ? Collection.SHADOWED_PATHS.FontCharacter : "",
+						dwellersInDarknessIcon = s.IsCollectionEnabled(Collection.DWELLERS_IN_DARKNESS) ? Collection.DWELLERS_IN_DARKNESS.FontCharacter : "",
+						spreadingWarIcon = s.IsCollectionEnabled(Collection.SPREADING_WAR) ? Collection.SPREADING_WAR.FontCharacter : "",
+
+						collectionIcons = (s.IsCollectionEnabled(Collection.CORE_SET) ? Collection.CORE_SET.FontCharacter : "")
+										+ (s.IsCollectionEnabled(Collection.VILLAINS_OF_ERIADOR) ? Collection.VILLAINS_OF_ERIADOR.FontCharacter : "")
+										+ (s.IsCollectionEnabled(Collection.SHADOWED_PATHS) ? Collection.SHADOWED_PATHS.FontCharacter : "")
+										+ (s.IsCollectionEnabled(Collection.DWELLERS_IN_DARKNESS) ? Collection.DWELLERS_IN_DARKNESS.FontCharacter : "")
+										+ (s.IsCollectionEnabled(Collection.SPREADING_WAR) ? Collection.SPREADING_WAR.FontCharacter : "")
 					});
 			}
 			return items;

@@ -140,23 +140,22 @@
 
 								<Grid>
 									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="auto"/>
 										<ColumnDefinition Width="*"/>
+										<ColumnDefinition Width="auto"/>
+										<ColumnDefinition Width="auto"/>
 										<ColumnDefinition Width="auto"/>
 									</Grid.ColumnDefinitions>
 									<StackPanel Grid.Column="0" Orientation="Horizontal">
 										<TextBlock Text="{Binding projectType}" Foreground="White" FontSize="12" Margin="0,0"/>
-										<Image Margin="4,0,0,0" VerticalAlignment="Top" Source="{Binding coreSetIcon}" Height="15"/>
-										<Image Margin="4,0,0,0" VerticalAlignment="Top" Source="{Binding villainsOfEriadorIcon}" Height="15"/>
-										<Image Margin="4,0,0,0" VerticalAlignment="Top" Source="{Binding shadowedPathsIcon}" Height="15"/>
-										<Image Margin="4,0,0,0" VerticalAlignment="Top" Source="{Binding dwellersInDarknessIcon}" Height="15"/>
-										<Image Margin="4,0,4,0" VerticalAlignment="Top" Source="{Binding spreadingWarIcon}" Height="15"/>
 									</StackPanel>
-									<StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
-										<TextBlock Text="v." Foreground="White"/>
-										<TextBlock Grid.Column="1" Text="{Binding fileVersion}" Foreground="White" FontSize="12" Margin="0,0"/>
+									<StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
+										<TextBlock Text="{Binding collectionIcons}" Foreground="White" FontSize="12" Margin="10,0" FontFamily="./Assets/#LoTR JiME Icons"/>
 									</StackPanel>
-									<TextBlock Grid.Column="2" Text="{Binding Date}" Style="{StaticResource SubText}" HorizontalAlignment="Right"/>
+									<StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Left" Margin="10,0">
+										<TextBlock Text=" v." Foreground="White"/>
+										<TextBlock Grid.Column="2" Text="{Binding fileVersion}" Foreground="White" FontSize="12"/>
+									</StackPanel>
+									<TextBlock Grid.Column="3" Text="{Binding Date}" Style="{StaticResource SubText}" HorizontalAlignment="Right"/>
 								</Grid>
 
 								<!--<TextBlock Text="{Binding Description}" TextTrimming="WordEllipsis" Foreground="White" FontSize="12" Margin="0,5,0,0"/>-->
