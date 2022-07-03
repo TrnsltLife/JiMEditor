@@ -106,7 +106,8 @@
 								<ColumnDefinition Width="*"/>
 								<ColumnDefinition Width="auto"/>
 							</Grid.ColumnDefinitions>
-							<ComboBox Name="inChapterCB" ItemsSource="{Binding chapter.tileObserver}" DisplayMemberPath="idNumber" SelectionChanged="ComboBox_SelectionChanged" Focusable="False" VerticalAlignment="Center"/>
+							<!-- <ComboBox Name="inChapterCB" ItemsSource="{Binding chapter.tileObserver}" DisplayMemberPath="idNumberAndCollection" SelectionChanged="ComboBox_SelectionChanged" Focusable="False" VerticalAlignment="Center"/> -->
+							<ComboBox Name="inChapterCB" ItemsSource="{Binding chapter.tileObserver}" DisplayMemberPath="idNumberAndCollection" SelectedValuePath="idNumber" SelectionChanged="ComboBox_SelectionChanged" Focusable="False" VerticalAlignment="Center" FontFamily="/Assets/#LoTR JiME Icons"/>
 							<Button Grid.Column="1" x:Name="removeTileButton" Click="removeTileButton_Click" Background="{StaticResource bgCancelDelete}" Height="32" Width=" 32" Margin="5,0,0,0">
 								<Image Source="/JiME;component/Assets/remove.png"/>
 							</Button>

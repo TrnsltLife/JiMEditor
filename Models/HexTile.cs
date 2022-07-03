@@ -8,6 +8,7 @@ using System.Windows.Shapes;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
+using JiME.Models;
 
 namespace JiME
 {
@@ -60,6 +61,13 @@ namespace JiME
 		public Image tileImage;
 		[JsonIgnore]
 		public bool useGraphic;
+		[JsonIgnore]
+		private Collection _collection;
+		[JsonIgnore]
+		public Collection collection { get { if (_collection == null) { _collection = Collection.FromTileID(idNumber); } return _collection; } 
+									   set { _collection = value; } }
+		[JsonIgnore]
+		public string idNumberAndCollection { get { return "" + idNumber + collection.FontCharacter; } }
 
 		public static bool printRect = false;
 		public Path rectPathShape;
@@ -70,7 +78,7 @@ namespace JiME
 
 		Point clickV;
 
-		public HexTile() { }
+		public HexTile() {}
 
 		//public HexTile( int n, Vector position, float angle )
 		//{
@@ -96,6 +104,7 @@ namespace JiME
 			flavorBookData.pages.Add( "" );
 			isStartTile = false;
 			triggerName = "None";
+			collection = Collection.FromTileID(idNumber);
 
 			if ( !skipBuild )
 			{
