@@ -138,19 +138,24 @@ namespace JiME.Views
 			HexTile hex = new HexTile( (int)tilePool.SelectedItem );
 			hex.useGraphic = scenario.useTileGraphics;
 			hex.ChangeColor( color );
+			//ChangeTileSide() also rehydrates and adds tile image
+			//This is why no need to call canvas.Children.Add(hex.hexPathShape)
+			hex.ChangeTileSide("A", canvas);
 			chapter.AddTile( hex );
-			if(HexTile.printRect)
-				canvas.Children.Add( hex.hexPathShape );
-			if ( scenario.useTileGraphics )
-				canvas.Children.Add( hex.tileImage );
-			if (HexTile.printPivot)
-				canvas.Children.Add(hex.pivotPathShape);
 			selected = hex;
 			selected.Select();
 			radioA.IsChecked = selected.tileSide == "A";
 			radioB.IsChecked = selected.tileSide == "B";
 			inChapterCB.SelectedIndex = chapter.tileObserver.Count - 1;
 			scenario.globalTilePool.Remove( (int)tilePool.SelectedItem );
+
+			if (HexTile.printRect)
+				canvas.Children.Add(hex.hexPathShape);
+			//if ( scenario.useTileGraphics )
+			//	canvas.Children.Add( hex.tileImage );
+			if (HexTile.printPivot)
+				canvas.Children.Add(hex.pivotPathShape);
+
 		}
 
 		private void removeTileButton_Click( object sender, RoutedEventArgs e )
