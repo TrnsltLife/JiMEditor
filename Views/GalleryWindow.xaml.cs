@@ -78,6 +78,7 @@ namespace JiME.Views
 				galleryTiles[i] = new GalleryTile();
 				galleryTiles[i].id = ids[i];
 				galleryTiles[i].source = Utils.tileSourceA[i];
+				galleryTiles[i].enabled = galleryTiles[i].enabled && scenario.IsCollectionEnabled(galleryTiles[i].collection);
 			}
 
 			for ( int i = 0; i < 4; i++ )
@@ -187,6 +188,10 @@ namespace JiME.Views
 			{
 				if ( !galleryTiles[i].selected && !scenario.globalTilePool.Contains( galleryTiles[i].id ) )
 					galleryTiles[i].enabled = false;
+
+				if ( !scenario.IsCollectionEnabled(galleryTiles[i].collection) )
+					galleryTiles[i].enabled = false;
+
 			}
 		}
 

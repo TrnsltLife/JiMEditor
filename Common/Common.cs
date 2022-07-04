@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.ComponentModel;
+using JiME.Models;
 
 namespace JiME
 {
@@ -114,8 +115,18 @@ namespace JiME
 	{
 		bool _selected, _enabled;
 		string _side;
-		public int id { get; set; }
+		int _id;
+		public int id { get { return _id; } 
+			set 
+			{
+				_id = value; 
+				collection = Collection.FromTileNumber(value); 
+				collectionChar = collection.FontCharacter;
+			} 
+		}
 		public ImageSource source { get; set; }
+		public Collection collection { get; set; }
+		public string collectionChar { get; set; }
 		public bool selected
 		{
 			get { return _selected; }

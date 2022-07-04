@@ -10,6 +10,7 @@
 	<Window.Resources>
 		<local:BoolToColor x:Key="b2c"/>
 		<local:BoolInvertConverter x:Key="b2i"/>
+		<local:TileCollectionConverter x:Key="tileCollection"/>
 	</Window.Resources>
 
 	<StackPanel>
@@ -52,6 +53,7 @@
 									<StackPanel Orientation="Horizontal" Margin="0,5,0,10" HorizontalAlignment="Center">
 										<TextBlock Text="{Binding id}" Style="{StaticResource Heading}"/>
 										<TextBlock Text="{Binding side}" Style="{StaticResource Heading}"/>
+										<TextBlock Text="{Binding collectionChar}" Style="{StaticResource Heading}" FontFamily="/Assets/#LoTR JiME Icons"/>
 									</StackPanel>
 								</StackPanel>
 							</DataTemplate>

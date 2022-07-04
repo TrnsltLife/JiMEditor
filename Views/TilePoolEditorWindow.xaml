@@ -9,6 +9,7 @@
 
 	<Window.Resources>
 		<local:SelectedToBoolConverter x:Key="sb"/>
+		<local:TileCollectionConverter x:Key="tileCollection"/>
 	</Window.Resources>
 
 	<StackPanel>
@@ -26,7 +27,13 @@
 					</Grid.ColumnDefinitions>
 
 					<GroupBox Header="Global Tile Pool" Style="{StaticResource DefaultGroupBox}" Margin="0,0,10,10">
-						<ListBox x:Name="global" Background="{StaticResource bgColorLight}" Foreground="White" ItemsSource="{Binding scenario.globalTilePool}" MouseDoubleClick="Global_MouseDoubleClick"/>
+						<ListBox x:Name="global" Background="{StaticResource bgColorLight}" Foreground="White" ItemsSource="{Binding scenario.filteredGlobalTilePool}" MouseDoubleClick="Global_MouseDoubleClick">
+							<ListBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding Converter={StaticResource tileCollection}}" FontFamily="/Assets/#LoTR JiME Icons"/>
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+						</ListBox>
 					</GroupBox>
 
 					<StackPanel Grid.Column="1" VerticalAlignment="Center">
@@ -48,7 +55,13 @@
 					</StackPanel>
 
 					<GroupBox Grid.Column="2" Header="Random Tile Pool" Style="{StaticResource DefaultGroupBox}" Margin="10,0,0,10">
-						<ListBox x:Name="random" Background="{StaticResource bgColorLight}" Foreground="White" ItemsSource="{Binding chapter.tileObserver}" MouseDoubleClick="Random_MouseDoubleClick" SelectionChanged="random_SelectionChanged" DisplayMemberPath="idNumber"/>
+						<ListBox x:Name="random" Background="{StaticResource bgColorLight}" Foreground="White" ItemsSource="{Binding chapter.tileObserver}" MouseDoubleClick="Random_MouseDoubleClick" SelectionChanged="random_SelectionChanged">
+							<ListBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding Converter={StaticResource tileCollection}}" FontFamily="/Assets/#LoTR JiME Icons"/>
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+						</ListBox>
 					</GroupBox>
 				</Grid>
 
@@ -75,7 +88,7 @@
 						<StackPanel Grid.Column="2">
 							<StackPanel Orientation="Horizontal">
 								<TextBlock Text="Selected Tile:" Style="{StaticResource Heading}"/>
-								<TextBlock Text="{Binding selected.idNumber}" Style="{StaticResource SubText}" Margin="10,0,0,0" VerticalAlignment="Center"/>
+								<TextBlock Text="{Binding selected.idNumber, Converter={StaticResource tileCollection}}" Style="{StaticResource SubText}" Margin="10,0,0,0" VerticalAlignment="Center" FontFamily="/Assets/#LoTR JiME Icons"/>
 							</StackPanel>
 
 							<StackPanel Orientation="Horizontal">

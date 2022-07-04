@@ -232,6 +232,15 @@ namespace JiME
                 {
 					filteredGlobalTilePool.Clear();
                 }
+				else if(e.Action == NotifyCollectionChangedAction.Replace && e.NewStartingIndex >= 0)
+                {
+					int i = 0;
+					foreach (var item in e.NewItems)
+					{
+						filteredGlobalTilePool[e.NewStartingIndex + i] = (int)item;
+						i++;
+					}
+                }
 			};
 		}
 

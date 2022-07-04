@@ -253,10 +253,30 @@ namespace JiME
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			if(value == null) { return ""; }
-			string tileString = value.ToString();
-			if(tileString.Trim() == "") { return ""; }
-			int tileNumber = (int)value;
+
+			Console.WriteLine(value + " " + value.GetType());
+			int tileNumber = 0;
+
+			//string tileString = value.ToString();
+			//if(tileString.Trim() == "") { return ""; }
+
+			if (value.GetType() == typeof(HexTile))
+			{
+				tileNumber = ((HexTile)value).idNumber;
+			}
+			else
+			{
+				Int32? castInt = value as Int32?;
+				if (castInt.HasValue)
+				{
+					tileNumber = castInt.Value;
+				}
+			}
 			Collection collection = Collection.FromTileNumber(tileNumber);
+			if(collection == null)
+            {
+				return "" + tileNumber;
+            }
 			return "" + tileNumber + collection.FontCharacter;
 		}
 
