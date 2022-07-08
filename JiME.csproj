@@ -724,19 +724,5 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\Collection-Crown.png" />
-    <Resource Include="Assets\Collection-Ring.png" />
-    <Resource Include="Assets\Collection-War.png" />
-    <Resource Include="Assets\Collection-Web.png" />
-    <Resource Include="Assets\Collection-Wolf.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\Collection-White-Crown.png" />
-    <Resource Include="Assets\Collection-White-Ring.png" />
-    <Resource Include="Assets\Collection-White-War.png" />
-    <Resource Include="Assets\Collection-White-Web.png" />
-    <Resource Include="Assets\Collection-White-Wolf.png" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
