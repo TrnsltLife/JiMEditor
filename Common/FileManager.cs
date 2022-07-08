@@ -262,6 +262,11 @@ namespace JiME
 					pi.Title = c.campaignName;
 					pi.fileName = dInfo.Name;
 					pi.fileVersion = c.fileVersion;
+					pi.collectionIcons  = (c.collectionCollection.Contains(Collection.CORE_SET) ? Collection.CORE_SET.FontCharacter : "")
+										+ (c.collectionCollection.Contains(Collection.VILLAINS_OF_ERIADOR) ? Collection.VILLAINS_OF_ERIADOR.FontCharacter : "")
+										+ (c.collectionCollection.Contains(Collection.SHADOWED_PATHS) ? Collection.SHADOWED_PATHS.FontCharacter : "")
+										+ (c.collectionCollection.Contains(Collection.DWELLERS_IN_DARKNESS) ? Collection.DWELLERS_IN_DARKNESS.FontCharacter : "")
+										+ (c.collectionCollection.Contains(Collection.SPREADING_WAR) ? Collection.SPREADING_WAR.FontCharacter : "");
 					items.Add( pi );
 				}
 			}
@@ -273,11 +278,6 @@ namespace JiME
 				Scenario s = Load( fi.FullName );
 				if ( s != null )
 					items.Add( new ProjectItem() { Title = s.scenarioName, projectType = s.projectType, Date = s.saveDate, fileName = fi.Name, fileVersion = s.fileVersion,
-						coreSetIcon = s.IsCollectionEnabled(Collection.CORE_SET) ? Collection.CORE_SET.FontCharacter : "",
-						villainsOfEriadorIcon = s.IsCollectionEnabled(Collection.VILLAINS_OF_ERIADOR) ? Collection.VILLAINS_OF_ERIADOR.FontCharacter : "",
-						shadowedPathsIcon = s.IsCollectionEnabled(Collection.SHADOWED_PATHS) ? Collection.SHADOWED_PATHS.FontCharacter : "",
-						dwellersInDarknessIcon = s.IsCollectionEnabled(Collection.DWELLERS_IN_DARKNESS) ? Collection.DWELLERS_IN_DARKNESS.FontCharacter : "",
-						spreadingWarIcon = s.IsCollectionEnabled(Collection.SPREADING_WAR) ? Collection.SPREADING_WAR.FontCharacter : "",
 
 						collectionIcons = (s.IsCollectionEnabled(Collection.CORE_SET) ? Collection.CORE_SET.FontCharacter : "")
 										+ (s.IsCollectionEnabled(Collection.VILLAINS_OF_ERIADOR) ? Collection.VILLAINS_OF_ERIADOR.FontCharacter : "")
@@ -308,6 +308,32 @@ namespace JiME
 					//NullValueHandling = NullValueHandling.Ignore,
 					MissingMemberHandling = MissingMemberHandling.Ignore
 				} );
+
+				//update scenario names
+				List<Scenario> scenarios = LoadCampaignScenarios(c);
+				for (int i = 0; i < c.scenarioCollection.Count; i++)
+				{
+					var item = c.scenarioCollection[i];
+					Scenario scenario = FileManager.LoadProjectFromPath(basePath, item.fileName);
+					if (scenarios[i] != null)
+					{
+						Console.WriteLine(scenarios[i].scenarioName);
+						c.scenarioCollection[i].scenarioName = scenarios[i].scenarioName;
+
+						//Determine Collections used in all Scenarios in this Campaign
+						c.scenarioCollection[i].collectionList = scenarios[i].collectionObserver.ToList();
+						foreach (Collection collection in scenarios[i].collectionObserver.ToList())
+						{
+							Console.WriteLine(collection);
+							if (!c.collectionCollection.Contains(collection))
+							{
+								c.collectionCollection.Add(collection);
+							}
+						}
+						c.scenarioCollection[i].collectionIcons = String.Join("", c.collectionCollection.ToList().ConvertAll(it => it.FontCharacter ));
+					}
+				}
+
 				return c;
 			}
 			catch ( Exception e )
@@ -316,5 +342,19 @@ namespace JiME
 				return null;
 			}
 		}
+
+		public static List<Scenario> LoadCampaignScenarios(Campaign c)
+		{
+			string campaignFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Your Journey", c.campaignGUID.ToString());
+			List<Scenario> scenarios = new List<Scenario>();
+			for (int i = 0; i < c.scenarioCollection.Count; i++)
+			{
+				var item = c.scenarioCollection[i];
+				Scenario scenario = FileManager.LoadProjectFromPath(campaignFolder, item.fileName);
+				scenarios.Add(scenario);
+			}
+			return scenarios;
+		}
+
 	}
 }

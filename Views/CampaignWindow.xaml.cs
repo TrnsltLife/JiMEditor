@@ -6,6 +6,8 @@ using System.Windows.Controls;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using System.IO.Compression;
+using System.Collections.Generic;
+using JiME.Models;
 
 namespace JiME.Views
 {
@@ -51,16 +53,6 @@ namespace JiME.Views
 			else
 				storySet.Text = "The Story Text is set.";
 
-			//update scenario names
-			for ( int i = 0; i < campaign.scenarioCollection.Count; i++ )
-			{
-				var item = campaign.scenarioCollection[i];
-				Scenario scenario = FileManager.LoadProjectFromPath( campaignFolder, item.fileName );
-				if ( scenario != null )
-				{
-					campaign.scenarioCollection[i].scenarioName = scenario.scenarioName;
-				}
-			}
 			SaveCampaign();
 		}
 

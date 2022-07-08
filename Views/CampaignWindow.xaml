@@ -74,7 +74,10 @@
 
 													<StackPanel VerticalAlignment="Center">
 														<TextBlock Text="{Binding scenarioName}" Style="{StaticResource Heading}" VerticalAlignment="Center"/>
-														<TextBlock Text="{Binding fileName}" Style="{StaticResource SubText}"/>
+														<StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+															<TextBlock Text="{Binding fileName}" Style="{StaticResource SubText}"/>
+															<TextBlock Text="{Binding collectionIcons}" Foreground="White" FontSize="12" Margin="10,0" FontFamily="/Assets/#LoTR JiME Icons"/>
+														</StackPanel>
 													</StackPanel>
 
 													<!--up/down/edit/remove buttons-->

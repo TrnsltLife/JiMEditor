@@ -1,4 +1,6 @@
-﻿using System;
+﻿using JiME.Models;
+using Newtonsoft.Json;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
@@ -32,6 +34,8 @@ namespace JiME
 
 		public ObservableCollection<CampaignItem> scenarioCollection { get; set; }
 		public ObservableCollection<Trigger> triggerCollection { get; set; }
+        [JsonIgnore]
+		public ObservableCollection<Collection> collectionCollection { get; set; }
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -40,6 +44,7 @@ namespace JiME
 			campaignGUID = Guid.NewGuid();
 			scenarioCollection = new ObservableCollection<CampaignItem>();
 			triggerCollection = new ObservableCollection<Trigger>();
+			collectionCollection = new ObservableCollection<Collection>();
 			campaignName = "";
 			storyText = "";
 			description = "";

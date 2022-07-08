@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.ComponentModel;
 using JiME.Models;
+using Newtonsoft.Json;
 
 namespace JiME
 {
@@ -88,11 +89,6 @@ namespace JiME
 		public ProjectType projectType { get; set; }
 		public string fileName { get; set; }
 		public string fileVersion { get; set; }
-		public string coreSetIcon { get; set; }
-		public string villainsOfEriadorIcon { get; set; }
-		public string shadowedPathsIcon { get; set; }
-		public string dwellersInDarknessIcon { get; set; }
-		public string spreadingWarIcon { get; set; }
 		public string collectionIcons { get; set; }
 	}
 
@@ -101,6 +97,11 @@ namespace JiME
 		public string scenarioName { get; set; }
 		///file NAME only, not path
 		public string fileName { get; set; }
+
+        [JsonIgnore]
+		public List<Collection> collectionList { get; set; }
+        [JsonIgnore]
+		public string collectionIcons { get; set; }
 	}
 
 	class TileSorter : IComparer<int>
