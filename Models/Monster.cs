@@ -243,7 +243,8 @@ namespace JiME
 			.Concat(Collection.VILLAINS_OF_ERIADOR.MonsterNames).ToArray()
 			.Concat(Collection.SHADOWED_PATHS.MonsterNames).ToArray()
 			.Concat(Collection.DWELLERS_IN_DARKNESS.MonsterNames).ToArray()
-			.Concat(Collection.SPREADING_WAR.MonsterNames).ToArray();
+			.Concat(Collection.SPREADING_WAR.MonsterNames).ToArray()
+			.Concat(Collection.SCOURGES_OF_THE_WASTES.MonsterNames).ToArray();
 
 		public event PropertyChangedEventHandler PropertyChanged;
 

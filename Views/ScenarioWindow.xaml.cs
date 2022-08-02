@@ -149,7 +149,11 @@ namespace JiME.Views
                 {
 					spreadingWarCB.IsChecked = true;
                 }
-            }
+				else if (collection == Collection.SCOURGES_OF_THE_WASTES)
+				{
+					scourgesOfTheWastesCB.IsChecked = true;
+				}
+			}
 		}
 
 		void UpdateThreatPanel()

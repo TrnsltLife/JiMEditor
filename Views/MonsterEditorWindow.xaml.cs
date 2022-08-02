@@ -26,6 +26,7 @@ namespace JiME.Views
 		List<RadioButton> shadowedPathsList;
 		List<RadioButton> dwellersInDarknessList;
 		List<RadioButton> spreadingWarList;
+		List<RadioButton> scourgesOfTheWastesList;
 		List<RadioButton> allMonsterList;
 
 		public MonsterEditorWindow(Scenario s, Monster m = null )
@@ -51,12 +52,14 @@ namespace JiME.Views
 			shadowedPathsList = new List<RadioButton>() { giantSpiderRB, pitGoblinRB, orcTaskmasterRB, shadowmanRB, namelessThingRB, caveTrollRB, balrogRB, spawnOfUngoliantRB };
 			dwellersInDarknessList = new List<RadioButton>() { supplicantOfMorgothRB, ursaRB, ollieRB };
 			spreadingWarList = new List<RadioButton>() { fellBeastRB, wargRiderRB, siegeEngineRB, warOliphauntRB, soldierRB, urukWarriorRB };
+			scourgesOfTheWastesList = new List<RadioButton>() { lordAngonRB, witchKingOfAngmarRB, eadrisRB };
 			allMonsterList = new List<RadioButton>();
 			allMonsterList.AddRange(coreSetList);
 			allMonsterList.AddRange(villainsOfEriadorList);
 			allMonsterList.AddRange(shadowedPathsList);
 			allMonsterList.AddRange(dwellersInDarknessList);
 			allMonsterList.AddRange(spreadingWarList);
+			allMonsterList.AddRange(scourgesOfTheWastesList);
 
 			Dictionary<List<RadioButton>, Collection> checkboxCollectionMap =
 				new Dictionary<List<RadioButton>, Collection>() {
@@ -64,7 +67,8 @@ namespace JiME.Views
 					{villainsOfEriadorList, Collection.VILLAINS_OF_ERIADOR},
 					{shadowedPathsList, Collection.SHADOWED_PATHS},
 					{dwellersInDarknessList, Collection.DWELLERS_IN_DARKNESS},
-					{spreadingWarList, Collection.SPREADING_WAR}
+					{spreadingWarList, Collection.SPREADING_WAR},
+					{scourgesOfTheWastesList, Collection.SCOURGES_OF_THE_WASTES}
 			};
 
 			//monster type radio buttons

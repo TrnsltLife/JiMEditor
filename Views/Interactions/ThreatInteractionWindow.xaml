@@ -346,6 +346,7 @@
 									<RowDefinition Height="*"/>
 									<RowDefinition Height="*"/>
 									<RowDefinition Height="*"/>
+									<RowDefinition Height="*"/>
 								</Grid.RowDefinitions>
 
 								<!--Core Set-->
@@ -355,7 +356,7 @@
 									<CheckBox Click="collection_Click" x:Name="coreSetCB" Content="Core Set:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
 								</StackPanel>
 								<CheckBox Grid.Row="0" Grid.Column="1" x:Name="goblinScoutCB" Content="Goblin Scout x6 (4)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="0" Grid.Column="2" x:Name="hillTrollCB" Content="Hill Troll x1 (25)" Foreground="White" Padding="0,0,5,0"/>
+								<CheckBox Grid.Row="0" Grid.Column="2" x:Name="hillTrollCB" Content="Hill Troll (25)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="0" Grid.Column="3" x:Name="orcHunterCB" Content="Orc Hunter x3 (10)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="0" Grid.Column="4" x:Name="orcMarauderCB" Content="Orc Marauder x3 (9)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="1" Grid.Column="1" x:Name="ruffianCB" Content="Ruffian x6 (7)" Foreground="White" Padding="0,0,5,0"/>
@@ -368,9 +369,9 @@
 									<TextBlock Text="v" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
 									<CheckBox Click="collection_Click" x:Name="villainsOfEriadorCB" Content="Villains of Eriador:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
 								</StackPanel>
-								<CheckBox Grid.Row="2" Grid.Column="1" x:Name="atarinCB" Content="Atarin x1 (X)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="2" Grid.Column="2" x:Name="coalfangCB" Content="Coalfang x1 (X)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="2" Grid.Column="3" x:Name="gulgotarCB" Content="Gulgotar x1 (X)" Foreground="White" Padding="0,0,5,0"/>
+								<CheckBox Grid.Row="2" Grid.Column="1" x:Name="atarinCB" Content="Atarin (X)" Foreground="White" Padding="0,0,5,0"/>
+								<CheckBox Grid.Row="2" Grid.Column="2" x:Name="coalfangCB" Content="Coalfang (X)" Foreground="White" Padding="0,0,5,0"/>
+								<CheckBox Grid.Row="2" Grid.Column="3" x:Name="gulgotarCB" Content="Gulgotar (X)" Foreground="White" Padding="0,0,5,0"/>
 
 								<!-- Shadowed Paths -->
 								<Rectangle Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="Black" />
@@ -378,14 +379,14 @@
 									<TextBlock Text="p" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
 									<CheckBox Click="collection_Click" x:Name="shadowedPathsCB" Content="Shadowed Paths:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
 								</StackPanel>
-								<CheckBox Grid.Row="3" Grid.Column="1" x:Name="balrogCB" Content="Balrog x1 (X)" Foreground="White" Padding="0,0,5,0"/>
+								<CheckBox Grid.Row="3" Grid.Column="1" x:Name="balrogCB" Content="Balrog (X)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="3" Grid.Column="2" x:Name="caveTrollCB" Content="Cave Troll x2 (20)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="3" Grid.Column="3" x:Name="giantSpiderCB" Content="Giant Spider x6 (5)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="3" Grid.Column="4" x:Name="namelessThingCB" Content="Nameless Thing x3 (27)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="4" Grid.Column="1" x:Name="orcTaskmasterCB" Content="Orc Taskmaster x6 (14)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="4" Grid.Column="2" x:Name="pitGoblinCB" Content="Pit Goblin x6 (4)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="4" Grid.Column="3" x:Name="shadowmanCB" Content="Shadowman x3 (17)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="2" x:Name="spawnOfUngoliantCB" Content="Spawn of Ungoliant x1 (X)" Foreground="White" Padding="0,0,5,0"/>
+								<CheckBox Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="2" x:Name="spawnOfUngoliantCB" Content="Spawn of Ungoliant (X)" Foreground="White" Padding="0,0,5,0"/>
 
 								<!-- Dwellers in Darkness -->
 								<Rectangle Grid.Row="5" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="Purple" />
@@ -393,9 +394,9 @@
 									<TextBlock Text="d" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
 									<CheckBox Click="collection_Click" x:Name="dwellersInDarknessCB" Content="Dwellers in Darkness:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
 								</StackPanel>
-								<CheckBox Grid.Row="5" Grid.Column="1" x:Name="ollieCB" Content="Ollie x1 (X)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="5" Grid.Column="2" x:Name="ursaCB" Content="Ursa x1 (X)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="2" x:Name="supplicantOfMorgothCB" Content="Supplicant of Morgoth x1 (X)" Foreground="White" Padding="0,0,5,0"/>
+								<CheckBox Grid.Row="5" Grid.Column="1" x:Name="ollieCB" Content="Ollie (X)" Foreground="White" Padding="0,0,5,0"/>
+								<CheckBox Grid.Row="5" Grid.Column="2" x:Name="ursaCB" Content="Ursa (X)" Foreground="White" Padding="0,0,5,0"/>
+								<CheckBox Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="2" x:Name="supplicantOfMorgothCB" Content="Supplicant of Morgoth (X)" Foreground="White" Padding="0,0,5,0"/>
 
 								<!-- Spreading War -->
 								<Rectangle Grid.Row="6" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="DarkRed" />
@@ -407,8 +408,25 @@
 								<CheckBox Grid.Row="6" Grid.Column="2" x:Name="siegeEngineCB" Content="Siege Engine x2 (22)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="6" Grid.Column="3" x:Name="soldierCB" Content="Soldier x6 (8)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="6" Grid.Column="4" x:Name="urukWarriorCB" Content="Uruk Warrior x6 (11)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="7" Grid.Column="1" x:Name="warOliphauntCB" Content="War Oliphaunt x1 (30)" Foreground="White" Padding="0,0,5,0"/>
+								<CheckBox Grid.Row="7" Grid.Column="1" x:Name="warOliphauntCB" Content="War Oliphaunt (30)" Foreground="White" Padding="0,0,5,0"/>
 								<CheckBox Grid.Row="7" Grid.Column="2" x:Name="wargRiderCB" Content="Warg Rider x3 (14)" Foreground="White" Padding="0,0,5,0"/>
+
+
+								<!-- Scourges of the Wastes -->
+								<Rectangle Grid.Row="8" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="YellowGreen" />
+								<StackPanel Orientation="Horizontal" Grid.Row="8" Grid.Column="0">
+									<TextBlock Text="c" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
+									<CheckBox Click="collection_Click" x:Name="scourgesOfTheWastesCB" FontWeight="Bold" Foreground="White" Padding="0,0,5,0">
+										<StackPanel Orientation="Horizontal">
+											<TextBlock Text="Scourges"/>
+											<TextBlock Text=" of the " FontSize="9" VerticalAlignment="Center"/>
+											<TextBlock Text="Wastes:"/>
+										</StackPanel>
+									</CheckBox>
+								</StackPanel>
+								<CheckBox Grid.Row="8" Grid.Column="1" x:Name="lordAngonCB" Content="Lord Angon (X)" Foreground="White" Padding="0,0,5,0"/>
+								<CheckBox Grid.Row="8" Grid.Column="2" x:Name="eadrisCB" Content="Eadris (X)" Foreground="White" Padding="0,0,5,0"/>
+								<CheckBox Grid.Row="8" Grid.Column="3" Grid.ColumnSpan="2" x:Name="witchKingOfAngmarCB" Content="Witch-king of Angmar (X)" Foreground="White" Padding="0,0,5,0"/>
 							</Grid>
 
 								<TextBlock Text="The Companion App will randomly spend the Base Pool Points to create Enemy Groups using the Enemies you check above."  Style="{StaticResource SubText}" TextWrapping="Wrap" Margin="0,5,0,0"/>

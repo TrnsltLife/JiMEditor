@@ -266,7 +266,8 @@ namespace JiME
 										+ (c.collectionCollection.Contains(Collection.VILLAINS_OF_ERIADOR) ? Collection.VILLAINS_OF_ERIADOR.FontCharacter : "")
 										+ (c.collectionCollection.Contains(Collection.SHADOWED_PATHS) ? Collection.SHADOWED_PATHS.FontCharacter : "")
 										+ (c.collectionCollection.Contains(Collection.DWELLERS_IN_DARKNESS) ? Collection.DWELLERS_IN_DARKNESS.FontCharacter : "")
-										+ (c.collectionCollection.Contains(Collection.SPREADING_WAR) ? Collection.SPREADING_WAR.FontCharacter : "");
+										+ (c.collectionCollection.Contains(Collection.SPREADING_WAR) ? Collection.SPREADING_WAR.FontCharacter : "")
+										+ (c.collectionCollection.Contains(Collection.SCOURGES_OF_THE_WASTES) ? Collection.SCOURGES_OF_THE_WASTES.FontCharacter : "");
 					items.Add( pi );
 				}
 			}
@@ -284,6 +285,7 @@ namespace JiME
 										+ (s.IsCollectionEnabled(Collection.SHADOWED_PATHS) ? Collection.SHADOWED_PATHS.FontCharacter : "")
 										+ (s.IsCollectionEnabled(Collection.DWELLERS_IN_DARKNESS) ? Collection.DWELLERS_IN_DARKNESS.FontCharacter : "")
 										+ (s.IsCollectionEnabled(Collection.SPREADING_WAR) ? Collection.SPREADING_WAR.FontCharacter : "")
+										+ (s.IsCollectionEnabled(Collection.SCOURGES_OF_THE_WASTES) ? Collection.SCOURGES_OF_THE_WASTES.FontCharacter : "")
 					});
 			}
 			return items;

@@ -26,7 +26,8 @@ namespace JiME
 							  Atarin, Gulgotar, Coalfang, //7-9
 							  GiantSpider, PitGoblin, OrcTaskmaster, Shadowman, NamelessThing, CaveTroll, Balrog, SpawnOfUngoliant, //10-17
 							  SupplicantOfMorgoth, Ursa, Ollie, //18-20
-							  FellBeast, WargRider, SiegeEngine, WarOliphaunt, Soldier, UrukWarrior //21-26
+							  FellBeast, WargRider, SiegeEngine, WarOliphaunt, Soldier, UrukWarrior, //21-26
+							  LordAngon, WitchKingOfAngmar, Eadris //27-29
 	}
 	public enum TileType { Hex, Battle }
 	public enum ThreatAttributes { }//armor, elite, etc
@@ -450,7 +451,7 @@ namespace JiME
 
 	public class SimulatorData
 	{
-		public bool[] includedEnemies = new bool[27];
+		public bool[] includedEnemies = new bool[30];
 		public DifficultyBias difficultyBias;
 		public float poolPoints;
 	}

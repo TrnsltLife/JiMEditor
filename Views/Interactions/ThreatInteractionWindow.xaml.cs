@@ -24,6 +24,7 @@ namespace JiME.Views
 		List<CheckBox> shadowedPathsList;
 		List<CheckBox> dwellersInDarknessList;
 		List<CheckBox> spreadingWarList;
+		List<CheckBox> scourgesOfTheWastesList;
 		List<CheckBox> allMonsterList;
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -77,6 +78,7 @@ namespace JiME.Views
 			shadowedPathsList = new List<CheckBox>() { giantSpiderCB, pitGoblinCB, orcTaskmasterCB, shadowmanCB, namelessThingCB, caveTrollCB, balrogCB, spawnOfUngoliantCB };
 			dwellersInDarknessList = new List<CheckBox>() { supplicantOfMorgothCB, ursaCB, ollieCB };
 			spreadingWarList = new List<CheckBox>() { fellBeastCB, wargRiderCB, siegeEngineCB, warOliphauntCB, soldierCB, urukWarriorCB };
+			scourgesOfTheWastesList = new List<CheckBox>() { lordAngonCB, witchKingOfAngmarCB, eadrisCB };
 
 			allMonsterList = new List<CheckBox>();
 			allMonsterList.AddRange(coreSetList);
@@ -84,6 +86,7 @@ namespace JiME.Views
 			allMonsterList.AddRange(shadowedPathsList);
 			allMonsterList.AddRange(dwellersInDarknessList);
 			allMonsterList.AddRange(spreadingWarList);
+			allMonsterList.AddRange(scourgesOfTheWastesList);
 
 			Dictionary<List<CheckBox>, Collection> checkboxCollectionMap =
 				new Dictionary<List<CheckBox>, Collection>() {
@@ -92,12 +95,14 @@ namespace JiME.Views
 					{shadowedPathsList, Collection.SHADOWED_PATHS},
 					{dwellersInDarknessList, Collection.DWELLERS_IN_DARKNESS},
 					{spreadingWarList, Collection.SPREADING_WAR},
+					{scourgesOfTheWastesList, Collection.SCOURGES_OF_THE_WASTES},
 
 					{new List<CheckBox>(){coreSetCB}, Collection.CORE_SET },
 					{new List<CheckBox>(){villainsOfEriadorCB}, Collection.VILLAINS_OF_ERIADOR },
 					{new List<CheckBox>(){shadowedPathsCB}, Collection.SHADOWED_PATHS },
 					{new List<CheckBox>(){dwellersInDarknessCB}, Collection.DWELLERS_IN_DARKNESS },
-					{new List<CheckBox>(){spreadingWarCB}, Collection.SPREADING_WAR }
+					{new List<CheckBox>(){spreadingWarCB}, Collection.SPREADING_WAR },
+					{new List<CheckBox>(){scourgesOfTheWastesCB}, Collection.SCOURGES_OF_THE_WASTES },
 				};
 
 			int index = 0;
@@ -335,29 +340,33 @@ namespace JiME.Views
 		private void collection_Click(object sender, RoutedEventArgs e)
 		{
 			CheckBox checkbox = ((CheckBox)sender);
-			string collection = checkbox.Content as string;
+			string collection = checkbox.Name as string;
 			bool? check = checkbox.IsChecked;
 
 			List<CheckBox> monsterList = null;
-			if(collection.StartsWith("Core Set"))
+			if(collection.StartsWith("coreSet"))
             {
 				monsterList = coreSetList;
             }
-			else if(collection.StartsWith("Villains of Eriador"))
+			else if(collection.StartsWith("villainsOfEriador"))
             {
 				monsterList = villainsOfEriadorList;
             }
-			else if(collection.StartsWith("Shadowed Paths"))
+			else if(collection.StartsWith("shadowedPaths"))
             {
 				monsterList = shadowedPathsList;
             }
-			else if(collection.StartsWith("Dwellers in Darkness"))
+			else if(collection.StartsWith("dwellersInDarkness"))
             {
 				monsterList = dwellersInDarknessList;
             }
-			else if(collection.StartsWith("Spreading War"))
+			else if(collection.StartsWith("spreadingWar"))
             {
 				monsterList = spreadingWarList;
+            }
+			else if(collection.StartsWith("scourgesOfTheWastes"))
+            {
+				monsterList = scourgesOfTheWastesList;
             }
 			monsterList.ForEach(it => it.IsChecked = check);
 		}

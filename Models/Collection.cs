@@ -58,6 +58,16 @@ namespace JiME.Models
             true, true
         );
 
+        public static readonly Collection SCOURGES_OF_THE_WASTES = new Collection(6, "Scourges of the Wasters", "c",
+            new string[] { "Lord Angon", "Witch-king of Angmar", "Eadris" },
+            new int[] { 27, 28, 29 }, //monsterId
+            new int[] { 1, 1, 1 }, //monsterCount
+            new int[] { 50, 50, 50 }, //monsterCost
+            new int[] { 1, 1, 1 }, //groupLimit
+            new int[] { }, //tileId
+            false, false
+        );
+
         public static IEnumerable<Collection> Values
         {
             get
@@ -67,6 +77,7 @@ namespace JiME.Models
                 yield return SHADOWED_PATHS;
                 yield return DWELLERS_IN_DARKNESS;
                 yield return SPREADING_WAR;
+                yield return SCOURGES_OF_THE_WASTES;
             }
         }
 
@@ -82,9 +93,9 @@ namespace JiME.Models
         public Boolean DifficultGround { get; private set; }
         public Boolean Fortified { get; private set; }
 
-        Collection(int id, string name, string fontCharacter, string[] monsterNames, int[] monsterIds, int[] monsterCosts, int[] monsterCounts, int[] groupLimits, int[] tileNumbers, Boolean difficultGround, Boolean fortified) =>
-            (ID, Name, FontCharacter, MonsterNames, MonsterIds, MonsterCosts, MonsterCounts, GroupLimits, TileNumbers, DifficultGround, Fortified) = 
-            (id, name, fontCharacter, monsterNames, monsterIds, monsterCosts, monsterCounts, groupLimits, tileNumbers, difficultGround, fortified);
+        Collection(int id, string name, string fontCharacter, string[] monsterNames, int[] monsterIds, int[] monsterCounts, int[] monsterCosts, int[] groupLimits, int[] tileNumbers, Boolean difficultGround, Boolean fortified) =>
+            (ID, Name, FontCharacter, MonsterNames, MonsterIds, MonsterCounts, MonsterCosts, GroupLimits, TileNumbers, DifficultGround, Fortified) = 
+            (id, name, fontCharacter, monsterNames, monsterIds, monsterCounts, monsterCosts, groupLimits, tileNumbers, difficultGround, fortified);
 
         public override string ToString() => Name;
 
@@ -102,6 +113,8 @@ namespace JiME.Models
                     return Collection.DWELLERS_IN_DARKNESS;
                 case 5:
                     return Collection.SPREADING_WAR;
+                case 6:
+                    return Collection.SCOURGES_OF_THE_WASTES;
                 default:
                     throw new Exception("Collection not recognized: " + id);
             }
@@ -121,6 +134,8 @@ namespace JiME.Models
                     return Collection.DWELLERS_IN_DARKNESS;
                 case "Spreading War":
                     return Collection.SPREADING_WAR;
+                case "Scourges of the Wastes":
+                    return Collection.SCOURGES_OF_THE_WASTES;
                 default:
                     throw new Exception("Collection not recognized: " + name);
             }

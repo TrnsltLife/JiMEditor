@@ -73,7 +73,8 @@ namespace JiME.Views
 			.Concat(Collection.VILLAINS_OF_ERIADOR.MonsterCosts).ToArray()
 			.Concat(Collection.SHADOWED_PATHS.MonsterCosts).ToArray()
 			.Concat(Collection.DWELLERS_IN_DARKNESS.MonsterCosts).ToArray()
-			.Concat(Collection.SPREADING_WAR.MonsterCosts).ToArray();
+			.Concat(Collection.SPREADING_WAR.MonsterCosts).ToArray()
+			.Concat(Collection.SCOURGES_OF_THE_WASTES.MonsterCosts).ToArray();
 
 		//int[] ModCost = new int[3] { 1, 2, 1 };
 		//string[] modNames = new string[3] { "Large", "Bloodthirsty", "Armored" };
