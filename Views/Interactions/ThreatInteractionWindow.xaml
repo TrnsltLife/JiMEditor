@@ -182,273 +182,285 @@
 				</StackPanel>
 			</TabItem>
 
-			<TabItem Padding="5" Header="Enemy Groups">
-				<StackPanel Margin="0,5,0,0" HorizontalAlignment="Stretch">
-					<Border Style="{StaticResource callout}">
-						<Grid Margin="0,0,0,10">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="*"/>
-								<ColumnDefinition Width="auto"/>
-							</Grid.ColumnDefinitions>
+			<!--scripted enemies-->
+			<TabItem Header="Enemy Groups" Padding="5">
+				<StackPanel Orientation="Vertical">
+					<TabControl Margin="5,20,5,5" Background="#FF2D2D30" BorderThickness="0,1,0,0">
+						<TabItem Header="Scripted Enemies" Padding="5">
+							<StackPanel Margin="0,5,0,0" HorizontalAlignment="Stretch">
+								<Border Style="{StaticResource callout}">
+									<Grid Margin="0,0,0,10">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="*"/>
+											<ColumnDefinition Width="auto"/>
+										</Grid.ColumnDefinitions>
 
-							<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap">
-						<Bold>Scripted Enemy Groups</Bold> allow you to design unique, non-standard Enemies with your own values for Health, Damage/Fear and Elite Modifiers. The <Bold>Enemy Pool System</Bold> automates the creation of Enemy Events that are random yet balanced, and automatically scale with Player Count and Game Difficulty.
-							</TextBlock>
+										<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap">
+									<Bold>Scripted Enemy Groups</Bold> allow you to design unique, non-standard Enemies with your own values for Health, Damage/Fear and Elite Modifiers. The <Bold>Enemy Pool System</Bold> automates the creation of Enemy Events that are random yet balanced, and automatically scale with Player Count and Game Difficulty.
+										</TextBlock>
 
-							<Button HorizontalAlignment="Right" Grid.Column="1" x:Name="help" Background="#FFC98800" Height="32"  Click="help_Click" Margin="10,0,0,0">
-								<StackPanel Orientation="Horizontal">
-									<Image Source="/JiME;component/Assets/help.png" Stretch="Uniform"/>
-									<TextBlock Text="Event Help" Style="{StaticResource Heading}" Margin="5,0,0,0"/>
-								</StackPanel>
-							</Button>
-						</Grid>
-					</Border>
+										<Button HorizontalAlignment="Right" Grid.Column="1" x:Name="help" Background="#FFC98800" Height="32"  Click="help_Click" Margin="10,0,0,0">
+											<StackPanel Orientation="Horizontal">
+												<Image Source="/JiME;component/Assets/help.png" Stretch="Uniform"/>
+												<TextBlock Text="Event Help" Style="{StaticResource Heading}" Margin="5,0,0,0"/>
+											</StackPanel>
+										</Button>
+									</Grid>
+								</Border>
 
-					<Button x:Name="addMonsterButton" Background="DodgerBlue"  HorizontalAlignment="Left" Margin="0,10,0,10" Click="AddMonsterButton_Click">
-						<StackPanel Orientation="Horizontal">
-							<TextBlock Text="Add Scripted Enemy Group..." Style="{StaticResource Heading}" VerticalAlignment="Center" Margin="0,0,5,0"/>
-							<Image Source="/JiME;component/Assets/add.png" Height="24"/>
-						</StackPanel>
-					</Button>
+								<Button x:Name="addMonsterButton" Background="DodgerBlue"  HorizontalAlignment="Left" Margin="0,10,0,10" Click="AddMonsterButton_Click">
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Text="Add Scripted Enemy Group..." Style="{StaticResource Heading}" VerticalAlignment="Center" Margin="0,0,5,0"/>
+										<Image Source="/JiME;component/Assets/add.png" Height="24"/>
+									</StackPanel>
+								</Button>
 
-					<!--items-->
-					<ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" MaxHeight="200">
-						<ItemsControl ItemsSource="{Binding interaction.monsterCollection}">
-							<ItemsControl.ItemsPanel>
-								<ItemsPanelTemplate>
-									<StackPanel IsItemsHost="True"/>
-								</ItemsPanelTemplate>
-							</ItemsControl.ItemsPanel>
-							<ItemsControl.ItemTemplate>
-								<DataTemplate>
-									<Border Style="{StaticResource callout}" Margin="0,2">
+								<!--items-->
+								<ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" MaxHeight="200">
+									<ItemsControl ItemsSource="{Binding interaction.monsterCollection}">
+										<ItemsControl.ItemsPanel>
+											<ItemsPanelTemplate>
+												<StackPanel IsItemsHost="True"/>
+											</ItemsPanelTemplate>
+										</ItemsControl.ItemsPanel>
+										<ItemsControl.ItemTemplate>
+											<DataTemplate>
+												<Border Style="{StaticResource callout}" Margin="0,2">
+													<Grid>
+														<Grid.ColumnDefinitions>
+															<ColumnDefinition Width="*"/>
+															<ColumnDefinition Width="auto"/>
+														</Grid.ColumnDefinitions>
+
+														<WrapPanel VerticalAlignment="Center">
+															<WrapPanel.Resources>
+																<Style TargetType="TextBlock">
+																	<Setter Property="Foreground" Value="Silver"/>
+																	<Setter Property="VerticalAlignment" Value="Center"/>
+																</Style>
+																<Style TargetType="Image">
+																	<Setter Property="Margin" Value="5,0,5,0"/>
+																</Style>
+															</WrapPanel.Resources>
+															<TextBlock Text="{Binding dataName}" Style="{StaticResource Heading}"/>
+															<Border Width="32" Height="32" Margin="10,0" BorderThickness="2" BorderBrush="White" CornerRadius="50">
+																<TextBlock Text="{Binding count}" Style="{StaticResource Heading}" HorizontalAlignment="Center"/>
+															</Border>
+															<Border Width="32" Height="32">
+																<Border.Background>
+																	<ImageBrush ImageSource="/JiME;component/Assets/health.png" Stretch="UniformToFill"/>
+																</Border.Background>
+																<TextBlock Text="{Binding health}" Style="{StaticResource Heading}" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+															</Border>
+															<!--<Image Source="/JiME;component/Assets/add2.png" Height="32" Margin="20,0,0,0"/>-->
+															<TextBlock Text="{Binding bonuses}" Margin="20,0,0,0"/>
+															<Image Source="/JiME;component/Assets/damage.png" Height="32" Margin="20,0,0,0"/>
+															<TextBlock Text="/" Margin="5,0,0,0"/>
+															<Image Source="/JiME;component/Assets/fear.png" Height="32"/>
+															<TextBlock Text="{Binding damage}"/>
+															<TextBlock Style="{StaticResource Heading}" Text="Elite" Margin="15, 0, 0, 0" Visibility="{Binding isElite,Converter={StaticResource bvis}}" Foreground="Red"/>
+															<TextBlock Margin="10,0"/>
+															<!--difficulty-->
+															<Border Width="16" Height="16" BorderThickness="2" BorderBrush="White" Background="Green" Visibility="{Binding isEasy, Converter={StaticResource bvis}}"/>
+															<Border Width="16" Height="16" BorderThickness="2" BorderBrush="White" Background="Yellow" Visibility="{Binding isNormal, Converter={StaticResource bvis}}"/>
+															<Border Width="16" Height="16" BorderThickness="2" BorderBrush="White" Background="Red" Visibility="{Binding isHard, Converter={StaticResource bvis}}"/>
+														</WrapPanel>
+
+														<StackPanel Orientation="Horizontal" Grid.Column="1">
+															<Button x:Name="editButton" Background="CornflowerBlue" Click="EditButton_Click" IsDefault="True" Width="40" Height="40" Margin="5,0" DataContext="{Binding}">
+																<Image Source="/JiME;component/Assets/edit.png" Stretch="Uniform" />
+															</Button>
+															<Button x:Name="deleteButton" Background="{StaticResource bgCancelDelete}" Click="DeleteButton_Click" IsDefault="True" Width="40" Height="40" DataContext="{Binding}">
+																<Image Source="/JiME;component/Assets/remove.png" Stretch="Uniform" />
+															</Button>
+														</StackPanel>
+													</Grid>
+												</Border>
+
+											</DataTemplate>
+										</ItemsControl.ItemTemplate>
+									</ItemsControl>
+								</ScrollViewer>
+							</StackPanel>
+						</TabItem>
+
+						<TabItem Padding="5" Header="Enemy Pool">
+							<StackPanel Margin="0,5,0,0" HorizontalAlignment="Stretch">
+								<!--pool-->
+								<Border Style="{StaticResource callout}" Margin="0,10,0,0">
+									<StackPanel>
 										<Grid>
 											<Grid.ColumnDefinitions>
-												<ColumnDefinition Width="*"/>
 												<ColumnDefinition Width="auto"/>
+												<ColumnDefinition Width="*"/>
 											</Grid.ColumnDefinitions>
-
-											<WrapPanel VerticalAlignment="Center">
-												<WrapPanel.Resources>
-													<Style TargetType="TextBlock">
-														<Setter Property="Foreground" Value="Silver"/>
-														<Setter Property="VerticalAlignment" Value="Center"/>
-													</Style>
-													<Style TargetType="Image">
-														<Setter Property="Margin" Value="5,0,5,0"/>
-													</Style>
-												</WrapPanel.Resources>
-												<TextBlock Text="{Binding dataName}" Style="{StaticResource Heading}"/>
-												<Border Width="32" Height="32" Margin="10,0" BorderThickness="2" BorderBrush="White" CornerRadius="50">
-													<TextBlock Text="{Binding count}" Style="{StaticResource Heading}" HorizontalAlignment="Center"/>
-												</Border>
-												<Border Width="32" Height="32">
-													<Border.Background>
-														<ImageBrush ImageSource="/JiME;component/Assets/health.png" Stretch="UniformToFill"/>
-													</Border.Background>
-													<TextBlock Text="{Binding health}" Style="{StaticResource Heading}" HorizontalAlignment="Center" Margin="0,0,0,4"/>
-												</Border>
-												<!--<Image Source="/JiME;component/Assets/add2.png" Height="32" Margin="20,0,0,0"/>-->
-												<TextBlock Text="{Binding bonuses}" Margin="20,0,0,0"/>
-												<Image Source="/JiME;component/Assets/damage.png" Height="32" Margin="20,0,0,0"/>
-												<TextBlock Text="/" Margin="5,0,0,0"/>
-												<Image Source="/JiME;component/Assets/fear.png" Height="32"/>
-												<TextBlock Text="{Binding damage}"/>
-												<TextBlock Style="{StaticResource Heading}" Text="Elite" Margin="15, 0, 0, 0" Visibility="{Binding isElite,Converter={StaticResource bvis}}" Foreground="Red"/>
-												<TextBlock Margin="10,0"/>
-												<!--difficulty-->
-												<Border Width="16" Height="16" BorderThickness="2" BorderBrush="White" Background="Green" Visibility="{Binding isEasy, Converter={StaticResource bvis}}"/>
-												<Border Width="16" Height="16" BorderThickness="2" BorderBrush="White" Background="Yellow" Visibility="{Binding isNormal, Converter={StaticResource bvis}}"/>
-												<Border Width="16" Height="16" BorderThickness="2" BorderBrush="White" Background="Red" Visibility="{Binding isHard, Converter={StaticResource bvis}}"/>
-											</WrapPanel>
-
-											<StackPanel Orientation="Horizontal" Grid.Column="1">
-												<Button x:Name="editButton" Background="CornflowerBlue" Click="EditButton_Click" IsDefault="True" Width="40" Height="40" Margin="5,0" DataContext="{Binding}">
-													<Image Source="/JiME;component/Assets/edit.png" Stretch="Uniform" />
-												</Button>
-												<Button x:Name="deleteButton" Background="{StaticResource bgCancelDelete}" Click="DeleteButton_Click" IsDefault="True" Width="40" Height="40" DataContext="{Binding}">
-													<Image Source="/JiME;component/Assets/remove.png" Stretch="Uniform" />
-												</Button>
+											<StackPanel>
+												<TextBlock Text="Enemy Pool System" Style="{StaticResource Heading}"/>
+												<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" VerticalAlignment="Top">
+									The <Bold>Enemy Pool</Bold> guides the Companion App in generating random, balanced encounters for this Event.
+												</TextBlock>
 											</StackPanel>
 										</Grid>
-									</Border>
 
-								</DataTemplate>
-							</ItemsControl.ItemTemplate>
-						</ItemsControl>
-					</ScrollViewer>
+										<Grid>
+											<Grid.ColumnDefinitions>
+												<ColumnDefinition Width="auto"/>
+												<ColumnDefinition Width="*"/>
+											</Grid.ColumnDefinitions>
 
-					<!--pool-->
-					<Border Style="{StaticResource callout}" Margin="0,10,0,0">
-						<StackPanel>
-							<Grid>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="auto"/>
-									<ColumnDefinition Width="*"/>
-								</Grid.ColumnDefinitions>
-								<StackPanel>
-									<TextBlock Text="Enemy Pool System" Style="{StaticResource Heading}"/>
-									<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" VerticalAlignment="Top">
-								The <Bold>Enemy Pool</Bold> guides the Companion App in generating random, balanced encounters for this Event.
-									</TextBlock>
-								</StackPanel>
-							</Grid>
+										</Grid>
 
-							<Grid>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="auto"/>
-									<ColumnDefinition Width="*"/>
-								</Grid.ColumnDefinitions>
+										<!--pool points-->
+										<Grid Margin="0,5,0,10">
+											<Grid.ColumnDefinitions>
+												<ColumnDefinition Width="auto"/>
+												<ColumnDefinition Width="*"/>
+											</Grid.ColumnDefinitions>
+											<StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+												<TextBlock Style="{StaticResource Heading}" Text="Base Pool Points:" Margin="0,0,10,0"/>
+												<TextBox x:Name="poolPointsBox"  Width="32" VerticalAlignment="Center" Text="{Binding interaction.basePoolPoints}"/>
+											</StackPanel>
+											<TextBlock Grid.Column="1" Style="{StaticResource SubText}" TextWrapping="Wrap" Margin="10,0,0,0">
+										This value provides a baseline for determining the difficulty of the Enemies generated for this Event.  It defaults to 10, representing <Bold>1 Hero at Normal Difficulty</Bold>, and is automatically scaled by Easy/Hard Difficulty and additional Heroes in the Companion App. See <Bold>Event Help</Bold> for details.
+											</TextBlock>
+										</Grid>
 
-							</Grid>
-
-							<!--pool points-->
-							<Grid Margin="0,5,0,10">
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="auto"/>
-									<ColumnDefinition Width="*"/>
-								</Grid.ColumnDefinitions>
-								<StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-									<TextBlock Style="{StaticResource Heading}" Text="Base Pool Points:" Margin="0,0,10,0"/>
-									<TextBox x:Name="poolPointsBox"  Width="32" VerticalAlignment="Center" Text="{Binding interaction.basePoolPoints}"/>
-								</StackPanel>
-								<TextBlock Grid.Column="1" Style="{StaticResource SubText}" TextWrapping="Wrap" Margin="10,0,0,0">
-									This value provides a baseline for determining the difficulty of the Enemies generated for this Event.  It defaults to 10, representing <Bold>1 Hero at Normal Difficulty</Bold>, and is automatically scaled by Easy/Hard Difficulty and additional Heroes in the Companion App. See <Bold>Event Help</Bold> for details.
-								</TextBlock>
-							</Grid>
-
-							<!--bias-->
-							<StackPanel Orientation="Horizontal">
-								<TextBlock Style="{StaticResource Heading}" Text="Difficulty Bias:"/>
-								<RadioButton x:Name="biasLight" Content="Light (+3/Hero)" Margin="10,5" GroupName="bias"/>
-								<RadioButton x:Name="biasMedium" Content="Medium (+5/Hero)" GroupName="bias"/>
-								<RadioButton x:Name="biasHeavy" Content="Heavy (+7/Hero)" Margin="10,0" GroupName="bias"/>
-							</StackPanel>
-
-							<TextBlock Text="Difficulty Bias changes how the Companion App increases the Pool Points based on Hero Counts above 1." TextWrapping="Wrap" Style="{StaticResource SubText}"/>
-
-							<TextBlock Style="{StaticResource Heading}" Text="Include These Enemies (Point Value in Parentheses):" Margin="0,10,0,5"/>
-
-							<Grid Margin="0,5,0,10">
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="auto"/>
-									<ColumnDefinition Width="auto"/>
-									<ColumnDefinition Width="auto"/>
-									<ColumnDefinition Width="auto"/>
-									<ColumnDefinition Width="*"/>
-								</Grid.ColumnDefinitions>
-								<Grid.RowDefinitions>
-									<RowDefinition Height="*"/>
-									<RowDefinition Height="*"/>
-									<RowDefinition Height="*"/>
-									<RowDefinition Height="*"/>
-									<RowDefinition Height="*"/>
-									<RowDefinition Height="*"/>
-									<RowDefinition Height="*"/>
-									<RowDefinition Height="*"/>
-									<RowDefinition Height="*"/>
-								</Grid.RowDefinitions>
-
-								<!--Core Set-->
-								<Rectangle Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="DarkGreen" />
-								<StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
-									<TextBlock Text="r" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-									<CheckBox Click="collection_Click" x:Name="coreSetCB" Content="Core Set:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
-								</StackPanel>
-								<CheckBox Grid.Row="0" Grid.Column="1" x:Name="goblinScoutCB" Content="Goblin Scout x6 (4)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="0" Grid.Column="2" x:Name="hillTrollCB" Content="Hill Troll (25)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="0" Grid.Column="3" x:Name="orcHunterCB" Content="Orc Hunter x3 (10)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="0" Grid.Column="4" x:Name="orcMarauderCB" Content="Orc Marauder x3 (9)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="1" Grid.Column="1" x:Name="ruffianCB" Content="Ruffian x6 (7)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="1" Grid.Column="2" x:Name="hungryWargCB" Content="Hungry Warg x3 (14)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="1" Grid.Column="3" x:Name="wightCB" Content="Wight x3 (17)" Foreground="White" Padding="0,0,5,0"/>
-
-								<!-- Villains of Eriador -->
-								<Rectangle Grid.Row="2" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="SaddleBrown" />
-								<StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
-									<TextBlock Text="v" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-									<CheckBox Click="collection_Click" x:Name="villainsOfEriadorCB" Content="Villains of Eriador:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
-								</StackPanel>
-								<CheckBox Grid.Row="2" Grid.Column="1" x:Name="atarinCB" Content="Atarin (X)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="2" Grid.Column="2" x:Name="coalfangCB" Content="Coalfang (X)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="2" Grid.Column="3" x:Name="gulgotarCB" Content="Gulgotar (X)" Foreground="White" Padding="0,0,5,0"/>
-
-								<!-- Shadowed Paths -->
-								<Rectangle Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="Black" />
-								<StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="0">
-									<TextBlock Text="p" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-									<CheckBox Click="collection_Click" x:Name="shadowedPathsCB" Content="Shadowed Paths:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
-								</StackPanel>
-								<CheckBox Grid.Row="3" Grid.Column="1" x:Name="balrogCB" Content="Balrog (X)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="3" Grid.Column="2" x:Name="caveTrollCB" Content="Cave Troll x2 (20)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="3" Grid.Column="3" x:Name="giantSpiderCB" Content="Giant Spider x6 (5)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="3" Grid.Column="4" x:Name="namelessThingCB" Content="Nameless Thing x3 (27)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="4" Grid.Column="1" x:Name="orcTaskmasterCB" Content="Orc Taskmaster x6 (14)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="4" Grid.Column="2" x:Name="pitGoblinCB" Content="Pit Goblin x6 (4)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="4" Grid.Column="3" x:Name="shadowmanCB" Content="Shadowman x3 (17)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="2" x:Name="spawnOfUngoliantCB" Content="Spawn of Ungoliant (X)" Foreground="White" Padding="0,0,5,0"/>
-
-								<!-- Dwellers in Darkness -->
-								<Rectangle Grid.Row="5" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="Purple" />
-								<StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="0">
-									<TextBlock Text="d" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-									<CheckBox Click="collection_Click" x:Name="dwellersInDarknessCB" Content="Dwellers in Darkness:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
-								</StackPanel>
-								<CheckBox Grid.Row="5" Grid.Column="1" x:Name="ollieCB" Content="Ollie (X)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="5" Grid.Column="2" x:Name="ursaCB" Content="Ursa (X)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="2" x:Name="supplicantOfMorgothCB" Content="Supplicant of Morgoth (X)" Foreground="White" Padding="0,0,5,0"/>
-
-								<!-- Spreading War -->
-								<Rectangle Grid.Row="6" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="DarkRed" />
-								<StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="0">
-									<TextBlock Text="w" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-									<CheckBox Click="collection_Click" x:Name="spreadingWarCB" Content="Spreading War:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
-								</StackPanel>
-								<CheckBox Grid.Row="6" Grid.Column="1" x:Name="fellBeastCB" Content="Fell Beast x3 (24)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="6" Grid.Column="2" x:Name="siegeEngineCB" Content="Siege Engine x2 (22)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="6" Grid.Column="3" x:Name="soldierCB" Content="Soldier x6 (8)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="6" Grid.Column="4" x:Name="urukWarriorCB" Content="Uruk Warrior x6 (11)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="7" Grid.Column="1" x:Name="warOliphauntCB" Content="War Oliphaunt (30)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="7" Grid.Column="2" x:Name="wargRiderCB" Content="Warg Rider x3 (14)" Foreground="White" Padding="0,0,5,0"/>
-
-
-								<!-- Scourges of the Wastes -->
-								<Rectangle Grid.Row="8" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="YellowGreen" />
-								<StackPanel Orientation="Horizontal" Grid.Row="8" Grid.Column="0">
-									<TextBlock Text="c" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-									<CheckBox Click="collection_Click" x:Name="scourgesOfTheWastesCB" FontWeight="Bold" Foreground="White" Padding="0,0,5,0">
+										<!--bias-->
 										<StackPanel Orientation="Horizontal">
-											<TextBlock Text="Scourges"/>
-											<TextBlock Text=" of the " FontSize="9" VerticalAlignment="Center"/>
-											<TextBlock Text="Wastes:"/>
+											<TextBlock Style="{StaticResource Heading}" Text="Difficulty Bias:"/>
+											<RadioButton x:Name="biasLight" Content="Light (+3/Hero)" Margin="10,5" GroupName="bias"/>
+											<RadioButton x:Name="biasMedium" Content="Medium (+5/Hero)" GroupName="bias"/>
+											<RadioButton x:Name="biasHeavy" Content="Heavy (+7/Hero)" Margin="10,0" GroupName="bias"/>
 										</StackPanel>
-									</CheckBox>
-								</StackPanel>
-								<CheckBox Grid.Row="8" Grid.Column="1" x:Name="lordAngonCB" Content="Lord Angon (X)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="8" Grid.Column="2" x:Name="eadrisCB" Content="Eadris (X)" Foreground="White" Padding="0,0,5,0"/>
-								<CheckBox Grid.Row="8" Grid.Column="3" Grid.ColumnSpan="2" x:Name="witchKingOfAngmarCB" Content="Witch-king of Angmar (X)" Foreground="White" Padding="0,0,5,0"/>
-							</Grid>
 
-								<TextBlock Text="The Companion App will randomly spend the Base Pool Points to create Enemy Groups using the Enemies you check above."  Style="{StaticResource SubText}" TextWrapping="Wrap" Margin="0,5,0,0"/>
+										<TextBlock Text="Difficulty Bias changes how the Companion App increases the Pool Points based on Hero Counts above 1." TextWrapping="Wrap" Style="{StaticResource SubText}"/>
 
-							<Button x:Name="simulateBtn" Click="simulateBtn_Click" Content="Simulate..." HorizontalAlignment="Left" Margin="0,10,0,0" Background="DodgerBlue" Foreground="White"/>
-						</StackPanel>
-					</Border>
+										<TextBlock Style="{StaticResource Heading}" Text="Include These Enemies (Point Value in Parentheses):" Margin="0,10,0,5"/>
 
-					<Border Style="{StaticResource callout}" Margin="0,10,0,0">
-						<StackPanel>
-							<TextBlock Text="When All Threats Have Been Defeated, Fire This Trigger (Optional):" Style="{StaticResource Heading}"/>
-							<StackPanel Orientation="Horizontal">
-								<ComboBox VerticalAlignment="Center" HorizontalAlignment="Left" Width="250" ItemsSource="{Binding scenario.triggersObserver}" DisplayMemberPath="dataName" SelectedValue="{Binding interaction.triggerDefeatedName}" SelectedValuePath="dataName"/>
-								<Button x:Name="addDefeatedTriggerButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="addDefeatedTriggerButton_Click">
-									<Image Source="/JiME;component/Assets/add2.png"/>
-								</Button>
+										<Grid Margin="0,5,0,10">
+											<Grid.ColumnDefinitions>
+												<ColumnDefinition Width="auto"/>
+												<ColumnDefinition Width="auto"/>
+												<ColumnDefinition Width="auto"/>
+												<ColumnDefinition Width="auto"/>
+												<ColumnDefinition Width="*"/>
+											</Grid.ColumnDefinitions>
+											<Grid.RowDefinitions>
+												<RowDefinition Height="*"/>
+												<RowDefinition Height="*"/>
+												<RowDefinition Height="*"/>
+												<RowDefinition Height="*"/>
+												<RowDefinition Height="*"/>
+												<RowDefinition Height="*"/>
+												<RowDefinition Height="*"/>
+												<RowDefinition Height="*"/>
+												<RowDefinition Height="*"/>
+											</Grid.RowDefinitions>
+
+											<!--Core Set-->
+											<Rectangle Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="DarkGreen" />
+											<StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+												<TextBlock Text="r" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
+												<CheckBox Click="collection_Click" x:Name="coreSetCB" Content="Core Set:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+											</StackPanel>
+											<CheckBox Grid.Row="0" Grid.Column="1" x:Name="goblinScoutCB" Content="Goblin Scout x6 (4)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="0" Grid.Column="2" x:Name="hillTrollCB" Content="Hill Troll (25)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="0" Grid.Column="3" x:Name="orcHunterCB" Content="Orc Hunter x3 (10)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="0" Grid.Column="4" x:Name="orcMarauderCB" Content="Orc Marauder x3 (9)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="1" Grid.Column="1" x:Name="ruffianCB" Content="Ruffian x6 (7)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="1" Grid.Column="2" x:Name="hungryWargCB" Content="Hungry Warg x3 (14)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="1" Grid.Column="3" x:Name="wightCB" Content="Wight x3 (17)" Foreground="White" Padding="0,0,5,0"/>
+
+											<!-- Villains of Eriador -->
+											<Rectangle Grid.Row="2" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="SaddleBrown" />
+											<StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
+												<TextBlock Text="v" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
+												<CheckBox Click="collection_Click" x:Name="villainsOfEriadorCB" Content="Villains of Eriador:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+											</StackPanel>
+											<CheckBox Grid.Row="2" Grid.Column="1" x:Name="atarinCB" Content="Atarin (X)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="2" Grid.Column="2" x:Name="coalfangCB" Content="Coalfang (X)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="2" Grid.Column="3" x:Name="gulgotarCB" Content="Gulgotar (X)" Foreground="White" Padding="0,0,5,0"/>
+
+											<!-- Shadowed Paths -->
+											<Rectangle Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="Black" />
+											<StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="0">
+												<TextBlock Text="p" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
+												<CheckBox Click="collection_Click" x:Name="shadowedPathsCB" Content="Shadowed Paths:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+											</StackPanel>
+											<CheckBox Grid.Row="3" Grid.Column="1" x:Name="balrogCB" Content="Balrog (X)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="3" Grid.Column="2" x:Name="caveTrollCB" Content="Cave Troll x2 (20)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="3" Grid.Column="3" x:Name="giantSpiderCB" Content="Giant Spider x6 (5)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="3" Grid.Column="4" x:Name="namelessThingCB" Content="Nameless Thing x3 (27)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="4" Grid.Column="1" x:Name="orcTaskmasterCB" Content="Orc Taskmaster x6 (14)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="4" Grid.Column="2" x:Name="pitGoblinCB" Content="Pit Goblin x6 (4)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="4" Grid.Column="3" x:Name="shadowmanCB" Content="Shadowman x3 (17)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="2" x:Name="spawnOfUngoliantCB" Content="Spawn of Ungoliant (X)" Foreground="White" Padding="0,0,5,0"/>
+
+											<!-- Dwellers in Darkness -->
+											<Rectangle Grid.Row="5" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="Purple" />
+											<StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="0">
+												<TextBlock Text="d" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
+												<CheckBox Click="collection_Click" x:Name="dwellersInDarknessCB" Content="Dwellers in Darkness:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+											</StackPanel>
+											<CheckBox Grid.Row="5" Grid.Column="1" x:Name="ollieCB" Content="Ollie (X)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="5" Grid.Column="2" x:Name="ursaCB" Content="Ursa (X)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="2" x:Name="supplicantOfMorgothCB" Content="Supplicant of Morgoth (X)" Foreground="White" Padding="0,0,5,0"/>
+
+											<!-- Spreading War -->
+											<Rectangle Grid.Row="6" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="DarkRed" />
+											<StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="0">
+												<TextBlock Text="w" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
+												<CheckBox Click="collection_Click" x:Name="spreadingWarCB" Content="Spreading War:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+											</StackPanel>
+											<CheckBox Grid.Row="6" Grid.Column="1" x:Name="fellBeastCB" Content="Fell Beast x3 (24)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="6" Grid.Column="2" x:Name="siegeEngineCB" Content="Siege Engine x2 (22)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="6" Grid.Column="3" x:Name="soldierCB" Content="Soldier x6 (8)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="6" Grid.Column="4" x:Name="urukWarriorCB" Content="Uruk Warrior x6 (11)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="7" Grid.Column="1" x:Name="warOliphauntCB" Content="War Oliphaunt (30)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="7" Grid.Column="2" x:Name="wargRiderCB" Content="Warg Rider x3 (14)" Foreground="White" Padding="0,0,5,0"/>
+
+
+											<!-- Scourges of the Wastes -->
+											<Rectangle Grid.Row="8" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="YellowGreen" />
+											<StackPanel Orientation="Horizontal" Grid.Row="8" Grid.Column="0">
+												<TextBlock Text="c" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
+												<CheckBox Click="collection_Click" x:Name="scourgesOfTheWastesCB" FontWeight="Bold" Foreground="White" Padding="0,0,5,0">
+													<StackPanel Orientation="Horizontal">
+														<TextBlock Text="Scourges"/>
+														<TextBlock Text=" of the " FontSize="9" VerticalAlignment="Center"/>
+														<TextBlock Text="Wastes:"/>
+													</StackPanel>
+												</CheckBox>
+											</StackPanel>
+											<CheckBox Grid.Row="8" Grid.Column="1" x:Name="lordAngonCB" Content="Lord Angon (X)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="8" Grid.Column="2" x:Name="eadrisCB" Content="Eadris (X)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="8" Grid.Column="3" Grid.ColumnSpan="2" x:Name="witchKingOfAngmarCB" Content="Witch-king of Angmar (X)" Foreground="White" Padding="0,0,5,0"/>
+										</Grid>
+
+										<TextBlock Text="The Companion App will randomly spend the Base Pool Points to create Enemy Groups using the Enemies you check above."  Style="{StaticResource SubText}" TextWrapping="Wrap" Margin="0,5,0,0"/>
+
+										<Button x:Name="simulateBtn" Click="simulateBtn_Click" Content="Simulate..." HorizontalAlignment="Left" Margin="0,10,0,0" Background="DodgerBlue" Foreground="White"/>
+									</StackPanel>
+								</Border>
 							</StackPanel>
-							<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Margin="0,5,0,0">
-								In the General Properties, the <Bold>Set Trigger After Event Is Resolved</Bold> Trigger fires immediately after this Enemy Threat is <Bold>spawned</Bold>, NOT after it's defeated. Set the Trigger above to fire when the Threat is <Bold>defeated</Bold>.
-							</TextBlock>
+						</TabItem>
+				</TabControl>
+
+
+				<Border Style="{StaticResource callout}" Margin="0,10,0,0">
+					<StackPanel>
+						<TextBlock Text="When All Threats Have Been Defeated, Fire This Trigger (Optional):" Style="{StaticResource Heading}"/>
+						<StackPanel Orientation="Horizontal">
+							<ComboBox VerticalAlignment="Center" HorizontalAlignment="Left" Width="250" ItemsSource="{Binding scenario.triggersObserver}" DisplayMemberPath="dataName" SelectedValue="{Binding interaction.triggerDefeatedName}" SelectedValuePath="dataName"/>
+							<Button x:Name="addDefeatedTriggerButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="addDefeatedTriggerButton_Click">
+								<Image Source="/JiME;component/Assets/add2.png"/>
+							</Button>
 						</StackPanel>
-					</Border>
+						<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Margin="0,5,0,0">
+								In the General Properties, the <Bold>Set Trigger After Event Is Resolved</Bold> Trigger fires immediately after this Enemy Threat is <Bold>spawned</Bold>, NOT after it's defeated. Set the Trigger above to fire when the Threat is <Bold>defeated</Bold>.
+						</TextBlock>
+					</StackPanel>
+				</Border>
 				</StackPanel>
 			</TabItem>
 		</TabControl>
