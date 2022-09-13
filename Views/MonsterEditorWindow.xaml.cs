@@ -29,6 +29,14 @@ namespace JiME.Views
 		List<RadioButton> scourgesOfTheWastesList;
 		List<RadioButton> allMonsterList;
 
+
+		string[] monsterNames = (Collection.CORE_SET.Monsters.Select(m => m.dataName))
+			.Concat(Collection.VILLAINS_OF_ERIADOR.Monsters.Select(m => m.dataName)).ToArray()
+			.Concat(Collection.SHADOWED_PATHS.Monsters.Select(m => m.dataName)).ToArray()
+			.Concat(Collection.DWELLERS_IN_DARKNESS.Monsters.Select(m => m.dataName)).ToArray()
+			.Concat(Collection.SPREADING_WAR.Monsters.Select(m => m.dataName)).ToArray()
+			.Concat(Collection.SCOURGES_OF_THE_WASTES.Monsters.Select(m => m.dataName)).ToArray();
+
 		public MonsterEditorWindow(Scenario s, Monster m = null )
 		{
 			InitializeComponent();
@@ -36,14 +44,14 @@ namespace JiME.Views
 
 			scenario = s;
 			cancelButton.Visibility = m == null ? Visibility.Visible : Visibility.Collapsed;
-			monster = m ?? new Monster( "" );
+			monster = m ?? new Monster(-1);
 
 			if ( monster.defaultStats )
 			{
 				stats1.IsEnabled = false;
 				stats2.IsEnabled = false;
 			}
-			FillDefaultStats( monster.monsterType.ToString() );
+			FillDefaultStats( (int)monster.monsterType );
 
 			//The order of the monsters in these lists is important to maintain unchanged because the order (0-26) tells the companion app which monster to use.
 			//The order also corresponds to the order in the MonsterType enum.
@@ -135,7 +143,7 @@ namespace JiME.Views
 			}
 
 			if ( string.IsNullOrEmpty( nameTB.Text.Trim() ) )
-				monster.dataName = Monster.monsterNames[(int)monster.monsterType];
+				monster.dataName = monsterNames[(int)monster.monsterType];
 		}
 
 		private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e )
@@ -161,8 +169,7 @@ namespace JiME.Views
 					index++;
 				}
 
-				Console.WriteLine("FillDefaultStats: " + monster.monsterType.ToString());
-				FillDefaultStats( monster.monsterType.ToString() );
+				FillDefaultStats((int)monster.monsterType);
 			}
 			else
 			{
@@ -172,45 +179,85 @@ namespace JiME.Views
 		}
 
 		private void FillDefaultStats( string enemy )
+        {
+			int id = -1;
+			try
+            {
+				id = Utils.defaultStats.Where(x => x.enumName == enemy).First().id;
+			}
+			catch(InvalidOperationException)
+            {
+
+            }
+			FillDefaultStats(id);
+		}
+
+		private void FillDefaultStats(int id)
 		{
+			Console.WriteLine("MonsterEditor FillDefaultStats " + id);
 			try
 			{
-				defaultStats = Utils.defaultStats.Where(x => x.name == enemy).First();
-				special.Text = defaultStats.special;
-				monster.specialAbility = defaultStats.special;
+				defaultStats = Utils.defaultStats.Where(x => x.id == id).First();
+				special.Text = string.Join(", ", defaultStats.special);
+				monster.specialAbility = string.Join(", ", defaultStats.special);
 			}
-			catch(InvalidOperationException e)
+			catch(InvalidOperationException)
             {
 				//TODO Set up the rest of the enemies in enemy-defaults.json and get rid of this
 				defaultStats = new DefaultStats();
-				defaultStats.name = enemy;
+				defaultStats.id = id;
+				defaultStats.dataName = "";
 				defaultStats.health = 5;
-				defaultStats.speed = "light";
-				defaultStats.damage = "light";
 				defaultStats.armor = 1;
 				defaultStats.sorcery = 0;
-				defaultStats.special = "";
+				defaultStats.moveA = 2;
+				defaultStats.moveB = 4;
+				defaultStats.moveSpecial = new string[0];
+				defaultStats.ranged = false;
+				defaultStats.groupLimit = 3;
+				defaultStats.figureLimit = 6;
+				defaultStats.cost = new int[] { 7, 13, 19 };
+				defaultStats.tag = new string[0];
+				defaultStats.speed = "medium";
+				defaultStats.damage = "light";
+				defaultStats.fearsome = false;
+				defaultStats.special = new string[0];
             }
 
 			if ( monster.defaultStats )
 			{
+				//Only change the name if the current textbox name is empty or was the default name for the previous monster.
+				if (string.IsNullOrEmpty(monster.dataName) 
+					|| (monster.id >= 0 && monster.id < Collection.MONSTERS().Length && monster.dataName == Collection.MONSTERS()[monster.id].dataName)) 
+				{ 
+					monster.dataName = defaultStats.dataName;
+				}
+				monster.id = defaultStats.id;
 				monster.health = defaultStats.health;
-				monster.movementValue = defaultStats.speed == "light" ? Light - 1 : ( defaultStats.speed == "medium" ? Medium - 1 : Heavy - 1 );
-				monster.damage = defaultStats.damage == "light" ? Light : ( defaultStats.damage == "medium" ? Medium : Heavy );
-				//monster.fear = defaultStats.damage == "light" ? Light : ( defaultStats.damage == "medium" ? Medium : Heavy );
 				monster.shieldValue = defaultStats.armor;
 				monster.sorceryValue = defaultStats.sorcery;
+				monster.moveA = defaultStats.moveA;
+				monster.moveB = defaultStats.moveB;
+				monster.moveSpecial = defaultStats.moveSpecial;
+				monster.isRanged = defaultStats.ranged;
+				monster.groupLimit = defaultStats.groupLimit;
+				monster.figureLimit = defaultStats.figureLimit;
+				monster.cost = defaultStats.cost;
+				monster.tag = defaultStats.tag;
+				monster.movementValue = defaultStats.speed == "light" ? Light - 1 : ( defaultStats.speed == "medium" ? Medium - 1 : Heavy - 1 );
+				monster.damage = defaultStats.damage == "light" ? Light : ( defaultStats.damage == "medium" ? Medium : Heavy );
+				monster.isFearsome = defaultStats.fearsome;
+				monster.special = defaultStats.special;
+				//monster.fear = defaultStats.damage == "light" ? Light : ( defaultStats.damage == "medium" ? Medium : Heavy );
 			}
 		}
 
 		private void monsterType_Click( object sender, RoutedEventArgs e )
 		{
 			string enemy = ( (RadioButton)sender ).Content as string;
-			Console.WriteLine("monsterType_Click enemy 1: " + enemy);
 			enemy = Regex.Replace(enemy, "x[0-9]+", ""); //replace unit count info
 			enemy = Regex.Replace(enemy, "of", "Of"); //replace lower case of
 			enemy = enemy.Replace(" ", ""); //replace spaces
-			Console.WriteLine("monsterType_Click enemy 2: " + enemy);
 			FillDefaultStats( enemy );
 		}
 	}

@@ -69,12 +69,12 @@ namespace JiME.Views
 		}
 
         //int[] MonsterCost = new int[7] { 3, 3, 6, 6, 7, 9, 7 };
-        int[] MonsterCost = (Collection.CORE_SET.MonsterCosts)
-			.Concat(Collection.VILLAINS_OF_ERIADOR.MonsterCosts).ToArray()
-			.Concat(Collection.SHADOWED_PATHS.MonsterCosts).ToArray()
-			.Concat(Collection.DWELLERS_IN_DARKNESS.MonsterCosts).ToArray()
-			.Concat(Collection.SPREADING_WAR.MonsterCosts).ToArray()
-			.Concat(Collection.SCOURGES_OF_THE_WASTES.MonsterCosts).ToArray();
+        int[] MonsterCost = (Collection.CORE_SET.Monsters.Select(m => m.cost[0]))
+			.Concat(Collection.VILLAINS_OF_ERIADOR.Monsters.Select(m => m.cost[0])).ToArray()
+			.Concat(Collection.SHADOWED_PATHS.Monsters.Select(m => m.cost[0])).ToArray()
+			.Concat(Collection.DWELLERS_IN_DARKNESS.Monsters.Select(m => m.cost[0])).ToArray()
+			.Concat(Collection.SPREADING_WAR.Monsters.Select(m => m.cost[0])).ToArray()
+			.Concat(Collection.SCOURGES_OF_THE_WASTES.Monsters.Select(m => m.cost[0])).ToArray();
 
 		//int[] ModCost = new int[3] { 1, 2, 1 };
 		//string[] modNames = new string[3] { "Large", "Bloodthirsty", "Armored" };

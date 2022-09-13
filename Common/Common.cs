@@ -18,7 +18,7 @@ namespace JiME
 	public enum ScenarioType { Journey, Battle }
 	public enum InteractionType { Text, Threat, StatTest, Decision, Branch, Darkness, MultiEvent, Persistent, Conditional, Dialog, Replace, Reward }
 	/// <summary>
-	/// The order of the monsters in this enum is important to maintain unchanged because the order (0-26) tells the companion app which monster to use.
+	/// The order of the monsters in this enum is important to maintain unchanged because the order (0-29) tells the companion app which monster to use.
 	/// The order for the first 7 (core set) was set by GlowPuff and is kept for backwards compatibility.
 	/// The order for the other sets is kept in the same order as the order in the original JiME engine, although not sharing the same enum int values.
 	/// </summary>
@@ -175,13 +175,32 @@ namespace JiME
 
 	public class DefaultStats
 	{
-		public string name { get; set; }
+		public int id { get; set; }
+		public string enumName { get; set; }
+		public string dataName { get; set; }
 		public int health { get; set; }
-		public string speed { get; set; }
-		public string damage { get; set; }
 		public int armor { get; set; }
 		public int sorcery { get; set; }
-		public string special { get; set; }
+		public int moveA { get; set; }
+		public int moveB { get; set; }
+		public string[] moveSpecial { get; set; }
+			//Encumbered: +1 to moveB
+			//Predatory: move to most damaged hero
+			//Incorporeal: ignore terrain and black borders when moving
+			//Flying: ignore terrain when moving
+			//Tunneler: doesn't move through spaces but is placed in the space. Doesn't trigger Move events. Ignores terrain and black borders.
+			//Reinforcements: Each hero in a space with an enemy suffers 2 facedown {Damage}, {Might} negates.
+			//Stampede: Move all other enemies in its space to the adjacent space with the most heroes.
+		public bool ranged { get; set; }
+		public int groupLimit { get; set; }
+		public int figureLimit { get; set; }
+		public int[] cost { get; set; }
+		public string[] tag { get; set; }
+		public string speed { get; set; }
+		public string damage { get; set; }
+		public bool fearsome { get; set; } //Used for what used to be "Fear Bias"
+		public string[] special { get; set; }
+			//Cleave: attacks hero in a space
 	}
 
 	public static class Utils
@@ -304,7 +323,7 @@ namespace JiME
 		{
 			var assembly = Assembly.GetExecutingAssembly();
 			string resourceName = assembly.GetManifestResourceNames()
-	.Single( str => str.Contains( ".enemy-defaults.json" ) );
+				.Single( str => str.Contains( ".enemy-defaults.json" ) );
 
 			using ( Stream stream = assembly.GetManifestResourceStream( resourceName ) )
 			using ( StreamReader reader = new StreamReader( stream ) )
@@ -313,6 +332,11 @@ namespace JiME
 				var list = JObject.Parse( json );
 				JToken token = list.SelectToken( "defaults" );
 				List<DefaultStats> ret = token.ToObject( typeof( List<DefaultStats> ) ) as List<DefaultStats>;
+				Console.WriteLine("DefaultStats Loaded:");
+				//foreach( DefaultStats item in ret )
+                //{
+				//	Console.WriteLine(item.id + " " + item.enumName + " " + item.dataName );
+                //}
 				return ret;
 			}
 		}

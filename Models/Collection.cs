@@ -9,61 +9,43 @@ namespace JiME.Models
     public class Collection
     {
         public static readonly Collection CORE_SET = new Collection(1, "Core Set", "r",
-            new string[] { "Ruffian", "Goblin Scout", "Orc Hunter", "Orc Marauder", "Hungry Warg", "Hill Troll", "Wight" },
-            new int[] { 0, 1, 2, 3, 4, 5, 6 }, //monsterId
-            new int[] { 6, 6, 3, 6, 3, 1, 3 }, //monsterCount
-            new int[] { 7, 4, 10, 9, 14, 25, 17 }, //monsterCost
-            new int[] { 3, 3, 3, 3, 3, 1, 3 }, //groupLimit
+            //new string[] { "Ruffian", "Goblin Scout", "Orc Hunter", "Orc Marauder", "Hungry Warg", "Hill Troll", "Wight" },
+            new Monster[] {new Monster(0), new Monster(1), new Monster(2), new Monster(3), new Monster(4), new Monster(5), new Monster(6)}, 
             new int[] { 100, 101, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 300, 301, 302, 303, 304, 305, 306, 307, 308, 400 }, //tileId
             false, false
         );
 
         public static readonly Collection VILLAINS_OF_ERIADOR = new Collection(2, "Villains of Eriador", "v",
-            new string[] { "Atarin", "Gulgotar", "Coalfang" },
-            new int[] { 7, 8, 9 }, //monsterId
-            new int[] { 1, 1, 1 }, //monsterCount
-            new int[] { 14, 22, 28 }, //monsterCost
-            new int[] { 1, 1, 1 }, //groupLimit
+            //new string[] { "Atarin", "Gulgotar", "Coalfang" },
+            new Monster[] {new Monster(7), new Monster(8), new Monster(9)},
             new int[] {}, //tileId
             false, false
         );
 
         public static readonly Collection SHADOWED_PATHS = new Collection(3, "Shadowed Paths", "p",
-            new string[] { "Giant Spider", "Pit Goblin", "Orc Taskmaster", "Shadowman", "Nameless Thing", "Cave Troll", "Balrog", "Spawn of Ungoliant" },
-            new int[] { 10, 11, 12, 13, 14, 15, 16, 17 }, //monsterId
-            new int[] { 6, 6, 3, 3, 3, 2, 1, 1 }, //monsterCount
-            new int[] { 5, 4, 14, 17, 27, 20, 50, 36 }, //monsterCost
-            new int[] { 3, 3, 3, 3, 1, 2, 1, 1 }, //groupLimit
+            //new string[] { "Giant Spider", "Pit Goblin", "Orc Taskmaster", "Shadowman", "Nameless Thing", "Cave Troll", "Balrog", "Spawn of Ungoliant" },
+            new Monster[] {new Monster(10), new Monster(11), new Monster(12), new Monster(13), new Monster(14), new Monster(15), new Monster(16), new Monster(17)},
             new int[] { 102, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 309, 310, 311, 312, 313, 401, 402 }, //tileId
             true, false
         );
 
         public static readonly Collection DWELLERS_IN_DARKNESS = new Collection(4, "Dwellers in Darkness", "d",
-            new string[] { "Supplicant of Morgoth", "Ursa", "Ollie" },
-            new int[] { 18, 19, 20 }, //monsterId
-            new int[] { 1, 1, 1 }, //monsterCount
-            new int[] { 34, 28, 40 }, //monsterCost
-            new int[] { 1, 1, 1 }, //groupLimit
+            //new string[] { "Supplicant of Morgoth", "Ursa", "Ollie" },
+            new Monster[] {new Monster(18), new Monster(19), new Monster(20)},
             new int[] { }, //tileId
             false, false
         );
 
         public static readonly Collection SPREADING_WAR = new Collection(5, "Spreading War", "w",
-            new string[] { "Fell Beast", "Warg Rider",  "Siege Engine", "War Oliphaunt", "Soldier", "Uruk Warrior", },
-            new int[] { 21, 22, 23, 24, 25, 26, }, //monsterId
-            new int[] { 3, 3, 2, 1, 6, 6, }, //monsterCount
-            new int[] { 24, 14, 22, 30, 8, 11, }, //monsterCost
-            new int[] { 1, 3, 1, 1, 3, 3, }, //groupLimit
+            //new string[] { "Fell Beast", "Warg Rider",  "Siege Engine", "War Oliphaunt", "Soldier", "Uruk Warrior", },
+            new Monster[] {new Monster(21), new Monster(22), new Monster(23), new Monster(24), new Monster(25), new Monster(26)},
             new int[] {  }, //tileId
             true, true
         );
 
-        public static readonly Collection SCOURGES_OF_THE_WASTES = new Collection(6, "Scourges of the Wasters", "c",
-            new string[] { "Lord Angon", "Witch-king of Angmar", "Eadris" },
-            new int[] { 27, 28, 29 }, //monsterId
-            new int[] { 1, 1, 1 }, //monsterCount
-            new int[] { 50, 50, 50 }, //monsterCost
-            new int[] { 1, 1, 1 }, //groupLimit
+        public static readonly Collection SCOURGES_OF_THE_WASTES = new Collection(6, "Scourges of the Wastes", "c",
+            //new string[] { "Lord Angon", "Witch-king of Angmar", "Eadris" },
+            new Monster[] {new Monster(27), new Monster(28), new Monster(29)},
             new int[] { }, //tileId
             false, false
         );
@@ -81,21 +63,39 @@ namespace JiME.Models
             }
         }
 
+        public static Monster[] _MONSTERS;
+        public static Monster[] MONSTERS()
+        {
+            if(_MONSTERS == null)
+            {
+                _MONSTERS = (Collection.CORE_SET.Monsters)
+                    .Concat(Collection.VILLAINS_OF_ERIADOR.Monsters).ToArray()
+                    .Concat(Collection.SHADOWED_PATHS.Monsters).ToArray()
+                    .Concat(Collection.DWELLERS_IN_DARKNESS.Monsters).ToArray()
+                    .Concat(Collection.SPREADING_WAR.Monsters).ToArray()
+                    .Concat(Collection.SCOURGES_OF_THE_WASTES.Monsters).ToArray();
+
+                //Console.WriteLine("Init MONSTERS:");
+                //foreach(var monster in _MONSTERS)
+                //{
+                //    Console.WriteLine(monster.id + " " + monster.health + " " + monster.dataName);
+                //}
+            }
+            return _MONSTERS;
+        }
+
         public int ID { get; private set; }
         public string Name { get; private set; }
         public string FontCharacter { get; private set; }
-        public string[] MonsterNames { get; private set; }
-        public int[] MonsterIds { get; private set; }
-        public int[] MonsterCosts { get; private set; }
-        public int[] MonsterCounts { get; private set; }
-        public int[] GroupLimits { get; private set; }
+        //public string[] MonsterNames { get; private set; }
+        public Monster[] Monsters { get; private set; }
         public int[] TileNumbers { get; private set; }
         public Boolean DifficultGround { get; private set; }
         public Boolean Fortified { get; private set; }
 
-        Collection(int id, string name, string fontCharacter, string[] monsterNames, int[] monsterIds, int[] monsterCounts, int[] monsterCosts, int[] groupLimits, int[] tileNumbers, Boolean difficultGround, Boolean fortified) =>
-            (ID, Name, FontCharacter, MonsterNames, MonsterIds, MonsterCounts, MonsterCosts, GroupLimits, TileNumbers, DifficultGround, Fortified) = 
-            (id, name, fontCharacter, monsterNames, monsterIds, monsterCounts, monsterCosts, groupLimits, tileNumbers, difficultGround, fortified);
+        Collection(int id, string name, string fontCharacter, Monster[] monsters, int[] tileNumbers, Boolean difficultGround, Boolean fortified) =>
+            (ID, Name, FontCharacter, Monsters, TileNumbers, DifficultGround, Fortified) = 
+            (id, name, fontCharacter, monsters, tileNumbers, difficultGround, fortified);
 
         public override string ToString() => Name;
 

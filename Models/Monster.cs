@@ -10,25 +10,62 @@ namespace JiME
 	/// </summary>
 	public class Monster : INotifyPropertyChanged, ICommonData
 	{
-		string _dataName, _bonuses;
-		int _count, _health, _damage, /*_fear,*/ _shieldValue, _sorceryValue, _loreReward, _movementValue, _maxMovementValue;
-		bool _isLarge, _isBloodThirsty, _isArmored, _isElite, _defaultStats, _isEasy, _isNormal, _isHard;
+		int Light { get { return 2; } }
+		int Medium { get { return 3; } }
+		int Heavy { get { return 4; } }
+
+		string _dataName, /*_name,*/ _bonuses;
+		int _id, _count, _health, _shieldValue, _sorceryValue, _moveA, _moveB, _groupLimit, _figureLimit, _damage, _loreReward, _movementValue, _maxMovementValue;
+		bool _isRanged, _isFearsome, _isLarge, _isBloodThirsty, _isArmored, _isElite, _defaultStats, _isEasy, _isNormal, _isHard;
+		int[] _cost;
+		string[] _moveSpecial, _tag, _special;
 
 		public Guid GUID { get; set; }
+
+		public int id
+		{
+			get => _id;
+			set
+			{
+				if (value != _id)
+				{
+					_id = value;
+					NotifyPropertyChanged("id");
+				}
+			}
+		}
+
 		public string dataName
 		{
 			get => _dataName;
 			set
 			{
-				if ( value != _dataName )
+				if (value != _dataName)
 				{
 					_dataName = value;
-					NotifyPropertyChanged( "dataName" );
+					NotifyPropertyChanged("dataName");
 				}
 			}
 		}
+
+		/*
+		public string name
+		{
+			get => _name;
+			set
+			{
+				if (value != _name)
+				{
+					_name = value;
+					NotifyPropertyChanged("name");
+				}
+			}
+		}
+		*/
+
 		public bool isEmpty { get; set; }
 		public string triggerName { get; set; }
+
 		public string bonuses
 		{
 			get
@@ -54,6 +91,7 @@ namespace JiME
 				}
 			}
 		}
+
 		public int health
 		{
 			get => _health;
@@ -66,6 +104,7 @@ namespace JiME
 				}
 			}
 		}
+
 		public int shieldValue
 		{
 			get => _shieldValue;
@@ -79,6 +118,7 @@ namespace JiME
 				}
 			}
 		}
+
 		public int sorceryValue
 		{
 			get => _sorceryValue;
@@ -92,6 +132,109 @@ namespace JiME
 				}
 			}
 		}
+
+		public int moveA
+		{
+			get => _moveA;
+			set
+			{
+				if (value != _moveA)
+				{
+					_moveA = value;
+					NotifyPropertyChanged("moveA");
+				}
+			}
+		}
+
+		public int moveB
+		{
+			get => _moveB;
+			set
+			{
+				if (value != _moveB)
+				{
+					_moveB = value;
+					NotifyPropertyChanged("moveB");
+				}
+			}
+		}
+
+		public string[] moveSpecial
+		{
+			get => _moveSpecial;
+			set
+			{
+				if (value != _moveSpecial)
+				{
+					_moveSpecial = value;
+					NotifyPropertyChanged("moveSpecial");
+					specialAbility = string.Join(", ", moveSpecial);
+				}
+			}
+		}
+
+		public bool isRanged
+		{
+			get => _isRanged;
+			set
+			{
+				_isRanged = value;
+				NotifyPropertyChanged("isRanged");
+			}
+		}
+
+		public int groupLimit
+		{
+			get => _groupLimit;
+			set
+			{
+				if (value != _groupLimit)
+				{
+					_groupLimit = value;
+					NotifyPropertyChanged("groupLimit");
+				}
+			}
+		}
+
+		public int figureLimit
+		{
+			get => _figureLimit;
+			set
+			{
+				if (value != _figureLimit)
+				{
+					_figureLimit = value;
+					NotifyPropertyChanged("figureLimit");
+				}
+			}
+		}
+
+		public int[] cost
+		{
+			get => _cost;
+			set
+			{
+				if (value != _cost)
+				{
+					_cost = value;
+					NotifyPropertyChanged("cost");
+				}
+			}
+		}
+
+		public string[] tag
+		{
+			get => _tag;
+			set
+			{
+				if (value != _tag)
+				{
+					_tag = value;
+					NotifyPropertyChanged("tag");
+				}
+			}
+		}
+
 		public int damage
 		{
 			get => _damage;
@@ -104,6 +247,31 @@ namespace JiME
 				}
 			}
 		}
+
+		public bool isFearsome
+		{
+			get => _isFearsome;
+			set
+			{
+				_isFearsome = value;
+				NotifyPropertyChanged("isFearsome");
+			}
+		}
+
+		public string[] special
+		{
+			get => _special;
+			set
+			{
+				if (value != _special)
+				{
+					_special = value;
+					NotifyPropertyChanged("special");
+					specialAbility = string.Join(", ", special);
+				}
+			}
+		}
+
 		public bool isLarge
 		{
 			get => _isLarge;
@@ -239,34 +407,64 @@ namespace JiME
 		}
 
 		//public static string[] monsterNames = { "Ruffian", "Goblin Scout", "Orc Hunter", "Orc Marauder", "Warg", "Hill Troll", "Wight" };
-		public static string[] monsterNames = (Collection.CORE_SET.MonsterNames)
-			.Concat(Collection.VILLAINS_OF_ERIADOR.MonsterNames).ToArray()
-			.Concat(Collection.SHADOWED_PATHS.MonsterNames).ToArray()
-			.Concat(Collection.DWELLERS_IN_DARKNESS.MonsterNames).ToArray()
-			.Concat(Collection.SPREADING_WAR.MonsterNames).ToArray()
-			.Concat(Collection.SCOURGES_OF_THE_WASTES.MonsterNames).ToArray();
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		public Monster( string name )
+		public Monster() { }
+
+		public Monster(int id)
 		{
-			GUID = Guid.NewGuid();
-			dataName = name;
-			damage = 1;
-			//fear = 1;
-			health = 5;
-			triggerName = "None";
-			negatedBy = Ability.Might;
-			isLarge = false;
-			count = 1;
-			isElite = false;
-			shieldValue = sorceryValue = 0;
-			loreReward = 0;
-			movementValue = 2;
-			maxMovementValue = 4;
-			defaultStats = true;
-			specialAbility = "";
-			isEasy = isNormal = isHard = true;
+			//Console.WriteLine("Monster(" + id + ")");
+
+			DefaultStats defaultStats;
+			try
+			{
+				defaultStats = Utils.defaultStats.Where(x => x.id == id).First();
+				specialAbility = string.Join(", ", defaultStats.special);
+			}
+			catch
+			{
+				//TODO Set up the rest of the enemies in enemy-defaults.json and get rid of this
+				defaultStats = new DefaultStats();
+				defaultStats.id = id;
+				defaultStats.dataName = "";
+				defaultStats.health = 5;
+				defaultStats.armor = 1;
+				defaultStats.sorcery = 0;
+				defaultStats.moveA = 2;
+				defaultStats.moveB = 4;
+				defaultStats.moveSpecial = new string[0];
+				defaultStats.ranged = false;
+				defaultStats.groupLimit = 3;
+				defaultStats.figureLimit = 6;
+				defaultStats.cost = new int[] { 7, 13, 19 };
+				defaultStats.tag = new string[0];
+				defaultStats.speed = "medium";
+				defaultStats.damage = "light";
+				defaultStats.fearsome = false;
+				defaultStats.special = new string[0];
+			}
+
+			if (defaultStats != null)
+			{
+				this.id = id;
+				dataName = defaultStats.dataName;
+				health = defaultStats.health;
+				shieldValue = defaultStats.armor;
+				sorceryValue = defaultStats.sorcery;
+				moveA = defaultStats.moveA;
+				moveB = defaultStats.moveB;
+				moveSpecial = defaultStats.moveSpecial;
+				isRanged = defaultStats.ranged;
+				groupLimit = defaultStats.groupLimit;
+				figureLimit = defaultStats.figureLimit;
+				cost = defaultStats.cost;
+				tag = defaultStats.tag;
+				movementValue = defaultStats.speed == "light" ? Light - 1 : (defaultStats.speed == "medium" ? Medium - 1 : Heavy - 1);
+				damage = defaultStats.damage == "light" ? Light : (defaultStats.damage == "medium" ? Medium : Heavy);
+				isFearsome = defaultStats.fearsome;
+				special = defaultStats.special;
+			}
 		}
 
 		public void NotifyPropertyChanged( string propName )

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using JiME.Models;
 
 namespace JiME
 {
 	public class ThreatInteraction : InteractionBase, INotifyPropertyChanged, ICommonData
 	{
 		string _triggerDefeatedName;
-		bool[] _includedEnemies;
+		bool[] _includedEnemies = new bool[Collection.MONSTERS().Length].Fill(false);
 		int _basePoolPoints;
 		DifficultyBias _difficultyBias;
 
@@ -55,7 +56,7 @@ namespace JiME
 			interactionType = InteractionType.Threat;
 
 			triggerDefeatedName = "None";
-			includedEnemies = new bool[30].Fill( false );
+			includedEnemies = new bool[Collection.MONSTERS().Length].Fill( false );
 			for (int i = 0; i < 7; i++) { includedEnemies[i] = true; }
 			basePoolPoints = 10;
 			difficultyBias = DifficultyBias.Medium;
@@ -75,5 +76,16 @@ namespace JiME
 		{
 			monsterCollection.Add( m );
 		}
+
+		//Help handle a situation where an old file type had less enemies available than we do now.
+		public void ResizeIncludedEnemies()
+        {
+			bool[] newArray = new bool[Collection.MONSTERS().Length].Fill(false);
+			for(int i=0; i<_includedEnemies.Length; i++)
+            {
+				newArray[i] = _includedEnemies[i];
+            }
+			_includedEnemies = newArray;
+        }
 	}
 }

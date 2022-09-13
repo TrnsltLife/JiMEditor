@@ -22,6 +22,10 @@ namespace JiME
 		public ProjectWindow()
 		{
 			InitializeComponent();
+
+			//initialize utilities
+			Utils.Init();
+
 			DataContext = this;
 
 			scrollVisible = false;

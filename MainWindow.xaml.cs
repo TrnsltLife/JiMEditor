@@ -27,6 +27,9 @@ namespace JiME
 			System.Globalization.CultureInfo.DefaultThreadCurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
 			System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
 
+			//initialize utilities
+			Utils.Init();
+
 			scenario = s ?? new Scenario();
 			scenario.TriggerTitleChange( false );
 			DataContext = scenario;
@@ -51,8 +54,6 @@ namespace JiME
 			triggersUC.dataListView.ItemsSource = scenario.triggersObserver;
 			objectivesUC.dataListView.ItemsSource = scenario.objectiveObserver;
 
-			//initialize utilities
-			Utils.Init();
 
 			//debug
 			//debug();

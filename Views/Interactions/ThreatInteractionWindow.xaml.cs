@@ -105,6 +105,9 @@ namespace JiME.Views
 					{new List<CheckBox>(){scourgesOfTheWastesCB}, Collection.SCOURGES_OF_THE_WASTES },
 				};
 
+			//Help handle a situation where an old file type had less enemies available than we do now.
+			if (allMonsterList.Count > interaction.includedEnemies.Length) { interaction.ResizeIncludedEnemies(); }
+
 			int index = 0;
 			foreach (var monsterCheckbox in allMonsterList)
             {
