@@ -8,6 +8,7 @@
              d:DesignHeight="450" d:DesignWidth="400">
 
 	<UserControl.Resources>
+		
 		<local:SettingsConverter x:Key="sc"/>
 		<!--custom button-->
 		<Style TargetType="{x:Type Button}">
@@ -57,6 +58,10 @@
 				</Button>
 				<Button x:Name="settings" Margin="5,0,0,0" Click="Settings_Click" Background="Silver" IsEnabled="{Binding ElementName=dataListView, Path=SelectedValue, Converter={StaticResource sc}}">
 					<Image Source="/JiME;component/Assets/settings.png" />
+				</Button>
+				<Button x:Name="duplicate" Margin="5,0,0,0" Click="Duplicate_Click" Background="MediumSeaGreen" IsEnabled="{Binding ElementName=dataListView, Path=SelectedValue, Converter={StaticResource sc}}"
+						Visibility="{Binding DuplicateButtonVisibility}">
+					<Image Source="/JiME;component/Assets/duplicate.png" />
 				</Button>
 			</StackPanel>
 		</StackPanel>

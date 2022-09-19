@@ -46,7 +46,7 @@ namespace JiME
 		public List<TextBookData> resolutions { get; set; }
 		public List<Threat> threats { get; set; }
 		public List<Chapter> chapters { get; set; }
-		[JsonConverter(typeof(CollectionConverter))]
+		[JsonConverter(typeof(CollectionListConverter))]
 		//[JsonIgnore]
 		public List<Collection> collections { get; set; } = new List<Collection>();
 		public List<int> globalTiles { get; set; }

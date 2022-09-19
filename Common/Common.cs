@@ -34,7 +34,7 @@ namespace JiME
 	public enum ProjectType { Standalone, Campaign }
 	public enum EditMode { Intro, Resolution, Objective, Flavor, Pass, Fail, Progress, Dialog, Special, Persistent, Story, Event }
 	public enum EditorMode { Information, Threat, Decision, Test, Branch }
-	public enum Ability { Might, Agility, Wisdom, Spirit, Wit, None }
+	public enum Ability { Might, Agility, Wisdom, Spirit, Wit, Wild, Random, None}
 	public enum TerrainToken { None, Pit, Mist, Barrels, Table, FirePit, Statue }
 	public enum TokenType { Search, Person, Threat, Darkness, Exploration, DifficultTerrain, Fortified, None }
 	public enum PersonType { Human, Elf, Hobbit, Dwarf }
@@ -203,6 +203,26 @@ namespace JiME
 			//Cleave: attacks hero in a space
 	}
 
+	public class DefaultActivations
+    {
+		public string name { get; set; }
+		public int id { get; set; }
+		[JsonConverter(typeof(CollectionConverter))]
+		public Collection collection { get; set; }
+		public DefaultActivationItem[] activations { get; set; }
+    }
+
+	public class DefaultActivationItem
+    {
+		public int id { get; set; }
+		public Ability negate { get; set; }
+		public bool[] valid { get; set; }
+		public int[] damage { get; set; }
+		public int[] fear { get; set; }
+		public string text { get; set; }
+		public string effect { get; set; }
+    }
+
 	public static class Utils
 	{
 		/// <summary>
@@ -223,6 +243,7 @@ namespace JiME
 		//public static GalleryTile[] galleryTilesB;
 		public static ImageSource[] tileSourceA, tileSourceB;
 		public static DefaultStats[] defaultStats;
+		public static DefaultActivations[] defaultActivations;
 
 		public static void Init()
 		{
@@ -275,6 +296,9 @@ namespace JiME
 
 			//load default enemy stats
 			defaultStats = LoadDefaultStats().ToArray();
+
+			//load default enemy activation stats
+			defaultActivations = LoadDefaultActivations().ToArray();
 		}
 
 		public static float RemapValue( float value, float low1, float high1, float low2, float high2 )
@@ -337,6 +361,23 @@ namespace JiME
                 //{
 				//	Console.WriteLine(item.id + " " + item.enumName + " " + item.dataName );
                 //}
+				return ret;
+			}
+		}
+		static List<DefaultActivations> LoadDefaultActivations()
+		{
+			var assembly = Assembly.GetExecutingAssembly();
+			string resourceName = assembly.GetManifestResourceNames()
+				.Single(str => str.Contains(".enemy-activation-defaults.json"));
+
+			using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+			using (StreamReader reader = new StreamReader(stream))
+			{
+				string json = reader.ReadToEnd();
+				var list = JObject.Parse(json);
+				JToken token = list.SelectToken("activations");
+				List<DefaultActivations> ret = token.ToObject(typeof(List<DefaultActivations>)) as List<DefaultActivations>;
+				Console.WriteLine("Default Activations Loaded:");
 				return ret;
 			}
 		}

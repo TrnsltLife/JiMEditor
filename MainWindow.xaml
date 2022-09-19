@@ -205,8 +205,10 @@
 		</ToolBar>
 
 		<Border BorderBrush="Black" BorderThickness="0,0,1,0" Background="#FF46464A">
-			<Grid Width="170" >
+			<Grid Width="190" >
 				<Grid.RowDefinitions>
+					<RowDefinition Height="auto"/>
+					<RowDefinition Height="*"/>
 					<RowDefinition Height="auto"/>
 					<RowDefinition Height="*"/>
 					<RowDefinition Height="auto"/>
@@ -232,6 +234,11 @@
 
 				<Border BorderThickness="0,0,0,0" BorderBrush="Gray" Grid.Row="4">
 					<uc:SidebarListView x:Name="triggersUC" Margin="5" Title="Triggers" />
+				</Border>
+
+
+				<Border BorderThickness="0,0,0,0" BorderBrush="Gray" Grid.Row="6">
+					<uc:SidebarListView x:Name="activationsUC" Margin="5" Title="Activations" ShowDuplicateButton="true" />
 				</Border>
 
 			</Grid>

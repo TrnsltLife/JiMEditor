@@ -47,12 +47,17 @@ namespace JiME
 			objectivesUC.onAddEvent += OnAddObjective;
 			objectivesUC.onRemoveEvent += OnRemoveObjective;
 			objectivesUC.onSettingsEvent += OnSettingsObjective;
+			activationsUC.onAddEvent += OnAddActivations;
+			activationsUC.onRemoveEvent += OnRemoveActivations;
+			activationsUC.onSettingsEvent += OnSettingsActivations;
+			activationsUC.onDuplicateEvent += OnDuplicateActivations;
 			//Debug.Log( this.FindResource( "mylist" ).GetType() );
 
 			//setup source of UI lists (scenario has to be created first!)
 			interactionsUC.dataListView.ItemsSource = scenario.interactionObserver;
 			triggersUC.dataListView.ItemsSource = scenario.triggersObserver;
 			objectivesUC.dataListView.ItemsSource = scenario.objectiveObserver;
+			activationsUC.dataListView.ItemsSource = scenario.activationsObserver;
 
 
 			//debug
@@ -203,6 +208,50 @@ namespace JiME
 			ObjectiveEditorWindow ow = new ObjectiveEditorWindow( scenario, ( (Objective)objectivesUC.dataListView.SelectedItem ), false );
 			ow.ShowDialog();
 		}
+
+
+
+		void OnAddActivations(object sender, EventArgs e)
+		{
+			AddActivations();
+		}
+
+		void OnRemoveActivations(object sender, EventArgs e)
+		{
+			int idx = activationsUC.dataListView.SelectedIndex;
+			MonsterActivations act = (MonsterActivations)activationsUC.dataListView.Items[idx];
+			Console.WriteLine("Remove Enemy Activations " + act.dataName);
+			if (idx != -1)
+				scenario.RemoveData(activationsUC.dataListView.Items[idx]);
+			activationsUC.dataListView.SelectedIndex = Math.Max(idx-1,0);
+		}
+
+		void OnSettingsActivations(object sender, EventArgs e)
+		{
+			int idx = activationsUC.dataListView.SelectedIndex;
+			MonsterActivations act = (MonsterActivations)activationsUC.dataListView.Items[idx];
+			Console.WriteLine("Settings Enemy Activations " + act.dataName);
+			/*
+			ActivationsEditorWindow ow = new ActivationsEditorWindow(scenario, ((MonsterActivations)activationsUC.dataListView.SelectedItem), false);
+			ow.ShowDialog();
+			*/
+		}
+
+		void OnDuplicateActivations(object sender, EventArgs e)
+		{
+			int idx = activationsUC.dataListView.SelectedIndex;
+			MonsterActivations act = (MonsterActivations)activationsUC.dataListView.Items[idx];
+			Console.WriteLine("Duplicate Enemy Activations " + act.dataName);
+
+			//Get next id starting at 2000 to create the new item
+			int maxId = scenario.activationsObserver.Max(a => a.id);
+			int newId = Math.Max(maxId+1, 2000); //Get the next id over 2000
+			scenario.activationsObserver.Add(act.Clone(newId));
+			/*
+			ActivationsEditorWindow ow = new ActivationsEditorWindow(scenario, ((MonsterActivations)activationsUC.dataListView.SelectedItem), false);
+			ow.ShowDialog();
+			*/
+		}
 		#endregion
 
 		private void scenarioName_PreviewMouseDown( object sender, System.Windows.Input.MouseButtonEventArgs e )
@@ -278,6 +327,19 @@ namespace JiME
 				scenario.AddObjective( ow.objective );
 			}
 		}
+
+		void AddActivations()
+		{
+			Console.WriteLine("Add Enemy Activations...");
+			/*
+			ActivationsEditorWindow ow = new ActivationsEditorWindow(scenario, new MonsterActivations("Default Short Name - Change This"));
+			if (ow.ShowDialog() == true)
+			{
+				scenario.AddActivations(ow.objective);
+			}
+			*/
+		}
+
 
 		void AddTrigger()
 		{

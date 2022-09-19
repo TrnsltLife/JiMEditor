@@ -193,6 +193,7 @@ namespace JiME
 		public ObservableCollection<IInteraction> interactionObserver { get; set; }
 		public ObservableCollection<Trigger> triggersObserver { get; set; }
 		public ObservableCollection<Objective> objectiveObserver { get; set; }
+		public ObservableCollection<MonsterActivations> activationsObserver { get; set; }
 		public ObservableCollection<TextBookData> resolutionObserver { get; set; }
 		public ObservableCollection<Threat> threatObserver { get; set; }
 		public ObservableCollection<Chapter> chapterObserver { get; set; }
@@ -272,6 +273,7 @@ namespace JiME
 			interactionObserver = new ObservableCollection<IInteraction>();
 			triggersObserver = new ObservableCollection<Trigger>();
 			objectiveObserver = new ObservableCollection<Objective>();
+			activationsObserver = new ObservableCollection<MonsterActivations>();
 			resolutionObserver = new ObservableCollection<TextBookData>();
 			threatObserver = new ObservableCollection<Threat>();
 			chapterObserver = new ObservableCollection<Chapter>();
@@ -381,6 +383,13 @@ namespace JiME
 			//default objective - always at least 1 in the scenario
 			Objective obj = new Objective( "Default Objective" ) { triggerName = "Objective Complete" };
 			objectiveObserver.Add( obj );
+
+			//Add the default enemy activations
+			foreach (DefaultActivations defAct in Utils.defaultActivations)
+			{
+				MonsterActivations act = new MonsterActivations(defAct);
+				activationsObserver.Add(act);
+			}
 
 			//starting chapter - always at least one in the scenario
 			Chapter chapter = new Chapter( "Start" ) { isEmpty = true };
@@ -497,6 +506,12 @@ namespace JiME
 			//	objectiveObserver[i] = objsorted[i];
 		}
 
+		public void AddActivations(MonsterActivations activations)
+		{
+			activationsObserver.Add(activations);
+		}
+
+
 		/// <summary>
 		/// adds a Resolution to Scenario AND adds EndStatus bool for it
 		/// </summary>
@@ -532,18 +547,20 @@ namespace JiME
 			if ( ( (ICommonData)item ).isEmpty )
 				return;
 
-			if ( item is IInteraction )
-				interactionObserver.Remove( item as IInteraction );
-			else if ( item is Trigger )
-				triggersObserver.Remove( item as Trigger );
-			else if ( item is Objective )
-				objectiveObserver.Remove( item as Objective );
-			else if ( item is TextBookData )
-				resolutionObserver.Remove( item as TextBookData );
-			else if ( item is Threat )
-				threatObserver.Remove( item as Threat );
-			else if ( item is Chapter )
-				chapterObserver.Remove( item as Chapter );
+			if (item is IInteraction)
+				interactionObserver.Remove(item as IInteraction);
+			else if (item is Trigger)
+				triggersObserver.Remove(item as Trigger);
+			else if (item is Objective)
+				objectiveObserver.Remove(item as Objective);
+			else if (item is MonsterActivations)
+				activationsObserver.Remove(item as MonsterActivations);
+			else if (item is TextBookData)
+				resolutionObserver.Remove(item as TextBookData);
+			else if (item is Threat)
+				threatObserver.Remove(item as Threat);
+			else if (item is Chapter)
+				chapterObserver.Remove(item as Chapter);
 		}
 
 		/// <summary>

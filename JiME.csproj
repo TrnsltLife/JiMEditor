@@ -77,12 +77,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\CollectionConverter.cs" />
     <Compile Include="Common\Commands.cs" />
     <Compile Include="Common\Converters.cs" />
     <Compile Include="Common\ErrorChecker.cs" />
     <Compile Include="Common\FileManager.cs" />
     <Compile Include="Common\HexTileData.cs" />
-    <Compile Include="Common\CollectionConverter.cs" />
+    <Compile Include="Common\CollectionListConverter.cs" />
     <Compile Include="Common\InteractionConverter.cs" />
     <Compile Include="Common\TextBook.cs" />
     <Compile Include="Common\TileConverter.cs" />
@@ -106,6 +107,8 @@
     <Compile Include="Models\Interaction Events\TextInteraction.cs" />
     <Compile Include="Models\Interaction Events\ThreatInteraction.cs" />
     <Compile Include="Common\Common.cs" />
+    <Compile Include="Models\MonsterActivationItem.cs" />
+    <Compile Include="Models\MonsterActivations.cs" />
     <Compile Include="Models\Monster.cs" />
     <Compile Include="Models\Objective.cs" />
     <Compile Include="Models\Scenario.cs" />
@@ -351,6 +354,7 @@
     <Resource Include="Assets\LoTR-JiME-Icons.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <EmbeddedResource Include="Assets\enemy-activation-defaults.json" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -723,6 +727,9 @@
     <Resource Include="Assets\TilesB\402.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\duplicate.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
