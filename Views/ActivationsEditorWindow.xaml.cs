@@ -36,17 +36,6 @@ namespace JiME.Views
 			oldName = activations.dataName;
 		}
 
-		/*
-		private void EditFlavorButton_Click( object sender, RoutedEventArgs e )
-		{
-			TextEditorWindow tw = new TextEditorWindow( scenario, EditMode.Flavor, interaction.textBookData );
-			if ( tw.ShowDialog() == true )
-			{
-				interaction.textBookData.pages = tw.textBookController.pages;
-			}
-		}
-		*/
-
 		bool TryClosing()
 		{
 			//check for dupe name

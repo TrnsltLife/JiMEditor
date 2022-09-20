@@ -15,8 +15,8 @@ namespace JiME
 
 		string _dataName;
 		int _id;
-		Collection _collection;
-		ObservableCollection<MonsterActivationItem> _activations;
+		Collection _collection = Collection.NONE;
+		ObservableCollection<MonsterActivationItem> _activations = new ObservableCollection<MonsterActivationItem>();
 
 		public Guid GUID { get; set; }
 
@@ -79,6 +79,12 @@ namespace JiME
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		public MonsterActivations() { }
+
+		public MonsterActivations(int id)
+		{
+			this.id = id;
+			this.dataName = "New Enemy Activations";
+		}
 
 		public MonsterActivations(DefaultActivations act)
 		{

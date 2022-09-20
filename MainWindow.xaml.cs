@@ -331,13 +331,14 @@ namespace JiME
 		void AddActivations()
 		{
 			Console.WriteLine("Add Enemy Activations...");
-			/*
-			ActivationsEditorWindow ow = new ActivationsEditorWindow(scenario, new MonsterActivations("Default Short Name - Change This"));
+			//Get next id starting at 2000 to create the new item
+			int maxId = scenario.activationsObserver.Max(a => a.id);
+			int newId = Math.Max(maxId + 1, 2000); //Get the next id over 2000
+			ActivationsEditorWindow ow = new ActivationsEditorWindow(scenario, new MonsterActivations(newId));
 			if (ow.ShowDialog() == true)
 			{
-				scenario.AddActivations(ow.objective);
+				scenario.AddActivations(ow.activations);
 			}
-			*/
 		}
 
 

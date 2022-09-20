@@ -8,6 +8,11 @@ namespace JiME.Models
 {
     public class Collection
     {
+        public static readonly Collection NONE = new Collection(0, "None", " ",
+            new Monster[] { },
+            new int[] { },
+            false, false);
+
         public static readonly Collection CORE_SET = new Collection(1, "Core Set", "r",
             //new string[] { "Ruffian", "Goblin Scout", "Orc Hunter", "Orc Marauder", "Hungry Warg", "Hill Troll", "Wight" },
             new Monster[] {new Monster(0), new Monster(1), new Monster(2), new Monster(3), new Monster(4), new Monster(5), new Monster(6)}, 
@@ -54,6 +59,7 @@ namespace JiME.Models
         {
             get
             {
+                yield return NONE;
                 yield return CORE_SET;
                 yield return VILLAINS_OF_ERIADOR;
                 yield return SHADOWED_PATHS;
@@ -103,6 +109,8 @@ namespace JiME.Models
         {
             switch (id)
             {
+                case 0:
+                    return Collection.NONE;
                 case 1:
                     return Collection.CORE_SET;
                 case 2:
@@ -124,6 +132,8 @@ namespace JiME.Models
         {
             switch (name)
             {
+                case "None":
+                    return Collection.NONE;
                 case "Core Set":
                     return Collection.CORE_SET;
                 case "Villains of Eriador":
