@@ -194,6 +194,7 @@ namespace JiME
 		public ObservableCollection<Trigger> triggersObserver { get; set; }
 		public ObservableCollection<Objective> objectiveObserver { get; set; }
 		public ObservableCollection<MonsterActivations> activationsObserver { get; set; }
+		//public List<MonsterActivations> filteredActivationsObserver => activationsObserver.Where(a => collectionObserver.Contains(a.collection)).ToList();
 		public ObservableCollection<TextBookData> resolutionObserver { get; set; }
 		public ObservableCollection<Threat> threatObserver { get; set; }
 		public ObservableCollection<Chapter> chapterObserver { get; set; }

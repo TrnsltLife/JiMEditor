@@ -187,6 +187,9 @@
     <Compile Include="Views\Interactions\ThreatInteractionWindow.xaml.cs">
       <DependentUpon>ThreatInteractionWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ActivationsEditorWindow.xaml.cs">
+      <DependentUpon>ActivationsEditorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TileEditorWindow.xaml.cs">
       <DependentUpon>TileEditorWindow.xaml</DependentUpon>
     </Compile>
@@ -310,6 +313,10 @@
     <Page Include="Views\Interactions\ThreatInteractionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ActivationsEditorWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\TileEditorWindow.xaml">
       <SubType>Designer</SubType>

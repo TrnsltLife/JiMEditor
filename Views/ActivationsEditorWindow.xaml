@@ -1,0 +1,196 @@
+﻿<Window x:Class="JiME.Views.ActivationsEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JiME"
+        mc:Ignorable="d"
+        ContentRendered="Window_ContentRendered"
+        Title="Enemy Activations Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" Width="750" Closing="Window_Closing">
+
+	<Window.Resources>
+		<BooleanToVisibilityConverter x:Key="bvis"/>
+		<local:BoolInvertConverter x:Key="binv"/>
+		<Style TargetType="RadioButton">
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="Margin" Value="0,5"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+		</Style>
+	</Window.Resources>
+
+	<StackPanel>
+
+		<StackPanel Orientation="Vertical">
+			<StackPanel Margin="0,5,0,0" HorizontalAlignment="Stretch">
+				<Border Style="{StaticResource callout}">
+					<StackPanel>
+						<TextBlock Style="{StaticResource Heading}" Text="Enemy Activations Name:"/>
+						<TextBlock Style="{StaticResource SubText}">
+								A short name used within the Editor. <Bold><Italic>Required</Italic></Bold>
+						</TextBlock>
+						<StackPanel Orientation="Horizontal">
+							<TextBox x:Name="nameTB" Text="{Binding activations.dataName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DefaultTextBox}" Margin="0,5" Width="250" HorizontalAlignment="Left" TextChanged="nameTB_TextChanged"/>
+							<TextBlock Text="   " Style="{StaticResource Heading}"/>
+							<TextBlock Text="{Binding activations.collection.FontCharacter}" FontFamily="/Assets/#LoTR JiME Icons" Style="{StaticResource Heading}" ToolTip="{Binding activations.collection.Name}"/>
+							<TextBlock Name="lockIcon" Text="   🔒" Style="{StaticResource Heading}" ToolTip="Locked: Default enemy activations cannot be deleted or renamed."/>
+						</StackPanel>
+					</StackPanel>
+				</Border>
+
+
+				<Border Style="{StaticResource callout}">
+					<Grid Margin="0,0,0,10">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*"/>
+							<ColumnDefinition Width="auto"/>
+						</Grid.ColumnDefinitions>
+
+						<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap">
+							An <Bold>Enemy Activation</Bold> determines the flavor text that is displayed to the Heroes when an enemy attacks. It also determines how much damage and fear is done, what character ability is tested to negate the damage, and any optional effect that occurs after the attack. You can create multiple activations for the activation group. With each enemy attack, an activation will be chosen at random from the activation group.
+						</TextBlock>
+
+						<Button HorizontalAlignment="Right" Grid.Column="1" x:Name="help" Background="#FFC98800" Height="32"  Click="help_Click" Margin="10,0,0,0">
+							<StackPanel Orientation="Horizontal">
+								<Image Source="/JiME;component/Assets/help.png" Stretch="Uniform"/>
+								<TextBlock Text="Activation Help" Style="{StaticResource Heading}" Margin="5,0,0,0"/>
+							</StackPanel>
+						</Button>
+					</Grid>
+				</Border>
+
+				<Button x:Name="addActivationButton" Background="DodgerBlue"  HorizontalAlignment="Left" Margin="0,10,0,10" Click="AddActivationButton_Click">
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Add Activation..." Style="{StaticResource Heading}" VerticalAlignment="Center" Margin="0,0,5,0"/>
+						<Image Source="/JiME;component/Assets/add.png" Height="24"/>
+					</StackPanel>
+				</Button>
+
+				<!--items-->
+				<ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" MaxHeight="350">
+					<ItemsControl ItemsSource="{Binding activations.activations}">
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<StackPanel IsItemsHost="True"/>
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Border Style="{StaticResource callout}" Margin="0,2">
+									<Grid>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="*"/>
+											<ColumnDefinition Width="auto"/>
+										</Grid.ColumnDefinitions>
+
+										<StackPanel Orientation="Vertical">
+											<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+												<StackPanel.Resources>
+													<Style TargetType="TextBlock">
+														<Setter Property="Foreground" Value="Silver"/>
+														<Setter Property="VerticalAlignment" Value="Center"/>
+													</Style>
+													<Style TargetType="Image">
+														<Setter Property="Margin" Value="5,0,5,0"/>
+													</Style>
+												</StackPanel.Resources>
+												<!--
+												<TextBlock Text="ID: " Style="{StaticResource SubText}"/>
+												<TextBlock Text="{Binding dataName}" Style="{StaticResource Heading}"/>
+												-->
+												
+												<TextBlock Text="1 Enemy: " Style="{StaticResource SubText}"/>
+												<TextBlock Text="{Binding damage[0]}" Style="{StaticResource Heading}"/>
+												<TextBlock Text="D" Style="{StaticResource Heading}" FontFamily="/Assets/#LoTR JiME Icons"/>
+												<TextBlock Text="/" Style="{StaticResource Heading}"/>
+												<TextBlock Text="{Binding fear[0]}" Style="{StaticResource Heading}"/>
+												<TextBlock Text="F" Style="{StaticResource Heading}" FontFamily="/Assets/#LoTR JiME Icons"/>
+
+												<TextBlock Text="   2 Enemies: " Style="{StaticResource SubText}"/>
+												<TextBlock Text="{Binding damage[1]}" Style="{StaticResource Heading}"/>
+												<TextBlock Text="D" Style="{StaticResource Heading}" FontFamily="/Assets/#LoTR JiME Icons"/>
+												<TextBlock Text="/" Style="{StaticResource Heading}"/>
+												<TextBlock Text="{Binding fear[1]}" Style="{StaticResource Heading}"/>
+												<TextBlock Text="F" Style="{StaticResource Heading}" FontFamily="/Assets/#LoTR JiME Icons"/>
+
+												<TextBlock Text="   3 Enemies: " Style="{StaticResource SubText}"/>
+												<TextBlock Text="{Binding damage[2]}" Style="{StaticResource Heading}"/>
+												<TextBlock Text="D" Style="{StaticResource Heading}" FontFamily="/Assets/#LoTR JiME Icons"/>
+												<TextBlock Text="/" Style="{StaticResource Heading}"/>
+												<TextBlock Text="{Binding fear[2]}" Style="{StaticResource Heading}"/>
+												<TextBlock Text="F" Style="{StaticResource Heading}" FontFamily="/Assets/#LoTR JiME Icons"/>
+
+												<TextBlock Text="   Negated by: " Style="{StaticResource SubText}"/>
+												<TextBlock Text="{Binding negate}" Style="{StaticResource Heading}"/>
+
+
+												<!--
+												<Border Width="32" Height="32" Margin="10,0" BorderThickness="2" BorderBrush="White" CornerRadius="50">
+													<TextBlock Text="{Binding count}" Style="{StaticResource Heading}" HorizontalAlignment="Center"/>
+												</Border>
+												<Border Width="32" Height="32">
+													<Border.Background>
+														<ImageBrush ImageSource="/JiME;component/Assets/health.png" Stretch="UniformToFill"/>
+													</Border.Background>
+													<TextBlock Text="{Binding health}" Style="{StaticResource Heading}" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+												</Border>
+												-->
+												<!--<Image Source="/JiME;component/Assets/add2.png" Height="32" Margin="20,0,0,0"/>-->
+												<!--
+												<TextBlock Text="{Binding bonuses}" Margin="20,0,0,0"/>
+												<Image Source="/JiME;component/Assets/damage.png" Height="32" Margin="20,0,0,0"/>
+												<TextBlock Text="/" Margin="5,0,0,0"/>
+												<Image Source="/JiME;component/Assets/fear.png" Height="32"/>
+												<TextBlock Text="{Binding damage}"/>
+												<TextBlock Style="{StaticResource Heading}" Text="Elite" Margin="15, 0, 0, 0" Visibility="{Binding isElite,Converter={StaticResource bvis}}" Foreground="Red"/>
+												<TextBlock Margin="10,0"/>
+												-->
+												<!--difficulty-->
+												<!--
+												<Border Width="16" Height="16" BorderThickness="2" BorderBrush="White" Background="Green" Visibility="{Binding isEasy, Converter={StaticResource bvis}}"/>
+												<Border Width="16" Height="16" BorderThickness="2" BorderBrush="White" Background="Yellow" Visibility="{Binding isNormal, Converter={StaticResource bvis}}"/>
+												<Border Width="16" Height="16" BorderThickness="2" BorderBrush="White" Background="Red" Visibility="{Binding isHard, Converter={StaticResource bvis}}"/>
+												-->
+											</StackPanel>
+											<StackPanel Orientation="Horizontal">
+												<TextBlock Text="Attack Text: " Style="{StaticResource SubText}"/>
+												<TextBlock Text="{Binding text}" Style="{StaticResource SubTextWhite}"/>
+											</StackPanel>
+											<StackPanel Orientation="Horizontal">
+												<TextBlock Text="After Effect: " Style="{StaticResource SubText}"/>
+												<TextBlock Text="{Binding effect}" Style="{StaticResource SubTextWhite}"/>
+											</StackPanel>
+										</StackPanel>
+
+										<StackPanel Orientation="Horizontal" Grid.Column="1">
+											<Button x:Name="editButton" Background="CornflowerBlue" Click="EditButton_Click" IsDefault="True" Width="40" Height="40" Margin="5,0" DataContext="{Binding}">
+												<Image Source="/JiME;component/Assets/edit.png" Stretch="Uniform" />
+											</Button>
+											<Button x:Name="deleteButton" Background="{StaticResource bgCancelDelete}" Click="DeleteButton_Click" IsDefault="True" Width="40" Height="40" DataContext="{Binding}">
+												<Image Source="/JiME;component/Assets/remove.png" Stretch="Uniform" />
+											</Button>
+										</StackPanel>
+									</Grid>
+								</Border>
+
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</ScrollViewer>
+			</StackPanel>
+		</StackPanel>
+
+		<!--footer-->
+		<Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Silver" HorizontalAlignment="Stretch" Background="#FF46464A">
+			<WrapPanel HorizontalAlignment="Right" >
+
+				<Button x:Name="okButton" Margin="10" Background="MediumSeaGreen" Click="OkButton_Click" IsDefault="True">
+					<Image Source="/JiME;component/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+
+				<Button x:Name="cancelButton" Margin="0,10,10,10" Background="{StaticResource bgCancelDelete}" Click="CancelButton_Click" IsCancel="True">
+					<Image Source="/JiME;component/Assets/cancel.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+			</WrapPanel>
+		</Border>
+	</StackPanel>
+</Window>

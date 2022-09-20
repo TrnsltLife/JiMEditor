@@ -41,6 +41,7 @@ namespace JiME
 				if (value != _id)
 				{
 					_id = value;
+					_dataName = value.ToString();
 					NotifyPropertyChanged("id");
 				}
 			}
@@ -130,6 +131,18 @@ namespace JiME
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		public MonsterActivationItem() { }
+
+		public MonsterActivationItem(int id)
+        {
+			this.id = id;
+			this.dataName = id.ToString();
+			this.negate = Ability.None;
+			this.text = "New attack text.";
+			this.effect = "New after effect (optional).";
+			this.valid = new bool[] { true, true, true };
+			this.damage = new int[] { 1, 2, 3 };
+			this.fear = new int[] { 1, 2, 3 };
+        }
 
 		public MonsterActivationItem(DefaultActivationItem act)
 		{

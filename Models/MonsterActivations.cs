@@ -2,6 +2,8 @@
 using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace JiME
 {
@@ -14,7 +16,7 @@ namespace JiME
 		string _dataName;
 		int _id;
 		Collection _collection;
-		MonsterActivationItem[] _activations;
+		ObservableCollection<MonsterActivationItem> _activations;
 
 		public Guid GUID { get; set; }
 
@@ -60,7 +62,7 @@ namespace JiME
 			}
 		}
 
-		public MonsterActivationItem[] activations
+		public ObservableCollection<MonsterActivationItem> activations
 		{
 			get => _activations;
 			set
@@ -83,10 +85,10 @@ namespace JiME
 			id = act.id;
 			dataName = act.name;
 			collection = act.collection;
-			activations = new MonsterActivationItem[act.activations.Length];
+			activations = new ObservableCollection<MonsterActivationItem>();
 			for(int i=0; i<act.activations.Length; i++)
             {
-				activations[i] = new MonsterActivationItem(act.activations[i]);
+				activations.Add(new MonsterActivationItem(act.activations[i]));
             }
 		}
 
@@ -98,12 +100,23 @@ namespace JiME
 		public MonsterActivations Clone(int newId)
         {
 			MonsterActivations newActivations = new MonsterActivations { id = newId, dataName = "Copy of " + this.dataName, collection = this.collection };
-			newActivations.activations = new MonsterActivationItem[activations.Length];
-			for(int i=0; i<activations.Length; i++)
+			newActivations.activations = new ObservableCollection<MonsterActivationItem>();
+			for(int i=0; i<activations.Count; i++)
             {
-                newActivations.activations[i] = activations[i].Clone();
+                newActivations.activations.Add(activations[i].Clone());
             }
 			return newActivations;
         }
+
+		public void RenumberActivations()
+		{
+			int i = 1;
+			foreach (var act in activations)
+			{
+				act.id = i;
+				i++;
+			}
+			NotifyPropertyChanged("activations");
+		}
 	}
 }

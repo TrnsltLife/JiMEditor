@@ -105,7 +105,13 @@
 				<Setter Property="FontSize" Value="12"/>
 				<Setter Property="Foreground" Value="Silver"/>
 			</Style>
-
+			
+			<!--text sub headings-->
+			<Style x:Key="SubTextWhite" TargetType="TextBlock">
+				<Setter Property="FontSize" Value="12"/>
+				<Setter Property="Foreground" Value="White"/>
+			</Style>
+			
 			<!--rounded corner buttons-->
 			<Style TargetType="{x:Type Button}">
 				<Setter Property="Template">
