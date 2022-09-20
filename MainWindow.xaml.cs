@@ -220,7 +220,6 @@ namespace JiME
 		{
 			int idx = activationsUC.dataListView.SelectedIndex;
 			MonsterActivations act = (MonsterActivations)activationsUC.dataListView.Items[idx];
-			Console.WriteLine("Remove Enemy Activations " + act.dataName);
 			if (idx != -1 && act.id >= 1000) //Don't allow removing the basic enemy activations. Only allow removing built-in custom activations and user custom activations.
 			{
 				scenario.RemoveData(activationsUC.dataListView.Items[idx]);
@@ -232,7 +231,6 @@ namespace JiME
 		{
 			int idx = activationsUC.dataListView.SelectedIndex;
 			MonsterActivations act = (MonsterActivations)activationsUC.dataListView.Items[idx];
-			Console.WriteLine("Settings Enemy Activations " + act.dataName);
 			ActivationsEditorWindow ow = new ActivationsEditorWindow(scenario, ((MonsterActivations)activationsUC.dataListView.SelectedItem));
 			ow.ShowDialog();
 		}
@@ -241,7 +239,6 @@ namespace JiME
 		{
 			int idx = activationsUC.dataListView.SelectedIndex;
 			MonsterActivations act = (MonsterActivations)activationsUC.dataListView.Items[idx];
-			Console.WriteLine("Duplicate Enemy Activations " + act.dataName);
 
 			//Get next id starting at 2000 to create the new item
 			int maxId = scenario.activationsObserver.Max(a => a.id);

@@ -128,6 +128,13 @@ namespace JiME
 			}
 		}
 
+		public void UpdateValid()
+        {
+			valid[0] = (damage[0] > 0 || fear[0] > 0);
+			valid[1] = (damage[1] > 0 || fear[1] > 0);
+			valid[2] = (damage[2] > 0 || fear[2] > 0);
+		}
+
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		public MonsterActivationItem() { }

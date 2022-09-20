@@ -1,0 +1,114 @@
+﻿<Window x:Class="JiME.Views.MonsterActivationItemEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JiME"
+		xmlns:sys="clr-namespace:System;assembly=mscorlib"
+		xmlns:jime="clr-namespace:JiME"
+        mc:Ignorable="d"
+        Title="Objective Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" Width="750" ContentRendered="Window_ContentRendered">
+
+	<Window.Resources>
+		<local:BoolInvertConverter x:Key="b2e"/>
+		<BooleanToVisibilityConverter x:Key="b2vis"/>
+		<local:BoolInvertVisibility x:Key="b2invVis"/>
+
+		<!-- Bind an Enum. https://learn.microsoft.com/en-us/dotnet/desktop/wpf/data/how-to-bind-to-an-enumeration?view=netdesktop-6.0 -->
+		<ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="AbilityEnumDataSource">
+			<ObjectDataProvider.MethodParameters>
+				<x:Type TypeName="jime:Ability"></x:Type>
+			</ObjectDataProvider.MethodParameters>
+		</ObjectDataProvider>
+	</Window.Resources>
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="auto"/>
+		</Grid.RowDefinitions>
+
+		<StackPanel Margin="5">
+			<Border Style="{StaticResource callout}" Margin="0,10">
+				<StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Style="{StaticResource SubText}" Text="Enemy Activations Group Name:"/>
+						<TextBlock Text="{Binding activations.dataName}" Style="{StaticResource Heading}"/>
+					</StackPanel>
+					
+					<TextBlock Style="{StaticResource Heading}" Text="Attack Text:" Margin="0,10,0,0"/>
+					<TextBlock Style="{StaticResource SubText}">
+					Write a vivid description. It will be shown to the Heroes when the enemy attacks. <Bold><Italic>Required</Italic></Bold>
+					</TextBlock>
+					<TextBox x:Name="textTB" Style="{StaticResource DefaultTextBox}" Margin="0,5" HorizontalAlignment="Stretch" Text="{Binding activationItem.text, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="true" TextWrapping="Wrap" MinLines="3" MaxLines="3"/>
+
+					<TextBlock Style="{StaticResource Heading}" Text="After Effect:" Margin="0,10,0,0"/>
+					<TextBlock Style="{StaticResource SubText}">
+					Describe any effects that occur after the attack. e.g. "If you did not take damage, gain one Inspiration." or "After the attack, move the Enemy 1 space away." <Bold><Italic>Required</Italic></Bold>
+					</TextBlock>
+					<TextBox x:Name="effectTB" Style="{StaticResource DefaultTextBox}" Margin="0,5" HorizontalAlignment="Stretch" Text="{Binding activationItem.effect, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="true" TextWrapping="Wrap"/>
+				</StackPanel>
+			</Border>
+
+			<GroupBox Header="Damage by Group Size" FontSize="14" Padding="0" Style="{StaticResource DefaultGroupBox}" Margin="0,10,0,0">
+				<!--<UniformGrid Columns="2">-->
+				<StackPanel>
+					<Border Style="{StaticResource callout}" Margin="5">
+						<UniformGrid Columns="2">
+							<StackPanel>
+								<StackPanel Orientation="Horizontal">
+									<TextBlock Style="{StaticResource Heading}" Margin="0,0,10,5" Text="1 Enemy:   "/>
+									<TextBox Style="{StaticResource DefaultTextBox}" Width="25" Text="{Binding activationItem.damage[0]}"/>
+									<TextBlock Text="D" Style="{StaticResource Heading}" FontFamily="/Assets/#LoTR JiME Icons"/>
+									<TextBlock Text=" / " Style="{StaticResource Heading}" FontSize="20"/>
+									<TextBox Style="{StaticResource DefaultTextBox}" Width="25" Text="{Binding activationItem.fear[0]}"/>
+									<TextBlock Text="F" Style="{StaticResource Heading}" FontFamily="/Assets/#LoTR JiME Icons"/>
+								</StackPanel>
+
+								<StackPanel Orientation="Horizontal">
+									<TextBlock Style="{StaticResource Heading}" Margin="0,0,10,5" Text="2 Enemies:"/>
+									<TextBox Style="{StaticResource DefaultTextBox}" Width="25" Text="{Binding activationItem.damage[1]}"/>
+									<TextBlock Text="D" Style="{StaticResource Heading}" FontFamily="/Assets/#LoTR JiME Icons"/>
+									<TextBlock Text=" / " Style="{StaticResource Heading}" FontSize="20"/>
+									<TextBox Style="{StaticResource DefaultTextBox}" Width="25" Text="{Binding activationItem.fear[1]}"/>
+									<TextBlock Text="F" Style="{StaticResource Heading}" FontFamily="/Assets/#LoTR JiME Icons"/>
+								</StackPanel>
+
+								<StackPanel Orientation="Horizontal">
+									<TextBlock Style="{StaticResource Heading}" Margin="0,0,10,5" Text="3 Enemies:"/>
+									<TextBox Style="{StaticResource DefaultTextBox}" Width="25" Text="{Binding activationItem.damage[2]}"/>
+									<TextBlock Text="D" Style="{StaticResource Heading}" FontFamily="/Assets/#LoTR JiME Icons"/>
+									<TextBlock Text=" / " Style="{StaticResource Heading}" FontSize="20"/>
+									<TextBox Style="{StaticResource DefaultTextBox}" Width="25" Text="{Binding activationItem.fear[2]}"/>
+									<TextBlock Text="F" Style="{StaticResource Heading}" FontFamily="/Assets/#LoTR JiME Icons"/>
+								</StackPanel>
+							</StackPanel>
+
+							<StackPanel>
+								<TextBlock Style="{StaticResource Heading}" Margin="0,10,0,5" TextWrapping="Wrap">
+										Damage and Fear Negated By: (<Italic>Required</Italic>):
+								</TextBlock>
+								<ComboBox x:Name="negateCB" ItemsSource="{Binding Source={StaticResource AbilityEnumDataSource}}" SelectedValue="{Binding activationItem.negate}" HorizontalAlignment="Left" VerticalAlignment="Center" MinWidth="200"/>
+							</StackPanel>
+						</UniformGrid>
+					</Border>
+				</StackPanel>
+			</GroupBox>
+		</StackPanel>
+
+		<!--Footer-->
+		<Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Silver" HorizontalAlignment="Stretch" Background="#FF46464A">
+			<WrapPanel HorizontalAlignment="Right" >
+
+				<Button x:Name="okButton" Margin="10" Background="MediumSeaGreen" Click="OkButton_Click" IsDefault="True">
+					<Image Source="/JiME;component/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+
+				<Button x:Name="cancelButton" Margin="0,10,10,10" Background="{StaticResource bgCancelDelete}" Click="CancelButton_Click" IsCancel="True">
+					<Image Source="/JiME;component/Assets/cancel.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+			</WrapPanel>
+		</Border>
+	</Grid>
+
+</Window>

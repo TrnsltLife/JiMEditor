@@ -80,15 +80,28 @@ namespace JiME.Views
 
 		private void AddActivationButton_Click( object sender, RoutedEventArgs e )
 		{
-			activations.activations.Add(new MonsterActivationItem(activations.activations.Count + 1));
+			MonsterActivationItem mai = new MonsterActivationItem(activations.activations.Count + 1);
+			MonsterActivationItemEditorWindow maie = new MonsterActivationItemEditorWindow(scenario, activations, mai, true);
+			if (maie.ShowDialog() == true)
+			{
+				activations.activations.Add(mai);
+				NotifyItemChanged(mai);
+			}
 		}
 
 		private void EditButton_Click( object sender, RoutedEventArgs e )
 		{
 			MonsterActivationItem mai = ( (Button)sender ).DataContext as MonsterActivationItem;
-			Console.WriteLine("EditButton_Click " + mai.id);
-			//MonsterEditorWindow me = new MonsterEditorWindow(scenario, m);
-			//me.ShowDialog();
+			MonsterActivationItemEditorWindow maie = new MonsterActivationItemEditorWindow(scenario, activations, mai, false);
+			maie.ShowDialog();
+			NotifyItemChanged(mai);
+		}
+
+		private void NotifyItemChanged(MonsterActivationItem mai)
+        {
+			mai.NotifyPropertyChanged("damage");
+			mai.NotifyPropertyChanged("fear");
+			mai.UpdateValid();
 		}
 
 		private void DeleteButton_Click( object sender, RoutedEventArgs e )
@@ -111,14 +124,6 @@ namespace JiME.Views
 		private void nameTB_TextChanged( object sender, TextChangedEventArgs e )
 		{
 			activations.dataName = ( (TextBox)sender ).Text;
-		}
-
-		private void help_Click( object sender, RoutedEventArgs e )
-		{
-			Console.WriteLine("Activations help_Click");
-			//TODO?
-			//HelpWindow hw = new HelpWindow( HelpType.Activations, 0 );
-			//hw.ShowDialog();
 		}
 	}
 }

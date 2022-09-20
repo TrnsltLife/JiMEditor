@@ -83,7 +83,7 @@ namespace JiME.Views
 			int index = 0;
 			foreach(var monsterRB in allMonsterList)
             {
-				Console.WriteLine(index + " " + monsterRB.Content + " " + ((MonsterType)index).ToString());
+				//Console.WriteLine(index + " " + monsterRB.Content + " " + ((MonsterType)index).ToString());
 				monsterRB.IsChecked = monster.monsterType == (MonsterType)index;
 				index++;
             }
@@ -194,7 +194,7 @@ namespace JiME.Views
 
 		private void FillDefaultStats(int id)
 		{
-			Console.WriteLine("MonsterEditor FillDefaultStats " + id);
+			//Console.WriteLine("MonsterEditor FillDefaultStats " + id);
 			try
 			{
 				defaultStats = Utils.defaultStats.Where(x => x.id == id).First();

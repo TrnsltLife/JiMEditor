@@ -172,6 +172,9 @@
     <Compile Include="Views\MonsterEditorWindow.xaml.cs">
       <DependentUpon>MonsterEditorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\MonsterActivationItemEditorWindow.xaml.cs">
+      <DependentUpon>MonsterActivationItemEditorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ObjectiveEditorWindow.xaml.cs">
       <DependentUpon>ObjectiveEditorWindow.xaml</DependentUpon>
     </Compile>
@@ -293,6 +296,10 @@
     <Page Include="Views\MonsterEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MonsterActivationItemEditorWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\ObjectiveEditorWindow.xaml">
       <SubType>Designer</SubType>
