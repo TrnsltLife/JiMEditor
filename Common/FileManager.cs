@@ -43,6 +43,7 @@ namespace JiME
 		public List<IInteraction> interactions { get; set; }
 		public List<Trigger> triggers { get; set; }
 		public List<Objective> objectives { get; set; }
+		public List<MonsterActivations> activations { get; set; }
 		public List<TextBookData> resolutions { get; set; }
 		public List<Threat> threats { get; set; }
 		public List<Chapter> chapters { get; set; }
@@ -76,6 +77,7 @@ namespace JiME
 			//skip saving campaign triggers
 			triggers = source.triggersObserver.Where( x => !x.isCampaignTrigger ).ToList();//source.triggersObserver.ToList();
 			objectives = source.objectiveObserver.ToList();
+			activations = source.activationsObserver.ToList();
 			resolutions = source.resolutionObserver.ToList();
 			threats = source.threatObserver.ToList();
 			chapters = source.chapterObserver.ToList();

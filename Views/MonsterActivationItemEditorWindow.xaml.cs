@@ -21,8 +21,7 @@ namespace JiME.Views
 			activations = act;
 			activationItem = actItem;
 
-			if ( !isNew )
-				cancelButton.Visibility = Visibility.Collapsed;
+			cancelButton.Visibility = isNew ? Visibility.Visible : Visibility.Collapsed;
 		}
 
 		private void OkButton_Click( object sender, RoutedEventArgs e )

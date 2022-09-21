@@ -7,7 +7,7 @@
 		xmlns:sys="clr-namespace:System;assembly=mscorlib"
 		xmlns:jime="clr-namespace:JiME"
         mc:Ignorable="d"
-        Title="Objective Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" Width="750" ContentRendered="Window_ContentRendered">
+        Title="Attack Description Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" Width="750" ContentRendered="Window_ContentRendered">
 
 	<Window.Resources>
 		<local:BoolInvertConverter x:Key="b2e"/>
@@ -32,21 +32,27 @@
 			<Border Style="{StaticResource callout}" Margin="0,10">
 				<StackPanel>
 					<StackPanel Orientation="Horizontal">
-						<TextBlock Style="{StaticResource SubText}" Text="Enemy Activations Group Name:"/>
+						<TextBlock Style="{StaticResource SubText}" Text="Enemy Attack Group Name:"/>
 						<TextBlock Text="{Binding activations.dataName}" Style="{StaticResource Heading}"/>
 					</StackPanel>
-					
-					<TextBlock Style="{StaticResource Heading}" Text="Attack Text:" Margin="0,10,0,0"/>
-					<TextBlock Style="{StaticResource SubText}">
-					Write a vivid description. It will be shown to the Heroes when the enemy attacks. <Bold><Italic>Required</Italic></Bold>
-					</TextBlock>
-					<TextBox x:Name="textTB" Style="{StaticResource DefaultTextBox}" Margin="0,5" HorizontalAlignment="Stretch" Text="{Binding activationItem.text, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="true" TextWrapping="Wrap" MinLines="3" MaxLines="3"/>
 
-					<TextBlock Style="{StaticResource Heading}" Text="After Effect:" Margin="0,10,0,0"/>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Style="{StaticResource Heading}" Margin="0,10,0,0">Attack Text:   </TextBlock>
+						<TextBlock Style="{StaticResource SubText}" Margin="0,10,0,0" VerticalAlignment="Bottom"><Bold><Italic>Required</Italic></Bold></TextBlock>
+					</StackPanel>
 					<TextBlock Style="{StaticResource SubText}">
-					Describe any effects that occur after the attack. e.g. "If you did not take damage, gain one Inspiration." or "After the attack, move the Enemy 1 space away." <Bold><Italic>Required</Italic></Bold>
+					Write a vivid description. It will be shown to the Heroes when the enemy attacks.
 					</TextBlock>
-					<TextBox x:Name="effectTB" Style="{StaticResource DefaultTextBox}" Margin="0,5" HorizontalAlignment="Stretch" Text="{Binding activationItem.effect, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="true" TextWrapping="Wrap"/>
+					<TextBox x:Name="textTB" Style="{StaticResource DefaultTextBox}" Margin="0,5" HorizontalAlignment="Stretch" Text="{Binding activationItem.text, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="true" TextWrapping="Wrap" MinHeight="64" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Style="{StaticResource Heading}" Margin="0,10,0,0">After Effect:   </TextBlock>
+						<TextBlock Style="{StaticResource SubText}" Margin="0,10,0,0" VerticalAlignment="Bottom"><Bold><Italic>Optional</Italic></Bold></TextBlock>
+					</StackPanel>
+					<TextBlock Style="{StaticResource SubText}">Describe any effects that occur after the attack.</TextBlock>
+					<TextBlock Style="{StaticResource SubText}">e.g. "If you did not take damage, gain one Inspiration."</TextBlock>
+					<TextBlock Style="{StaticResource SubText}">or "After the attack, move the Enemy 1 space away."</TextBlock>
+					<TextBox x:Name="effectTB" Style="{StaticResource DefaultTextBox}" Margin="0,5" HorizontalAlignment="Stretch" Text="{Binding activationItem.effect, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="true" TextWrapping="Wrap"  MinHeight="48" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
 				</StackPanel>
 			</Border>
 
@@ -86,7 +92,7 @@
 
 							<StackPanel>
 								<TextBlock Style="{StaticResource Heading}" Margin="0,10,0,5" TextWrapping="Wrap">
-										Damage and Fear Negated By: (<Italic>Required</Italic>):
+										Damage and Fear Negated By:
 								</TextBlock>
 								<ComboBox x:Name="negateCB" ItemsSource="{Binding Source={StaticResource AbilityEnumDataSource}}" SelectedValue="{Binding activationItem.negate}" HorizontalAlignment="Left" VerticalAlignment="Center" MinWidth="200"/>
 							</StackPanel>

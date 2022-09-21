@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Newtonsoft.Json;
 
 namespace JiME
 {
@@ -49,6 +50,7 @@ namespace JiME
 		public bool isEmpty { get; set; }
 		public string triggerName { get; set; }
 
+		[JsonConverter(typeof(CollectionConverter))]
 		public Collection collection
 		{
 			get => _collection;
@@ -78,16 +80,21 @@ namespace JiME
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		public MonsterActivations() { }
+		public MonsterActivations()
+		{
+			GUID = Guid.NewGuid();
+		}
 
 		public MonsterActivations(int id)
 		{
+			GUID = Guid.NewGuid();
 			this.id = id;
-			this.dataName = "New Enemy Activations";
+			this.dataName = "New Enemy Attack Group";
 		}
 
 		public MonsterActivations(DefaultActivations act)
 		{
+			GUID = Guid.NewGuid(); 
 			id = act.id;
 			dataName = act.name;
 			collection = act.collection;
@@ -105,7 +112,8 @@ namespace JiME
 
 		public MonsterActivations Clone(int newId)
         {
-			MonsterActivations newActivations = new MonsterActivations { id = newId, dataName = "Copy of " + this.dataName, collection = this.collection };
+			MonsterActivations newActivations = new MonsterActivations { id = newId, dataName = "Copy of " + this.dataName, collection = this.collection, GUID = Guid.NewGuid() };
+			newActivations.collection = Collection.NONE;
 			newActivations.activations = new ObservableCollection<MonsterActivationItem>();
 			for(int i=0; i<activations.Count; i++)
             {

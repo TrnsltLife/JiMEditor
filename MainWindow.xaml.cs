@@ -231,23 +231,24 @@ namespace JiME
 		{
 			int idx = activationsUC.dataListView.SelectedIndex;
 			MonsterActivations act = (MonsterActivations)activationsUC.dataListView.Items[idx];
-			ActivationsEditorWindow ow = new ActivationsEditorWindow(scenario, ((MonsterActivations)activationsUC.dataListView.SelectedItem));
+			ActivationsEditorWindow ow = new ActivationsEditorWindow(scenario, ((MonsterActivations)activationsUC.dataListView.SelectedItem), false);
 			ow.ShowDialog();
 		}
 
 		void OnDuplicateActivations(object sender, EventArgs e)
 		{
-			int idx = activationsUC.dataListView.SelectedIndex;
-			MonsterActivations act = (MonsterActivations)activationsUC.dataListView.Items[idx];
-
 			//Get next id starting at 2000 to create the new item
 			int maxId = scenario.activationsObserver.Max(a => a.id);
 			int newId = Math.Max(maxId+1, 2000); //Get the next id over 2000
-			scenario.activationsObserver.Add(act.Clone(newId));
-			/*
-			ActivationsEditorWindow ow = new ActivationsEditorWindow(scenario, ((MonsterActivations)activationsUC.dataListView.SelectedItem), false);
-			ow.ShowDialog();
-			*/
+			//Get the selected item and clone it
+			int idx = activationsUC.dataListView.SelectedIndex;
+			MonsterActivations act = ((MonsterActivations)activationsUC.dataListView.Items[idx]).Clone(newId);
+
+			ActivationsEditorWindow aew = new ActivationsEditorWindow(scenario, act, true);
+			if(aew.ShowDialog() == true)
+            {
+				scenario.activationsObserver.Add(act);
+			}
 		}
 		#endregion
 
@@ -331,10 +332,10 @@ namespace JiME
 			//Get next id starting at 2000 to create the new item
 			int maxId = scenario.activationsObserver.Max(a => a.id);
 			int newId = Math.Max(maxId + 1, 2000); //Get the next id over 2000
-			ActivationsEditorWindow ow = new ActivationsEditorWindow(scenario, new MonsterActivations(newId));
-			if (ow.ShowDialog() == true)
+			ActivationsEditorWindow aew = new ActivationsEditorWindow(scenario, new MonsterActivations(newId), false);
+			if (aew.ShowDialog() == true)
 			{
-				scenario.AddActivations(ow.activations);
+				scenario.AddActivations(aew.activations);
 			}
 		}
 

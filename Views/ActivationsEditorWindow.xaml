@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:JiME"
         mc:Ignorable="d"
         ContentRendered="Window_ContentRendered"
-        Title="Enemy Activations Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" Width="750" Closing="Window_Closing">
+        Title="Enemy Attack Group Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" Width="750" Closing="Window_Closing">
 
 	<Window.Resources>
 		<BooleanToVisibilityConverter x:Key="bvis"/>
@@ -24,7 +24,7 @@
 			<StackPanel Margin="0,5,0,0" HorizontalAlignment="Stretch">
 				<Border Style="{StaticResource callout}">
 					<StackPanel>
-						<TextBlock Style="{StaticResource Heading}" Text="Enemy Activations Name:"/>
+						<TextBlock Style="{StaticResource Heading}" Text="Enemy Attack Group Name:"/>
 						<TextBlock Style="{StaticResource SubText}">
 								A short name used within the Editor. <Bold><Italic>Required</Italic></Bold>
 						</TextBlock>
@@ -46,21 +46,17 @@
 						</Grid.ColumnDefinitions>
 
 						<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap">
-							An <Bold>Enemy Activation</Bold> determines the flavor text that is displayed to the Heroes when an enemy attacks. It also determines how much damage and fear is done, what character ability is tested to negate the damage, and any optional effect that occurs after the attack. You can create multiple activations for the activation group. With each enemy attack, an activation will be chosen at random from the activation group.
+							An <Bold>Attack Description</Bold> determines the flavor text that is displayed to the Heroes when an enemy attacks. 
+							This also determines how much damage and fear is done, what character ability is tested to negate the damage, 
+							and any optional effect that occurs after the attack. You can create multiple Attack Description sfor the Enemy Attack Group. 
+							With each enemy attack, an Attack Description will be chosen at random from the Enemy Attack Group.
 						</TextBlock>
-
-						<Button HorizontalAlignment="Right" Grid.Column="1" x:Name="help" Background="#FFC98800" Height="32"  Click="help_Click" Margin="10,0,0,0">
-							<StackPanel Orientation="Horizontal">
-								<Image Source="/JiME;component/Assets/help.png" Stretch="Uniform"/>
-								<TextBlock Text="Activation Help" Style="{StaticResource Heading}" Margin="5,0,0,0"/>
-							</StackPanel>
-						</Button>
 					</Grid>
 				</Border>
 
 				<Button x:Name="addActivationButton" Background="DodgerBlue"  HorizontalAlignment="Left" Margin="0,10,0,10" Click="AddActivationButton_Click">
 					<StackPanel Orientation="Horizontal">
-						<TextBlock Text="Add Activation..." Style="{StaticResource Heading}" VerticalAlignment="Center" Margin="0,0,5,0"/>
+						<TextBlock Text="Add Attack Description..." Style="{StaticResource Heading}" VerticalAlignment="Center" Margin="0,0,5,0"/>
 						<Image Source="/JiME;component/Assets/add.png" Height="24"/>
 					</StackPanel>
 				</Button>

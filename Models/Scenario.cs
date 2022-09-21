@@ -302,6 +302,10 @@ namespace JiME
 			s.interactionObserver = new ObservableCollection<IInteraction>( fm.interactions );
 			s.triggersObserver = new ObservableCollection<Trigger>( fm.triggers );
 			s.objectiveObserver = new ObservableCollection<Objective>( fm.objectives );
+			if (fm.activations != null)
+			{
+				s.activationsObserver = new ObservableCollection<MonsterActivations>(fm.activations);
+			}
 			s.resolutionObserver = new ObservableCollection<TextBookData>( fm.resolutions );
 			s.threatObserver = new ObservableCollection<Threat>( fm.threats );
 			s.chapterObserver = new ObservableCollection<Chapter>( fm.chapters );
@@ -386,10 +390,13 @@ namespace JiME
 			objectiveObserver.Add( obj );
 
 			//Add the default enemy activations
-			foreach (DefaultActivations defAct in Utils.defaultActivations)
+			if (activationsObserver == null || activationsObserver.Count == 0)
 			{
-				MonsterActivations act = new MonsterActivations(defAct);
-				activationsObserver.Add(act);
+				foreach (DefaultActivations defAct in Utils.defaultActivations)
+				{
+					MonsterActivations act = new MonsterActivations(defAct);
+					activationsObserver.Add(act);
+				}
 			}
 
 			//starting chapter - always at least one in the scenario

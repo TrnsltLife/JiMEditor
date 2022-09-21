@@ -164,34 +164,44 @@
 						<ColumnDefinition Width="auto"/>
 						<ColumnDefinition Width="*"/>
 						<ColumnDefinition Width="auto"/>
+						<ColumnDefinition Width="auto"/>
 					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="*"/>
+						<RowDefinition Height="auto"/>
+					</Grid.RowDefinitions>
 					<!--use default-->
-					<StackPanel>
+					<StackPanel Grid.Column="0" Grid.Row="0">
 						<TextBlock Text="Base Enemy Stats:" Style="{StaticResource Heading}"/>
-						<CheckBox x:Name="useDefaultCB" Grid.Column="0" Content="Use Default Stats" Foreground="White" VerticalAlignment="Center" Margin="0,10,0,0" IsChecked="{Binding monster.defaultStats}" Click="useDefaultCB_Click"/>
+						<CheckBox x:Name="useDefaultCB" Content="Use Default Stats" Foreground="White" VerticalAlignment="Center" Margin="0,10,0,0" IsChecked="{Binding monster.defaultStats}" Click="useDefaultCB_Click"/>
 						<TextBlock x:Name="special" Style="{StaticResource SubText}" TextWrapping="Wrap" MaxWidth="110" Margin="0,10,0,0"/>
 					</StackPanel>
 
-					<StackPanel x:Name="stats1" HorizontalAlignment="Center" Grid.Column="1" Orientation="Horizontal" IsEnabled="True">
-						<StackPanel Orientation="Horizontal">
-							<Image Source="/JiME;component/Assets/health.png" Height="32" Margin="0,0,5,0"/>
-							<TextBox Style="{StaticResource DefaultTextBox}" Width="25" Text="{Binding monster.health, UpdateSourceTrigger=PropertyChanged}"/>
-						</StackPanel>
-
-						<StackPanel MaxWidth="250">
-							<StackPanel Orientation="Horizontal" Margin="10,0">
-								<Image Source="/JiME;component/Assets/damage.png" Height="40" Margin="10,0,5,0"/>
-								<TextBlock Text="/" Style="{StaticResource Heading}"/>
-								<Image Source="/JiME;component/Assets/fear.png" Height="40" Margin="10,0,5,0"/>
-								<TextBox Style="{StaticResource DefaultTextBox}" Width="25" Text="{Binding monster.damage, UpdateSourceTrigger=PropertyChanged}"/>
+					<!-- Enemy Health -->
+					<StackPanel x:Name="stats1" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="0" Orientation="Horizontal" IsEnabled="True">
+						<StackPanel>
+							<TextBlock Text="Enemy Health:" Style="{StaticResource Heading}" Margin="0,0,5,10"/>
+							<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+								<Image Source="/JiME;component/Assets/health.png" Height="32" Margin="0,0,5,0"/>
+								<TextBox Style="{StaticResource DefaultTextBox}" Width="25" Text="{Binding monster.health, UpdateSourceTrigger=PropertyChanged}"/>
 							</StackPanel>
-							<TextBlock Style="{StaticResource SubText}" Margin="10,0,10,0" Text="Damage and Fear share one value randomly split between them." TextWrapping="Wrap"/>
 						</StackPanel>
 					</StackPanel>
 
-					<StackPanel x:Name="stats2" Grid.Column="2" IsEnabled="True">
-						<TextBlock Text="Attributes:" Style="{StaticResource Heading}"/>
-						<StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+
+					<!-- Attack Value -->
+					<StackPanel MaxWidth="250" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center">
+						<TextBlock Text="Total Default Attack Value:" Style="{StaticResource Heading}" Margin="0,0,5,10"/>
+						<StackPanel Orientation="Horizontal" Margin="10,0" HorizontalAlignment="Center">
+							<Image Source="/JiME;component/Assets/damage.png" Height="40" Margin="10,0,5,0"/>
+							<TextBox Style="{StaticResource DefaultTextBox}" Width="25" Text="{Binding monster.damage, UpdateSourceTrigger=PropertyChanged}"/>
+							<Image Source="/JiME;component/Assets/fear.png" Height="40" Margin="10,0,5,0"/>
+						</StackPanel>
+					</StackPanel>
+
+					<!-- Shield/Sorcery/Movement -->
+					<StackPanel x:Name="stats2" Grid.Column="3" Grid.Row="0" IsEnabled="True">
+						<StackPanel Orientation="Horizontal" Margin="10,0,0,10">
 							<StackPanel Margin="0,5,0,0">
 								<TextBlock Text="Shield:" Style="{StaticResource Heading}"/>
 								<TextBox Style="{StaticResource DefaultTextBox}" Width="25" HorizontalAlignment="Left" Text="{Binding monster.shieldValue}"/>
@@ -205,21 +215,34 @@
 							<StackPanel Margin="15,5,0,0">
 								<TextBlock Text="Movement:" Style="{StaticResource Heading}"/>
 								<StackPanel Orientation="Horizontal">
-									<TextBox Margin="0,0,10,0" Style="{StaticResource DefaultTextBox}" Width="25" HorizontalAlignment="Left" Text="{Binding monster.movementValue}"/>
+									<TextBox Margin="0,0,10,0" Style="{StaticResource DefaultTextBox}" Width="25" HorizontalAlignment="Left" Text="{Binding monster.moveA}"/>
+									<TextBlock Style="{StaticResource Heading}" Text="/ " FontSize="18"/>
+									<TextBox Margin="0,0,10,0" Style="{StaticResource DefaultTextBox}" Width="25" HorizontalAlignment="Left" Text="{Binding monster.moveB}"/>
 								</StackPanel>
 							</StackPanel>
 						</StackPanel>
 					</StackPanel>
+
+					<StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+						<TextBlock Text="Enemy Attack Group Descriptions:" Style="{StaticResource Heading}"/>
+						<!-- activationsUC    scenario.activationsObserver -->
+						<ComboBox x:Name="activationIdCB" ItemsSource="{Binding scenario.activationsObserver}" SelectedValuePath="id" Margin="3" DisplayMemberPath="dataName" SelectedValue="{Binding monster.activationsId}"/>
+					</StackPanel>
+
+					<TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource SubText}" MaxWidth="200" Margin="10,0,10,0" Text="Damage and Fear share one value randomly split between them." TextWrapping="Wrap"/>
+
 				</Grid>
 			</Border>
 
 			<!--stats-->
 			<Border Style="{StaticResource callout}" Margin="0,5">
+				<!--
 				<Grid>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="*"/>
 						<ColumnDefinition Width="auto"/>
 					</Grid.ColumnDefinitions>
+				-->
 					<!--<StackPanel Orientation="Horizontal">
 						<StackPanel Orientation="Horizontal">
 							<Image Source="/JiME;component/Assets/health.png" Height="32" Margin="0,0,5,0"/>
@@ -237,6 +260,7 @@
 						</StackPanel>
 					</StackPanel>-->
 
+					<!--
 					<StackPanel>
 						<TextBlock Text="Attack Negated By:" Style="{StaticResource Heading}"/>
 						<UniformGrid VerticalAlignment="Center" Columns="5">
@@ -247,6 +271,7 @@
 							<RadioButton x:Name="witRB" Content="Wit" Margin="5,0,0,0"/>
 						</UniformGrid>
 					</StackPanel>
+					-->
 
 					<StackPanel Grid.Column="1" VerticalAlignment="Center">
 						<TextBlock Style="{StaticResource Heading}" Text="Elite Bonuses:"/>
@@ -257,7 +282,9 @@
 							<CheckBox Content="Armored" Margin="5,0" Foreground="White" IsChecked="{Binding monster.isArmored}" VerticalAlignment="Center"/>
 						</StackPanel>
 					</StackPanel>
+				<!--
 				</Grid>
+				-->
 			</Border>
 
 			<!--difficulty-->

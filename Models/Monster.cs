@@ -15,7 +15,7 @@ namespace JiME
 		int Heavy { get { return 4; } }
 
 		string _dataName, /*_name,*/ _bonuses;
-		int _id, _count, _health, _shieldValue, _sorceryValue, _moveA, _moveB, _groupLimit, _figureLimit, _damage, _loreReward, _movementValue, _maxMovementValue;
+		int _id, _activationsId, _count, _health, _shieldValue, _sorceryValue, _moveA, _moveB, _groupLimit, _figureLimit, _damage, _loreReward, _movementValue, _maxMovementValue;
 		bool _isRanged, _isFearsome, _isLarge, _isBloodThirsty, _isArmored, _isElite, _defaultStats, _isEasy, _isNormal, _isHard;
 		int[] _cost;
 		string[] _moveSpecial, _tag, _special;
@@ -31,6 +31,19 @@ namespace JiME
 				{
 					_id = value;
 					NotifyPropertyChanged("id");
+				}
+			}
+		}
+
+		public int activationsId
+		{
+			get => _activationsId;
+			set
+			{
+				if (value != _activationsId)
+				{
+					_activationsId = value;
+					NotifyPropertyChanged("activationsId");
 				}
 			}
 		}

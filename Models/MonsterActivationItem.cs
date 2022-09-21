@@ -137,10 +137,14 @@ namespace JiME
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		public MonsterActivationItem() { }
+		public MonsterActivationItem() 
+		{
+			GUID = Guid.NewGuid();
+		}
 
 		public MonsterActivationItem(int id)
         {
+			GUID = Guid.NewGuid();
 			this.id = id;
 			this.dataName = id.ToString();
 			this.negate = Ability.None;
@@ -153,6 +157,7 @@ namespace JiME
 
 		public MonsterActivationItem(DefaultActivationItem act)
 		{
+			GUID = Guid.NewGuid(); 
 			id = act.id;
 			dataName = act.id.ToString();
 			negate = act.negate;

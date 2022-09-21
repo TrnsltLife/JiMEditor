@@ -238,7 +238,7 @@
 
 
 				<Border BorderThickness="0,0,0,0" BorderBrush="Gray" Grid.Row="6">
-					<uc:SidebarListView x:Name="activationsUC" Margin="5" Title="Activations" ShowDuplicateButton="true" />
+					<uc:SidebarListView x:Name="activationsUC" Margin="5" Title="Enemy Attack Group" ShowDuplicateButton="true" />
 				</Border>
 
 			</Grid>

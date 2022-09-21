@@ -22,7 +22,7 @@ namespace JiME.Views
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		public ActivationsEditorWindow( Scenario s, MonsterActivations activ = null )
+		public ActivationsEditorWindow( Scenario s, MonsterActivations activ = null, bool isNew = true )
 		{
 			InitializeComponent();
 			DataContext = this;
@@ -34,14 +34,16 @@ namespace JiME.Views
 			activations = activ ?? new MonsterActivations();
 
 			oldName = activations.dataName;
+
+			cancelButton.Visibility = isNew ? Visibility.Visible : Visibility.Collapsed;
 		}
 
 		bool TryClosing()
 		{
 			//check for dupe name
-			if ( activations.dataName == "New Enemy Activations" || scenario.activationsObserver.Count( x => x.dataName == activations.dataName ) > 1 )
+			if ( activations.dataName == "New Enemy Attack Group" || scenario.activationsObserver.Count( x => x.dataName == activations.dataName ) > 1 )
 			{
-				MessageBox.Show( "Give this Enemy Activations group a unique name.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
+				MessageBox.Show( "Give this Enemy Attack Group a unique name.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
 				return false;
 			}
 

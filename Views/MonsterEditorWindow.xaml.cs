@@ -110,12 +110,17 @@ namespace JiME.Views
 				}
 			}
 
+			//Migrate movement
+			if(monster.moveA == 0) { monster.moveA = monster.movementValue; }
+
 			//negated radio buttons
+			/*
 			mightRB.IsChecked = monster.negatedBy == Ability.Might;
 			agilityRB.IsChecked = monster.negatedBy == Ability.Agility;
 			wisdomRB.IsChecked = monster.negatedBy == Ability.Wisdom;
 			spiritRB.IsChecked = monster.negatedBy == Ability.Spirit;
 			witRB.IsChecked = monster.negatedBy == Ability.Wit;
+			*/
 		}
 
 		private void OkButton_Click( object sender, RoutedEventArgs e )
@@ -233,6 +238,7 @@ namespace JiME.Views
 					monster.dataName = defaultStats.dataName;
 				}
 				monster.id = defaultStats.id;
+				monster.activationsId = defaultStats.id;
 				monster.health = defaultStats.health;
 				monster.shieldValue = defaultStats.armor;
 				monster.sorceryValue = defaultStats.sorcery;
