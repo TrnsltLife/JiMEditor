@@ -115,6 +115,9 @@
     <Compile Include="Models\Threat.cs" />
     <Compile Include="Models\Token.cs" />
     <Compile Include="Models\Trigger.cs" />
+    <Compile Include="UserControls\RichTextBoxIconEditor.xaml.cs">
+      <DependentUpon>RichTextBoxIconEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\SidebarListView.xaml.cs">
       <DependentUpon>SidebarListView.xaml</DependentUpon>
     </Compile>
@@ -221,6 +224,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UserControls\RichTextBoxIconEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UserControls\SidebarListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -369,6 +376,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <EmbeddedResource Include="Assets\enemy-activation-defaults.json" />
+    <EmbeddedResource Include="Assets\enemy-activation-defaults-original.json" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

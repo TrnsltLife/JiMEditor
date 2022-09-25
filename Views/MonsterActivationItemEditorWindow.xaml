@@ -1,4 +1,5 @@
 ﻿<Window x:Class="JiME.Views.MonsterActivationItemEditorWindow"
+		x:Name="ucRichTextBoxIconEditor"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,6 +7,7 @@
         xmlns:local="clr-namespace:JiME"
 		xmlns:sys="clr-namespace:System;assembly=mscorlib"
 		xmlns:jime="clr-namespace:JiME"
+		xmlns:uc="clr-namespace:JiME.UserControls"
         mc:Ignorable="d"
         Title="Attack Description Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" Width="750" ContentRendered="Window_ContentRendered">
 
@@ -43,7 +45,7 @@
 					<TextBlock Style="{StaticResource SubText}">
 					Write a vivid description. It will be shown to the Heroes when the enemy attacks.
 					</TextBlock>
-					<TextBox x:Name="textTB" Style="{StaticResource DefaultTextBox}" Margin="0,5" HorizontalAlignment="Stretch" Text="{Binding activationItem.text, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="true" TextWrapping="Wrap" MinHeight="64" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+					<uc:RichTextBoxIconEditor x:Name="textRTB" Text="{Binding activationItem.text, UpdateSourceTrigger=PropertyChanged}"/>
 
 					<StackPanel Orientation="Horizontal">
 						<TextBlock Style="{StaticResource Heading}" Margin="0,10,0,0">After Effect:   </TextBlock>
@@ -52,7 +54,7 @@
 					<TextBlock Style="{StaticResource SubText}">Describe any effects that occur after the attack.</TextBlock>
 					<TextBlock Style="{StaticResource SubText}">e.g. "If you did not take damage, gain one Inspiration."</TextBlock>
 					<TextBlock Style="{StaticResource SubText}">or "After the attack, move the Enemy 1 space away."</TextBlock>
-					<TextBox x:Name="effectTB" Style="{StaticResource DefaultTextBox}" Margin="0,5" HorizontalAlignment="Stretch" Text="{Binding activationItem.effect, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="true" TextWrapping="Wrap"  MinHeight="48" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+					<uc:RichTextBoxIconEditor x:Name="effectRTB" Text="{Binding activationItem.effect, UpdateSourceTrigger=PropertyChanged}"/>
 				</StackPanel>
 			</Border>
 

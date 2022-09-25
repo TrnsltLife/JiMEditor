@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="JiME.UserControls.RichTextBoxIconEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:JiME"
+             mc:Ignorable="d" 
+             d:DesignHeight="200" d:DesignWidth="660">
+
+	<UserControl.Resources>
+		<local:SettingsConverter x:Key="sc"/>
+	</UserControl.Resources>
+
+	<StackPanel Orientation="Vertical" Margin="0,0,0,0">
+		<StackPanel Orientation="Horizontal">
+			<Button Content="M" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
+			<Button Content="Z" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
+			<Button Content="A" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
+			<Button Content="S" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
+			<Button Content="W" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
+			<Button Content="X" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click" Margin="0,0,5,0"></Button>
+
+			<Button Content="f" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
+			<Button Content="s" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click" Margin="0,0,5,0"></Button>
+
+			<Button Content="a" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
+			<Button Content="O" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
+			<Button Content="T" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
+			<Button Content="m" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
+			<Button Content="R" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
+			<Button Content="t" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click" Margin="0,0,5,0"></Button>
+
+			<Button Content="D" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
+			<Button Content="F" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click" Margin="0,0,5,0"></Button>
+
+			<Button Content="r" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
+			<Button Content="v" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
+			<Button Content="p" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
+			<Button Content="d" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
+			<Button Content="w" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
+			<Button Content="c" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click" Margin="0,0,5,0"></Button>
+
+			<Button Content="I" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
+			<Button Content="L" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click" Margin="0,0,5,0"></Button>
+
+			<Button Content="Clear Formatting" Click="ClearFormattingButton_Click"></Button>
+		</StackPanel>
+		<RichTextBox x:Name="iconRTB" Margin="0,5" HorizontalAlignment="Stretch" AcceptsReturn="true" MinHeight="64" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+			<RichTextBox.CommandBindings>
+				<CommandBinding Command="AlignCenter" CanExecute="CommandBinding_CanExecute" />
+				<CommandBinding Command="AlignJustify" CanExecute="CommandBinding_CanExecute" />
+				<CommandBinding Command="AlignLeft" CanExecute="CommandBinding_CanExecute" />
+				<CommandBinding Command="AlignRight" CanExecute="CommandBinding_CanExecute" />
+				<CommandBinding Command="DecreaseFontSize" CanExecute="CommandBinding_CanExecute" />
+				<CommandBinding Command="DecreaseIndentation" CanExecute="CommandBinding_CanExecute" />
+				<CommandBinding Command="IncreaseFontSize" CanExecute="CommandBinding_CanExecute" />
+				<CommandBinding Command="ToggleBold" CanExecute="CommandBinding_CanExecute" />
+				<CommandBinding Command="ToggleBullets" CanExecute="CommandBinding_CanExecute" />
+				<CommandBinding Command="ToggleItalic" CanExecute="CommandBinding_CanExecute" />
+				<CommandBinding Command="ToggleNumbering" CanExecute="CommandBinding_CanExecute" />
+				<CommandBinding Command="ToggleSubscript" CanExecute="CommandBinding_CanExecute" />
+				<CommandBinding Command="ToggleSuperscript" CanExecute="CommandBinding_CanExecute" />
+				<CommandBinding Command="ToggleUnderline" CanExecute="CommandBinding_CanExecute" />
+			</RichTextBox.CommandBindings>
+		</RichTextBox>
+		<Button Content="Output Code" Click="OutputButton_Click"/>
+	</StackPanel>
+
+</UserControl>

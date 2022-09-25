@@ -655,5 +655,10 @@ namespace JiME
 				tw.ShowDialog();
 			}
 		}
-	}
+
+        private void activationsUC_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+    }
 }

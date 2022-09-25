@@ -1,4 +1,13 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Documents;
+using System.IO;
+using System.Text;
+using System;
+using System.Xml;
+using System.Windows.Markup;
+using System.Text.RegularExpressions;
 
 namespace JiME.Views
 {
@@ -26,6 +35,9 @@ namespace JiME.Views
 
 		private void OkButton_Click( object sender, RoutedEventArgs e )
 		{
+			activationItem.text = textRTB.Text;
+			activationItem.effect = effectRTB.Text;
+
 			//check empty string
 			if ( string.IsNullOrEmpty( activationItem.text ) )
 			{
@@ -52,7 +64,7 @@ namespace JiME.Views
 
 		private void Window_ContentRendered( object sender, System.EventArgs e )
 		{
-			textTB.Focus();
+			textRTB.Focus();
 		}
 	}
 }
