@@ -28,11 +28,11 @@
 					<StackPanel Orientation="Horizontal" Margin="0,5">
 						<TextBox x:Name="nameTB" Text="{Binding monster.dataName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DefaultTextBox}" Width="350" HorizontalAlignment="Left"/>
 						<TextBlock Text="Enemy Count:" Style="{StaticResource Heading}" Margin="25,0,0,0"/>
-						<ComboBox Margin="10,0" SelectedIndex="{Binding monster.count}">
-							<ComboBoxItem Content="0" Visibility="Collapsed"/>
-							<ComboBoxItem Content="1"/>
-							<ComboBoxItem Content="2"/>
-							<ComboBoxItem Content="3"/>
+						<ComboBox x:Name="countCB" Margin="10,0" SelectedIndex="{Binding monster.count}">
+							<ComboBoxItem x:Name="countCB0" Content="0" Visibility="Collapsed"/>
+							<ComboBoxItem x:Name="countCB1" Content="1"/>
+							<ComboBoxItem x:Name="countCB2" Content="2"/>
+							<ComboBoxItem x:Name="countCB3" Content="3"/>
 						</ComboBox>
 						<StackPanel Orientation="Horizontal" Margin="10,0">
 							<TextBlock Style="{StaticResource Heading}" Margin="0,0,10,5" Text="Lore Reward:"/>

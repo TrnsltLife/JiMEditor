@@ -461,6 +461,7 @@ namespace JiME
 			if (defaultStats != null)
 			{
 				this.id = id;
+				this.monsterType = (MonsterType)this.id;
 				dataName = defaultStats.dataName;
 				health = defaultStats.health;
 				shieldValue = defaultStats.armor;

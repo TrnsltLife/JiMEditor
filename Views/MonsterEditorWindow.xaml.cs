@@ -44,7 +44,21 @@ namespace JiME.Views
 
 			scenario = s;
 			cancelButton.Visibility = m == null ? Visibility.Visible : Visibility.Collapsed;
-			monster = m ?? new Monster(-1);
+			if(m != null)
+            {
+				//If a monster is already set, use it
+				monster = m;
+            }
+			else
+            {
+				//Otherwise default to the top-left, basic enemy "Goblin" id 1, use default stats, and set the monster to appera in Easy, Normal, and Hard mode by default
+				monster = new Monster(1);
+				monster.defaultStats = true;
+				monster.isEasy = true;
+				monster.isNormal = true;
+				monster.isHard = true;
+				monster.count = 1; //Don't start off set to 0, it's confusing when you launch the campaign and no monsters appear.
+            }
 
 			if ( monster.defaultStats )
 			{
@@ -238,6 +252,7 @@ namespace JiME.Views
 					monster.dataName = defaultStats.dataName;
 				}
 				monster.id = defaultStats.id;
+				monster.monsterType = (MonsterType)monster.id;
 				monster.activationsId = defaultStats.id;
 				monster.health = defaultStats.health;
 				monster.shieldValue = defaultStats.armor;
@@ -255,8 +270,23 @@ namespace JiME.Views
 				monster.isFearsome = defaultStats.fearsome;
 				monster.special = defaultStats.special;
 				//monster.fear = defaultStats.damage == "light" ? Light : ( defaultStats.damage == "medium" ? Medium : Heavy );
+
+				AdjustEnemyCountComboBox(monster);
 			}
 		}
+
+		private void AdjustEnemyCountComboBox(Monster m)
+        {
+			//This enforces the limits of enemy group size. e.g. there can be 3 Goblin Scouts in a group, but only 2 Cave Trolls, or only 1 Nameless Thing
+			if(monster.count > monster.groupLimit)
+            {
+				monster.count = monster.groupLimit;
+            }
+
+			countCB1.IsEnabled = (monster.groupLimit >= 1);
+			countCB2.IsEnabled = (monster.groupLimit >= 2);
+			countCB3.IsEnabled = (monster.groupLimit >= 3);
+        }
 
 		private void monsterType_Click( object sender, RoutedEventArgs e )
 		{
