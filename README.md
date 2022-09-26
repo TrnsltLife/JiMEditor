@@ -4,6 +4,22 @@ A Scenario editor for the Journeys in Middle Earth board game. The scenarios are
 ## Documentation
 You can find documentation for the app [in GlowPuff's Wiki](https://github.com/GlowPuff/JiMEditor/wiki). Although it is somewhat out of date at this point, it should still get you started.
 
+### Enabling new Collections (expansions)
+1. Click the Edit Scenario gear icon at the top of the main scenario editor window.
+2. Click the checkboxes next to the collections you want to enable.
+3. Note: deselecting a collection will prevent you from using further enemies or tiles from that collection, but won't currently remove any tiles or enemies from that collection that you have already added to the scenario.
+
+### Enemy Attack Descriptions
+1. Access the Enemy Attack Descriptions using the Enemy Attack Group list in the sidebar.
+2. You can add a new Enemy Attack Group or duplicate an existing one.
+3. You cannot delete the core Enemy Attack Groups. "Uluk" is the first Enemy Attack Group in the list that you can delete.
+4. Click the gear icon to edit an Enemy Attack Group. You can add, delete, or edit the Enemy Activation Descriptions.
+
+### Enemy Events
+1. Enemy Pool monsters will now use the default Enemy Attack Group Descriptions.
+2. You can choose any Enemy Attack Group for enemies you create in the Scripted Enemies tab, including custom Enemy Attack Groups that you create. Look for the drop-down box on the Scripted Enemies tab.
+3. By the way, you can now set two movement values. The first one is the enemy's normal movement; the second is the movement if they can't reach their target.
+
 ## Download the latest release
 If you just want to download and run the app, grab it here: 
 
@@ -14,7 +30,7 @@ If you just want to download and run the app, grab it here:
 ## GlowPuff's Demonstration video
 [On YouTube](https://www.youtube.com/watch?v=J5u6YwjxIgU) - Again, this is somewhat out of date.
 
-### Your Journey - Companion Playback App
+## Your Journey - Companion Playback App
 The companion app that plays back your scenarios is in [this repository](https://github.com/TrnsltLife/your-journey).
 
 [Direct link to latest releases](https://github.com/TrnsltLife/your-journey/releases)
