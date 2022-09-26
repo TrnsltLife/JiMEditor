@@ -118,42 +118,16 @@
 												<TextBlock Text="   Negated by: " Style="{StaticResource SubText}"/>
 												<TextBlock Text="{Binding negate}" Style="{StaticResource Heading}"/>
 
-
-												<!--
-												<Border Width="32" Height="32" Margin="10,0" BorderThickness="2" BorderBrush="White" CornerRadius="50">
-													<TextBlock Text="{Binding count}" Style="{StaticResource Heading}" HorizontalAlignment="Center"/>
-												</Border>
-												<Border Width="32" Height="32">
-													<Border.Background>
-														<ImageBrush ImageSource="/JiME;component/Assets/health.png" Stretch="UniformToFill"/>
-													</Border.Background>
-													<TextBlock Text="{Binding health}" Style="{StaticResource Heading}" HorizontalAlignment="Center" Margin="0,0,0,4"/>
-												</Border>
-												-->
-												<!--<Image Source="/JiME;component/Assets/add2.png" Height="32" Margin="20,0,0,0"/>-->
-												<!--
-												<TextBlock Text="{Binding bonuses}" Margin="20,0,0,0"/>
-												<Image Source="/JiME;component/Assets/damage.png" Height="32" Margin="20,0,0,0"/>
-												<TextBlock Text="/" Margin="5,0,0,0"/>
-												<Image Source="/JiME;component/Assets/fear.png" Height="32"/>
-												<TextBlock Text="{Binding damage}"/>
-												<TextBlock Style="{StaticResource Heading}" Text="Elite" Margin="15, 0, 0, 0" Visibility="{Binding isElite,Converter={StaticResource bvis}}" Foreground="Red"/>
-												<TextBlock Margin="10,0"/>
-												-->
-												<!--difficulty-->
-												<!--
-												<Border Width="16" Height="16" BorderThickness="2" BorderBrush="White" Background="Green" Visibility="{Binding isEasy, Converter={StaticResource bvis}}"/>
-												<Border Width="16" Height="16" BorderThickness="2" BorderBrush="White" Background="Yellow" Visibility="{Binding isNormal, Converter={StaticResource bvis}}"/>
-												<Border Width="16" Height="16" BorderThickness="2" BorderBrush="White" Background="Red" Visibility="{Binding isHard, Converter={StaticResource bvis}}"/>
-												-->
 											</StackPanel>
 											<StackPanel Orientation="Horizontal">
 												<TextBlock Text="Attack Text: " Style="{StaticResource SubText}"/>
-												<TextBlock Text="{Binding text}" Style="{StaticResource SubTextWhite}"/>
+												<!--<TextBlock Text="{Binding text}" Style="{StaticResource SubTextWhite}"/>-->
+												<FlowDocumentScrollViewer Document="{Binding TextFlowDocument}" MaxHeight="32" Foreground="White" VerticalScrollBarVisibility="Disabled"/>
 											</StackPanel>
 											<StackPanel Orientation="Horizontal">
 												<TextBlock Text="After Effect: " Style="{StaticResource SubText}"/>
-												<TextBlock Text="{Binding effect}" Style="{StaticResource SubTextWhite}"/>
+												<!--<TextBlock Text="{Binding effect}" Style="{StaticResource SubTextWhite}" />-->
+												<FlowDocumentScrollViewer Document="{Binding EffectFlowDocument}" MaxHeight="32" Foreground="White" VerticalScrollBarVisibility="Disabled"/>
 											</StackPanel>
 										</StackPanel>
 

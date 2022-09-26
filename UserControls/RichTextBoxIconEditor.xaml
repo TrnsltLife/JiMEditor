@@ -63,7 +63,9 @@
 				<CommandBinding Command="ToggleUnderline" CanExecute="CommandBinding_CanExecute" />
 			</RichTextBox.CommandBindings>
 		</RichTextBox>
+		<!--
 		<Button Content="Output Code" Click="OutputButton_Click"/>
+		-->
 	</StackPanel>
 
 </UserControl>

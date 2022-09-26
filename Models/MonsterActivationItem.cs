@@ -1,7 +1,9 @@
-﻿using JiME.Models;
+﻿using System.Windows.Documents;
 using System;
+using System.Windows.Markup;
+using System.Text.RegularExpressions;
 using System.ComponentModel;
-using System.Linq;
+using Newtonsoft.Json;
 
 namespace JiME
 {
@@ -127,6 +129,34 @@ namespace JiME
 				}
 			}
 		}
+
+        [JsonIgnore]
+		public FlowDocument TextFlowDocument
+        {
+			//Transform the text to display icons properly in a TextBlock
+			get => CreateFlowDocumentFromSimpleHtml(text);
+        }
+
+        [JsonIgnore]
+		public FlowDocument EffectFlowDocument
+        {
+			//Transform the effect to display icons properly in a TextBlock
+			get => CreateFlowDocumentFromSimpleHtml(effect);
+        }
+
+		private FlowDocument CreateFlowDocumentFromSimpleHtml(string html)
+		{
+			if(html == null) { return null; }
+			//Create a FlowDocument from the simple HTML in order to show the icons in the detail view. However, just transform internal paragraphs into spaces.
+			//html = Regex.Replace(html, "\r\n", "</Paragraph><Paragraph>");
+			html = Regex.Replace(html, "\r\n", " ");
+			html = Regex.Replace(html, "<b>", "<Run FontFamily=\"LoTR JiME Icons\">");
+			html = Regex.Replace(html, "</b>", "</Run>");
+			html = "<Paragraph FontFamily=\"Segoe UI\" FontSize=\"12\">" + html + "</Paragraph>";
+			html = "<?xml version=\"1.0\" encoding=\"utf-16\"?><FlowDocument PagePadding=\"5,0,5,0\" AllowDrop=\"True\" NumberSubstitution.CultureSource=\"User\" xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\">" + html + "</FlowDocument>";
+			return (FlowDocument)XamlReader.Parse(html);
+		}
+
 
 		public void UpdateValid()
         {
