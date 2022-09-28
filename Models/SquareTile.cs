@@ -12,7 +12,7 @@ using JiME.Models;
 
 namespace JiME
 {
-	public class HexTile : BaseTile, INotifyPropertyChanged, ITile
+	public class SquareTile : BaseTile, INotifyPropertyChanged, ITile
 	{
 		/*
 		string _tileSide, _triggerName;
@@ -78,12 +78,11 @@ namespace JiME
 
 		Point clickV;
 		*/
-
 		public TextBookData flavorBookData { get; set; }
 
-		public HexTile() {}
+		public SquareTile() {}
 
-		public HexTile( int n, bool skipBuild = false )
+		public SquareTile( int n, bool skipBuild = false )
 		{
 			tileType = TileType.Hex;
 			idNumber = n;
@@ -106,7 +105,7 @@ namespace JiME
 			}
 		}
 
-		protected override void BuildShape()
+		new void BuildShape()
 		{
 			//where is this from?????
 			//dims: 68.8660278320313,86.4256286621094 of ONE hexagon
@@ -256,9 +255,8 @@ namespace JiME
 		/// <summary>
 		/// updates shape position on canvas
 		/// </summary>
-		override protected void Update()
+		new void Update()
 		{
-			Debug.Log("Update-Hex");
 			//Apply translation to the pathShape
 			pathShape.RenderTransformOrigin = new Point( 0, 0 );
 			TranslateTransform tf = new TranslateTransform(position.X, position.Y);
@@ -345,7 +343,7 @@ namespace JiME
 		*/
 
 		/*
-		new public void Rehydrate( Canvas canvas )
+		public void Rehydrate( Canvas canvas )
 		{
 			BuildShape();
 			BuildImage();
@@ -420,7 +418,7 @@ namespace JiME
 		}
 		*/
 
-		override public void Drag( MouseEventArgs e, Canvas canvas )
+		new public void Drag( MouseEventArgs e, Canvas canvas )
 		{
 			Vector clickPoint = new Vector( e.GetPosition( canvas ).X - clickV.X, e.GetPosition( canvas ).Y - clickV.Y );
 

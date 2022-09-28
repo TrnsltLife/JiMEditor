@@ -38,6 +38,9 @@ namespace JiME
 					case 1:
 						tile = item.ToObject<BattleTile>();
 						break;
+					case 2:
+						tile = item.ToObject<SquareTile>();
+						break;
 				}
 				tileObserver.Add( tile );
 			}

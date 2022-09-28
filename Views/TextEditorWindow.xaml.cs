@@ -58,6 +58,7 @@ namespace JiME.Views
 			triggerLB.IsEnabled = mode == EditMode.Resolution;
 		}
 
+		/*
 		private void AddButton_Click( object sender, RoutedEventArgs e )
 		{
 			textBookController.SetContent( pageText.Text );
@@ -79,6 +80,7 @@ namespace JiME.Views
 			pageText.CaretIndex = idx;
 			UpdateInfo( false );
 		}
+		*/
 
 		void UpdateInfo( bool focus = true )
 		{
@@ -87,10 +89,11 @@ namespace JiME.Views
 			if ( focus )
 			{
 				pageText.Focus();
-				pageText.CaretIndex = pageText.Text.Length;
+				//pageText.CaretIndex = pageText.Text.Length;
 			}
 		}
 
+		/*
 		private void RightButton_Click( object sender, RoutedEventArgs e )
 		{
 			textBookController.SetContent( pageText.Text );
@@ -104,6 +107,7 @@ namespace JiME.Views
 			pageText.Text = textBookController.Previous();
 			UpdateInfo();
 		}
+		*/
 
 		private void OkButton_Click( object sender, RoutedEventArgs e )
 		{

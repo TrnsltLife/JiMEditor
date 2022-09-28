@@ -203,6 +203,11 @@ namespace JiME
 
 		public ObservableCollection<int> filteredGlobalTilePool { get; set; }
 
+		public static bool IsBattleTile(int t)
+        {
+			return (t == 998 || t == 999);
+        }
+
 		private void AddCollectionChangedLambda()
 		{
 			globalTilePool.CollectionChanged += (object s, NotifyCollectionChangedEventArgs e) =>
@@ -213,7 +218,8 @@ namespace JiME
 					{
 						foreach (var item in e.NewItems)
 						{
-							if (collectionObserver.Contains(Collection.FromTileNumber((int)item)))
+							if (scenarioTypeJourney ? !IsBattleTile((int)item) && collectionObserver.Contains(Collection.FromTileNumber((int)item))
+													:  IsBattleTile((int)item) && collectionObserver.Contains(Collection.FromTileNumber((int)item)))
 							{
 								filteredGlobalTilePool.Add((int)item);
 							}
@@ -249,7 +255,11 @@ namespace JiME
 		public void RefilterGlobalTilePool()
         {
 			filteredGlobalTilePool.Clear();
-			var newList = new ObservableCollection<int>(globalTilePool.Where(tileNumber => collectionObserver.Contains(Collection.FromTileNumber(tileNumber))).ToList());
+			//If Journey Map is selected, filter only the tiles in the currently selected Collections
+			//If Battle Map is selected, fitler only tiles 998 and 999 which stand for the two Battle Map tiles
+			var newList = new ObservableCollection<int>(globalTilePool
+				.Where(tileNumber => scenarioTypeJourney ? !IsBattleTile(tileNumber) && collectionObserver.Contains(Collection.FromTileNumber(tileNumber)) 
+														 :  IsBattleTile(tileNumber) && collectionObserver.Contains(Collection.FromTileNumber(tileNumber))).ToList());
 			filteredGlobalTilePool.Clear();
 			foreach (var item in newList)
 			{
@@ -270,6 +280,7 @@ namespace JiME
 			isDirty = true;
 			projectType = ProjectType.Standalone;
 			titleChangedToken = new Tuple<bool, string, Guid, ProjectType>( true, string.Empty, Guid.NewGuid(), ProjectType.Standalone );
+			scenarioTypeJourney = true;
 
 			interactionObserver = new ObservableCollection<IInteraction>();
 			triggersObserver = new ObservableCollection<Trigger>();
@@ -281,7 +292,8 @@ namespace JiME
 			collectionObserver = new ObservableCollection<Collection>();
 			collectionObserver.Add(Collection.CORE_SET);
 			globalTilePool = new ObservableCollection<int>( Utils.LoadTiles() );
-			filteredGlobalTilePool = new ObservableCollection<int>(globalTilePool.Where(tileNumber => collectionObserver.Contains(Collection.FromTileNumber(tileNumber))).ToList());
+			filteredGlobalTilePool = new ObservableCollection<int>();
+			RefilterGlobalTilePool();
 			AddCollectionChangedLambda();
 			scenarioEndStatus = new Dictionary<string, bool>();
 			Utils.LoadHexData();
@@ -420,9 +432,31 @@ namespace JiME
 
 		public void WipeChapters()
 		{
+			var listCopy = chapterObserver.ToList();
+			foreach (var c in listCopy)
+			{
+				RemoveChapter(c);
+			}
 			chapterObserver.Clear();
 			Chapter chapter = new Chapter( "Start" ) { isEmpty = true };
 			chapterObserver.Add( chapter );
+		}
+
+		public void RemoveChapter(Chapter c)
+        {
+			foreach (var tile in c.tileObserver)
+			{
+				globalTilePool.Add(tile.idNumber);
+			}
+			TileSorter sorter = new TileSorter();
+			List<int> foo = globalTilePool.ToList();
+			foo.Sort(sorter);
+			globalTilePool.Clear();
+			foreach (int s in foo)
+			{
+				globalTilePool.Add(s);
+			}
+			RemoveData(c);
 		}
 
 		void PropChanged( string name )

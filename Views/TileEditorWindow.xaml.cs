@@ -44,10 +44,17 @@ namespace JiME.Views
 			//rehydrate existing tiles in this chapter
 			for ( int i = 0; i < chapter.tileObserver.Count; i++ )
 			{
-				( (HexTile)chapter.tileObserver[i] ).useGraphic = scenario.useTileGraphics;
-				( (HexTile)chapter.tileObserver[i] ).Rehydrate( canvas );
-				( (HexTile)chapter.tileObserver[i] ).ChangeColor( i );
-				( (HexTile)chapter.tileObserver[i] ).ToggleGraphic( canvas );
+				HexTile hex = ((HexTile)chapter.tileObserver[i]);
+				HexTile.printPivot = true;
+				hex.useGraphic = scenario.useTileGraphics;
+				hex.Rehydrate( canvas );
+				hex.ChangeColor( i );
+				hex.ToggleGraphic( canvas );
+				if (HexTile.printRect)
+					canvas.Children.Add(hex.pathShape);
+				if (HexTile.printPivot)
+					canvas.Children.Add(hex.pivotPathShape);
+
 			}
 
 			editTokenButton.IsEnabled = !chapter.usesRandomGroups;
@@ -150,7 +157,7 @@ namespace JiME.Views
 			scenario.globalTilePool.Remove( (int)tilePool.SelectedItem );
 
 			if (HexTile.printRect)
-				canvas.Children.Add(hex.hexPathShape);
+				canvas.Children.Add(hex.pathShape);
 			//if ( scenario.useTileGraphics )
 			//	canvas.Children.Add( hex.tileImage );
 			if (HexTile.printPivot)
@@ -177,7 +184,7 @@ namespace JiME.Views
 
 		private void RemoveTile(HexTile tile, bool affectScenarioAndChapter)
         {
-			canvas.Children.Remove(tile.hexPathShape);
+			canvas.Children.Remove(tile.pathShape);
 			canvas.Children.Remove(tile.tileImage);
 			if (affectScenarioAndChapter)
 			{
@@ -259,7 +266,11 @@ namespace JiME.Views
 					radioA.IsChecked = selected.tileSide == "A";
 					radioB.IsChecked = selected.tileSide == "B";
 					tokenCount.Text = "Tokens in Tile: " + selected.tokenList.Count;
-					//Debug.Log( selected );
+
+					//Info printed on status bar
+					infoTileID.Text = selected.idNumberAndCollection;
+					infoTilePosition.Text = selected.position.ToString();
+					infoTileRotation.Text = selected.angle.ToString();
 				}
 			}
 

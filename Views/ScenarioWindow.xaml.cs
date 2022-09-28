@@ -355,13 +355,14 @@ namespace JiME.Views
 				if ( ret == MessageBoxResult.Yes )
 				{
 					currentType = scenario.scenarioTypeJourney;
+					scenario.WipeChapters();
 					if ( scenario.scenarioTypeJourney )
 						scenario.chapterObserver[0].ToJourneyTile();
 					else
 					{
 						scenario.chapterObserver[0].ToBattleTile();
-						scenario.WipeChapters();
 					}
+					scenario.RefilterGlobalTilePool();
 				}
 				else
 					scenario.scenarioTypeJourney = currentType;

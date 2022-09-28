@@ -230,7 +230,7 @@ namespace JiME
 		/// Update this number every time the file format changes with new features
 		/// </summary>
 		public static string formatVersion = "1.10";
-		public static string appVersion = "0.20-alpha";
+		public static string appVersion = "0.20";
 		public static Dictionary<int, HexTileData> hexDictionary { get; set; } = new Dictionary<int, HexTileData>();
 		public static Dictionary<int, HexTileData> hexDictionaryB { get; set; } = new Dictionary<int, HexTileData>();
 		public static int tolerance = 25;

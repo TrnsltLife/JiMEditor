@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
 				xmlns:local="clr-namespace:JiME"
-				xmlns:core="clr-namespace:System;assembly=mscorlib"
-        Title="Tile Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" MinWidth="800"  MinHeight="400" Height="650" SizeToContent="Manual" PreviewKeyDown="Window_PreviewKeyDown" Closing="Window_Closing">
+				xmlns:core="clr-namespace:System;assembly=mscorlib" xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+		Title="Tile Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" MinWidth="800"  MinHeight="400" Height="650" SizeToContent="Manual" PreviewKeyDown="Window_PreviewKeyDown" Closing="Window_Closing">
 
 	<Window.Resources>
 		<local:NullToVisibility x:Key="n2vis"/>
@@ -168,10 +168,22 @@
 						<ColumnDefinition Width="auto"/>
 					</Grid.ColumnDefinitions>
 
-					<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,0,0,0">
-						<TextBlock Style="{StaticResource Heading}" Text="Add Up To 5 Tiles" Margin="0,0,0,0"/>
-						<TextBlock Style="{StaticResource Heading}" Text="Rotate: Page Up/Page Down" Margin="80,0"/>
-						<TextBlock Style="{StaticResource Heading}" Text="Remove Selected Tile: Del" />
+					<StackPanel Orientation="Vertical" VerticalAlignment="Center">
+						<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,0,0,0">
+							<TextBlock Style="{StaticResource Heading}" Text="Add Up To 5 Tiles" Margin="0,0,0,0"/>
+							<TextBlock Style="{StaticResource Heading}" Text="Rotate: Page Up/Page Down" Margin="80,0"/>
+							<TextBlock Style="{StaticResource Heading}" Text="Remove Selected Tile: Del" />
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,20,0,0">
+							<TextBlock Style="{StaticResource SubTextWhite}" VerticalAlignment="Bottom" Text="Tile ID: "/>
+							<TextBlock x:Name="infoTileID" Style="{StaticResource Heading}" VerticalAlignment="Bottom" Text="" FontFamily="/Assets/#LoTR JiME Icons"/>
+							
+							<TextBlock Margin="40,0,0,0" Style="{StaticResource SubTextWhite}" VerticalAlignment="Bottom" Text="Tile Position: "/>
+							<TextBlock x:Name="infoTilePosition" Style="{StaticResource Heading}" VerticalAlignment="Bottom" Text=""/>
+
+							<TextBlock Margin="40,0,0,0" Style="{StaticResource SubTextWhite}" VerticalAlignment="Bottom" Text="Tile Rotation: "/>
+							<TextBlock x:Name="infoTileRotation" Style="{StaticResource Heading}" VerticalAlignment="Bottom" Text=""/>
+						</StackPanel>
 					</StackPanel>
 
 					<Button Grid.Column="1" x:Name="okButton" Margin="10" Background="MediumSeaGreen" Click="OkButton_Click" IsDefault="True">

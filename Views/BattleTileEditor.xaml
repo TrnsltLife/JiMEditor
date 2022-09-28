@@ -54,7 +54,8 @@
 
 
 			<Canvas Grid.Column="1" x:Name="canvas" MouseDown="Canvas_MouseDown" Height="192" Width="384" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10,0,0" >
-				<Path Style="{StaticResource box1}" DataContext="0">
+				<!-- first battle map -->
+				<Path Style="{StaticResource box1}" DataContext="0" Fill="{Binding LeftColor}">
 					<Path.RenderTransform>
 						<TranslateTransform X=".5" Y="0"/>
 					</Path.RenderTransform>

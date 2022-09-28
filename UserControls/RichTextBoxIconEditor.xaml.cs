@@ -39,6 +39,32 @@ namespace JiME.UserControls
 			}
 		}
 
+		public double MinTextHeight
+		{
+			get => iconRTB.MinHeight;
+			set
+			{
+				iconRTB.MinHeight = value;
+			}
+		}
+
+		public double TextHeight
+        {
+			get => iconRTB.Height;
+			set
+            {
+				iconRTB.Height = value;
+            }
+        }
+
+		public double MaxTextHeight
+		{
+			get => iconRTB.MaxHeight;
+			set
+			{
+				iconRTB.MaxHeight = value;
+			}
+		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
 

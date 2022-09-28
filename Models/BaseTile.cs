@@ -12,9 +12,8 @@ using JiME.Models;
 
 namespace JiME
 {
-	public class HexTile : BaseTile, INotifyPropertyChanged, ITile
+	public class BaseTile : INotifyPropertyChanged, ITile
 	{
-		/*
 		string _tileSide, _triggerName;
 		bool _isStartTile;
 
@@ -76,24 +75,18 @@ namespace JiME
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		Point clickV;
-		*/
+		protected Point clickV;
 
-		public TextBookData flavorBookData { get; set; }
+		public BaseTile() {}
 
-		public HexTile() {}
-
-		public HexTile( int n, bool skipBuild = false )
+		public BaseTile( int n, bool skipBuild = false )
 		{
-			tileType = TileType.Hex;
 			idNumber = n;
 			tokenCount = ( n / 100 ) % 10;
 			GUID = Guid.NewGuid();
 			tileSide = "A";
 			position = new Vector( Utils.dragSnapX[5], Utils.dragSnapY[5] );
 			tokenList = new ObservableCollection<Token>();
-			flavorBookData = new TextBookData( "" );
-			flavorBookData.pages.Add( "" );
 			isStartTile = false;
 			triggerName = "None";
 			collection = Collection.FromTileNumber(idNumber);
@@ -106,79 +99,15 @@ namespace JiME
 			}
 		}
 
-		protected override void BuildShape()
+		virtual protected void BuildShape()
 		{
-			//where is this from?????
-			//dims: 68.8660278320313,86.4256286621094 of ONE hexagon
-
-			//canvas grid 32x28
-			//hexagon ratio 1 : 1.1547005
-			//unit dims: 1 x 0.8660254 = hex ratio
-
-			//dims 64 x 55.4256256
-			// distance between hextiles = 55.425626
-
 			pathShape = new Path();
 			pathShape.Stroke = Brushes.White;
 			pathShape.StrokeThickness = 2;
 			pathShape.Fill = new SolidColorBrush( Color.FromRgb( 70, 70, 74 ) );
-
-			HexTileData hexdata;
-			if ( tileSide == "A" )
-				hexdata = Utils.hexDictionary[idNumber];
-			else
-				hexdata = Utils.hexDictionaryB[idNumber];
-
-			//store the FIRST hexagon position (pathRoot) that makes up the tile (searching top to bottom from left to right)
-			//pathRoot is needed by companion app to calculate offsets
-			Point[] hexPoints = HexTileData.ExtractCoords(hexdata.coords);
-			pathRoot = new Vector(hexPoints[0].X, hexPoints[0].Y);
-
-			//local coords, example: (0,1) translated to canvas coords
-			Point[] hexPositions = HexTileData.ConvertCoords( String.Join(" ", hexPoints )); //Use hexPoints because it is sorted from top to bottom, left to right
-			Point center = hexPositions[0];
-			PathFigure[] hexfigures = new PathFigure[hexdata.tileCount];
-			for ( int i = 0; i < hexfigures.Length; i++ )
-			{
-				hexPositions[i] = RotatePoint( hexPositions[i],
-					//new Point( 0, 55.4256256d / 2 ), 
-					center,
-					angle );
-				hexfigures[i] = BuildRegularPolygon( hexPositions[i], 32, 6, 0 );
-			}
-			pathShape.Data = new PathGeometry( hexfigures );
-			pathShape.DataContext = this;
-
-
-			if (printRect)
-			{
-				//Rectangle for verifying proper size of HexTileData width and height
-				rectPathShape = new Path();
-				rectPathShape.Stroke = Brushes.White;
-				rectPathShape.StrokeThickness = 2;
-				rectPathShape.Fill = new SolidColorBrush(Color.FromRgb(70, 70, 74));
-				PathFigure[] rectfigures = new PathFigure[1];
-				rectfigures[0] = BuildRectangle(new Point(0, 0), Utils.hexDictionary[idNumber].width, Utils.hexDictionary[idNumber].height);
-				rectPathShape.Data = new PathGeometry(rectfigures);
-				rectPathShape.DataContext = this;
-			}
-
-			if (printPivot)
-			{
-				//Pivot center for rotation - debug display
-				pivotPathShape = new Path();
-				pivotPathShape.Stroke = Brushes.Magenta;
-				pivotPathShape.StrokeThickness = 2;
-				pivotPathShape.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-				PathFigure[] pivotfigures = new PathFigure[1];
-				pivotfigures[0] = BuildRectangle(new Point(-1, -1), 3, 3);
-				pivotPathShape.Data = new PathGeometry(pivotfigures);
-				pivotPathShape.DataContext = this;
-			}
 		}
 
-		/*
-		void BuildImage()
+		virtual protected void BuildImage()
 		{
 			tileImage = new Image();
 			int idx = Utils.LoadTiles().IndexOf( idNumber );
@@ -190,10 +119,8 @@ namespace JiME
 			tileImage.Height = Math.Ceiling( tileImage.Source.Height );
 			tileImage.IsHitTestVisible = false;
 		}
-		*/
 
-		/*
-		PathFigure BuildRectangle( Point c, double width, double height )
+		virtual protected PathFigure BuildRectangle( Point c, double width, double height )
         {
 			LineSegment[] segments = new LineSegment[5];
 			Point cur = c;
@@ -210,10 +137,8 @@ namespace JiME
 			PathFigure figure = new PathFigure(startPoint, segments, false);
 			return figure;
 		}
-		*/
 
-		/*
-		PathFigure BuildRegularPolygon( Point c, double r, int numSides, double offsetDegree )
+		virtual protected PathFigure BuildRegularPolygon( Point c, double r, int numSides, double offsetDegree )
 		{
 			// c is the center, r is the radius,
 			// numSides the number of sides, offsetDegree the offset in Degrees.
@@ -240,10 +165,8 @@ namespace JiME
 			//Debug.Log( "end poly" );
 			return figure;
 		}
-		*/
 
-		/*
-		public void ChangeColor( int idx )
+		virtual public void ChangeColor( int idx )
 		{
 			color = idx;
 			if ( !useGraphic )
@@ -251,30 +174,29 @@ namespace JiME
 			else
 				pathShape.Fill = new SolidColorBrush( Colors.White );
 		}
-		*/
 
 		/// <summary>
 		/// updates shape position on canvas
 		/// </summary>
-		override protected void Update()
+		virtual protected void Update()
 		{
-			Debug.Log("Update-Hex");
+			Debug.Log("Update-Base");
 			//Apply translation to the pathShape
 			pathShape.RenderTransformOrigin = new Point( 0, 0 );
 			TranslateTransform tf = new TranslateTransform(position.X, position.Y);
 
-			TransformGroup hexgrp = new TransformGroup();
-			hexgrp.Children.Add( tf );
-			pathShape.RenderTransform = hexgrp;
+			TransformGroup trnsgrp = new TransformGroup();
+			trnsgrp.Children.Add( tf );
+			pathShape.RenderTransform = trnsgrp;
 
 
 			//Apply scale, translation, and rotation to the tile image
 			//get size dimensions of PATH object
 			Vector dims;
 			if ( tileSide == "A" )
-				dims = new Vector( Utils.hexDictionary[idNumber].width, Utils.hexDictionary[idNumber].height );
+				dims = new Vector( 512, 512 );
 			else
-				dims = new Vector( Utils.hexDictionaryB[idNumber].width, Utils.hexDictionary[idNumber].height );
+				dims = new Vector( 512, 512 );
 
 			//calculate the SCALE of largest side (width or height)
 			double scale;
@@ -287,19 +209,19 @@ namespace JiME
 
 			ScaleTransform scaleTransform = new ScaleTransform( scale, scale );
 
-			float imgTranslateX = (float)position.X - 32f;
-			float imgTranslateY = (float)position.Y - 27.7128128f;
+			float imgTranslateX = (float)position.X; // - 32f;
+			float imgTranslateY = (float)position.Y; // - 27.7128128f;
 			TranslateTransform translateTransform = new TranslateTransform(imgTranslateX, imgTranslateY);
 			//Console.WriteLine("imgTranslate: " + imgTranslateX + "," + imgTranslateY);
 
 			RotateTransform rotateTransform = new RotateTransform( angle );
-			rotateTransform.CenterX = position.X + (pathRoot.X * 32f);
-			rotateTransform.CenterY = position.Y + (pathRoot.Y * 27.7128128f);
+			rotateTransform.CenterX = position.X; // + (pathRoot.X * 32f);
+			rotateTransform.CenterY = position.Y; // + (pathRoot.Y * 27.7128128f);
 			//Console.WriteLine("rotateCenter: " + rotateTransform.CenterX + "," + rotateTransform.CenterY);
 
 			imggrp.Children.Add( scaleTransform );
 			imggrp.Children.Add( translateTransform );
-			imggrp.Children.Add(rotateTransform);
+			imggrp.Children.Add( rotateTransform );
 			tileImage.RenderTransform = imggrp;
 
 			if (printRect)
@@ -317,13 +239,9 @@ namespace JiME
 				pivotgrp.Children.Add(pivottf);
 				pivotPathShape.RenderTransform = pivotgrp;
 			}
-
-			//dims 64 x 55.4256256
-			//27.7128128
 		}
 
-		/*
-		public void Select()
+		virtual public void Select()
 		{
 			pathShape.Stroke = new SolidColorBrush( Colors.Red );
 			Canvas.SetZIndex( pathShape, 100 );
@@ -333,19 +251,15 @@ namespace JiME
 			if(printPivot)
 				Canvas.SetZIndex(pivotPathShape, 102);
 		}
-		*/
 
-		/*
-		public void Unselect()
+		virtual public void Unselect()
 		{
 			pathShape.Stroke = new SolidColorBrush( Colors.White );
 			Canvas.SetZIndex( pathShape, 0 );
 			Canvas.SetZIndex( tileImage, 1 );
 		}
-		*/
 
-		/*
-		new public void Rehydrate( Canvas canvas )
+		virtual public void Rehydrate( Canvas canvas )
 		{
 			BuildShape();
 			BuildImage();
@@ -355,10 +269,8 @@ namespace JiME
 				canvas.Children.Add( tileImage );
 			Update();
 		}
-		*/
 
-		/*
-		public void ToggleGraphic( Canvas canvas )
+		virtual public void ToggleGraphic( Canvas canvas )
 		{
 			if ( useGraphic )
 			{
@@ -371,10 +283,8 @@ namespace JiME
 			}
 			ChangeColor( color );
 		}
-		*/
 
-		/*
-		public void ChangeTileSide( string side, Canvas canvas )
+		virtual public void ChangeTileSide( string side, Canvas canvas )
 		{
 			tileSide = side;
 			position = new Vector( Utils.dragSnapX[5], Utils.dragSnapY[5] );
@@ -383,10 +293,8 @@ namespace JiME
 			ChangeColor( color );
 			Select();
 		}
-		*/
 
-		/*
-		public void Rotate( double amount, Canvas canvas )
+		virtual public void Rotate( double amount, Canvas canvas )
 		{
 			//4,57.7128128
 			canvas.Children.Remove( pathShape );
@@ -399,10 +307,8 @@ namespace JiME
 			ChangeColor( color );
 			Select();
 		}
-		*/
 
-		/*
-		public void SetClickV( MouseButtonEventArgs e, Canvas canvas )
+		virtual public void SetClickV( MouseButtonEventArgs e, Canvas canvas )
 		{
 			clickV = new Point();
 			TransformGroup grp = pathShape.RenderTransform as TransformGroup;
@@ -415,12 +321,11 @@ namespace JiME
 				clickV = e.GetPosition( canvas );
 				clickV.X -= gv.X;
 				clickV.Y -= gv.Y;
-				//Debug.Log( "clickV:" + clickV );
+				Debug.Log( "clickV:" + clickV );
 			}
 		}
-		*/
 
-		override public void Drag( MouseEventArgs e, Canvas canvas )
+		virtual public void Drag( MouseEventArgs e, Canvas canvas )
 		{
 			Vector clickPoint = new Vector( e.GetPosition( canvas ).X - clickV.X, e.GetPosition( canvas ).Y - clickV.Y );
 
@@ -434,8 +339,7 @@ namespace JiME
 				Update();
 		}
 
-		/*
-		Point RotatePoint( Point pointToRotate, Point centerPoint, double angleInDegrees )
+		virtual protected Point RotatePoint( Point pointToRotate, Point centerPoint, double angleInDegrees )
 		{
 			double angleInRadians = angleInDegrees * ( Math.PI / 180 );
 			double cosTheta = Math.Cos( angleInRadians );
@@ -456,10 +360,8 @@ namespace JiME
 			p.Y = ( from snapy in Utils.hexSnapY where p.Y.WithinTolerance( snapy, 5 ) select snapy ).FirstOr( -1 );
 			return p;
 		}
-		*/
 
-		/*
-		public void RenameTrigger( string oldName, string newName )
+		virtual public void RenameTrigger( string oldName, string newName )
 		{
 			foreach ( Token t in tokenList )
 			{
@@ -471,10 +373,9 @@ namespace JiME
 				triggerName = newName;
 		}
 
-		void PropChanged( string name )
+		virtual protected void PropChanged( string name )
 		{
 			PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( name ) );
 		}
-		*/
 	}
 }
