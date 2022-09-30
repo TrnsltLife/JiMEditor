@@ -360,7 +360,8 @@ namespace JiME.Views
 						scenario.chapterObserver[0].ToJourneyTile();
 					else
 					{
-						scenario.chapterObserver[0].ToBattleTile();
+						//scenario.chapterObserver[0].ToBattleTile();
+						scenario.chapterObserver[0].ToSquareTile();
 					}
 					scenario.RefilterGlobalTilePool();
 				}

@@ -82,6 +82,7 @@
     <Compile Include="Common\Converters.cs" />
     <Compile Include="Common\ErrorChecker.cs" />
     <Compile Include="Common\FileManager.cs" />
+    <Compile Include="Common\BaseTileData.cs" />
     <Compile Include="Common\HexTileData.cs" />
     <Compile Include="Common\CollectionListConverter.cs" />
     <Compile Include="Common\InteractionConverter.cs" />

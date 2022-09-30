@@ -55,6 +55,8 @@ namespace JiME
 		}
 
 		[JsonIgnore]
+		public double rotationAngle = 15;
+		[JsonIgnore]
 		public Path pathShape;
 		[JsonIgnore]
 		public Image tileImage;
@@ -68,9 +70,13 @@ namespace JiME
 		[JsonIgnore]
 		public string idNumberAndCollection { get { return "" + idNumber + collection.FontCharacter; } }
 
+        [JsonIgnore]
 		public static bool printRect = false;
+		[JsonIgnore]
 		public Path rectPathShape;
+		[JsonIgnore]
 		public static bool printPivot = false;
+		[JsonIgnore]
 		public Path pivotPathShape;
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -294,14 +300,14 @@ namespace JiME
 			Select();
 		}
 
-		virtual public void Rotate( double amount, Canvas canvas )
+		virtual public void Rotate( double direction, Canvas canvas )
 		{
 			//4,57.7128128
 			canvas.Children.Remove( pathShape );
 			canvas.Children.Remove( tileImage );
 			if(printRect)
 				canvas.Children.Remove(rectPathShape);
-			angle += amount;
+			angle += direction * rotationAngle;
 			angle %= 360;
 			Rehydrate( canvas );
 			ChangeColor( color );
@@ -313,15 +319,20 @@ namespace JiME
 			clickV = new Point();
 			TransformGroup grp = pathShape.RenderTransform as TransformGroup;
 
-			if ( grp?.Children.Count == 1 )
+			if ( grp?.Children.Count == 1 ) //HexTile
 			{
 				Vector gv = new Vector( ( (TranslateTransform)grp.Children[0] ).X, ( (TranslateTransform)grp.Children[0] ).Y );
-				//Debug.Log( "shape position(center):" + gv.X + "," + gv.Y );
-				//Debug.Log( $"dims: {pathShape.ActualWidth},{pathShape.ActualHeight}" );
 				clickV = e.GetPosition( canvas );
 				clickV.X -= gv.X;
 				clickV.Y -= gv.Y;
-				Debug.Log( "clickV:" + clickV );
+			}
+			else if( grp?.Children.Count == 3) //SquareTile
+            {
+				//Order of the transforms as set in SquareTile was ScaleTransform=0, TranslateTransform=1, RotateTransform=2
+				Vector gv = new Vector(((TranslateTransform)grp.Children[1]).X, ((TranslateTransform)grp.Children[1]).Y);
+				clickV = e.GetPosition(canvas);
+				clickV.X -= gv.X;
+				clickV.Y -= gv.Y;
 			}
 		}
 
@@ -356,8 +367,16 @@ namespace JiME
 							cosTheta * ( pointToRotate.Y - centerPoint.Y ) + centerPoint.Y )
 			};
 
-			p.X = ( from snapx in Utils.hexSnapX where p.X.WithinTolerance( snapx, 5 ) select snapx ).FirstOr( -1 );
-			p.Y = ( from snapy in Utils.hexSnapY where p.Y.WithinTolerance( snapy, 5 ) select snapy ).FirstOr( -1 );
+			if (tileType == TileType.Hex)
+			{
+				p.X = (from snapx in Utils.hexSnapX where p.X.WithinTolerance(snapx, 5) select snapx).FirstOr(-1);
+				p.Y = (from snapy in Utils.hexSnapY where p.Y.WithinTolerance(snapy, 5) select snapy).FirstOr(-1);
+			}
+			else if(tileType == TileType.Square)
+            {
+				p.X = (from snapx in Utils.sqrSnapX where p.X.WithinTolerance(snapx, 5) select snapx).FirstOr(-1);
+				p.Y = (from snapy in Utils.sqrSnapY where p.Y.WithinTolerance(snapy, 5) select snapy).FirstOr(-1);
+			}
 			return p;
 		}
 

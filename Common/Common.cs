@@ -29,7 +29,7 @@ namespace JiME
 							  FellBeast, WargRider, SiegeEngine, WarOliphaunt, Soldier, UrukWarrior, //21-26
 							  LordAngon, WitchKingOfAngmar, Eadris //27-29
 	}
-	public enum TileType { Hex, Battle }
+	public enum TileType { Hex, Battle, Square }
 	public enum ThreatAttributes { }//armor, elite, etc
 	public enum ProjectType { Standalone, Campaign }
 	public enum EditMode { Intro, Resolution, Objective, Flavor, Pass, Fail, Progress, Dialog, Special, Persistent, Story, Event }
@@ -231,12 +231,14 @@ namespace JiME
 		/// </summary>
 		public static string formatVersion = "1.10";
 		public static string appVersion = "0.20";
-		public static Dictionary<int, HexTileData> hexDictionary { get; set; } = new Dictionary<int, HexTileData>();
-		public static Dictionary<int, HexTileData> hexDictionaryB { get; set; } = new Dictionary<int, HexTileData>();
+		public static Dictionary<int, BaseTileData> tileDictionary { get; set; } = new Dictionary<int, BaseTileData>();
+		public static Dictionary<int, BaseTileData> tileDictionaryB { get; set; } = new Dictionary<int, BaseTileData>();
 		public static int tolerance = 25;
 		public static double[] dragSnapX, dragSnapY;
 		//hexSnap is used to convert local to absolute canvas coords (world)
-		public static double[] hexSnapX, hexSnapY;//used in HexTileData.cs
+		public static double[] hexSnapX, hexSnapY;//used in BaseTileData.cs
+		//sqrSnap is used to convert local to absolute canvas coords (world)
+		public static double[] sqrSnapX, sqrSnapY;//used in BaseTileData.cs
 		public static SolidColorBrush[] hexColors;
 		public static bool isLoaded = false;
 		//public static GalleryTile[] galleryTilesA;
@@ -248,8 +250,8 @@ namespace JiME
 		public static void Init()
 		{
 			//create the hex grid snaps on canvas
-			dragSnapX = new double[20];
-			dragSnapY = new double[20];
+			dragSnapX = new double[60];
+			dragSnapY = new double[40];
 			//grid snap is STAGGERED
 			//x to x is NOT whole width of hex
 			//1 hex is 64 wide
@@ -261,8 +263,8 @@ namespace JiME
 				dragSnapY[i] = 55.4256256d / 2 * i;//27.7128128
 
 			//max hex area of any composite shape
-			hexSnapX = new double[25];//20
-			hexSnapY = new double[26];//21
+			hexSnapX = new double[35];//25//20
+			hexSnapY = new double[36];//26//21
 
 			//hexSnapX = new double[8];
 			//hexSnapY = new double[9];
@@ -272,6 +274,15 @@ namespace JiME
 				hexSnapX[c] = xx + ( 48d * c );
 			for ( int c = 0; c < hexSnapY.Length; c++ )
 				hexSnapY[c] = yy + ( 55.4256256d / 2 * c );
+
+			//sqrSnap grid
+			sqrSnapX = new double[35];
+			sqrSnapY = new double[35];
+			double sqrxx = 0, sqryy = 0d;//offset onto canvas
+			for (int i = 0; i < sqrSnapX.Length; i++)
+				sqrSnapX[i] = sqrxx + (33d * i);
+			for (int i = 0; i < sqrSnapY.Length; i++)
+				sqrSnapY[i] = sqryy + (33d * i);
 
 			hexColors = new SolidColorBrush[5];
 			hexColors[0] = new SolidColorBrush( Colors.SaddleBrown );
@@ -392,7 +403,7 @@ namespace JiME
 			foreach ( var item in new string[] { "A", "B" } )
 			{
 				string resourceName = assembly.GetManifestResourceNames()
-.Single( str => str.Contains( ".hextiles" + item + ".json" ) );
+					.Single( str => str.Contains( ".hextiles" + item + ".json" ) );
 
 				using ( Stream stream = assembly.GetManifestResourceStream( resourceName ) )
 				using ( StreamReader reader = new StreamReader( stream ) )
@@ -400,33 +411,17 @@ namespace JiME
 					string json = reader.ReadToEnd();
 					var list = JObject.Parse( json );
 					JToken token = list.SelectToken( "tiles" );
-					List<HexTileData> ret = token.ToObject( typeof( List<HexTileData> ) ) as List<HexTileData>;
-					foreach ( HexTileData data in ret )
+					List<BaseTileData> ret = token.ToObject( typeof( List<BaseTileData> ) ) as List<BaseTileData>;
+					foreach ( BaseTileData data in ret )
 					{
 						data.Init();
 						if ( item == "A" )
 						{
-							hexDictionary.Add( data.id, data );
-
-							/*
-							//Print out the mirror image coordinates that can be used for hextilesB
-							string oords = String.Join(" ",
-								HexTileData.Mirror(
-									HexTileData.ExtractCoords(data.coords)
-								));
-							Console.WriteLine(dataB.id + ": " + dataB.coords);
-							*/
+							tileDictionary.Add( data.id, data );
 						}
 						else
 						{
-							hexDictionaryB.Add( data.id, data );
-							/*
-                            if (hexDictionaryB[data.id].width != hexDictionary[data.id].width ||
-								hexDictionaryB[data.id].height != hexDictionary[data.id].height)
-                            {
-								Console.WriteLine(data.id + ": width=" + hexDictionary[data.id].width + ", height=" + hexDictionary[data.id].height);
-                            }
-							*/
+							tileDictionaryB.Add( data.id, data );
 						}
 					}
 				}

@@ -15,8 +15,8 @@ namespace JiME.Views
 	/// </summary>
 	public partial class TileEditorWindow : Window, INotifyPropertyChanged
 	{
-		HexTile _selected;
-		public HexTile selected
+		BaseTile _selected;
+		public BaseTile selected
 		{
 			get => _selected;
 			set
@@ -41,19 +41,47 @@ namespace JiME.Views
 			chapter = c ?? new Chapter( "New Block" );
 			selected = null;
 
+			if(scenario.scenarioTypeJourney)
+            {
+				canvas.Style = (Style)FindResource("hexGrid"); ;
+			}
+			else
+            {
+				canvas.Style = (Style)FindResource("squareGrid"); ;
+			}
+			scenario.RefilterGlobalTilePool();
+
+			//BaseTile.printPivot = true;
+			//HexTile.printPivot = true;
+			//SquareTile.printPivot = true;
 			//rehydrate existing tiles in this chapter
 			for ( int i = 0; i < chapter.tileObserver.Count; i++ )
 			{
-				HexTile hex = ((HexTile)chapter.tileObserver[i]);
-				HexTile.printPivot = true;
-				hex.useGraphic = scenario.useTileGraphics;
-				hex.Rehydrate( canvas );
-				hex.ChangeColor( i );
-				hex.ToggleGraphic( canvas );
-				if (HexTile.printRect)
-					canvas.Children.Add(hex.pathShape);
-				if (HexTile.printPivot)
-					canvas.Children.Add(hex.pivotPathShape);
+				BaseTile bt = ((BaseTile)chapter.tileObserver[i]);
+				if (bt.tileType == TileType.Hex)
+				{
+					HexTile hex = ((HexTile)chapter.tileObserver[i]);
+					hex.useGraphic = scenario.useTileGraphics;
+					hex.Rehydrate(canvas);
+					hex.ChangeColor(i);
+					hex.ToggleGraphic(canvas);
+					if (HexTile.printRect)
+						canvas.Children.Add(hex.pathShape);
+					if (HexTile.printPivot)
+						canvas.Children.Add(hex.pivotPathShape);
+				}
+				else if (bt.tileType == TileType.Square)
+                {
+					SquareTile sqr = ((SquareTile)chapter.tileObserver[i]);
+					sqr.useGraphic = scenario.useTileGraphics;
+					sqr.Rehydrate(canvas);
+					sqr.ChangeColor(i);
+					sqr.ToggleGraphic(canvas);
+					if (SquareTile.printRect)
+						canvas.Children.Add(sqr.pathShape);
+					if (SquareTile.printPivot)
+						canvas.Children.Add(sqr.pivotPathShape);
+				}
 
 			}
 
@@ -67,7 +95,7 @@ namespace JiME.Views
 
 		int GetUnusedColor()
 		{
-			int[] used = chapter.tileObserver.Select( x => ( (HexTile)x ).color ).ToArray();
+			int[] used = chapter.tileObserver.Select( x => ( (BaseTile)x ).color ).ToArray();
 			for ( int i = 0; i < chapter.tileObserver.Count; i++ )
 			{
 				if ( i < used.Length && !used.Contains( i ) )
@@ -112,9 +140,9 @@ namespace JiME.Views
 			if ( selected != null )
 			{
 				if ( e.Key == Key.PageUp )
-					selected.Rotate( 60, canvas );
+					selected.Rotate( 1, canvas );
 				else if ( e.Key == Key.PageDown )
-					selected.Rotate( -60, canvas );
+					selected.Rotate( -1, canvas );
 				else if ( e.Key == Key.Delete )
 				{
 					RemoveTile(selected, true);
@@ -136,32 +164,40 @@ namespace JiME.Views
 			if ( tilePool.SelectedIndex == -1 || chapter.tileObserver.Count == 5 )
 				return;
 
-			foreach ( HexTile tt in chapter.tileObserver )
+			foreach ( BaseTile tt in chapter.tileObserver )
 			{
 				tt.Unselect();
 			}
 
 			int color = GetUnusedColor();
-			HexTile hex = new HexTile( (int)tilePool.SelectedItem );
-			hex.useGraphic = scenario.useTileGraphics;
-			hex.ChangeColor( color );
+			BaseTile tile;
+			if (scenario.scenarioTypeJourney)
+			{
+				tile = new HexTile((int)tilePool.SelectedItem);
+			}
+			else
+            {
+				tile = new SquareTile((int)tilePool.SelectedItem);
+            }
+			tile.useGraphic = scenario.useTileGraphics;
+			tile.ChangeColor( color );
 			//ChangeTileSide() also rehydrates and adds tile image
 			//This is why no need to call canvas.Children.Add(hex.hexPathShape)
-			hex.ChangeTileSide("A", canvas);
-			chapter.AddTile( hex );
-			selected = hex;
+			tile.ChangeTileSide("A", canvas);
+			chapter.AddTile( tile );
+			selected = tile;
 			selected.Select();
 			radioA.IsChecked = selected.tileSide == "A";
 			radioB.IsChecked = selected.tileSide == "B";
 			inChapterCB.SelectedIndex = chapter.tileObserver.Count - 1;
 			scenario.globalTilePool.Remove( (int)tilePool.SelectedItem );
 
-			if (HexTile.printRect)
-				canvas.Children.Add(hex.pathShape);
+			if (BaseTile.printRect)
+				canvas.Children.Add(tile.pathShape);
 			//if ( scenario.useTileGraphics )
 			//	canvas.Children.Add( hex.tileImage );
-			if (HexTile.printPivot)
-				canvas.Children.Add(hex.pivotPathShape);
+			if (BaseTile.printPivot)
+				canvas.Children.Add(tile.pivotPathShape);
 
 		}
 
@@ -182,7 +218,7 @@ namespace JiME.Views
 			}
 		}
 
-		private void RemoveTile(HexTile tile, bool affectScenarioAndChapter)
+		private void RemoveTile(BaseTile tile, bool affectScenarioAndChapter)
         {
 			canvas.Children.Remove(tile.pathShape);
 			canvas.Children.Remove(tile.tileImage);
@@ -211,17 +247,17 @@ namespace JiME.Views
 		/// </summary>
 		private void ComboBox_SelectionChanged( object sender, SelectionChangedEventArgs e )
 		{
-			foreach ( HexTile tt in chapter.tileObserver )
+			foreach ( BaseTile tt in chapter.tileObserver )
 			{
 				tt.Unselect();
 			}
 
 			selected = null;
 
-			var s = ( (ComboBox)sender ).SelectedItem as HexTile;
+			var s = ( (ComboBox)sender ).SelectedItem as BaseTile;
 			if ( s != null )
 			{
-				var t = ( from HexTile tile in chapter.tileObserver where s.GUID == tile.GUID select tile ).FirstOr( null );
+				var t = ( from BaseTile tile in chapter.tileObserver where s.GUID == tile.GUID select tile ).FirstOr( null );
 				if ( t != null )
 				{
 					selected = t;
@@ -248,17 +284,20 @@ namespace JiME.Views
 
 		private void canvas_MouseLeftButtonDown( object sender, MouseButtonEventArgs e )
 		{
+			Debug.Log("Clicked on " + e.Source.GetType());
 			if ( e.ClickCount == 1 )
 			{
-				foreach ( HexTile tt in chapter.tileObserver )
+				foreach (BaseTile tt in chapter.tileObserver)
+				{
 					tt.Unselect();
+				}
 
 				selected = null;
 
 				if ( e.Source is Path )
 				{
 					Path path = e.Source as Path;
-					selected = path.DataContext as HexTile;
+					selected = path.DataContext as BaseTile;
 					selected.Select();
 					dragging = true;
 					selected.SetClickV( e, canvas );
@@ -293,9 +332,9 @@ namespace JiME.Views
 			if ( selected != null )
             {
 				if (e.Delta > 0)
-					selected.Rotate(60, canvas);
+					selected.Rotate(1, canvas);
 				else if (e.Delta < 0)
-					selected.Rotate(-60, canvas);
+					selected.Rotate(-1, canvas);
             }
         }
 
@@ -326,7 +365,7 @@ namespace JiME.Views
 			GalleryWindow gw = new GalleryWindow( scenario, chapter.tileObserver.Count );
 			if ( gw.ShowDialog() == true && gw.selectedData.Length > 0 )
 			{
-				foreach ( HexTile tt in chapter.tileObserver )
+				foreach ( BaseTile tt in chapter.tileObserver )
 				{
 					tt.Unselect();
 				}
@@ -334,7 +373,7 @@ namespace JiME.Views
 				foreach ( var t in gw.selectedData )
 				{
 					int color = GetUnusedColor();
-					HexTile hex = new HexTile( t.Item1 );
+					BaseTile hex = new BaseTile( t.Item1 );
 					hex.useGraphic = scenario.useTileGraphics;
 					hex.ChangeColor( color );
 					//ChangeTileSide() also rehydrates and adds tile image
@@ -364,8 +403,8 @@ namespace JiME.Views
 		{
 			for ( int i = 0; i < chapter.tileObserver.Count; i++ )
 			{
-				( (HexTile)chapter.tileObserver[i] ).useGraphic = scenario.useTileGraphics;
-				( (HexTile)chapter.tileObserver[i] ).ToggleGraphic( canvas );
+				( (BaseTile)chapter.tileObserver[i] ).useGraphic = scenario.useTileGraphics;
+				( (BaseTile)chapter.tileObserver[i] ).ToggleGraphic( canvas );
 			}
 		}
 	}

@@ -157,12 +157,12 @@ namespace JiME
 		//	};
 		//}
 
-		public void AddTile( HexTile t )
+		public void AddTile( BaseTile t )
 		{
 			tileObserver.Add( t );
 		}
 
-		public void RemoveTile( HexTile t )
+		public void RemoveTile( BaseTile t )
 		{
 			tileObserver.Remove( t );
 		}
@@ -183,6 +183,12 @@ namespace JiME
 		public void ToJourneyTile()
 		{
 			tileObserver = new ObservableCollection<ITile>();
+		}
+
+		public void ToSquareTile()
+		{
+			tileObserver = new ObservableCollection<ITile>();
+			//tileObserver.Add(new SquareTile());
 		}
 
 		public void ToBattleTile()

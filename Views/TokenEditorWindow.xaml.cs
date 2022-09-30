@@ -27,42 +27,49 @@ namespace JiME.Views
 			}
 		}
 		public Scenario scenario { get; set; }
-		public HexTile hexTile { get; set; }
+		public BaseTile tile { get; set; }
 		public event PropertyChangedEventHandler PropertyChanged;
 		public ObservableCollection<IInteraction> tokenInteractions { get; set; }
 
 		//token drawing
 		bool dragging;
 
-		public TokenEditorWindow( HexTile hex, Scenario s, bool fromRandom = false )
+		public TokenEditorWindow( BaseTile bt, Scenario s, bool fromRandom = false )
 		{
 			InitializeComponent();
 			DataContext = this;
 
 			scenario = s;
-			hexTile = hex;
+			tile = bt;
 			selected = null;
 
 			tokenInteractions = new ObservableCollection<IInteraction>( scenario.interactionObserver.Where( x => ( x.isTokenInteraction && !Regex.IsMatch( x.dataName, @"\sGRP\d+$" ) ) || x.dataName == "None" ) );
 
-			if ( hexTile.tokenList.Count > 0 )
+			if ( tile.tokenList.Count > 0 )
 				tokenCombo.SelectedIndex = 0;
 
 			//rehydrate existing tokens in this tile
-			for ( int i = 0; i < hexTile.tokenList.Count; i++ )
-				hexTile.tokenList[i].Rehydrate( canvas );
+			for ( int i = 0; i < tile.tokenList.Count; i++ )
+				tile.tokenList[i].Rehydrate( canvas );
 
 			try
 			{
-				tileImage.Source = new BitmapImage( new Uri( $"pack://application:,,,/JiME;component/Assets/Tiles{hexTile.tileSide}/{hexTile.idNumber}.png" ) );
+				tileImage.Source = new BitmapImage( new Uri( $"pack://application:,,,/JiME;component/Assets/Tiles{tile.tileSide}/{tile.idNumber}.png" ) );
 			}
 			catch ( Exception e ) { Debug.Log( e.Message ); }
 			UpdateButtonsEnabled();
 
-			if ( string.IsNullOrEmpty( hexTile.flavorBookData.pages[0] ) )
-				exploreStatus.Text = "Exploration Text is Empty";
+			if (tile.tileType == TileType.Hex)
+			{
+				if (string.IsNullOrEmpty(((HexTile)tile).flavorBookData.pages[0]))
+					exploreStatus.Text = "Exploration Text is Empty";
+				else
+					exploreStatus.Text = "Exploration Text is Set";
+			}
 			else
-				exploreStatus.Text = "Exploration Text is Set";
+            {
+				exploreStatus.Text = "Exploration Text: N/A";
+            }
 
 			if ( fromRandom )
 				explorationBox.Visibility = Visibility.Collapsed;
@@ -75,10 +82,10 @@ namespace JiME.Views
 
 		//private void addSearch_Click( object sender, RoutedEventArgs e )
 		//{
-		//	foreach ( Token tt in hexTile.tokenList )
+		//	foreach ( Token tt in tile.tokenList )
 		//		tt.Unselect();
 		//	Token t = new Token( TokenType.Search );
-		//	hexTile.tokenList.Add( t );
+		//	tile.tokenList.Add( t );
 		//	selected = t;
 		//	canvas.Children.Add( t.tokenPathShape );
 		//	t.Select();
@@ -87,10 +94,10 @@ namespace JiME.Views
 
 		//private void addPerson_Click( object sender, RoutedEventArgs e )
 		//{
-		//	foreach ( Token tt in hexTile.tokenList )
+		//	foreach ( Token tt in tile.tokenList )
 		//		tt.Unselect();
 		//	Token t = new Token( TokenType.Person );
-		//	hexTile.tokenList.Add( t );
+		//	tile.tokenList.Add( t );
 		//	selected = t;
 		//	canvas.Children.Add( t.tokenPathShape );
 		//	t.Select();
@@ -99,10 +106,10 @@ namespace JiME.Views
 
 		//private void addThreat_Click( object sender, RoutedEventArgs e )
 		//{
-		//	foreach ( Token tt in hexTile.tokenList )
+		//	foreach ( Token tt in tile.tokenList )
 		//		tt.Unselect();
 		//	Token t = new Token( TokenType.Threat );
-		//	hexTile.tokenList.Add( t );
+		//	tile.tokenList.Add( t );
 		//	selected = t;
 		//	canvas.Children.Add( t.tokenPathShape );
 		//	t.Select();
@@ -111,10 +118,10 @@ namespace JiME.Views
 
 		//private void addDarkness_Click( object sender, RoutedEventArgs e )
 		//{
-		//	foreach ( Token tt in hexTile.tokenList )
+		//	foreach ( Token tt in tile.tokenList )
 		//		tt.Unselect();
 		//	Token t = new Token( TokenType.Darkness );
-		//	hexTile.tokenList.Add( t );
+		//	tile.tokenList.Add( t );
 		//	selected = t;
 		//	canvas.Children.Add( t.tokenPathShape );
 		//	t.Select();
@@ -123,12 +130,12 @@ namespace JiME.Views
 
 		void UpdateButtonsEnabled()
 		{
-			addToken.IsEnabled = hexTile.tokenList.Count < hexTile.tokenCount;
+			addToken.IsEnabled = tile.tokenList.Count < tile.tokenCount;
 		}
 
 		private void Canvas_MouseDown( object sender, MouseButtonEventArgs e )
 		{
-			foreach ( Token tt in hexTile.tokenList )
+			foreach ( Token tt in tile.tokenList )
 				tt.Unselect();
 			selected = null;
 			if ( e.Source is Ellipse )
@@ -165,7 +172,7 @@ namespace JiME.Views
 			var s = ( (ComboBox)sender ).SelectedItem as Token;
 			if ( s != null )
 			{
-				foreach ( Token tt in hexTile.tokenList )
+				foreach ( Token tt in tile.tokenList )
 					tt.Unselect();
 				s.Select();
 				selected = s;
@@ -179,7 +186,7 @@ namespace JiME.Views
 
 			var s = tokenCombo.SelectedItem as Token;
 			if ( s != null )
-				hexTile.tokenList.Remove( s );
+				tile.tokenList.Remove( s );
 			UpdateButtonsEnabled();
 			canvas.Children.Remove( s.tokenPathShape );
 			selected = null;
@@ -187,14 +194,22 @@ namespace JiME.Views
 
 		private void addFlavor_Click( object sender, RoutedEventArgs e )
 		{
-			TextEditorWindow tw = new TextEditorWindow( scenario, EditMode.Flavor, hexTile.flavorBookData );
-			if ( tw.ShowDialog() == true )
-				hexTile.flavorBookData.pages = tw.textBookController.pages;
+			if (tile.tileType == TileType.Hex)
+			{
+				HexTile hexTile = (HexTile)tile;
+				TextEditorWindow tw = new TextEditorWindow(scenario, EditMode.Flavor, hexTile.flavorBookData);
+				if (tw.ShowDialog() == true)
+					hexTile.flavorBookData.pages = tw.textBookController.pages;
 
-			if ( string.IsNullOrEmpty( hexTile.flavorBookData.pages[0] ) )
-				exploreStatus.Text = "Exploration Text is Empty";
+				if (string.IsNullOrEmpty(hexTile.flavorBookData.pages[0]))
+					exploreStatus.Text = "Exploration Text is Empty";
+				else
+					exploreStatus.Text = "Exploration Text is Set";
+			}
 			else
-				exploreStatus.Text = "Exploration Text is Set";
+            {
+				exploreStatus.Text = "Exploration Text: N/A";
+            }
 		}
 
 		private void addTrigger_Click( object sender, RoutedEventArgs e )
@@ -211,10 +226,10 @@ namespace JiME.Views
 
 		private void addToken_Click( object sender, RoutedEventArgs e )
 		{
-			foreach ( Token tt in hexTile.tokenList )
+			foreach ( Token tt in tile.tokenList )
 				tt.Unselect();
 			Token t = new Token( TokenType.None );
-			hexTile.tokenList.Add( t );
+			tile.tokenList.Add( t );
 			selected = t;
 			canvas.Children.Add( t.tokenPathShape );
 			t.Select();
@@ -245,7 +260,7 @@ namespace JiME.Views
 				{
 					var s = tokenCombo.SelectedItem as Token;
 					if ( s != null )
-						hexTile.tokenList.Remove( s );
+						tile.tokenList.Remove( s );
 					UpdateButtonsEnabled();
 					canvas.Children.Remove( s.tokenPathShape );
 					selected = null;
