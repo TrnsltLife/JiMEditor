@@ -266,7 +266,6 @@ namespace JiME.Views
 			TokenEditorWindow tw = new TokenEditorWindow( selected, scenario );
 			if(tw.ShowDialog() == true)
             {
-				Debug.Log("Rehydrate tile " + selected.idNumber);
 				selected.Rehydrate(canvas);
             }
 			selected = null;
@@ -274,7 +273,6 @@ namespace JiME.Views
 
 		private void canvas_MouseLeftButtonDown( object sender, MouseButtonEventArgs e )
 		{
-			Debug.Log("Clicked on " + e.Source.GetType());
 			if ( e.ClickCount == 1 )
 			{
 				foreach (BaseTile tt in chapter.tileObserver)
@@ -286,7 +284,6 @@ namespace JiME.Views
 
 				if ( e.Source is Path )
 				{
-					Debug.Log("Source is Path");
 					Path path = e.Source as Path;
 					selected = path.DataContext as BaseTile;
 					selected.Select();
@@ -301,6 +298,7 @@ namespace JiME.Views
 					//Info printed on status bar
 					infoTileID.Text = selected.idNumberAndCollection;
 					infoTilePosition.Text = selected.position.ToString();
+					infoTileSize.Text = selected.tileImage.Source.Width + "," + selected.tileImage.Source.Height;
 					infoTileRotation.Text = selected.angle.ToString();
 				}
 			}
@@ -314,8 +312,11 @@ namespace JiME.Views
 
 				TokenEditorWindow tw = new TokenEditorWindow( selected, scenario );
 				selected.Unselect();
+				if(tw.ShowDialog() == true)
+                {
+					selected.Rehydrate(canvas);
+                }
 				selected = null;
-				tw.ShowDialog();
 			}
 		}
 

@@ -135,17 +135,24 @@ namespace JiME
 		{
 			if(parentTile != null)
             {
+				//tokenPathShape.RenderTransformOrigin = new Point(.5d, .5d);
 				TransformGroup grp = new TransformGroup();
 				ScaleTransform sc = new ScaleTransform(0.5d, 0.5d);
 				grp.Children.Add(sc);
 				tokenPathShape.RenderTransform = grp;
 
-				Canvas.SetLeft(tokenPathShape, position.X / 3);
-				Canvas.SetTop(tokenPathShape, position.Y / 3);
+				//The passed in canvas element has its size set the same as the tileImage. Use the width and height scaling to 512 to properly position tokens.
+				double scale = Math.Max(parentCanvas.Width, parentCanvas.Height) / 512d;
+				//The TokenEditorWindow has the short dimension of the image centered in the frame, so we have to offset that dimension
+				double widthOffset = parentCanvas.Width > parentCanvas.Height ? 0 : (parentCanvas.Height - parentCanvas.Width) / 2;
+				double heightOffset = parentCanvas.Height > parentCanvas.Width ? 0 : (parentCanvas.Width - parentCanvas.Height) / 2;
+				Debug.Log("Token scale: " + scale + " widthOffset:" + widthOffset + " heightOffset:" + heightOffset);
+				Canvas.SetLeft(tokenPathShape, (position.X - 25) * scale - widthOffset);
+				Canvas.SetTop(tokenPathShape, (position.Y - 25) * scale - heightOffset);
 			}
 			else
             {
-				tokenPathShape.RenderTransformOrigin = new Point(.5d, .5d);//.5d, .5d );
+				tokenPathShape.RenderTransformOrigin = new Point(.5d, .5d);
 				TranslateTransform tf = new TranslateTransform(position.X - 25, position.Y - 25);
 				tokenPathShape.RenderTransform = tf;
 			}
@@ -159,8 +166,6 @@ namespace JiME
 			canvas.Children.Add( tokenPathShape );
 			if (parentTile != null)
 			{
-				Canvas.SetLeft(tokenPathShape, position.X / 3);
-				Canvas.SetTop(tokenPathShape, position.Y / 3);
 				Canvas.SetZIndex(tokenPathShape, 104);
 			}
 			else

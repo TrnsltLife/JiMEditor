@@ -130,18 +130,20 @@ namespace JiME
 
 			//Apply scale to the tile image translation
 			//get size dimensions of PATH object
+			/*
 			Vector dims;
 			if ( tileSide == "A" )
 				dims = new Vector( Utils.tileDictionary[idNumber].width, Utils.tileDictionary[idNumber].height );
 			else
 				dims = new Vector( Utils.tileDictionaryB[idNumber].width, Utils.tileDictionary[idNumber].height );
+			*/
 
 			//calculate the SCALE of largest side (width or height)
 			double scale;
 			if ( tileImage.Source.Width > tileImage.Source.Height )
-				scale = dims.X / 512;
+				scale = tileDims.X / 512;
 			else
-				scale = dims.Y / 512;
+				scale = tileDims.Y / 512;
 
 			TransformGroup imggrp = new TransformGroup();
 			ScaleTransform scaleTransform = new ScaleTransform(scale, scale);

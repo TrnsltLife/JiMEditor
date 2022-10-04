@@ -74,7 +74,7 @@ namespace JiME.Views
 				exploreStatus.Text = "Exploration Text: N/A";
             }
 
-			if ( fromRandom )
+			if ( fromRandom || tile.tileType == TileType.Square )
 				explorationBox.Visibility = Visibility.Collapsed;
 		}
 

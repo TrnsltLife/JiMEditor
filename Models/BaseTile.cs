@@ -16,6 +16,8 @@ namespace JiME
 	{
 		[JsonIgnore]
 		public Canvas canvas = new Canvas();
+        [JsonIgnore]
+		protected Vector tileDims;
 
 		string _tileSide, _triggerName;
 		bool _isStartTile;
@@ -127,6 +129,12 @@ namespace JiME
 			tileImage.Width = Math.Ceiling( tileImage.Source.Width );
 			tileImage.Height = Math.Ceiling( tileImage.Source.Height );
 			tileImage.IsHitTestVisible = false;
+
+			//get size dimensions of PATH object
+			if (tileSide == "A")
+				tileDims = new Vector(Utils.tileDictionary[idNumber].width, Utils.tileDictionary[idNumber].height);
+			else
+				tileDims = new Vector(Utils.tileDictionaryB[idNumber].width, Utils.tileDictionary[idNumber].height);
 		}
 
 		virtual protected PathFigure BuildRectangle( Point c, double width, double height )
@@ -217,6 +225,10 @@ namespace JiME
 		{
 			BuildShape();
 			BuildImage();
+			//canvas size comes from the tileImage size; the size will be shared with Token.Rehydrate via canvas being passed in
+			//double scale = Math.Max(tileDims.X, tileDims.Y) / 512d;
+			canvas.Width = tileDims.X;
+			canvas.Height = tileDims.Y;
 
 			//Remove canvas children before re-adding them
 			canvas.Children.Clear();
