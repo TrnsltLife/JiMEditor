@@ -49,8 +49,11 @@ namespace JiME.Views
 				tokenCombo.SelectedIndex = 0;
 
 			//rehydrate existing tokens in this tile
-			for ( int i = 0; i < tile.tokenList.Count; i++ )
-				tile.tokenList[i].Rehydrate( canvas );
+			for (int i = 0; i < tile.tokenList.Count; i++)
+			{
+				tile.tokenList[i].parentTile = null;
+				tile.tokenList[i].Rehydrate(canvas);
+			}
 
 			try
 			{

@@ -52,7 +52,8 @@ namespace JiME.Views
 			scenario.RefilterGlobalTilePool();
 
 			//BaseTile.printPivot = true;
-			//HexTile.printPivot = true;
+			HexTile.printPivot = true;
+			HexTile.printRect = true;
 			//SquareTile.printPivot = true;
 			//rehydrate existing tiles in this chapter
 			for ( int i = 0; i < chapter.tileObserver.Count; i++ )
@@ -65,10 +66,6 @@ namespace JiME.Views
 					hex.Rehydrate(canvas);
 					hex.ChangeColor(i);
 					hex.ToggleGraphic(canvas);
-					if (HexTile.printRect)
-						canvas.Children.Add(hex.pathShape);
-					if (HexTile.printPivot)
-						canvas.Children.Add(hex.pivotPathShape);
 				}
 				else if (bt.tileType == TileType.Square)
                 {
@@ -77,12 +74,7 @@ namespace JiME.Views
 					sqr.Rehydrate(canvas);
 					sqr.ChangeColor(i);
 					sqr.ToggleGraphic(canvas);
-					if (SquareTile.printRect)
-						canvas.Children.Add(sqr.pathShape);
-					if (SquareTile.printPivot)
-						canvas.Children.Add(sqr.pivotPathShape);
 				}
-
 			}
 
 			editTokenButton.IsEnabled = !chapter.usesRandomGroups;
@@ -191,14 +183,6 @@ namespace JiME.Views
 			radioB.IsChecked = selected.tileSide == "B";
 			inChapterCB.SelectedIndex = chapter.tileObserver.Count - 1;
 			scenario.globalTilePool.Remove( (int)tilePool.SelectedItem );
-
-			if (BaseTile.printRect)
-				canvas.Children.Add(tile.pathShape);
-			//if ( scenario.useTileGraphics )
-			//	canvas.Children.Add( hex.tileImage );
-			if (BaseTile.printPivot)
-				canvas.Children.Add(tile.pivotPathShape);
-
 		}
 
 		private void removeTileButton_Click( object sender, RoutedEventArgs e )
@@ -220,8 +204,10 @@ namespace JiME.Views
 
 		private void RemoveTile(BaseTile tile, bool affectScenarioAndChapter)
         {
-			canvas.Children.Remove(tile.pathShape);
-			canvas.Children.Remove(tile.tileImage);
+			tile.canvas.Children.Clear();
+			//canvas.Children.Remove(tile.pathShape);
+			//tile.canvas.Children.Remove(tile.tileImage);
+			canvas.Children.Remove(tile.canvas);
 			if (affectScenarioAndChapter)
 			{
 				scenario.globalTilePool.Add(tile.idNumber);
@@ -278,7 +264,11 @@ namespace JiME.Views
 		{
 			selected.Unselect();
 			TokenEditorWindow tw = new TokenEditorWindow( selected, scenario );
-			tw.ShowDialog();
+			if(tw.ShowDialog() == true)
+            {
+				Debug.Log("Rehydrate tile " + selected.idNumber);
+				selected.Rehydrate(canvas);
+            }
 			selected = null;
 		}
 
@@ -296,11 +286,13 @@ namespace JiME.Views
 
 				if ( e.Source is Path )
 				{
+					Debug.Log("Source is Path");
 					Path path = e.Source as Path;
 					selected = path.DataContext as BaseTile;
 					selected.Select();
 					dragging = true;
-					selected.SetClickV( e, canvas );
+					//selected.SetClickV( e, canvas );
+					selected.SetClickV(e, selected.canvas);
 					inChapterCB.SelectedItem = selected;
 					radioA.IsChecked = selected.tileSide == "A";
 					radioB.IsChecked = selected.tileSide == "B";

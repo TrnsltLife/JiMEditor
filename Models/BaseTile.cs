@@ -14,6 +14,9 @@ namespace JiME
 {
 	public class BaseTile : INotifyPropertyChanged, ITile
 	{
+		[JsonIgnore]
+		public Canvas canvas = new Canvas();
+
 		string _tileSide, _triggerName;
 		bool _isStartTile;
 
@@ -184,153 +187,143 @@ namespace JiME
 		/// <summary>
 		/// updates shape position on canvas
 		/// </summary>
-		virtual protected void Update()
-		{
-			Debug.Log("Update-Base");
-			//Apply translation to the pathShape
-			pathShape.RenderTransformOrigin = new Point( 0, 0 );
-			TranslateTransform tf = new TranslateTransform(position.X, position.Y);
-
-			TransformGroup trnsgrp = new TransformGroup();
-			trnsgrp.Children.Add( tf );
-			pathShape.RenderTransform = trnsgrp;
-
-
-			//Apply scale, translation, and rotation to the tile image
-			//get size dimensions of PATH object
-			Vector dims;
-			if ( tileSide == "A" )
-				dims = new Vector( 512, 512 );
-			else
-				dims = new Vector( 512, 512 );
-
-			//calculate the SCALE of largest side (width or height)
-			double scale;
-			if ( tileImage.Source.Width > tileImage.Source.Height )
-				scale = dims.X / 512;
-			else
-				scale = dims.Y / 512;
-
-			TransformGroup imggrp = new TransformGroup();
-
-			ScaleTransform scaleTransform = new ScaleTransform( scale, scale );
-
-			float imgTranslateX = (float)position.X; // - 32f;
-			float imgTranslateY = (float)position.Y; // - 27.7128128f;
-			TranslateTransform translateTransform = new TranslateTransform(imgTranslateX, imgTranslateY);
-			//Console.WriteLine("imgTranslate: " + imgTranslateX + "," + imgTranslateY);
-
-			RotateTransform rotateTransform = new RotateTransform( angle );
-			rotateTransform.CenterX = position.X; // + (pathRoot.X * 32f);
-			rotateTransform.CenterY = position.Y; // + (pathRoot.Y * 27.7128128f);
-			//Console.WriteLine("rotateCenter: " + rotateTransform.CenterX + "," + rotateTransform.CenterY);
-
-			imggrp.Children.Add( scaleTransform );
-			imggrp.Children.Add( translateTransform );
-			imggrp.Children.Add( rotateTransform );
-			tileImage.RenderTransform = imggrp;
-
-			if (printRect)
-			{
-				TransformGroup rectgrp = new TransformGroup();
-				rectgrp.Children.Add(translateTransform);
-				rectgrp.Children.Add(rotateTransform);
-				rectPathShape.RenderTransform = rectgrp;
-			}
-
-			if (printPivot)
-			{
-				TransformGroup pivotgrp = new TransformGroup();
-				TranslateTransform pivottf = new TranslateTransform(rotateTransform.CenterX, rotateTransform.CenterY);
-				pivotgrp.Children.Add(pivottf);
-				pivotPathShape.RenderTransform = pivotgrp;
-			}
-		}
+		virtual protected void Update() { }
 
 		virtual public void Select()
 		{
 			pathShape.Stroke = new SolidColorBrush( Colors.Red );
-			Canvas.SetZIndex( pathShape, 100 );
-			Canvas.SetZIndex( tileImage, 101 );
+			Canvas.SetZIndex(canvas, 100);
+			Canvas.SetZIndex( pathShape, 101 );
+			Canvas.SetZIndex( tileImage, 102 );
 			if (printRect)
 				Canvas.SetZIndex(rectPathShape, 100);
 			if(printPivot)
-				Canvas.SetZIndex(pivotPathShape, 102);
+				Canvas.SetZIndex(pivotPathShape, 103);
 		}
 
 		virtual public void Unselect()
 		{
 			pathShape.Stroke = new SolidColorBrush( Colors.White );
-			Canvas.SetZIndex( pathShape, 0 );
-			Canvas.SetZIndex( tileImage, 1 );
+			Canvas.SetZIndex(canvas, 0);
+			Canvas.SetZIndex( pathShape, 1 );
+			Canvas.SetZIndex( tileImage, 2 );
+			if (printRect)
+				Canvas.SetZIndex(rectPathShape, 0);
+			if (printPivot)
+				Canvas.SetZIndex(pivotPathShape, 3);
 		}
 
-		virtual public void Rehydrate( Canvas canvas )
+		virtual public void Rehydrate( Canvas parentCanvas )
 		{
 			BuildShape();
 			BuildImage();
+
+			//Remove canvas children before re-adding them
+			canvas.Children.Clear();
+			parentCanvas.Children.Remove(canvas);
+
+			//The tile shape/outline
 			pathShape.DataContext = this;
-			canvas.Children.Add( pathShape );
-			if ( useGraphic )
-				canvas.Children.Add( tileImage );
+			canvas.Children.Add(pathShape);
+			Canvas.SetLeft(pathShape, -30);
+			Canvas.SetTop(pathShape, -30);
+
+			//The tile image
+			if (useGraphic)
+			{
+				canvas.Children.Add(tileImage);
+				Canvas.SetLeft(tileImage, 0);
+				Canvas.SetTop(tileImage, 0);
+			}
+
+			//Add tokens
+			for (int t = 0; t < tokenList.Count; t++)
+			{
+				tokenList[t].parentTile = this;
+				tokenList[t].parentCanvas = canvas;
+				tokenList[t].Rehydrate(canvas);
+			}
+
+			//Rectangle for debugging
+			if (printRect)
+			{
+				canvas.Children.Add(rectPathShape);
+				Canvas.SetLeft(rectPathShape, 0);
+				Canvas.SetTop(rectPathShape, 0);
+			}
+
+			//Pivot point for debugging
+			if (printPivot)
+			{
+				canvas.Children.Add(pivotPathShape);
+				Canvas.SetLeft(pivotPathShape, 0);
+				Canvas.SetTop(pivotPathShape, 0);
+			}
+
+			parentCanvas.Children.Add(canvas);
 			Update();
 		}
 
-		virtual public void ToggleGraphic( Canvas canvas )
+		virtual public void ToggleGraphic( Canvas parentCanvas )
 		{
 			if ( useGraphic )
 			{
-				if ( !canvas.Children.Contains( tileImage ) )
-					canvas.Children.Add( tileImage );
+				if (!canvas.Children.Contains(tileImage))
+				{
+					canvas.Children.Add(tileImage);
+				}
 			}
 			else
 			{
-				canvas.Children.Remove( tileImage );
+				canvas.Children.Remove(tileImage);
 			}
 			ChangeColor( color );
 		}
 
-		virtual public void ChangeTileSide( string side, Canvas canvas )
+		virtual public void ChangeTileSide( string side, Canvas parentCanvas )
 		{
 			tileSide = side;
 			position = new Vector( Utils.dragSnapX[5], Utils.dragSnapY[5] );
 			angle = 0;
-			Rehydrate( canvas );
+			Rehydrate( parentCanvas );
 			ChangeColor( color );
 			Select();
 		}
 
-		virtual public void Rotate( double direction, Canvas canvas )
+		virtual public void Rotate( double direction, Canvas parentCanvas )
 		{
-			//4,57.7128128
-			canvas.Children.Remove( pathShape );
-			canvas.Children.Remove( tileImage );
-			if(printRect)
-				canvas.Children.Remove(rectPathShape);
+			canvas.Children.Clear();
+			parentCanvas.Children.Remove(canvas);
 			angle += direction * rotationAngle;
 			angle %= 360;
-			Rehydrate( canvas );
+			Rehydrate( parentCanvas );
 			ChangeColor( color );
 			Select();
 		}
 
-		virtual public void SetClickV( MouseButtonEventArgs e, Canvas canvas )
+		virtual public void SetClickV( MouseButtonEventArgs e, Canvas parentCanvas )
 		{
 			clickV = new Point();
-			TransformGroup grp = pathShape.RenderTransform as TransformGroup;
+			//TransformGroup grp = pathShape.RenderTransform as TransformGroup;
+			TransformGroup grp = canvas.RenderTransform as TransformGroup;
 
-			if ( grp?.Children.Count == 1 ) //HexTile
+			Debug.Log("SetClickV transform children: " + grp?.Children.Count);
+			if ( grp?.Children.Count == 2 ) //HexTile
 			{
 				Vector gv = new Vector( ( (TranslateTransform)grp.Children[0] ).X, ( (TranslateTransform)grp.Children[0] ).Y );
-				clickV = e.GetPosition( canvas );
-				clickV.X -= gv.X;
-				clickV.Y -= gv.Y;
+				clickV = e.GetPosition( parentCanvas );
+				Debug.Log("canvas X:" + gv.X + " Y:" + gv.Y);
+				Debug.Log("click   X: " + clickV.X + " Y:" + clickV.Y);
+				//clickV.X -= gv.X;
+				//clickV.Y -= gv.Y;
+				Debug.Log("click/\\ X: " + clickV.X + " Y:" + clickV.Y);
+
 			}
 			else if( grp?.Children.Count == 3) //SquareTile
             {
 				//Order of the transforms as set in SquareTile was ScaleTransform=0, TranslateTransform=1, RotateTransform=2
 				Vector gv = new Vector(((TranslateTransform)grp.Children[1]).X, ((TranslateTransform)grp.Children[1]).Y);
-				clickV = e.GetPosition(canvas);
+				clickV = e.GetPosition(parentCanvas);
 				clickV.X -= gv.X;
 				clickV.Y -= gv.Y;
 			}

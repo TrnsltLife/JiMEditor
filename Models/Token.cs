@@ -11,6 +11,11 @@ namespace JiME
 {
 	public class Token : INotifyPropertyChanged, ICommonData
 	{
+		[JsonIgnore]
+		public BaseTile parentTile = null;
+		[JsonIgnore]
+		public Canvas parentCanvas = null;
+
 		string _dataName;
 		string _triggerName, _triggeredByName;
 		TokenType _tokenType;
@@ -128,11 +133,22 @@ namespace JiME
 
 		void Update()
 		{
-			tokenPathShape.RenderTransformOrigin = new Point( .5d, .5d );//.5d, .5d );
-			TranslateTransform tf = new TranslateTransform( position.X - 25, position.Y - 25 );
-			//TransformGroup grp = new TransformGroup();
-			//grp.Children.Add( tf );
-			tokenPathShape.RenderTransform = tf;
+			if(parentTile != null)
+            {
+				TransformGroup grp = new TransformGroup();
+				ScaleTransform sc = new ScaleTransform(0.5d, 0.5d);
+				grp.Children.Add(sc);
+				tokenPathShape.RenderTransform = grp;
+
+				Canvas.SetLeft(tokenPathShape, position.X / 3);
+				Canvas.SetTop(tokenPathShape, position.Y / 3);
+			}
+			else
+            {
+				tokenPathShape.RenderTransformOrigin = new Point(.5d, .5d);//.5d, .5d );
+				TranslateTransform tf = new TranslateTransform(position.X - 25, position.Y - 25);
+				tokenPathShape.RenderTransform = tf;
+			}
 		}
 
 		public void Rehydrate( Canvas canvas )
@@ -141,19 +157,29 @@ namespace JiME
 			tokenPathShape.Fill = fillColors[(int)tokenType];
 			tokenPathShape.DataContext = this;
 			canvas.Children.Add( tokenPathShape );
+			if (parentTile != null)
+			{
+				Canvas.SetLeft(tokenPathShape, position.X / 3);
+				Canvas.SetTop(tokenPathShape, position.Y / 3);
+				Canvas.SetZIndex(tokenPathShape, 104);
+			}
+			else
+            {
+				//Rely on transform in Update()
+			}
 			Update();
 		}
 
 		public void Select()
 		{
 			tokenPathShape.Stroke = new SolidColorBrush( Colors.Red );
-			Canvas.SetZIndex( tokenPathShape, 100 );
+			Canvas.SetZIndex( tokenPathShape, 105 );
 		}
 
 		public void Unselect()
 		{
 			tokenPathShape.Stroke = new SolidColorBrush( Colors.White );
-			Canvas.SetZIndex( tokenPathShape, 0 );
+			Canvas.SetZIndex( tokenPathShape, 104 );
 		}
 
 		public void SetClickV( MouseButtonEventArgs e, Canvas canvas )

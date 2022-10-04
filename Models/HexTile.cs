@@ -80,10 +80,11 @@ namespace JiME
 			PathFigure[] hexfigures = new PathFigure[hexdata.tileCount];
 			for ( int i = 0; i < hexfigures.Length; i++ )
 			{
-				hexPositions[i] = RotatePoint( hexPositions[i],
+				hexPositions[i] = RotatePoint(hexPositions[i],
 					//new Point( 0, 55.4256256d / 2 ), 
 					center,
-					angle );
+					0);
+					//angle );
 				hexfigures[i] = BuildRegularPolygon( hexPositions[i], 32, 6, 0 );
 			}
 			pathShape.Data = new PathGeometry( hexfigures );
@@ -96,7 +97,6 @@ namespace JiME
 				rectPathShape = new Path();
 				rectPathShape.Stroke = Brushes.White;
 				rectPathShape.StrokeThickness = 2;
-				rectPathShape.Fill = new SolidColorBrush(Color.FromRgb(70, 70, 74));
 				PathFigure[] rectfigures = new PathFigure[1];
 				rectfigures[0] = BuildRectangle(new Point(0, 0), Utils.tileDictionary[idNumber].width, Utils.tileDictionary[idNumber].height);
 				rectPathShape.Data = new PathGeometry(rectfigures);
@@ -122,17 +122,13 @@ namespace JiME
 		/// </summary>
 		override protected void Update()
 		{
-			Debug.Log("Update-Hex");
-			//Apply translation to the pathShape
-			pathShape.RenderTransformOrigin = new Point( 0, 0 );
-			TranslateTransform tf = new TranslateTransform(position.X, position.Y);
+			//Debug.Log("Update-Hex");
 
-			TransformGroup hexgrp = new TransformGroup();
-			hexgrp.Children.Add( tf );
-			pathShape.RenderTransform = hexgrp;
+			//Set location of the pathShape
+			Canvas.SetLeft(pathShape, 32f);
+			Canvas.SetTop(pathShape, 27.7128128f);
 
-
-			//Apply scale, translation, and rotation to the tile image
+			//Apply scale to the tile image translation
 			//get size dimensions of PATH object
 			Vector dims;
 			if ( tileSide == "A" )
@@ -148,42 +144,25 @@ namespace JiME
 				scale = dims.Y / 512;
 
 			TransformGroup imggrp = new TransformGroup();
+			ScaleTransform scaleTransform = new ScaleTransform(scale, scale);
+			imggrp.Children.Add(scaleTransform);
+			tileImage.RenderTransform = imggrp;
 
-			ScaleTransform scaleTransform = new ScaleTransform( scale, scale );
+
+			//Add translation and rotation to the canvas
+			TransformGroup canvasgrp = new TransformGroup();
 
 			float imgTranslateX = (float)position.X - 32f;
 			float imgTranslateY = (float)position.Y - 27.7128128f;
 			TranslateTransform translateTransform = new TranslateTransform(imgTranslateX, imgTranslateY);
-			//Console.WriteLine("imgTranslate: " + imgTranslateX + "," + imgTranslateY);
 
 			RotateTransform rotateTransform = new RotateTransform( angle );
 			rotateTransform.CenterX = position.X + (pathRoot.X * 32f);
 			rotateTransform.CenterY = position.Y + (pathRoot.Y * 27.7128128f);
-			//Console.WriteLine("rotateCenter: " + rotateTransform.CenterX + "," + rotateTransform.CenterY);
 
-			imggrp.Children.Add( scaleTransform );
-			imggrp.Children.Add( translateTransform );
-			imggrp.Children.Add(rotateTransform);
-			tileImage.RenderTransform = imggrp;
-
-			if (printRect)
-			{
-				TransformGroup rectgrp = new TransformGroup();
-				rectgrp.Children.Add(translateTransform);
-				rectgrp.Children.Add(rotateTransform);
-				rectPathShape.RenderTransform = rectgrp;
-			}
-
-			if (printPivot)
-			{
-				TransformGroup pivotgrp = new TransformGroup();
-				TranslateTransform pivottf = new TranslateTransform(rotateTransform.CenterX, rotateTransform.CenterY);
-				pivotgrp.Children.Add(pivottf);
-				pivotPathShape.RenderTransform = pivotgrp;
-			}
-
-			//dims 64 x 55.4256256
-			//27.7128128
+			canvasgrp.Children.Add(translateTransform);
+			canvasgrp.Children.Add(rotateTransform);
+			canvas.RenderTransform = canvasgrp;
 		}
 
 		override public void Drag( MouseEventArgs e, Canvas canvas )
@@ -193,7 +172,6 @@ namespace JiME
 			Vector snapped = new Vector();
 			snapped.X = ( from snapx in Utils.dragSnapX where clickPoint.X.WithinTolerance( snapx, Utils.tolerance ) select snapx ).FirstOr( -1 );
 			snapped.Y = ( from snapy in Utils.dragSnapY where clickPoint.Y.WithinTolerance( snapy, Utils.tolerance ) select snapy ).FirstOr( -1 );
-
 			position = snapped;
 
 			if ( snapped != new Vector( -1, -1 ) )

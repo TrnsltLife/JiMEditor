@@ -46,7 +46,6 @@ namespace JiME
         protected override void BuildShape()
         {
 			double img2PathScale = 4d / 3d;
-			double shrinkScale = 0.8d;
 
 			base.BuildShape();
 			pathShape = new Path();
