@@ -51,10 +51,11 @@ namespace JiME.Views
 			}
 			scenario.RefilterGlobalTilePool();
 
-			//BaseTile.printPivot = true;
-			HexTile.printPivot = true;
-			HexTile.printRect = true;
+			//Uncomment these for visual debugging
+			//HexTile.printPivot = true;
+			//HexTile.printRect = true;
 			//SquareTile.printPivot = true;
+
 			//rehydrate existing tiles in this chapter
 			for ( int i = 0; i < chapter.tileObserver.Count; i++ )
 			{

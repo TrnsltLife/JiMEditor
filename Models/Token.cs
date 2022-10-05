@@ -141,12 +141,12 @@ namespace JiME
 				grp.Children.Add(sc);
 				tokenPathShape.RenderTransform = grp;
 
-				//The passed in canvas element has its size set the same as the tileImage. Use the width and height scaling to 512 to properly position tokens.
+				//The passed in canvas element has its size set the same as the tileImage.
+				//Calculate the scale based on the longest .png dimension of 512 pixels. Used to properly position tokens.
 				double scale = Math.Max(parentCanvas.Width, parentCanvas.Height) / 512d;
 				//The TokenEditorWindow has the short dimension of the image centered in the frame, so we have to offset that dimension
 				double widthOffset = parentCanvas.Width > parentCanvas.Height ? 0 : (parentCanvas.Height - parentCanvas.Width) / 2;
 				double heightOffset = parentCanvas.Height > parentCanvas.Width ? 0 : (parentCanvas.Width - parentCanvas.Height) / 2;
-				Debug.Log("Token scale: " + scale + " widthOffset:" + widthOffset + " heightOffset:" + heightOffset);
 				Canvas.SetLeft(tokenPathShape, (position.X - 25) * scale - widthOffset);
 				Canvas.SetTop(tokenPathShape, (position.Y - 25) * scale - heightOffset);
 			}

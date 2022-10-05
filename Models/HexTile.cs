@@ -153,15 +153,12 @@ namespace JiME
 
 			//Add translation and rotation to the canvas
 			TransformGroup canvasgrp = new TransformGroup();
-
 			float imgTranslateX = (float)position.X - 32f;
 			float imgTranslateY = (float)position.Y - 27.7128128f;
 			TranslateTransform translateTransform = new TranslateTransform(imgTranslateX, imgTranslateY);
-
 			RotateTransform rotateTransform = new RotateTransform( angle );
 			rotateTransform.CenterX = position.X + (pathRoot.X * 32f);
 			rotateTransform.CenterY = position.Y + (pathRoot.Y * 27.7128128f);
-
 			canvasgrp.Children.Add(translateTransform);
 			canvasgrp.Children.Add(rotateTransform);
 			canvas.RenderTransform = canvasgrp;
