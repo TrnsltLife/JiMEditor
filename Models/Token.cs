@@ -137,7 +137,15 @@ namespace JiME
             {
 				//tokenPathShape.RenderTransformOrigin = new Point(.5d, .5d);
 				TransformGroup grp = new TransformGroup();
-				ScaleTransform sc = new ScaleTransform(0.5d, 0.5d);
+				ScaleTransform sc = null;
+				if (parentTile.tileType == TileType.Hex)
+				{
+					sc = new ScaleTransform(0.5d, 0.5d);
+				}
+				else
+                {
+					sc = new ScaleTransform(0.8d, 0.8d);
+				}
 				grp.Children.Add(sc);
 				tokenPathShape.RenderTransform = grp;
 
@@ -147,7 +155,7 @@ namespace JiME
 				//The TokenEditorWindow has the short dimension of the image centered in the frame, so we have to offset that dimension
 				double widthOffset = parentCanvas.Width > parentCanvas.Height ? 0 : (parentCanvas.Height - parentCanvas.Width) / 2;
 				double heightOffset = parentCanvas.Height > parentCanvas.Width ? 0 : (parentCanvas.Width - parentCanvas.Height) / 2;
-				Canvas.SetLeft(tokenPathShape, (position.X - 25) * scale - widthOffset);
+				Canvas.SetLeft(tokenPathShape, (position.X - 23) * scale - widthOffset);
 				Canvas.SetTop(tokenPathShape, (position.Y - 25) * scale - heightOffset);
 			}
 			else
