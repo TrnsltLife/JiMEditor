@@ -36,8 +36,9 @@ namespace JiME
 	public enum EditorMode { Information, Threat, Decision, Test, Branch }
 	public enum Ability { Might, Agility, Wisdom, Spirit, Wit, Wild, Random, None}
 	public enum TerrainToken { None, Pit, Mist, Barrels, Table, FirePit, Statue }
-	public enum TokenType { Search, Person, Threat, Darkness, Exploration, DifficultTerrain, Fortified, None }
+	public enum TokenType { Search, Person, Threat, Darkness, DifficultGround, Fortified, Terrain, None }
 	public enum PersonType { Human, Elf, Hobbit, Dwarf }
+	public enum TerrainType { None, Barrels, Barricade, Boulder, Bush, Chest, Elevation, Fence, FirePit, Fountain, Log, Mist, Pit, Pond, Rubble, Statue, Stream, Table, Trench, Wall, Web }
 	public enum HelpType { Token, Grouping, Enemies, Triggers }
 	public enum DifficultyBias { Light, Medium, Heavy }
 

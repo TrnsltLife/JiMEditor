@@ -239,6 +239,7 @@ namespace JiME.Views
 			UpdateButtonsEnabled();
 		}
 
+
 		private void interactionCB_SelectionChanged( object sender, SelectionChangedEventArgs e )
 		{
 			if ( selected != null && ( (ComboBox)sender ).SelectedItem != null )

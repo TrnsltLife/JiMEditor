@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Newtonsoft.Json;
 
@@ -90,16 +91,25 @@ namespace JiME
 		public Ellipse tokenPathShape;
 		Point clickV;
 		Vector lastPos;
-		static SolidColorBrush[] fillColors = { 
-			Brushes.ForestGreen, //Search
-			Brushes.BlueViolet, //Person
-			Brushes.DarkRed, //Threat
-			Brushes.Black, //Darkness
-			Brushes.Gray, //Exploration
-			Brushes.Yellow, //DifficultTerrain
-			Brushes.OrangeRed, //Fortified
+
+		static Brush[] personBrushes = {
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Tokens/Human.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Tokens/Elf.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Tokens/Hobbit.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Tokens/Dwarf.png")))
+		};
+
+		static Brush[] tokenBrushes = {
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Tokens/Search.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Tokens/Person.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Tokens/Threat.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Tokens/Darkness.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Tokens/DifficultGround.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Tokens/Fortified.png"))),
+			Brushes.Brown, //Terrain
 			Brushes.Gray //None
 		};
+
 
 		public Token( TokenType ttype )
 		{
@@ -117,13 +127,19 @@ namespace JiME
 
 		public void ReColor()
 		{
-			tokenPathShape.Fill = fillColors[(int)tokenType];
+			Debug.Log("Recolor tokenType: " + tokenType + " personType: " + personType);
+			if (tokenType == TokenType.Person)
+				tokenPathShape.Fill = personBrushes[(int)personType];
+			//else if (tokenType == TokenType.Terrain)
+			//	tokenPathShape.Fill = terrainBrushes[(int)terrainType];
+			else
+				tokenPathShape.Fill = tokenBrushes[(int)tokenType];
 		}
 
 		void BuildShape()
 		{
 			tokenPathShape = new Ellipse();
-			tokenPathShape.Fill = fillColors[(int)tokenType];
+			ReColor();
 			tokenPathShape.StrokeThickness = 4;
 			tokenPathShape.Stroke = Brushes.White;
 			tokenPathShape.Width = 50;
@@ -169,7 +185,7 @@ namespace JiME
 		public void Rehydrate( Canvas canvas )
 		{
 			BuildShape();
-			tokenPathShape.Fill = fillColors[(int)tokenType];
+			ReColor();
 			tokenPathShape.DataContext = this;
 			canvas.Children.Add( tokenPathShape );
 			if (parentTile != null)
