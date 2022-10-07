@@ -83,6 +83,9 @@
 								<RadioButton x:Name="searchRadio" Content="Search" Margin="0,0,20,0" Click="tokenTypeClick"/>
 								<RadioButton x:Name="threatRadio" Content="Threat" Margin="0,0,20,0" Click="tokenTypeClick"/>
 								<RadioButton x:Name="darkRadio" Content="Darkness" Click="tokenTypeClick"/>
+								<RadioButton x:Name="difficultGroundRadio" Content="Difficult Ground" Margin="0,0,20,0" Click="tokenTypeClick"/>
+								<RadioButton x:Name="fortifiedRadio" Content="Fortified" Margin="0,0,20,0" Click="tokenTypeClick"/>
+								<RadioButton x:Name="terrainRadio" Content="Terrain" Margin="0,0,20,0" Click="tokenTypeClick"/>
 							</StackPanel>
 							<StackPanel Orientation="Horizontal" Name="personType" Visibility="Collapsed">
 								<TextBlock Text="Person Type:" Style="{StaticResource Heading}" Margin="0,0,10,0"/>

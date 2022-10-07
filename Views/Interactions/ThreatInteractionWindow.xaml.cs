@@ -68,6 +68,10 @@ namespace JiME.Views
 			searchRadio.IsChecked = interaction.tokenType == TokenType.Search;
 			darkRadio.IsChecked = interaction.tokenType == TokenType.Darkness;
 			threatRadio.IsChecked = interaction.tokenType == TokenType.Threat;
+			difficultGroundRadio.IsChecked = interaction.tokenType == TokenType.DifficultGround;
+			fortifiedRadio.IsChecked = interaction.tokenType == TokenType.Fortified;
+			terrainRadio.IsChecked = interaction.tokenType == TokenType.Terrain;
+
 
 			oldName = interaction.dataName;
 
@@ -220,10 +224,12 @@ namespace JiME.Views
 				interaction.tokenType = TokenType.Darkness;
 			if ( threatRadio.IsChecked.HasValue && threatRadio.IsChecked.Value )
 				interaction.tokenType = TokenType.Threat;
-			if (terrainRadio.IsChecked.HasValue && terrainRadio.IsChecked.Value)
-				interaction.tokenType = TokenType.DifficultTerrain;
+			if (difficultGroundRadio.IsChecked.HasValue && difficultGroundRadio.IsChecked.Value)
+				interaction.tokenType = TokenType.DifficultGround;
 			if (fortifiedRadio.IsChecked.HasValue && fortifiedRadio.IsChecked.Value)
 				interaction.tokenType = TokenType.Fortified;
+			if (terrainRadio.IsChecked.HasValue && terrainRadio.IsChecked.Value)
+				interaction.tokenType = TokenType.Terrain;
 
 			if ( humanRadio.IsChecked == true )
 				interaction.personType = PersonType.Human;
