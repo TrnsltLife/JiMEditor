@@ -94,7 +94,30 @@
 								<RadioButton x:Name="hobbitRadio" Content="Hobbit" Margin="0,0,20,0"/>
 								<RadioButton x:Name="dwarfRadio" Content="Dwarf"/>
 							</StackPanel>
-
+							<WrapPanel Orientation="Horizontal" Name="terrainType" Visibility="Collapsed">
+								<TextBlock Text="Terrain Type:" Style="{StaticResource Heading}" Margin="0,0,10,0"/>
+								<RadioButton x:Name="barrelsRadio" Content="Barrels" Margin="0,0,20,0"/>
+								<RadioButton x:Name="barricadeRadio" Content="Barricade" Margin="0,0,20,0"/>
+								<RadioButton x:Name="boulderRadio" Content="Boulder" Margin="0,0,20,0"/>
+								<RadioButton x:Name="bushRadio" Content="Bush" Margin="0,0,20,0"/>
+								<RadioButton x:Name="chestRadio" Content="Chest" Margin="0,0,20,0"/>
+								<RadioButton x:Name="elevationRadio" Content="Elevation" Margin="0,0,20,0"/>
+								<RadioButton x:Name="fenceRadio" Content="Fence" Margin="0,0,20,0"/>
+								<RadioButton x:Name="firePitRadio" Content="Fire Pit" Margin="0,0,20,0"/>
+								<RadioButton x:Name="fountainRadio" Content="Fountain" Margin="0,0,20,0"/>
+								<RadioButton x:Name="logRadio" Content="Log" Margin="0,0,20,0"/>
+								<RadioButton x:Name="mistRadio" Content="Mist" Margin="0,0,20,0"/>
+								<RadioButton x:Name="pitRadio" Content="Pit" Margin="0,0,20,0"/>
+								<RadioButton x:Name="pondRadio" Content="Pond" Margin="0,0,20,0"/>
+								<RadioButton x:Name="rubbleRadio" Content="Rubble" Margin="0,0,20,0"/>
+								<RadioButton x:Name="statueRadio" Content="Statue" Margin="0,0,20,0"/>
+								<RadioButton x:Name="streamRadio" Content="Stream" Margin="0,0,20,0"/>
+								<RadioButton x:Name="tableRadio" Content="Table" Margin="0,0,20,0"/>
+								<RadioButton x:Name="trenchRadio" Content="Trench" Margin="0,0,20,0"/>
+								<RadioButton x:Name="wallRadio" Content="Wall" Margin="0,0,20,0"/>
+								<RadioButton x:Name="webRadio" Content="Web" Margin="0,0,20,0"/>
+							</WrapPanel>
+							
 							<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Margin="0,5,0,0">
 							Token Interactions are triggered by players as they journey across the map. When a player clicks a Token, the Flavor Text below is shown. The player can decide to use an Action to Interact with the Token, after which the Event Text is shown, along with the Event itself.
 							</TextBlock>

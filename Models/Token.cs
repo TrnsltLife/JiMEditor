@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,6 +22,7 @@ namespace JiME
 		string _triggerName, _triggeredByName;
 		TokenType _tokenType;
 		PersonType _personType;
+		TerrainType _terrainType;
 
 		public string dataName
 		{
@@ -60,6 +62,7 @@ namespace JiME
 				Prop( "tokenType" );
 			}
 		}
+
 		public PersonType personType
 		{
 			get => _personType;
@@ -69,6 +72,17 @@ namespace JiME
 				Prop( "personType" );
 			}
 		}
+
+		public TerrainType terrainType
+		{
+			get => _terrainType;
+			set
+			{
+				_terrainType = value;
+				Prop("terrainType");
+			}
+		}
+
 		public int idNumber { get; set; }
 		public Vector position { get; set; }
 		public string triggeredByName
@@ -88,7 +102,7 @@ namespace JiME
 
 		//shape stuff
 		[JsonIgnore]
-		public Ellipse tokenPathShape;
+		public Shape tokenPathShape;
 		Point clickV;
 		Vector lastPos;
 
@@ -110,6 +124,30 @@ namespace JiME
 			Brushes.Gray //None
 		};
 
+		static Brush[] terrainBrushes = {
+			Brushes.Black, //None
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Barrels.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Barricade.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Boulder.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Bush.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Chest.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Elevation.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Fence.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/FirePit.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Fountain.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Log.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Mist.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Pit.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Pond.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Rubble.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Statue.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Stream.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Table.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Trench.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Wall.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Web.png")))
+		};
+
 
 		public Token( TokenType ttype )
 		{
@@ -119,39 +157,121 @@ namespace JiME
 			triggeredByName = "None";
 			tokenType = ttype;
 			personType = PersonType.Human;
+			terrainType = TerrainType.None;
 			position = new Vector( 256, 256 );
 
 			BuildShape();
 			Update();
 		}
 
+		public void Rehydrate(Canvas canvas)
+		{
+			canvas.Children.Remove(tokenPathShape);
+			BuildShape();
+			tokenPathShape.DataContext = this;
+			canvas.Children.Add(tokenPathShape);
+			if (parentTile != null)
+			{
+				Canvas.SetZIndex(tokenPathShape, 104);
+			}
+			else
+			{
+				//Rely on transform in Update()
+			}
+			Update();
+		}
+
 		public void ReColor()
 		{
-			Debug.Log("Recolor tokenType: " + tokenType + " personType: " + personType);
 			if (tokenType == TokenType.Person)
+			{
 				tokenPathShape.Fill = personBrushes[(int)personType];
-			//else if (tokenType == TokenType.Terrain)
-			//	tokenPathShape.Fill = terrainBrushes[(int)terrainType];
+			}
+			else if (tokenType == TokenType.Terrain)
+			{
+				Debug.Log("Recolor terrainType: " + terrainType);
+				tokenPathShape.Fill = terrainBrushes[(int)terrainType];
+			}
 			else
+			{
 				tokenPathShape.Fill = tokenBrushes[(int)tokenType];
+			}
 		}
 
 		void BuildShape()
 		{
-			tokenPathShape = new Ellipse();
-			ReColor();
-			tokenPathShape.StrokeThickness = 4;
-			tokenPathShape.Stroke = Brushes.White;
-			tokenPathShape.Width = 50;
-			tokenPathShape.Height = 50;
-			tokenPathShape.DataContext = this;
+			if (tokenType == TokenType.Terrain)
+			{
+				Debug.Log("BuildShape: Terrain " + terrainType);
+				if(new List<TerrainType>() { TerrainType.Barrels, TerrainType.Barricade, TerrainType.Chest, TerrainType.Elevation, TerrainType.Log, TerrainType.Table }.Contains(terrainType))
+                {
+					Debug.Log("Medium Rectangle");
+					//31mm x 70mm rectangle
+					tokenPathShape = new Rectangle();
+					ReColor();
+					tokenPathShape.StrokeThickness = 4;
+					tokenPathShape.Stroke = Brushes.White;
+					tokenPathShape.Width = 62;
+					tokenPathShape.Height = 140;
+					tokenPathShape.DataContext = this;
+				}
+				else if (new List<TerrainType>() { TerrainType.Fence, TerrainType.Stream, TerrainType.Trench, TerrainType.Wall }.Contains(terrainType))
+                {
+					Debug.Log("Thin Rectangle");
+					//15mm x 94mm rectangle
+					tokenPathShape = new Rectangle();
+					ReColor();
+					tokenPathShape.StrokeThickness = 4;
+					tokenPathShape.Stroke = Brushes.White;
+					tokenPathShape.Width = 30;
+					tokenPathShape.Height = 188;
+					tokenPathShape.DataContext = this;
+				}
+				else if (new List<TerrainType>() { TerrainType.Boulder, TerrainType.Bush, TerrainType.FirePit, TerrainType.Rubble, TerrainType.Statue, TerrainType.Web }.Contains(terrainType))
+				{
+					Debug.Log("Medium Circle");
+					//37mm diameter ellipse
+					tokenPathShape = new Ellipse();
+					ReColor();
+					tokenPathShape.StrokeThickness = 4;
+					tokenPathShape.Stroke = Brushes.White;
+					tokenPathShape.Width = 74;
+					tokenPathShape.Height = 74;
+					tokenPathShape.DataContext = this;
+				}
+				else if (new List<TerrainType>() { TerrainType.Fountain, TerrainType.Mist, TerrainType.Pit, TerrainType.Pond }.Contains(terrainType))
+				{
+					Debug.Log("Large Rounded Square");
+					//75mm x 75mm rounded rectangle?
+					tokenPathShape = new Rectangle();
+					ReColor();
+					tokenPathShape.StrokeThickness = 4;
+					tokenPathShape.Stroke = Brushes.White;
+					tokenPathShape.Width = 150;
+					tokenPathShape.Height = 150;
+					((Rectangle)tokenPathShape).RadiusX = 50;
+					((Rectangle)tokenPathShape).RadiusY = 50;
+					tokenPathShape.DataContext = this;
+				}
+			}
+			else //Round/Hex tokens simply displayed with Ellipse in the editor
+			{
+				//25mm diameter
+				tokenPathShape = new Ellipse();
+				ReColor();
+				tokenPathShape.StrokeThickness = 4;
+				tokenPathShape.Stroke = Brushes.White;
+				tokenPathShape.Width = 50;
+				tokenPathShape.Height = 50;
+				tokenPathShape.DataContext = this;
+			}
 		}
 
 		void Update()
 		{
 			if(parentTile != null)
             {
-				//tokenPathShape.RenderTransformOrigin = new Point(.5d, .5d);
+				tokenPathShape.RenderTransformOrigin = new Point(.5d, .5d);
 				TransformGroup grp = new TransformGroup();
 				ScaleTransform sc = null;
 				if (parentTile.tileType == TileType.Hex)
@@ -180,23 +300,6 @@ namespace JiME
 				TranslateTransform tf = new TranslateTransform(position.X - 25, position.Y - 25);
 				tokenPathShape.RenderTransform = tf;
 			}
-		}
-
-		public void Rehydrate( Canvas canvas )
-		{
-			BuildShape();
-			ReColor();
-			tokenPathShape.DataContext = this;
-			canvas.Children.Add( tokenPathShape );
-			if (parentTile != null)
-			{
-				Canvas.SetZIndex(tokenPathShape, 104);
-			}
-			else
-            {
-				//Rely on transform in Update()
-			}
-			Update();
 		}
 
 		public void Select()

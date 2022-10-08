@@ -10,6 +10,7 @@ namespace JiME
 		int _loreReward, _xpReward, _threatReward;
 		TokenType _tokenType;
 		PersonType _personType;
+		TerrainType _terrainType;
 
 		public string dataName
 		{
@@ -66,6 +67,13 @@ namespace JiME
 			get => _personType;
 			set { _personType = value; NotifyPropertyChanged( "personType" ); }
 		}
+
+		public TerrainType terrainType
+		{
+			get => _terrainType;
+			set { _terrainType = value; NotifyPropertyChanged("terrainType"); }
+		}
+
 		public TextBookData textBookData { get; set; }
 		public TextBookData eventBookData { get; set; }
 		public int loreReward
