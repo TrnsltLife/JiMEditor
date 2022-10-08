@@ -165,6 +165,17 @@ namespace JiME.Views
 			}
 		}
 
+		private void Canvas_MouseWheel(object sender, MouseWheelEventArgs e)
+		{
+			if (selected != null)
+			{
+				if (e.Delta > 0)
+					selected.Rotate(1, canvas);
+				else if (e.Delta < 0)
+					selected.Rotate(-1, canvas);
+			}
+		}
+
 		void PropChanged( string name )
 		{
 			PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( name ) );

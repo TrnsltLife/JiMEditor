@@ -17,6 +17,8 @@ namespace JiME
 		public BaseTile parentTile = null;
 		[JsonIgnore]
 		public Canvas parentCanvas = null;
+		[JsonIgnore]
+		public double rotationAngle = 15;
 
 		string _dataName;
 		string _triggerName, _triggeredByName;
@@ -85,6 +87,7 @@ namespace JiME
 
 		public int idNumber { get; set; }
 		public Vector position { get; set; }
+		public double angle { get; set; }
 		public string triggeredByName
 		{
 			get => _triggeredByName;
@@ -189,7 +192,6 @@ namespace JiME
 			}
 			else if (tokenType == TokenType.Terrain)
 			{
-				Debug.Log("Recolor terrainType: " + terrainType);
 				tokenPathShape.Fill = terrainBrushes[(int)terrainType];
 			}
 			else
@@ -202,10 +204,8 @@ namespace JiME
 		{
 			if (tokenType == TokenType.Terrain)
 			{
-				Debug.Log("BuildShape: Terrain " + terrainType);
 				if(new List<TerrainType>() { TerrainType.Barrels, TerrainType.Barricade, TerrainType.Chest, TerrainType.Elevation, TerrainType.Log, TerrainType.Table }.Contains(terrainType))
                 {
-					Debug.Log("Medium Rectangle");
 					//31mm x 70mm rectangle
 					tokenPathShape = new Rectangle();
 					ReColor();
@@ -217,19 +217,17 @@ namespace JiME
 				}
 				else if (new List<TerrainType>() { TerrainType.Fence, TerrainType.Stream, TerrainType.Trench, TerrainType.Wall }.Contains(terrainType))
                 {
-					Debug.Log("Thin Rectangle");
 					//15mm x 94mm rectangle
 					tokenPathShape = new Rectangle();
 					ReColor();
 					tokenPathShape.StrokeThickness = 4;
 					tokenPathShape.Stroke = Brushes.White;
-					tokenPathShape.Width = 30;
-					tokenPathShape.Height = 188;
+					tokenPathShape.Width = 27; //30;
+					tokenPathShape.Height = 170; //188;
 					tokenPathShape.DataContext = this;
 				}
 				else if (new List<TerrainType>() { TerrainType.Boulder, TerrainType.Bush, TerrainType.FirePit, TerrainType.Rubble, TerrainType.Statue, TerrainType.Web }.Contains(terrainType))
 				{
-					Debug.Log("Medium Circle");
 					//37mm diameter ellipse
 					tokenPathShape = new Ellipse();
 					ReColor();
@@ -241,7 +239,6 @@ namespace JiME
 				}
 				else if (new List<TerrainType>() { TerrainType.Fountain, TerrainType.Mist, TerrainType.Pit, TerrainType.Pond }.Contains(terrainType))
 				{
-					Debug.Log("Large Rounded Square");
 					//75mm x 75mm rounded rectangle?
 					tokenPathShape = new Rectangle();
 					ReColor();
@@ -269,36 +266,49 @@ namespace JiME
 
 		void Update()
 		{
-			if(parentTile != null)
+			if(parentTile != null) //TileEditorWindow
             {
-				tokenPathShape.RenderTransformOrigin = new Point(.5d, .5d);
-				TransformGroup grp = new TransformGroup();
-				ScaleTransform sc = null;
-				if (parentTile.tileType == TileType.Hex)
+				//tokenPathShape.RenderTransformOrigin = new Point(.5d, .5d);
+				double scale = 0.5d; //TileType.hex
+				if (parentTile.tileType == TileType.Square)
 				{
-					sc = new ScaleTransform(0.5d, 0.5d);
+					scale = 0.8d;
 				}
-				else
-                {
-					sc = new ScaleTransform(0.8d, 0.8d);
-				}
+				ScaleTransform sc = new ScaleTransform(scale, scale);
+
+				RotateTransform rotateTransform = new RotateTransform(angle);
+				double centerOffsetX = (tokenPathShape.Width / 2) * scale;
+				double centerOffsetY = (tokenPathShape.Height / 2) * scale;
+				rotateTransform.CenterX = centerOffsetX;
+				rotateTransform.CenterY = centerOffsetY;
+
+				TransformGroup grp = new TransformGroup();
 				grp.Children.Add(sc);
+				grp.Children.Add(rotateTransform);
 				tokenPathShape.RenderTransform = grp;
 
 				//The passed in canvas element has its size set the same as the tileImage.
 				//Calculate the scale based on the longest .png dimension of 512 pixels. Used to properly position tokens.
-				double scale = Math.Max(parentCanvas.Width, parentCanvas.Height) / 512d;
+				double positionScale = Math.Max(parentCanvas.Width, parentCanvas.Height) / 512d;
 				//The TokenEditorWindow has the short dimension of the image centered in the frame, so we have to offset that dimension
 				double widthOffset = parentCanvas.Width > parentCanvas.Height ? 0 : (parentCanvas.Height - parentCanvas.Width) / 2;
 				double heightOffset = parentCanvas.Height > parentCanvas.Width ? 0 : (parentCanvas.Width - parentCanvas.Height) / 2;
-				Canvas.SetLeft(tokenPathShape, (position.X - 23) * scale - widthOffset);
-				Canvas.SetTop(tokenPathShape, (position.Y - 25) * scale - heightOffset);
+				Canvas.SetLeft(tokenPathShape, (position.X) * positionScale - widthOffset);
+				Canvas.SetTop(tokenPathShape, (position.Y) * positionScale - heightOffset);
 			}
-			else
+			else //TokenEditorWindow
             {
 				tokenPathShape.RenderTransformOrigin = new Point(.5d, .5d);
-				TranslateTransform tf = new TranslateTransform(position.X - 25, position.Y - 25);
-				tokenPathShape.RenderTransform = tf;
+				TranslateTransform tf = new TranslateTransform(position.X, position.Y);
+
+				RotateTransform rotateTransform = new RotateTransform(angle);
+				rotateTransform.CenterX = position.X;
+				rotateTransform.CenterY = position.Y;
+
+				TransformGroup grp = new TransformGroup();
+				grp.Children.Add(tf);
+				grp.Children.Add(rotateTransform);
+				tokenPathShape.RenderTransform = grp;
 			}
 		}
 
@@ -333,18 +343,32 @@ namespace JiME
 
 		public void Drag( MouseEventArgs e, Canvas canvas )
 		{
-			Vector clickPoint = new Vector( e.GetPosition( canvas ).X - clickV.X, e.GetPosition( canvas ).Y - clickV.Y );
+			Vector clickPoint = new Vector( e.GetPosition( canvas ).X - clickV.X - tokenPathShape.Width/2, e.GetPosition( canvas ).Y - clickV.Y - tokenPathShape.Height/2);
 
 			//Vector snapped = new Vector();
 			//snapped.X = ( from snapx in Utils.dragSnapX where clickPoint.X.WithinTolerance( snapx, Utils.tolerance ) select snapx ).FirstOr( -1 );
 			//snapped.Y = ( from snapy in Utils.dragSnapY where clickPoint.Y.WithinTolerance( snapy, Utils.tolerance ) select snapy ).FirstOr( -1 );
 
 			position = clickPoint;
-			if ( position.X - 25 < 0 || position.Y - 25 < 0 ||
-				position.X + 25 > 512 || position.Y + 25 > 512 )
+			if (position.X < 0 || position.Y < 0 ||
+				position.X > 512 || position.Y > 512)
+			{
 				position = lastPos;
+			}
 			lastPos = position;
 			Update();
+		}
+
+		virtual public void Rotate(double direction, Canvas parentCanvas)
+		{
+			//Only allow rotating Terrain tokens
+			if (tokenType == TokenType.Terrain)
+			{
+				angle += direction * rotationAngle;
+				angle %= 360;
+				Update();
+				Select();
+			}
 		}
 
 		void Prop( string name )
