@@ -53,14 +53,28 @@ namespace JiME.Views
 			//searchRadio.IsChecked = interaction.tokenType == TokenType.Search;
 			//darkRadio.IsChecked = interaction.tokenType == TokenType.Darkness;
 			//threatRadio.IsChecked = interaction.tokenType == TokenType.Threat;
+			//difficultGroundRadio.IsChecked = interaction.tokenType == TokenType.DifficultGround;
+			//fortifiedRadio.IsChecked = interaction.tokenType == TokenType.Fortified;
+			//terrainRadio.IsChecked = interaction.tokenType == TokenType.Terrain;
 
 			oldName = interaction.dataName;
 		}
 
 		private void isTokenCB_Click( object sender, RoutedEventArgs e )
 		{
-			//if ( isTokenCB.IsChecked.Value )
-			//	interaction.triggerName = "None";
+			/*
+			if (isTokenCB.IsChecked == true)
+			{
+				interaction.triggerName = "None";
+				personType.Visibility = personRadio.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
+				terrainType.Visibility = terrainRadio.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
+			}
+			else
+			{
+				personType.Visibility = Visibility.Collapsed;
+				terrainType.Visibility = Visibility.Collapsed;
+			}
+			*/
 		}
 
 		private void ComboBox_SelectionChanged( object sender, SelectionChangedEventArgs e )
@@ -128,6 +142,12 @@ namespace JiME.Views
 			//	interaction.tokenType = TokenType.Darkness;
 			//if ( threatRadio.IsChecked.HasValue && threatRadio.IsChecked.Value )
 			//	interaction.tokenType = TokenType.Threat;
+			//if (difficultGroundRadio.IsChecked.HasValue && difficultGroundRadio.IsChecked.Value)
+			//	interaction.tokenType = TokenType.DifficultGround;
+			//if (fortifiedRadio.IsChecked.HasValue && fortifiedRadio.IsChecked.Value)
+			//	interaction.tokenType = TokenType.Fortified;
+			//if (terrainRadio.IsChecked.HasValue && terrainRadio.IsChecked.Value)
+			//	interaction.tokenType = TokenType.Terrain;
 
 			scenario.UpdateEventReferences( oldName, interaction );
 

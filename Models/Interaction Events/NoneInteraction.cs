@@ -14,7 +14,8 @@ namespace JiME
 				dataName = "None",
 				isEmpty = true,
 				tokenType = TokenType.None,
-				personType = PersonType.Human,
+				personType = PersonType.None,
+				terrainType = TerrainType.None,
 				isTokenInteraction = false
 			};
 			return empty;

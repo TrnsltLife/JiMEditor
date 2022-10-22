@@ -44,7 +44,7 @@
 				<ColumnDefinition Width="auto"/>
 			</Grid.ColumnDefinitions>
 
-			<Canvas x:Name="canvas" MouseDown="Canvas_MouseDown" MouseUp="Canvas_MouseUp" MouseMove="Canvas_MouseMove" Width="512" Height="512" HorizontalAlignment="Left" VerticalAlignment="Top">
+			<Canvas x:Name="canvas" MouseDown="Canvas_MouseDown" MouseUp="Canvas_MouseUp" MouseMove="Canvas_MouseMove" MouseWheel="Canvas_MouseWheel"  Width="512" Height="512" HorizontalAlignment="Left" VerticalAlignment="Top">
 				<Image x:Name="tileImage" Width="512" Height="512"/>
 			</Canvas>
 

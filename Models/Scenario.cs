@@ -756,6 +756,8 @@ namespace JiME
 								token.tokenType = interaction.tokenType;
 								//update person type
 								token.personType = interaction.personType;
+								//update terrain type
+								token.terrainType = interaction.terrainType;
 								//rename
 								token.triggerName = interaction.dataName;
 								//remove event if it's no longer a token interaction

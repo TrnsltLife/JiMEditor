@@ -141,9 +141,9 @@ namespace JiME.Views
 			foreach ( Token tt in tile.tokenList )
 				tt.Unselect();
 			selected = null;
-			if ( e.Source is Ellipse )
+			if ( e.Source is Shape )
 			{
-				Ellipse path = e.Source as Ellipse;
+				Shape path = e.Source as Shape;
 				selected = path.DataContext as Token;
 				selected.Select();
 				dragging = true;
@@ -162,6 +162,17 @@ namespace JiME.Views
 			if ( dragging && selected != null )
 			{
 				selected.Drag( e, canvas );
+			}
+		}
+
+		private void Canvas_MouseWheel(object sender, MouseWheelEventArgs e)
+		{
+			if (selected != null)
+			{
+				if (e.Delta > 0)
+					selected.Rotate(1, canvas);
+				else if (e.Delta < 0)
+					selected.Rotate(-1, canvas);
 			}
 		}
 
@@ -234,7 +245,8 @@ namespace JiME.Views
 			Token t = new Token( TokenType.None );
 			tile.tokenList.Add( t );
 			selected = t;
-			canvas.Children.Add( t.tokenPathShape );
+			//canvas.Children.Add( t.tokenPathShape );
+			t.Rehydrate(canvas);
 			t.Select();
 			UpdateButtonsEnabled();
 		}
@@ -245,8 +257,9 @@ namespace JiME.Views
 			{
 				selected.tokenType = ( (IInteraction)( (ComboBox)sender )?.SelectedItem ).tokenType;
 				selected.personType = ( (IInteraction)( (ComboBox)sender )?.SelectedItem ).personType;
+				selected.terrainType = ((IInteraction)((ComboBox)sender)?.SelectedItem).terrainType;
 				selected.dataName = selected.tokenType.ToString();
-				selected.ReColor();
+				selected.Rehydrate(canvas);
 			}
 
 			//	Debug.Log( selected.tokenType );

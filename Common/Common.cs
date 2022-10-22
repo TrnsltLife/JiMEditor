@@ -36,8 +36,9 @@ namespace JiME
 	public enum EditorMode { Information, Threat, Decision, Test, Branch }
 	public enum Ability { Might, Agility, Wisdom, Spirit, Wit, Wild, Random, None}
 	public enum TerrainToken { None, Pit, Mist, Barrels, Table, FirePit, Statue }
-	public enum TokenType { Search, Person, Threat, Darkness, Exploration, DifficultTerrain, Fortified, None }
-	public enum PersonType { Human, Elf, Hobbit, Dwarf }
+	public enum TokenType { Search, Person, Threat, Darkness, DifficultGround, Fortified, Terrain, None }
+	public enum PersonType { Human, Elf, Hobbit, Dwarf, None }
+	public enum TerrainType { None, Barrels, Barricade, Boulder, Bush, Chest, Elevation, Fence, FirePit, Fountain, Log, Mist, Pit, Pond, Rubble, Statue, Stream, Table, Trench, Wall, Web }
 	public enum HelpType { Token, Grouping, Enemies, Triggers }
 	public enum DifficultyBias { Light, Medium, Heavy }
 
@@ -70,6 +71,8 @@ namespace JiME
 		string triggerName { get; set; }
 		TokenType tokenType { get; set; }
 		PersonType personType { get; set; }
+
+		TerrainType terrainType { get; set; }
 	}
 
 	class Debug
@@ -229,8 +232,8 @@ namespace JiME
 		/// AKA "Engine Version" in the companion app
 		/// Update this number every time the file format changes with new features
 		/// </summary>
-		public static string formatVersion = "1.10";
-		public static string appVersion = "0.20";
+		public static string formatVersion = "1.11";
+		public static string appVersion = "0.21";
 		public static Dictionary<int, BaseTileData> tileDictionary { get; set; } = new Dictionary<int, BaseTileData>();
 		public static Dictionary<int, BaseTileData> tileDictionaryB { get; set; } = new Dictionary<int, BaseTileData>();
 		public static int tolerance = 25;
