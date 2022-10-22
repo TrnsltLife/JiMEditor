@@ -159,7 +159,7 @@ namespace JiME
 			triggerName = "None";
 			triggeredByName = "None";
 			tokenType = ttype;
-			personType = PersonType.Human;
+			personType = PersonType.None;
 			terrainType = TerrainType.None;
 			position = new Vector( 256, 256 );
 
@@ -239,7 +239,7 @@ namespace JiME
 				}
 				else if (new List<TerrainType>() { TerrainType.Fountain, TerrainType.Mist, TerrainType.Pit, TerrainType.Pond }.Contains(terrainType))
 				{
-					//75mm x 75mm rounded rectangle?
+					//75mm x 75mm rounded rectangle
 					tokenPathShape = new Rectangle();
 					ReColor();
 					tokenPathShape.StrokeThickness = 4;
@@ -351,7 +351,7 @@ namespace JiME
 
 			position = clickPoint;
 			if (position.X < 0 || position.Y < 0 ||
-				position.X > 512 || position.Y > 512)
+				(position.X + tokenPathShape.Width) > 512 || (position.Y + tokenPathShape.Height) > 512)
 			{
 				position = lastPos;
 			}

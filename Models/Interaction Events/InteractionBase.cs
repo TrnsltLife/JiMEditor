@@ -117,7 +117,8 @@ namespace JiME
 			triggerAfterName = "None";
 			isTokenInteraction = false;
 			tokenType = TokenType.Search;
-			personType = PersonType.Human;
+			personType = PersonType.None;
+			terrainType = TerrainType.None;
 			textBookData = new TextBookData();
 			textBookData.pages.Add( "Default Flavor Text\n\nUse this text to describe the Event situation and present choices, depending on the type of Event this is." );
 			eventBookData = new TextBookData();
