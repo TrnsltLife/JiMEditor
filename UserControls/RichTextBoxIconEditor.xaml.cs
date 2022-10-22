@@ -2,7 +2,6 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Documents;
-using System.IO;
 using System.Text;
 using System;
 using System.Xml;
@@ -57,44 +56,35 @@ namespace JiME.UserControls
 		private void InsertButton_Click(object sender, RoutedEventArgs e)
 		{
 			Button button = sender as Button;
+
+			iconRTB.BeginChange();
+
 			var caretPos = iconRTB.CaretPosition;
-			//caretPos.InsertTextInRun(button.Content as string);
 
 			var selection = iconRTB.Selection;
 			selection.Text = " ";
-			//caretPos.DeleteTextInRun(selection.Start.GetOffsetToPosition(selection.End));
 
-			//Span mySpan = new Span(selection.Start, selection.End);
-			/*
-			Span mySpan = new Span(new Run(button.Content as string), caretPos);
-			mySpan.FontFamily = new FontFamily("LoTR JiME Icons");
-			mySpan.Background = Brushes.LightGray;
-			*/
-			//Span mySpan = new Span(new Run(button.Content as string), caretPos);
 			Run myRun = new Run(button.Content as string, caretPos);
 			myRun.FontFamily = new FontFamily("LoTR JiME Icons");
 			myRun.Background = Brushes.LightGray;
 
 			//iconRTB.CaretPosition = iconRTB.CaretPosition.GetNextInsertionPosition(LogicalDirection.Forward); //move caret forward one position?
 			iconRTB.Focus();
-			//selection.Select(caretPos, caretPos.GetNextInsertionPosition(LogicalDirection.Forward));
-			//EditingCommands.Delete
-			//EditingCommands.ToggleBold.Execute(null, iconRTB);
+			var nextPos = caretPos.GetNextInsertionPosition(LogicalDirection.Forward);
+			selection.Select(nextPos, nextPos);
 
-			//Bold myBold = new Bold(new Run(button.Content as string), caretPos);
-			//myBold.FontFamily = new FontFamily("LoTR JiME Icons");
-
-			//Span mySpan = new Span(new Run(button.Content as string), caretPos);
-			//mySpan.FontFamily = new FontFamily("LoTR JiME Icons");
+			iconRTB.EndChange();
 		}
 
 		private void ClearFormattingButton_Click(object sender, RoutedEventArgs e)
 		{
+			iconRTB.BeginChange();
 			var selection = iconRTB.Selection;
 			selection.ClearAllProperties();
 			selection.ClearAllProperties();
 			selection.ClearAllProperties();
 			iconRTB.Focus();
+			iconRTB.EndChange();
 		}
 
 		private void OutputButton_Click(object sender, RoutedEventArgs e)
@@ -108,38 +98,51 @@ namespace JiME.UserControls
 			if (document == null) return String.Empty;
 			else
 			{
+				string s = "";
 
-				StringBuilder sb = new StringBuilder();
-				using (XmlWriter xw = XmlWriter.Create(sb))
+				try
 				{
-					XamlDesignerSerializationManager sm = new XamlDesignerSerializationManager(xw);
-					sm.XamlWriterMode = XamlWriterMode.Expression;
+					StringBuilder sb = new StringBuilder();
+					using (XmlWriter xw = XmlWriter.Create(sb))
+					{
+						XamlDesignerSerializationManager sm = new XamlDesignerSerializationManager(xw);
+						sm.XamlWriterMode = XamlWriterMode.Expression;
 
-					XamlWriter.Save(document, sm);
+						XamlWriter.Save(document, sm);
+					}
+					//sb.Replace("{}", "");
+					Console.WriteLine(sb.ToString());
+					sb.Replace("</Run>", "</b>");
+					sb.Replace("</Paragraph>", "\r\n");
+					sb.Replace("</FlowDocument>", "");
+					s = sb.ToString();
+					s = Regex.Replace(s, @"<\?xml[^>]*>", "");
+					s = Regex.Replace(s, @"<FlowDocument[^>]*>", "");
+					s = Regex.Replace(s, "<Paragraph[^>]*>", "");
+					s = Regex.Replace(s, "<Run FontFamily=\"LoTR JiME Icons\"[^>]*>", "<b>");
+					s = Regex.Replace(s, @"<Run[^>]*>", "");
+					s = Regex.Replace(s, @"<Span[^>]*>", "");
+					s = Regex.Replace(s, @"</Span[^>]*>", "");
+					s = Regex.Replace(s, @"<List[^>]*>", "");
+					s = Regex.Replace(s, @"</List[^>]*>", "");
+					s = Regex.Replace(s, @"<TextDecoration[^>]*>", "");
+					s = Regex.Replace(s, @"</TextDecoration>", "");
 				}
-				//sb.Replace("{}", "");
-				Console.WriteLine(sb.ToString());
-				sb.Replace("</Run>", "</b>");
-				sb.Replace("</Paragraph>", "\r\n");
-				sb.Replace("</FlowDocument>", "");
-				string s = sb.ToString();
-				s = Regex.Replace(s, @"<\?xml[^>]*>", "");
-				s = Regex.Replace(s, @"<FlowDocument[^>]*>", "");
-				s = Regex.Replace(s, "<Paragraph[^>]*>", "");
-				s = Regex.Replace(s, "<Run FontFamily=\"LoTR JiME Icons\"[^>]*>", "<b>");
-				s = Regex.Replace(s, @"<Run[^>]*>", "");
-				s = Regex.Replace(s, @"<Span[^>]*>", "");
-				s = Regex.Replace(s, @"</Span[^>]*>", "");
-				s = Regex.Replace(s, @"<List[^>]*>", "");
-				s = Regex.Replace(s, @"</List[^>]*>", "");
-				s = Regex.Replace(s, @"<TextDecoration[^>]*>", "");
-				s = Regex.Replace(s, @"</TextDecoration>", "");
+				catch
+                {
+					s = document.ToString();
+                    System.Windows.Forms.MessageBox.Show("An error occurred while trying to save your text. This is what we were able to salvage. Copy it with Ctrl+C or it will be lost.\r\n\r\n" + s,
+						"Error Saving Text",
+						System.Windows.Forms.MessageBoxButtons.OK,
+						System.Windows.Forms.MessageBoxIcon.Error);
+				}
 				return s;
 			}
 		}
 
 		private void SetRichTextBoxFromSimpleHtml(string html)
         {
+			string originalHtml = html;
 			FlowDocument document = iconRTB.Document;
 			document.Blocks.Clear();
 			html = Regex.Replace(html, "\r\n", "</Paragraph><Paragraph>");
@@ -148,8 +151,18 @@ namespace JiME.UserControls
 			html = "<Paragraph>" + html + "</Paragraph>";
 			html = "<?xml version=\"1.0\" encoding=\"utf-16\"?><FlowDocument PagePadding=\"5,0,5,0\" AllowDrop=\"True\" NumberSubstitution.CultureSource=\"User\" xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\">" + html + "</FlowDocument>";
 			Console.WriteLine("html:\r\n" + html);
-			iconRTB.Document = (FlowDocument)XamlReader.Parse(html);
-        }
+			try
+			{
+				iconRTB.Document = (FlowDocument)XamlReader.Parse(html);
+			}
+			catch
+            {
+				System.Windows.Forms.MessageBox.Show("An error occurred while trying to load your text. The underlying HTML may have been corrupted and you may need to fix it in the .jime file. Copy it with Ctrl+C. Here's what it looks like:\r\n\r\n" + originalHtml,
+					"Error Loading Text",
+					System.Windows.Forms.MessageBoxButtons.OK,
+					System.Windows.Forms.MessageBoxIcon.Error);
+			}
+		}
 
 
 		private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
