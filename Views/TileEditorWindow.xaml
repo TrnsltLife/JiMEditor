@@ -206,6 +206,9 @@
 							<TextBlock Margin="40,0,0,0" Style="{StaticResource SubTextWhite}" VerticalAlignment="Bottom" Text="Tile Position: "/>
 							<TextBlock x:Name="infoTilePosition" Style="{StaticResource Heading}" VerticalAlignment="Bottom" Text=""/>
 
+							<TextBlock Margin="40,0,0,0" Style="{StaticResource SubTextWhite}" VerticalAlignment="Bottom" Text="Tile Size: "/>
+							<TextBlock x:Name="infoTileSize" Style="{StaticResource Heading}" VerticalAlignment="Bottom" Text=""/>
+
 							<TextBlock Margin="40,0,0,0" Style="{StaticResource SubTextWhite}" VerticalAlignment="Bottom" Text="Tile Rotation: "/>
 							<TextBlock x:Name="infoTileRotation" Style="{StaticResource Heading}" VerticalAlignment="Bottom" Text=""/>
 						</StackPanel>

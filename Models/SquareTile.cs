@@ -46,7 +46,6 @@ namespace JiME
         protected override void BuildShape()
         {
 			double img2PathScale = 4d / 3d;
-			double shrinkScale = 0.8d;
 
 			base.BuildShape();
 			pathShape = new Path();
@@ -100,79 +99,41 @@ namespace JiME
 		/// </summary>
 		override protected void Update()
 		{
-			double img2PathScale = 4d / 3d; //I'm not sure why this is but the image comes out scaled bigger than the pathShape?
+			//double img2PathScale = 4d / 3d; //I'm not sure why this is but the image comes out scaled bigger than the pathShape?
+			double img2PathScale = 1d / (17d / 16d); //I'm not sure why this is but the image comes out scaled bigger than the pathShape?
 			double shrinkScale = 0.8d;
 
-			//get size dimensions of PATH object
-			Vector dims;
-			if (tileSide == "A")
-				dims = new Vector(Utils.tileDictionary[idNumber].width, Utils.tileDictionary[idNumber].height);
-			else
-				dims = new Vector(Utils.tileDictionaryB[idNumber].width, Utils.tileDictionary[idNumber].height);
+			//Set location of the pathShape
+			Canvas.SetLeft(pathShape, 0);
+			Canvas.SetTop(pathShape, 0);
 
 			//calculate the SCALE of largest side (width or height)
 			double scale;
 			if (tileImage.Source.Width > tileImage.Source.Height)
-				scale = dims.X / 512;
+				scale = tileDims.X / 512;
 			else
-				scale = dims.Y / 512;
+				scale = tileDims.Y / 512;
 
-			//Console.WriteLine("Image: " + dims.X + "," + dims.Y + " Scale: " + scale + " Resized: " + (dims.X * scale) + "," + (dims.Y * scale));
-
-
-			//Move the pathShape drawing to the location on the screen the user has moved it to (as opposed to its basic origin at 0,0)
-			//Apply translation to the pathShape
-			pathShape.RenderTransformOrigin = new Point( 0, 0 );
-			TranslateTransform pathTranslateTransform = new TranslateTransform(position.X, position.Y);
-			RotateTransform pathRotateTransform = new RotateTransform(angle);
-			pathRotateTransform.CenterX = position.X + (dims.X / 2d * img2PathScale * shrinkScale); // (pathRoot.X * 150f);
-			pathRotateTransform.CenterY = position.Y + (dims.Y / 2d * img2PathScale * shrinkScale); // (pathRoot.Y * 150f);
-			ScaleTransform pathScaleTransform = new ScaleTransform(img2PathScale * shrinkScale, img2PathScale * shrinkScale);
-			TransformGroup sqrgrp = new TransformGroup();
-			sqrgrp.Children.Add(pathScaleTransform);
-			sqrgrp.Children.Add(pathTranslateTransform);
-			sqrgrp.Children.Add(pathRotateTransform);
-			pathShape.RenderTransform = sqrgrp;
-
-			//Apply scale, translation, and rotation to the tile image
-
+			//Apply scale to the tile image
 			TransformGroup imggrp = new TransformGroup();
-
-			ScaleTransform scaleTransform = new ScaleTransform( scale * shrinkScale, scale * shrinkScale );
-
-			float imgTranslateX = (float)position.X;// - 150f;
-			float imgTranslateY = (float)position.Y;// - 150f;
-			TranslateTransform translateTransform = new TranslateTransform(imgTranslateX, imgTranslateY);
-			//Console.WriteLine("imgTranslate: " + imgTranslateX + "," + imgTranslateY);
-
-			RotateTransform rotateTransform = new RotateTransform( angle );
-			rotateTransform.CenterX = position.X + (dims.X / 2 * img2PathScale * shrinkScale); // (pathRoot.X * 150f);
-			rotateTransform.CenterY = position.Y + (dims.Y / 2 * img2PathScale * shrinkScale); // (pathRoot.Y * 150f);
-			//Console.WriteLine("rotateCenter: " + rotateTransform.CenterX + "," + rotateTransform.CenterY);
-
+			ScaleTransform scaleTransform = new ScaleTransform( scale * shrinkScale * img2PathScale, scale * shrinkScale * img2PathScale);
 			imggrp.Children.Add(scaleTransform);
-			imggrp.Children.Add(translateTransform);
-			imggrp.Children.Add(rotateTransform);
 			tileImage.RenderTransform = imggrp;
 
-			if (printRect)
-			{
-				TransformGroup rectgrp = new TransformGroup();
-				rectgrp.Children.Add(translateTransform);
-				rectgrp.Children.Add(rotateTransform);
-				rectPathShape.RenderTransform = rectgrp;
-			}
 
-			if (printPivot)
-			{
-				TransformGroup pivotgrp = new TransformGroup();
-				TranslateTransform pivottf = new TranslateTransform(rotateTransform.CenterX, rotateTransform.CenterY);
-				pivotgrp.Children.Add(pivottf);
-				pivotPathShape.RenderTransform = pivotgrp;
-			}
-
-			//dims 64 x 55.4256256
-			//27.7128128
+			//Add translation and rotation to the canvas
+			TransformGroup canvasgrp = new TransformGroup();
+			float imgTranslateX = (float)position.X;
+			float imgTranslateY = (float)position.Y;
+			TranslateTransform translateTransform = new TranslateTransform(imgTranslateX, imgTranslateY);
+			RotateTransform rotateTransform = new RotateTransform( angle );
+			double centerOffsetX = (tileDims.X / 2);
+			double centerOffsetY = (tileDims.Y / 2);
+			rotateTransform.CenterX = position.X + centerOffsetX;
+			rotateTransform.CenterY = position.Y + centerOffsetY;
+			canvasgrp.Children.Add(translateTransform);
+			canvasgrp.Children.Add(rotateTransform);
+			canvas.RenderTransform = canvasgrp;
 		}
 
 		override public void Drag( MouseEventArgs e, Canvas canvas )

@@ -82,7 +82,7 @@ namespace JiME
 		/// </summary>
 		public static Point[] ExtractCoords( string coords )
         {
-			Console.WriteLine("ExtractCoords: " + coords);
+			//Console.WriteLine("ExtractCoords: " + coords);
 			Point[] vectors;
 			string[] array = coords.Split(' ');
 			vectors = new Point[array.Length];
@@ -97,7 +97,7 @@ namespace JiME
 				if (xComparison != 0) { return xComparison; }
 				else return point1.Y.CompareTo(point2.Y);
             });
-			Console.WriteLine("Results:       " + String.Join(" ", vectors));
+			//Console.WriteLine("Results:       " + String.Join(" ", vectors));
 			return vectors;
         }
 

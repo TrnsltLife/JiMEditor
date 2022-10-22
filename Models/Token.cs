@@ -11,6 +11,11 @@ namespace JiME
 {
 	public class Token : INotifyPropertyChanged, ICommonData
 	{
+		[JsonIgnore]
+		public BaseTile parentTile = null;
+		[JsonIgnore]
+		public Canvas parentCanvas = null;
+
 		string _dataName;
 		string _triggerName, _triggeredByName;
 		TokenType _tokenType;
@@ -128,11 +133,37 @@ namespace JiME
 
 		void Update()
 		{
-			tokenPathShape.RenderTransformOrigin = new Point( .5d, .5d );//.5d, .5d );
-			TranslateTransform tf = new TranslateTransform( position.X - 25, position.Y - 25 );
-			//TransformGroup grp = new TransformGroup();
-			//grp.Children.Add( tf );
-			tokenPathShape.RenderTransform = tf;
+			if(parentTile != null)
+            {
+				//tokenPathShape.RenderTransformOrigin = new Point(.5d, .5d);
+				TransformGroup grp = new TransformGroup();
+				ScaleTransform sc = null;
+				if (parentTile.tileType == TileType.Hex)
+				{
+					sc = new ScaleTransform(0.5d, 0.5d);
+				}
+				else
+                {
+					sc = new ScaleTransform(0.8d, 0.8d);
+				}
+				grp.Children.Add(sc);
+				tokenPathShape.RenderTransform = grp;
+
+				//The passed in canvas element has its size set the same as the tileImage.
+				//Calculate the scale based on the longest .png dimension of 512 pixels. Used to properly position tokens.
+				double scale = Math.Max(parentCanvas.Width, parentCanvas.Height) / 512d;
+				//The TokenEditorWindow has the short dimension of the image centered in the frame, so we have to offset that dimension
+				double widthOffset = parentCanvas.Width > parentCanvas.Height ? 0 : (parentCanvas.Height - parentCanvas.Width) / 2;
+				double heightOffset = parentCanvas.Height > parentCanvas.Width ? 0 : (parentCanvas.Width - parentCanvas.Height) / 2;
+				Canvas.SetLeft(tokenPathShape, (position.X - 23) * scale - widthOffset);
+				Canvas.SetTop(tokenPathShape, (position.Y - 25) * scale - heightOffset);
+			}
+			else
+            {
+				tokenPathShape.RenderTransformOrigin = new Point(.5d, .5d);
+				TranslateTransform tf = new TranslateTransform(position.X - 25, position.Y - 25);
+				tokenPathShape.RenderTransform = tf;
+			}
 		}
 
 		public void Rehydrate( Canvas canvas )
@@ -141,19 +172,27 @@ namespace JiME
 			tokenPathShape.Fill = fillColors[(int)tokenType];
 			tokenPathShape.DataContext = this;
 			canvas.Children.Add( tokenPathShape );
+			if (parentTile != null)
+			{
+				Canvas.SetZIndex(tokenPathShape, 104);
+			}
+			else
+            {
+				//Rely on transform in Update()
+			}
 			Update();
 		}
 
 		public void Select()
 		{
 			tokenPathShape.Stroke = new SolidColorBrush( Colors.Red );
-			Canvas.SetZIndex( tokenPathShape, 100 );
+			Canvas.SetZIndex( tokenPathShape, 105 );
 		}
 
 		public void Unselect()
 		{
 			tokenPathShape.Stroke = new SolidColorBrush( Colors.White );
-			Canvas.SetZIndex( tokenPathShape, 0 );
+			Canvas.SetZIndex( tokenPathShape, 104 );
 		}
 
 		public void SetClickV( MouseButtonEventArgs e, Canvas canvas )
