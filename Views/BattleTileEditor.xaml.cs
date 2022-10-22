@@ -13,6 +13,7 @@ namespace JiME.Views
 	public partial class BattleTileEditor : Window, INotifyPropertyChanged
 	{
 		BattleTile _selectedLeft;
+		Brush _leftColor = Brushes.LawnGreen;
 
 		int selectedWallIndex;
 		int wallValue;
@@ -26,10 +27,26 @@ namespace JiME.Views
 			get => _selectedLeft;
 			set
 			{
-				_selectedLeft = value;
-				PropChanged( "selectedLeft" );
+				if (value != _selectedLeft)
+				{
+					_selectedLeft = value;
+					PropChanged("selectedLeft");
+				}
 			}
 		}
+
+		public Brush LeftColor
+        {
+			get => _leftColor;
+			set
+            {
+				if(value != _leftColor)
+                {
+					_leftColor = value;
+					PropChanged("leftColor");
+                }
+            }
+        }
 
 		public BattleTileEditor( Scenario s, Chapter c )
 		{
@@ -49,8 +66,18 @@ namespace JiME.Views
 					selectedWall = (Path)el;
 				}
 			}
-			selectedLeft = chapter.tileObserver[0] as BattleTile;
-			( (Path)canvas.Children[0] ).Stroke = Brushes.Red;
+
+			//rehydrate existing tiles in this chapter
+			if(chapter.tileObserver.Count == 1)
+			{
+				selectedLeft = chapter.tileObserver[0] as BattleTile;
+			}
+			else
+            {
+				selectedLeft = new BattleTile();
+            }
+
+			((Path)canvas.Children[0] ).Stroke = Brushes.Red;
 			Canvas.SetZIndex( (FrameworkElement)canvas.Children[0], 100 );
 
 			selectedWallIndex = 0;

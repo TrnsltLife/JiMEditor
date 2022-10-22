@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JiME.Views"
+		xmlns:uc="clr-namespace:JiME.UserControls"
         mc:Ignorable="d"
         Title="{Binding Title, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DefaultWindow}" Height="450" WindowStartupLocation="CenterScreen" ResizeMode="CanResize" MinWidth="680" MaxHeight="800">
 	<Grid>
@@ -19,8 +20,9 @@
 			<TextBox x:Name="shortnameTB" Text="{Binding shortName}" Margin="10,0" MinWidth="300" Height="24" HorizontalAlignment="Left" FontSize="16"/>
 		</StackPanel>
 
-		<TextBox Grid.Row="1" x:Name="pageText" AcceptsReturn="True" Background="{StaticResource bgColorLight}" Foreground="White" FontSize="14" TextWrapping="Wrap" Padding="5" Margin="5,5,5,0" BorderBrush="White" TextChanged="TextBox_TextChanged" VerticalScrollBarVisibility="Auto"/>
-
+		<!--<TextBox Grid.Row="1" x:Name="pageText" AcceptsReturn="True" Background="{StaticResource bgColorLight}" Foreground="White" FontSize="14" TextWrapping="Wrap" Padding="5" Margin="5,5,5,0" BorderBrush="White" TextChanged="TextBox_TextChanged" VerticalScrollBarVisibility="Auto"/>-->
+		<uc:RichTextBoxIconEditor x:Name="pageText" TextHeight="400" MaxTextHeight="600"/>
+		
 		<!--page info-->
 		<!--<TextBlock x:Name="pageInfo" Grid.Row="2" Margin="10,0,10,0" Style="{StaticResource SubText}" Text="Info"/>
 

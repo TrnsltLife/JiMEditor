@@ -82,6 +82,7 @@
     <Compile Include="Common\Converters.cs" />
     <Compile Include="Common\ErrorChecker.cs" />
     <Compile Include="Common\FileManager.cs" />
+    <Compile Include="Common\BaseTileData.cs" />
     <Compile Include="Common\HexTileData.cs" />
     <Compile Include="Common\CollectionListConverter.cs" />
     <Compile Include="Common\InteractionConverter.cs" />
@@ -90,6 +91,8 @@
     <Compile Include="Models\BattleTile.cs" />
     <Compile Include="Models\Campaign.cs" />
     <Compile Include="Models\Collection.cs" />
+    <Compile Include="Models\BaseTile.cs" />
+    <Compile Include="Models\SquareTile.cs" />
     <Compile Include="Models\HexTile.cs" />
     <Compile Include="Models\Chapter.cs" />
     <Compile Include="Models\Interaction Events\BranchInteraction.cs" />
@@ -752,6 +755,26 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\duplicate.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\TilesA\998.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\TilesA\999.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\TilesB\998.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\TilesB\999.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

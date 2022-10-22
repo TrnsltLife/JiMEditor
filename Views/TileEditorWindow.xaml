@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
 				xmlns:local="clr-namespace:JiME"
-				xmlns:core="clr-namespace:System;assembly=mscorlib"
-        Title="Tile Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" MinWidth="800"  MinHeight="400" Height="650" SizeToContent="Manual" PreviewKeyDown="Window_PreviewKeyDown" Closing="Window_Closing">
+				xmlns:core="clr-namespace:System;assembly=mscorlib" xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+		Title="Tile Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" MinWidth="1200"  MinHeight="750" Height="800" SizeToContent="Manual" PreviewKeyDown="Window_PreviewKeyDown" Closing="Window_Closing">
 
 	<Window.Resources>
 		<local:NullToVisibility x:Key="n2vis"/>
@@ -22,15 +22,15 @@
 			<core:String>Threat</core:String>
 		</x:Array>
 
-		<Style TargetType="Canvas">
+		<Style x:Key="hexGrid" TargetType="Canvas">
 			<Setter Property="Background">
 				<Setter.Value>
-					<DrawingBrush TileMode="Tile" Viewport="4.2871872,0,32,28" ViewportUnits="Absolute" Opacity=".25">
+					<DrawingBrush TileMode="Tile" Viewport="24,0,48,27.7128128" ViewportUnits="Absolute" Opacity=".25">
 						<DrawingBrush.Drawing>
 							<GeometryDrawing>
 								<GeometryDrawing.Geometry>
 									<!--<PathGeometry Figures="M0,0 L4.330127,2.5 4.330127,7.5 0,10 -4.330127,7.5 -4.330127,2.5 0,0 z" />-->
-									<RectangleGeometry Rect="4.2871872,0,32,28"/>
+									<RectangleGeometry Rect="24,0,48,27.7128128"/>
 								</GeometryDrawing.Geometry>
 								<GeometryDrawing.Pen>
 									<Pen Brush="Gray" Thickness="1"/>
@@ -41,21 +41,46 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
+
+		<Style x:Key="squareGrid" TargetType="Canvas">
+			<Setter Property="Background">
+				<Setter.Value>
+					<DrawingBrush TileMode="Tile" Viewport="0,0,25,25" ViewportUnits="Absolute" Opacity=".25">
+						<DrawingBrush.Drawing>
+							<GeometryDrawing>
+								<GeometryDrawing.Geometry>
+									<!--<PathGeometry Figures="M0,0 L4.330127,2.5 4.330127,7.5 0,10 -4.330127,7.5 -4.330127,2.5 0,0 z" />-->
+									<RectangleGeometry Rect="0,0,25,25"/>
+								</GeometryDrawing.Geometry>
+								<GeometryDrawing.Pen>
+									<Pen Brush="Gray" Thickness="1"/>
+								</GeometryDrawing.Pen>
+							</GeometryDrawing>
+						</DrawingBrush.Drawing>
+					</DrawingBrush>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
 	</Window.Resources>
 
 	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="9*"/>
+			<ColumnDefinition Width="16*"/>
+		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
 
-		<Grid Margin="10">
+		<Grid Margin="0,10,10,10" Grid.ColumnSpan="2">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="auto"/>
 			</Grid.ColumnDefinitions>
 
-			<Canvas x:Name="canvas" MouseUp="Canvas_MouseUp" MouseMove="Canvas_MouseMove" Width="512" Height="512" HorizontalAlignment="Left" VerticalAlignment="Top" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseWheel="canvas_MouseWheel">
+			<Canvas x:Name="canvas" Style="{StaticResource hexGrid}" MouseUp="Canvas_MouseUp" MouseMove="Canvas_MouseMove" Width="950" Height="750" HorizontalAlignment="Left" VerticalAlignment="Top" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseWheel="canvas_MouseWheel">
 				<!--<Image Source="/JiME;component/Assets/TilesA/101.png" />-->
 				<!--<Path Style="{StaticResource hex}"/>
 				<Path Style="{StaticResource hex}">
@@ -159,7 +184,7 @@
 			</ScrollViewer>
 		</Grid>
 
-		<StackPanel Grid.Row="1">
+		<StackPanel Grid.ColumnSpan="2" Margin="0,700,0,0" Grid.RowSpan="2">
 			<!--footer-->
 			<Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Silver" HorizontalAlignment="Stretch" Background="#FF46464A">
 				<Grid>
@@ -168,10 +193,22 @@
 						<ColumnDefinition Width="auto"/>
 					</Grid.ColumnDefinitions>
 
-					<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,0,0,0">
-						<TextBlock Style="{StaticResource Heading}" Text="Add Up To 5 Tiles" Margin="0,0,0,0"/>
-						<TextBlock Style="{StaticResource Heading}" Text="Rotate: Page Up/Page Down" Margin="80,0"/>
-						<TextBlock Style="{StaticResource Heading}" Text="Remove Selected Tile: Del" />
+					<StackPanel Orientation="Vertical" VerticalAlignment="Center">
+						<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,0,0,0">
+							<TextBlock Style="{StaticResource Heading}" Text="Add Up To 5 Tiles" Margin="0,0,0,0"/>
+							<TextBlock Style="{StaticResource Heading}" Text="Rotate: Page Up/Page Down" Margin="80,0"/>
+							<TextBlock Style="{StaticResource Heading}" Text="Remove Selected Tile: Del" />
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,20,0,0">
+							<TextBlock Style="{StaticResource SubTextWhite}" VerticalAlignment="Bottom" Text="Tile ID: "/>
+							<TextBlock x:Name="infoTileID" Style="{StaticResource Heading}" VerticalAlignment="Bottom" Text="" FontFamily="/Assets/#LoTR JiME Icons"/>
+
+							<TextBlock Margin="40,0,0,0" Style="{StaticResource SubTextWhite}" VerticalAlignment="Bottom" Text="Tile Position: "/>
+							<TextBlock x:Name="infoTilePosition" Style="{StaticResource Heading}" VerticalAlignment="Bottom" Text=""/>
+
+							<TextBlock Margin="40,0,0,0" Style="{StaticResource SubTextWhite}" VerticalAlignment="Bottom" Text="Tile Rotation: "/>
+							<TextBlock x:Name="infoTileRotation" Style="{StaticResource Heading}" VerticalAlignment="Bottom" Text=""/>
+						</StackPanel>
 					</StackPanel>
 
 					<Button Grid.Column="1" x:Name="okButton" Margin="10" Background="MediumSeaGreen" Click="OkButton_Click" IsDefault="True">

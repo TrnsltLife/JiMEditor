@@ -14,26 +14,28 @@ namespace JiME
 	{
 		public Scenario scenario { get; set; }
 
-		public MainWindow( Guid campaignGUID ) : this( null )
+		public MainWindow(Guid campaignGUID) : this(null)
 		{
 			scenario.campaignGUID = campaignGUID;
 		}
 
-		public MainWindow( Scenario s = null )
+		public MainWindow(Scenario s = null)
 		{
-			InitializeComponent();
-
 			System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
 			System.Globalization.CultureInfo.DefaultThreadCurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
 			System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
 
-			//initialize utilities
+			//Initialize utilities
 			Utils.Init();
 
+			//Initialize scenario
 			scenario = s ?? new Scenario();
-			scenario.TriggerTitleChange( false );
+			scenario.TriggerTitleChange(false);
 			DataContext = scenario;
-			Debug.Log( scenario.scenarioGUID );
+			Debug.Log(scenario.scenarioGUID);
+
+			//We need to initialize the scenario before we initialize the component.
+			InitializeComponent();
 
 			appVersion.Text = Utils.appVersion;
 			formatVersion.Text = Utils.formatVersion;
@@ -481,7 +483,9 @@ namespace JiME
 
 		private void CommandNewChapter_CanExecute( object sender, System.Windows.Input.CanExecuteRoutedEventArgs e )
 		{
-			e.CanExecute = true;
+			//e.CanExecute = true;
+			//Only allow adding new tile blocks if we're on the journey map, no the battle map
+			e.CanExecute = scenario.scenarioTypeJourney;
 		}
 
 		//Interaction popup commands
@@ -643,15 +647,25 @@ namespace JiME
 
 		private void TileEditButton_Click( object sender, RoutedEventArgs e )
 		{
-			Chapter c = ( (Button)e.Source ).DataContext as Chapter;
-			if ( c.isRandomTiles )
+			Chapter c = ((Button)e.Source).DataContext as Chapter;
+			if (scenario.scenarioTypeJourney)
 			{
-				TilePoolEditorWindow tp = new TilePoolEditorWindow( scenario, c );
-				tp.ShowDialog();
+				if (c.isRandomTiles)
+				{
+					TilePoolEditorWindow tp = new TilePoolEditorWindow(scenario, c);
+					tp.ShowDialog();
+				}
+				else
+				{
+					TileEditorWindow tw = new TileEditorWindow(scenario, c);
+					tw.ShowDialog();
+				}
 			}
 			else
-			{
-				TileEditorWindow tw = new TileEditorWindow( scenario, c );
+            {
+				//BattleTileEditor bte = new BattleTileEditor(scenario, c);
+				//bte.ShowDialog();
+				TileEditorWindow tw = new TileEditorWindow(scenario, c);
 				tw.ShowDialog();
 			}
 		}
