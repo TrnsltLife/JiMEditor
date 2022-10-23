@@ -36,12 +36,28 @@ namespace JiME.UserControls
 		InteractionBase interaction;
 		Scenario scenario;
 
+		List<RadioButton> coreSetList;
+		List<RadioButton> shadowedPathsList;
+		List<RadioButton> spreadingWarList;
+		List<RadioButton> allTerrainList;
+
 		public TokenTypeSelector()
 		{
 			Debug.Log("TokenTypeSelector constructor");
 			InitializeComponent();
 			//DataContext = this;
+
+			//The order of the terrrain in these lists is important to maintain unchanged because the order tells the companion app which terrain to use.
+			//The order also corresponds to the order in the TerrainType enum.
+			coreSetList = new List<RadioButton>() { barrelsRadio, boulderRadio, bushRadio, firePitRadio, mistRadio, pitRadio, statueRadio, streamRadio, tableRadio, wallRadio };
+			shadowedPathsList = new List<RadioButton>() { elevationRadio, logRadio, rubbleRadio, webRadio };
+			spreadingWarList = new List<RadioButton>() { barricadeRadio, chestRadio, fenceRadio, fountainRadio, pondRadio, trenchRadio };
+			allTerrainList = new List<RadioButton>();
+			allTerrainList.AddRange(coreSetList);
+			allTerrainList.AddRange(shadowedPathsList);
+			allTerrainList.AddRange(spreadingWarList);
 		}
+
 
 		protected override void OnInitialized(EventArgs e)
         {
@@ -97,6 +113,43 @@ namespace JiME.UserControls
 			if (interaction == null || scenario == null) return;
 			Debug.Log("InitializeSelections interaction and scenario not null");
 
+			Dictionary<List<RadioButton>, Collection> checkboxCollectionMap = 
+				new Dictionary<List<RadioButton>, Collection>() {
+					{coreSetList, Collection.CORE_SET},
+					{shadowedPathsList, Collection.SHADOWED_PATHS},
+					{spreadingWarList, Collection.SPREADING_WAR},
+				};
+
+			//terrain type radio buttons
+			int index = 0;
+			foreach (var terrainRadio in allTerrainList)
+			{
+				//Console.WriteLine(index + " " + monsterRB.Content + " " + ((MonsterType)index).ToString());
+				terrainRadio.IsChecked = interaction.terrainType == (TerrainType)index;
+				index++;
+			}
+
+			//Enable/Disable Collections and their monsters based on the Collections enabled for this Scenario
+			foreach (KeyValuePair<List<RadioButton>, Collection> pair in checkboxCollectionMap)
+			{
+				if (scenario.IsCollectionEnabled(pair.Value))
+				{
+					foreach (var radio in pair.Key)
+					{
+						radio.IsEnabled = true;
+						radio.FontStyle = FontStyles.Normal;
+					}
+				}
+				else
+				{
+					foreach (var radio in pair.Key)
+					{
+						radio.IsChecked = false;
+						radio.IsEnabled = false;
+						radio.FontStyle = FontStyles.Italic;
+					}
+				}
+			}
 
 			bool isThreatTriggered = scenario.threatObserver.Any(x => x.triggerName == interaction.dataName);
 			if (isThreatTriggered)

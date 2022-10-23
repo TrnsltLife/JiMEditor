@@ -129,26 +129,31 @@ namespace JiME
 
 		static Brush[] terrainBrushes = {
 			Brushes.Black, //None
+			//Core Set
 			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Barrels.png"))),
-			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Barricade.png"))),
 			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Boulder.png"))),
 			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Bush.png"))),
-			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Chest.png"))),
-			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Elevation.png"))),
-			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Fence.png"))),
 			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/FirePit.png"))),
-			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Fountain.png"))),
-			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Log.png"))),
 			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Mist.png"))),
 			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Pit.png"))),
-			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Pond.png"))),
-			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Rubble.png"))),
 			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Statue.png"))),
 			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Stream.png"))),
 			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Table.png"))),
-			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Trench.png"))),
 			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Wall.png"))),
-			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Web.png")))
+
+			//Shadowed Paths
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Elevation.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Log.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Rubble.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Web.png"))),
+
+			//Spreading War
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Barricade.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Chest.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Fence.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Fountain.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Pond.png"))),
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Trench.png")))
 		};
 
 
