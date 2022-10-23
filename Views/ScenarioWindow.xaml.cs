@@ -126,6 +126,12 @@ namespace JiME.Views
 				campaignGUID.Text = scenario.campaignGUID.ToString();
 			}
 
+			//Always enable the CORE_SET and don't let it be removed.
+			if(!scenario.collectionObserver.Contains(Collection.CORE_SET))
+            {
+				scenario.collectionObserver.Add(Collection.CORE_SET);
+			}
+
 			//collections
 			foreach(var collection in scenario.collectionObserver)
             {
