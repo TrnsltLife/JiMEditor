@@ -26,7 +26,8 @@ namespace JiME
 			tileType = TileType.Square;
 			rotationAngle = 90;
 			idNumber = n;
-			tokenCount = ( n / 100 ) % 10;
+			//tokenCount = ( n / 100 ) % 10;
+			tokenCount = 33; //This is ridiculous but would cover all 12 outside walls, all 8 inside walls, 3 additional tokens per large space, and 1 for the center space
 			GUID = Guid.NewGuid();
 			tileSide = "A";
 			position = new Vector( Utils.sqrSnapX[5], Utils.sqrSnapY[5] );
