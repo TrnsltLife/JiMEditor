@@ -1,0 +1,123 @@
+﻿<UserControl x:Class="JiME.UserControls.TokenTypeSelector"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:JiME"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="600">
+
+	<UserControl.Resources>
+		<BooleanToVisibilityConverter x:Key="bvis"/>
+	</UserControl.Resources>
+
+	<StackPanel>
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="auto"/>
+			</Grid.ColumnDefinitions>
+
+			<CheckBox x:Name="isTokenCB" Content="This Event is a Token Interaction" Foreground="White" IsChecked="{Binding interaction.isTokenInteraction}" VerticalAlignment="Center" Click="isTokenCB_Click"/>
+
+			<StackPanel Grid.Column="1" Orientation="Horizontal" Name="persistentOption" Visibility="{Binding ElementName=isTokenCB, Path=IsChecked, Converter={StaticResource bvis}}" Margin="50,0,0,0">
+				<CheckBox x:Name="persCB" Content="This Event's Token is Persistent" Foreground="White" VerticalAlignment="Center" IsChecked="{Binding interaction.isPersistent}"/>
+				<Button x:Name="editPersText" Content="Edit Persistent Text" Foreground="White" Background="MediumSeaGreen" Margin="10,0,0,0" Click="editPersText_Click" IsEnabled="{Binding interaction.isPersistent}"/>
+			</StackPanel>
+
+			<Button Grid.Column="2" x:Name="tokenHelp" Background="#FFC98800" Click="tokenHelp_Click" Width="32" Height="32" Margin="10,0,0,0" HorizontalAlignment="Right">
+				<Image Source="/JiME;component/Assets/help.png" Stretch="Uniform"/>
+			</Button>
+
+			<!-- Special Instructions that appear only for certain interaction types -->
+			<TextBlock x:Name="threatMessage" Grid.Column="3" Width="455" FontWeight="Bold" Text="IMPORTANT: Threat Events that are NOT Token Interactions will be randomly placed on an existing, explored tile. If that fails, the Event is discarded." TextWrapping="Wrap" Style="{StaticResource SubText}" VerticalAlignment="Center" Margin="10,0,0,0" Visibility="Collapsed"/>
+			<TextBlock x:Name="persistentEventMessage" Grid.Column="3" Style="{StaticResource SubText}" Text="IMPORTANT: Persistent Events are required to be Token Interactions. Choose a Token Type below." VerticalAlignment="Center" Margin="10,0,0,0" TextWrapping="Wrap" Width="455" FontWeight="Bold" Visibility="Collapsed"/>
+		</Grid>
+
+		<StackPanel x:Name="tokenTypeBox" Orientation="Horizontal" Visibility="{Binding ElementName=isTokenCB, Path=IsChecked, Converter={StaticResource bvis}}">
+			<TextBlock Style="{StaticResource Heading}" Text="Token Type:" Margin="0,0,10,0"/>
+			<RadioButton x:Name="personRadio" Content="Person" Margin="0,0,20,0" Click="tokenTypeClick"/>
+			<RadioButton x:Name="searchRadio" Content="Search" Margin="0,0,20,0" Click="tokenTypeClick"/>
+			<RadioButton x:Name="threatRadio" Content="Threat" Margin="0,0,20,0" Click="tokenTypeClick"/>
+			<RadioButton x:Name="darkRadio" Content="Darkness" Margin="0,0,20,0" Click="tokenTypeClick"/>
+			<RadioButton x:Name="difficultGroundRadio" Content="Difficult Ground" Margin="0,0,20,0" Click="tokenTypeClick"/>
+			<RadioButton x:Name="fortifiedRadio" Content="Fortified" Margin="0,0,20,0" Click="tokenTypeClick"/>
+			<RadioButton x:Name="terrainRadio" Content="Terrain" Margin="0,0,20,0" Click="tokenTypeClick"/>
+		</StackPanel>
+		<StackPanel Orientation="Horizontal" Name="personType" Visibility="Collapsed">
+			<TextBlock Text="Person Type:" Style="{StaticResource Heading}" Margin="0,0,10,0"/>
+			<RadioButton x:Name="humanRadio" Content="Human" Margin="0,0,20,0"/>
+			<RadioButton x:Name="elfRadio" Content="Elf" Margin="0,0,20,0"/>
+			<RadioButton x:Name="hobbitRadio" Content="Hobbit" Margin="0,0,20,0"/>
+			<RadioButton x:Name="dwarfRadio" Content="Dwarf"/>
+		</StackPanel>
+		<StackPanel Orientation="Vertical" Name="terrainType" Visibility="Collapsed">
+			<TextBlock Text="Terrain Type:" Style="{StaticResource Heading}" Margin="0,0,10,0"/>
+
+			<Grid Margin="0,5,0,10">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="auto"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+
+				<!--Core Set-->
+				<Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Fill="DarkGreen" />
+				<TextBlock Grid.Row="0" Grid.Column="0" Text="r" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
+				<WrapPanel Grid.Row="0" Grid.Column="1">
+					<RadioButton GroupName="Terrain" x:Name="barrelsRadio" Content="Barrels" Margin="0,0,20,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="boulderRadio" Content="Boulder" Margin="0,0,20,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="bushRadio" Content="Bush" Margin="0,0,20,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="firePitRadio" Content="Fire Pit" Margin="0,0,20,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="mistRadio" Content="Mist" Margin="0,0,20,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="pitRadio" Content="Pit" Margin="0,0,20,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="statueRadio" Content="Statue" Margin="0,0,20,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="streamRadio" Content="Stream" Margin="0,0,20,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="tableRadio" Content="Table" Margin="0,0,20,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="wallRadio" Content="Wall" Margin="0,0,20,0" Foreground="White"/>
+				</WrapPanel>
+
+				<!-- Shadowed Paths -->
+				<Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Fill="Black" />
+				<TextBlock Grid.Row="1" Grid.Column="0" Text="p" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
+				<WrapPanel Grid.Row="1" Grid.Column="1">
+					<RadioButton GroupName="Terrain" x:Name="elevationRadio" Content="Elevation" Margin="0,0,20,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="logRadio" Content="Log" Margin="0,0,20,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="rubbleRadio" Content="Rubble" Margin="0,0,20,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="webRadio" Content="Web" Margin="0,0,20,0" Foreground="White"/>
+				</WrapPanel>
+
+				<!-- Spreading War -->
+				<Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Fill="DarkRed" />
+				<TextBlock Grid.Row="2" Grid.Column="0" Text="w" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
+				<WrapPanel Grid.Row="2" Grid.Column="1">
+					<RadioButton GroupName="Terrain" x:Name="barricadeRadio" Content="Barricade" Margin="0,0,20,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="chestRadio" Content="Chest" Margin="0,0,20,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="fenceRadio" Content="Fence" Margin="0,0,20,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="fountainRadio" Content="Fountain" Margin="0,0,20,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="pondRadio" Content="Pond" Margin="0,0,20,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="trenchRadio" Content="Trench" Margin="0,0,20,0" Foreground="White"/>
+				</WrapPanel>
+			</Grid>
+		</StackPanel>
+
+		<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Margin="0,5,0,0">
+						Token Interactions are triggered by players as they journey across the map. When a player clicks a Token, the Flavor Text below is shown. The player can decide to use an Action to Interact with the Token, after which the Event Text is shown, along with the Event itself.
+		</TextBlock>
+
+		<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Margin="0,5,0,0">
+							If this Token Interaction Event has already been assigned to a <Bold>Token</Bold> in the Tile Editor and you uncheck the Token Interaction setting above, that Token's <Italic>Token Interaction Trigger</Italic> will automatically be set to <Italic>None</Italic> because this Event will no longer be a Token Interaction.
+		</TextBlock>
+
+		<TextBlock x:Name="persistentMessage" Style="{StaticResource SubText}" TextWrapping="Wrap" Margin="0,5,0,0" Visibility="Collapsed">
+							If this Event is <Bold>Persistent</Bold>, its Token will stay on the board after being activated. After its first activation, the Persistent Text will be shown each time it's interacted with. <Bold>Leave the Persistent Text empty to re-use the Event Text, instead.</Bold> The <Bold>Set Trigger After...</Bold> setting below will fire normally, but only after the Event's first activation by players.
+		</TextBlock>
+	</StackPanel>
+	
+</UserControl>

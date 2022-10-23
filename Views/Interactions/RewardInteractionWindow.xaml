@@ -65,71 +65,17 @@
 						</UniformGrid>
 					</Border>
 
-					<!--{Binding interaction.isTokenInteraction}-->
 					<!--token interaction-->
 					<Border x:Name="isEventBox" Style="{StaticResource callout}" Margin="0,10,0,0">
 						<StackPanel>
-							<Grid>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="auto"/>
-									<ColumnDefinition Width="*"/>
-									<ColumnDefinition Width="auto"/>
-								</Grid.ColumnDefinitions>
+							<TextBlock Text="Token Interaction" Style="{StaticResource Heading}"/>
 
-								<CheckBox x:Name="isTokenCB" Content="This Event is a Token Interaction" Foreground="White" IsChecked="{Binding interaction.isTokenInteraction}" VerticalAlignment="Center" Click="isTokenCB_Click" IsEnabled="False"/>
-
-								<Button Grid.Column="2" x:Name="tokenHelp" Background="#FFC98800" Click="tokenHelp_Click" Width="32" Height="32" Margin="10,0,0,0" HorizontalAlignment="Right">
-									<Image Source="/JiME;component/Assets/help.png" Stretch="Uniform"/>
-								</Button>
-							</Grid>
-
-							<StackPanel x:Name="tokenTypeBox" Orientation="Horizontal" Visibility="{Binding ElementName=isTokenCB, Path=IsChecked, Converter={StaticResource bvis}}">
-								<TextBlock Style="{StaticResource Heading}" Text="Token Type:" Margin="0,0,10,0"/>
-								<RadioButton x:Name="personRadio" Content="Person" Margin="0,0,20,0" Click="tokenTypeClick"/>
-								<RadioButton x:Name="searchRadio" Content="Search" Margin="0,0,20,0" Click="tokenTypeClick"/>
-								<RadioButton x:Name="threatRadio" Content="Threat" Margin="0,0,20,0" Click="tokenTypeClick"/>
-								<RadioButton x:Name="darkRadio" Content="Darkness" Click="tokenTypeClick"/>
-								<RadioButton x:Name="difficultGroundRadio" Content="Difficult Ground" Margin="0,0,20,0" Click="tokenTypeClick"/>
-								<RadioButton x:Name="fortifiedRadio" Content="Fortified" Margin="0,0,20,0" Click="tokenTypeClick"/>
-								<RadioButton x:Name="terrainRadio" Content="Terrain" Margin="0,0,20,0" Click="tokenTypeClick"/>
-							</StackPanel>
-							<StackPanel Orientation="Horizontal" Name="personType" Visibility="Collapsed">
-								<TextBlock Text="Person Type:" Style="{StaticResource Heading}" Margin="0,0,10,0"/>
-								<RadioButton x:Name="humanRadio" Content="Human" Margin="0,0,20,0"/>
-								<RadioButton x:Name="elfRadio" Content="Elf" Margin="0,0,20,0"/>
-								<RadioButton x:Name="hobbitRadio" Content="Hobbit" Margin="0,0,20,0"/>
-								<RadioButton x:Name="dwarfRadio" Content="Dwarf"/>
-							</StackPanel>
-							<WrapPanel Orientation="Horizontal" Name="terrainType" Visibility="Collapsed">
-								<TextBlock Text="Terrain Type:" Style="{StaticResource Heading}" Margin="0,0,10,0"/>
-								<RadioButton x:Name="barrelsRadio" Content="Barrels" Margin="0,0,20,0"/>
-								<RadioButton x:Name="barricadeRadio" Content="Barricade" Margin="0,0,20,0"/>
-								<RadioButton x:Name="boulderRadio" Content="Boulder" Margin="0,0,20,0"/>
-								<RadioButton x:Name="bushRadio" Content="Bush" Margin="0,0,20,0"/>
-								<RadioButton x:Name="chestRadio" Content="Chest" Margin="0,0,20,0"/>
-								<RadioButton x:Name="elevationRadio" Content="Elevation" Margin="0,0,20,0"/>
-								<RadioButton x:Name="fenceRadio" Content="Fence" Margin="0,0,20,0"/>
-								<RadioButton x:Name="firePitRadio" Content="Fire Pit" Margin="0,0,20,0"/>
-								<RadioButton x:Name="fountainRadio" Content="Fountain" Margin="0,0,20,0"/>
-								<RadioButton x:Name="logRadio" Content="Log" Margin="0,0,20,0"/>
-								<RadioButton x:Name="mistRadio" Content="Mist" Margin="0,0,20,0"/>
-								<RadioButton x:Name="pitRadio" Content="Pit" Margin="0,0,20,0"/>
-								<RadioButton x:Name="pondRadio" Content="Pond" Margin="0,0,20,0"/>
-								<RadioButton x:Name="rubbleRadio" Content="Rubble" Margin="0,0,20,0"/>
-								<RadioButton x:Name="statueRadio" Content="Statue" Margin="0,0,20,0"/>
-								<RadioButton x:Name="streamRadio" Content="Stream" Margin="0,0,20,0"/>
-								<RadioButton x:Name="tableRadio" Content="Table" Margin="0,0,20,0"/>
-								<RadioButton x:Name="trenchRadio" Content="Trench" Margin="0,0,20,0"/>
-								<RadioButton x:Name="wallRadio" Content="Wall" Margin="0,0,20,0"/>
-								<RadioButton x:Name="webRadio" Content="Web" Margin="0,0,20,0"/>
-							</WrapPanel>
-
-							<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Margin="0,5,0,0">
-							This Event can't be assigned to a Token as a Token Interaction.
+							<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap">
+							Reward Events are activated by a Trigger and cannot be assigned to an explorable Token on a tile.
 							</TextBlock>
 						</StackPanel>
 					</Border>
-
+					
 					<!--triggers-->
 					<Border x:Name="triggerBox" Style="{StaticResource callout}" Margin="0,10,0,0">
 						<StackPanel>
@@ -137,8 +83,8 @@
 								<StackPanel HorizontalAlignment="Left">
 									<TextBlock Text="Triggered By (Optional):" Style="{StaticResource Heading}"/>
 									<StackPanel Orientation="Horizontal">
-										<ComboBox VerticalAlignment="Center" Name="triggeredByCB" Width="250" ItemsSource="{Binding scenario.triggersObserver}" DisplayMemberPath="dataName" SelectedValue="{Binding interaction.triggerName}" SelectedValuePath="dataName" Margin="0" HorizontalAlignment="Left" IsEnabled="{Binding ElementName=isTokenCB, Path=IsChecked, Converter={StaticResource binv}}"/>
-										<Button x:Name="addMainTriggerButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="addMainTriggerButton_Click" IsEnabled="{Binding ElementName=isTokenCB, Path=IsChecked, Converter={StaticResource binv}}">
+										<ComboBox VerticalAlignment="Center" Name="triggeredByCB" Width="250" ItemsSource="{Binding scenario.triggersObserver}" DisplayMemberPath="dataName" SelectedValue="{Binding interaction.triggerName}" SelectedValuePath="dataName" Margin="0" HorizontalAlignment="Left" IsEnabled="True"/>
+										<Button x:Name="addMainTriggerButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="addMainTriggerButton_Click" IsEnabled="True">
 											<Image Source="/JiME;component/Assets/add2.png"/>
 										</Button>
 									</StackPanel>

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JiME"
+		xmlns:uc="clr-namespace:JiME.UserControls"
         mc:Ignorable="d"
         ContentRendered="Window_ContentRendered"
         Title="Text Event Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" Width="750" Closing="Window_Closing">
@@ -66,81 +67,10 @@
 						</UniformGrid>
 					</Border>
 
-					<!--{Binding interaction.isTokenInteraction}-->
 					<!--token interaction-->
 					<Border x:Name="isEventBox" Style="{StaticResource callout}" Margin="0,10,0,0">
 						<StackPanel>
-							<Grid>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="auto"/>
-									<ColumnDefinition Width="*"/>
-									<ColumnDefinition Width="auto"/>
-								</Grid.ColumnDefinitions>
-
-								<CheckBox x:Name="isTokenCB" Content="This Event is a Token Interaction" Foreground="White" IsChecked="{Binding interaction.isTokenInteraction}" VerticalAlignment="Center" Click="isTokenCB_Click"/>
-
-								<StackPanel Grid.Column="1" Orientation="Horizontal" Name="persistentOption" Visibility="{Binding ElementName=isTokenCB, Path=IsChecked, Converter={StaticResource bvis}}" Margin="50,0,0,0">
-									<CheckBox x:Name="persCB" Content="This Event's Token is Persistent" Foreground="White" VerticalAlignment="Center" IsChecked="{Binding interaction.isPersistent}"/>
-									<Button x:Name="editPersText" Content="Edit Persistent Text" Foreground="White" Background="MediumSeaGreen" Margin="10,0,0,0" Click="editPersText_Click" IsEnabled="{Binding interaction.isPersistent}"/>
-								</StackPanel>
-
-								<Button Grid.Column="2" x:Name="tokenHelp" Background="#FFC98800" Click="tokenHelp_Click" Width="32" Height="32" Margin="10,0,0,0" HorizontalAlignment="Right">
-									<Image Source="/JiME;component/Assets/help.png" Stretch="Uniform"/>
-								</Button>
-							</Grid>
-
-							<StackPanel x:Name="tokenTypeBox" Orientation="Horizontal" Visibility="{Binding ElementName=isTokenCB, Path=IsChecked, Converter={StaticResource bvis}}">
-								<TextBlock Style="{StaticResource Heading}" Text="Token Type:" Margin="0,0,10,0"/>
-								<RadioButton x:Name="personRadio" Content="Person" Margin="0,0,20,0" Click="tokenTypeClick"/>
-								<RadioButton x:Name="searchRadio" Content="Search" Margin="0,0,20,0" Click="tokenTypeClick"/>
-								<RadioButton x:Name="threatRadio" Content="Threat" Margin="0,0,20,0" Click="tokenTypeClick"/>
-								<RadioButton x:Name="darkRadio" Content="Darkness" Margin="0,0,20,0" Click="tokenTypeClick"/>
-								<RadioButton x:Name="difficultGroundRadio" Content="Difficult Ground" Margin="0,0,20,0" Click="tokenTypeClick"/>
-								<RadioButton x:Name="fortifiedRadio" Content="Fortified" Margin="0,0,20,0" Click="tokenTypeClick"/>
-								<RadioButton x:Name="terrainRadio" Content="Terrain" Margin="0,0,20,0" Click="tokenTypeClick"/>
-							</StackPanel>
-							<StackPanel Orientation="Horizontal" Name="personType" Visibility="Collapsed">
-								<TextBlock Text="Person Type:" Style="{StaticResource Heading}" Margin="0,0,10,0"/>
-								<RadioButton x:Name="humanRadio" Content="Human" Margin="0,0,20,0"/>
-								<RadioButton x:Name="elfRadio" Content="Elf" Margin="0,0,20,0"/>
-								<RadioButton x:Name="hobbitRadio" Content="Hobbit" Margin="0,0,20,0"/>
-								<RadioButton x:Name="dwarfRadio" Content="Dwarf"/>
-							</StackPanel>
-							<WrapPanel Orientation="Horizontal" Name="terrainType" Visibility="Collapsed">
-								<TextBlock Text="Terrain Type:" Style="{StaticResource Heading}" Margin="0,0,10,0"/>
-								<RadioButton x:Name="barrelsRadio" Content="Barrels" Margin="0,0,20,0"/>
-								<RadioButton x:Name="barricadeRadio" Content="Barricade" Margin="0,0,20,0"/>
-								<RadioButton x:Name="boulderRadio" Content="Boulder" Margin="0,0,20,0"/>
-								<RadioButton x:Name="bushRadio" Content="Bush" Margin="0,0,20,0"/>
-								<RadioButton x:Name="chestRadio" Content="Chest" Margin="0,0,20,0"/>
-								<RadioButton x:Name="elevationRadio" Content="Elevation" Margin="0,0,20,0"/>
-								<RadioButton x:Name="fenceRadio" Content="Fence" Margin="0,0,20,0"/>
-								<RadioButton x:Name="firePitRadio" Content="Fire Pit" Margin="0,0,20,0"/>
-								<RadioButton x:Name="fountainRadio" Content="Fountain" Margin="0,0,20,0"/>
-								<RadioButton x:Name="logRadio" Content="Log" Margin="0,0,20,0"/>
-								<RadioButton x:Name="mistRadio" Content="Mist" Margin="0,0,20,0"/>
-								<RadioButton x:Name="pitRadio" Content="Pit" Margin="0,0,20,0"/>
-								<RadioButton x:Name="pondRadio" Content="Pond" Margin="0,0,20,0"/>
-								<RadioButton x:Name="rubbleRadio" Content="Rubble" Margin="0,0,20,0"/>
-								<RadioButton x:Name="statueRadio" Content="Statue" Margin="0,0,20,0"/>
-								<RadioButton x:Name="streamRadio" Content="Stream" Margin="0,0,20,0"/>
-								<RadioButton x:Name="tableRadio" Content="Table" Margin="0,0,20,0"/>
-								<RadioButton x:Name="trenchRadio" Content="Trench" Margin="0,0,20,0"/>
-								<RadioButton x:Name="wallRadio" Content="Wall" Margin="0,0,20,0"/>
-								<RadioButton x:Name="webRadio" Content="Web" Margin="0,0,20,0"/>
-							</WrapPanel>
-
-							<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Margin="0,5,0,0">
-							Token Interactions are triggered by players as they journey across the map. When a player clicks a Token, the Flavor Text below is shown. The player can decide to use an Action to Interact with the Token, after which the Event Text is shown, along with the Event itself.
-							</TextBlock>
-
-							<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Margin="0,5,0,0">
-								If this Token Interaction Event has already been assigned to a <Bold>Token</Bold> in the Tile Editor and you uncheck the Token Interaction setting above, that Token's <Italic>Token Interaction Trigger</Italic> will automatically be set to <Italic>None</Italic> because this Event will no longer be a Token Interaction.
-							</TextBlock>
-
-							<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Margin="0,5,0,0">
-								If this Event is <Bold>Persistent</Bold>, its Token will stay on the board after being activated. After its first activation, the Persistent Text will be shown each time it's interacted with. <Bold>Leave the Persistent Text empty to re-use the Event Text, instead.</Bold> The <Bold>Set Trigger After...</Bold> setting below will fire normally, but only after the Event's first activation by players.
-							</TextBlock>
+						<uc:TokenTypeSelector x:Name="tokenTypeSelector" Interaction="{Binding interaction}" Scenario="{Binding scenario}"/>
 						</StackPanel>
 					</Border>
 
@@ -151,8 +81,8 @@
 								<StackPanel HorizontalAlignment="Left">
 									<TextBlock Text="Triggered By (Optional):" Style="{StaticResource Heading}"/>
 									<StackPanel Orientation="Horizontal">
-										<ComboBox VerticalAlignment="Center" Name="triggeredByCB" Width="250" ItemsSource="{Binding scenario.triggersObserver}" DisplayMemberPath="dataName" SelectedValue="{Binding interaction.triggerName}" SelectedValuePath="dataName" Margin="0" HorizontalAlignment="Left" IsEnabled="{Binding ElementName=isTokenCB, Path=IsChecked, Converter={StaticResource binv}}"/>
-										<Button x:Name="addMainTriggerButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="addMainTriggerButton_Click" IsEnabled="{Binding ElementName=isTokenCB, Path=IsChecked, Converter={StaticResource binv}}">
+										<ComboBox VerticalAlignment="Center" Name="triggeredByCB" Width="250" ItemsSource="{Binding scenario.triggersObserver}" DisplayMemberPath="dataName" SelectedValue="{Binding interaction.triggerName}" SelectedValuePath="dataName" Margin="0" HorizontalAlignment="Left" IsEnabled="{Binding interaction.isTokenInteraction, Converter={StaticResource binv}}"/>
+										<Button x:Name="addMainTriggerButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="addMainTriggerButton_Click" IsEnabled="{Binding interaction.isTokenInteraction, Converter={StaticResource binv}}">
 											<Image Source="/JiME;component/Assets/add2.png"/>
 										</Button>
 									</StackPanel>
@@ -209,7 +139,7 @@
 					This text is shown when a player interacts with a Token. Use it to hint at the Event. Flavor Text is only shown if this Event is a Token Interaction.
 									</TextBlock>
 								</StackPanel>
-								<Button Grid.Column="1" x:Name="editFlavorButton" Background="CornflowerBlue" Margin="10,0,0,0" Click="EditFlavorButton_Click" Width="46" Height="46" IsEnabled="{Binding ElementName=isTokenCB,Path=IsChecked}">
+								<Button Grid.Column="1" x:Name="editFlavorButton" Background="CornflowerBlue" Margin="10,0,0,0" Click="EditFlavorButton_Click" Width="46" Height="46" IsEnabled="{Binding interaction.isTokenInteraction}">
 									<Image Source="/JiME;component/Assets/edit.png"/>
 								</Button>
 							</Grid>
