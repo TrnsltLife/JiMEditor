@@ -2,11 +2,10 @@
 
 namespace JiME
 {
-	public class DialogInteraction : InteractionBase, INotifyPropertyChanged, ICommonData
+	public class DialogInteraction : PersistentInteractionBase, INotifyPropertyChanged, ICommonData
 	{
 		//dialog
-		string _choice1, _choice2, _choice3, _c1Trigger, _c2Trigger, _c3Trigger, _c1Text, _c2Text, _c3Text, _persistentText;
-		bool _isPersistent;
+		string _choice1, _choice2, _choice3, _c1Trigger, _c2Trigger, _c3Trigger, _c1Text, _c2Text, _c3Text;
 
 		public string choice1
 		{
@@ -89,24 +88,6 @@ namespace JiME
 				NotifyPropertyChanged( "c3Text" );
 			}
 		}
-		public bool isPersistent
-		{
-			get => _isPersistent;
-			set
-			{
-				_isPersistent = value;
-				NotifyPropertyChanged( "isPersistent" );
-			}
-		}
-		public string persistentText
-		{
-			get => _persistentText;
-			set
-			{
-				_persistentText = value;
-				NotifyPropertyChanged( "persistentText" );
-			}
-		}
 
 		public DialogInteraction( string name ) : base( name )
 		{
@@ -115,9 +96,8 @@ namespace JiME
 			choice1 = "Choice 1";
 			choice2 = "Choice 2";
 			choice3 = "Choice 3";
-			c1Text = c2Text = c3Text = persistentText = "";
+			c1Text = c2Text = c3Text = "";
 			c1Trigger = c2Trigger = c3Trigger = "None";
-			isPersistent = false;
 		}
 
 		new public void RenameTrigger( string oldName, string newName )

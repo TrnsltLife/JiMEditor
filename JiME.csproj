@@ -92,6 +92,7 @@
     <Compile Include="Models\Campaign.cs" />
     <Compile Include="Models\Collection.cs" />
     <Compile Include="Models\BaseTile.cs" />
+    <Compile Include="Models\Interaction Events\PersistentInteractionBase.cs" />
     <Compile Include="Models\SquareTile.cs" />
     <Compile Include="Models\HexTile.cs" />
     <Compile Include="Models\Chapter.cs" />
@@ -118,6 +119,9 @@
     <Compile Include="Models\Threat.cs" />
     <Compile Include="Models\Token.cs" />
     <Compile Include="Models\Trigger.cs" />
+    <Compile Include="UserControls\TokenTypeSelector.xaml.cs">
+      <DependentUpon>TokenTypeSelector.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\RichTextBoxIconEditor.xaml.cs">
       <DependentUpon>RichTextBoxIconEditor.xaml</DependentUpon>
     </Compile>
@@ -227,6 +231,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UserControls\TokenTypeSelector.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UserControls\RichTextBoxIconEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
