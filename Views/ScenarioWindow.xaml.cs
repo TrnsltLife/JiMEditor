@@ -130,6 +130,7 @@ namespace JiME.Views
 			if(!scenario.collectionObserver.Contains(Collection.CORE_SET))
             {
 				scenario.collectionObserver.Add(Collection.CORE_SET);
+				scenario.RefilterGlobalTilePool();
 			}
 
 			//collections
