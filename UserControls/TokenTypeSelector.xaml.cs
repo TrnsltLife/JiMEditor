@@ -120,6 +120,21 @@ namespace JiME.UserControls
 					{spreadingWarList, Collection.SPREADING_WAR},
 				};
 
+			//special tokens
+			foreach(var c in scenario.collectionObserver)
+            {
+				if(c.DifficultGround)
+                {
+					difficultGroundRadio.IsEnabled = true;
+					difficultGroundRadio.FontStyle = FontStyles.Normal;
+				}
+				if(c.Fortified)
+                {
+					fortifiedRadio.IsEnabled = true;
+					fortifiedRadio.FontStyle = FontStyles.Normal;
+				}
+			}
+
 			//terrain type radio buttons
 			int index = 0;
 			foreach (var terrainRadio in allTerrainList)

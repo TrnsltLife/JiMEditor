@@ -42,8 +42,8 @@
 			<RadioButton x:Name="searchRadio" Content="Search" Margin="0,0,20,0" Click="tokenTypeClick"/>
 			<RadioButton x:Name="threatRadio" Content="Threat" Margin="0,0,20,0" Click="tokenTypeClick"/>
 			<RadioButton x:Name="darkRadio" Content="Darkness" Margin="0,0,20,0" Click="tokenTypeClick"/>
-			<RadioButton x:Name="difficultGroundRadio" Content="Difficult Ground" Margin="0,0,20,0" Click="tokenTypeClick"/>
-			<RadioButton x:Name="fortifiedRadio" Content="Fortified" Margin="0,0,20,0" Click="tokenTypeClick"/>
+			<RadioButton x:Name="difficultGroundRadio" Content="Difficult Ground" Margin="0,0,20,0" Click="tokenTypeClick" IsEnabled="False" FontStyle="Italic"/>
+			<RadioButton x:Name="fortifiedRadio" Content="Fortified" Margin="0,0,20,0" Click="tokenTypeClick" IsEnabled="False" FontStyle="Italic"/>
 			<RadioButton x:Name="terrainRadio" Content="Terrain" Margin="0,0,20,0" Click="tokenTypeClick"/>
 		</StackPanel>
 		<StackPanel Orientation="Horizontal" Name="personType" Visibility="Collapsed">
@@ -71,16 +71,16 @@
 				<Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Fill="DarkGreen" />
 				<TextBlock Grid.Row="0" Grid.Column="0" Text="r" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
 				<WrapPanel Grid.Row="0" Grid.Column="1">
-					<RadioButton GroupName="Terrain" x:Name="barrelsRadio" Content="Barrels" Margin="0,0,20,0" Foreground="White"/>
-					<RadioButton GroupName="Terrain" x:Name="boulderRadio" Content="Boulder" Margin="0,0,20,0" Foreground="White"/>
-					<RadioButton GroupName="Terrain" x:Name="bushRadio" Content="Bush" Margin="0,0,20,0" Foreground="White"/>
-					<RadioButton GroupName="Terrain" x:Name="firePitRadio" Content="Fire Pit" Margin="0,0,20,0" Foreground="White"/>
-					<RadioButton GroupName="Terrain" x:Name="mistRadio" Content="Mist" Margin="0,0,20,0" Foreground="White"/>
-					<RadioButton GroupName="Terrain" x:Name="pitRadio" Content="Pit" Margin="0,0,20,0" Foreground="White"/>
-					<RadioButton GroupName="Terrain" x:Name="statueRadio" Content="Statue" Margin="0,0,20,0" Foreground="White"/>
-					<RadioButton GroupName="Terrain" x:Name="streamRadio" Content="Stream" Margin="0,0,20,0" Foreground="White"/>
-					<RadioButton GroupName="Terrain" x:Name="tableRadio" Content="Table" Margin="0,0,20,0" Foreground="White"/>
-					<RadioButton GroupName="Terrain" x:Name="wallRadio" Content="Wall" Margin="0,0,20,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="barrelsRadio" Content="Barrels" Margin="0,0,18,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="boulderRadio" Content="Boulder" Margin="0,0,18,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="bushRadio" Content="Bush" Margin="0,0,18,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="firePitRadio" Content="Fire Pit" Margin="0,0,18,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="mistRadio" Content="Mist" Margin="0,0,18,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="pitRadio" Content="Pit" Margin="0,0,18,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="statueRadio" Content="Statue" Margin="0,0,18,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="streamRadio" Content="Stream" Margin="0,0,18,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="tableRadio" Content="Table" Margin="0,0,18,0" Foreground="White"/>
+					<RadioButton GroupName="Terrain" x:Name="wallRadio" Content="Wall" Margin="0,0,18,0" Foreground="White"/>
 				</WrapPanel>
 
 				<!-- Shadowed Paths -->
