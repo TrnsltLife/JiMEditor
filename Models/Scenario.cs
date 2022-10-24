@@ -397,15 +397,6 @@ namespace JiME
 			AddTrigger( "Objective Complete" );
 			//AddInteraction( Interaction.EmptyInteraction() );
 
-			//Add the default terrain interactions
-			if (interactionObserver.Count <= 1)
-			{
-				foreach(InteractionBase terrainInteraction in Utils.defaultTerrainInteractions)
-                {
-					interactionObserver.Add(terrainInteraction);
-                }
-			}
-
 			//default objective - always at least 1 in the scenario
 			Objective obj = new Objective( "Default Objective" ) { triggerName = "Objective Complete" };
 			objectiveObserver.Add( obj );
@@ -427,6 +418,30 @@ namespace JiME
 			wallTypes = new int[22];
 			for ( int i = 0; i < 22; i++ )
 				wallTypes[i] = 0;//0=none, 1=wall, 2=river
+		}
+
+		public void AddDefaultTerrainInteractions()
+        {
+			//Add the default terrain interactions
+			foreach (InteractionBase terrainInteraction in Utils.defaultTerrainInteractions)
+			{
+				if (!interactionObserver.Contains(terrainInteraction))
+				{
+					interactionObserver.Add(terrainInteraction);
+				}
+			}
+		}
+
+		public void RemoveDefaultTerrainInteractions()
+		{
+			//Remove the default terrain interactions
+			foreach (InteractionBase terrainInteraction in Utils.defaultTerrainInteractions)
+			{
+				if (interactionObserver.Contains(terrainInteraction))
+				{
+					interactionObserver.Remove(terrainInteraction);
+				}
+			}
 		}
 
 		public Boolean IsCollectionEnabled(Collection collection)
@@ -523,9 +538,9 @@ namespace JiME
 			}
 
 			//sort by name
-			//List<IInteraction> sorted = interactionObserver.OrderBy( key => key.dataName != "None" ).ThenBy( key => key.dataName ).ToList();
-			//for ( int i = 0; i < sorted.Count; i++ )
-			//	interactionObserver[i] = sorted[i];
+			List<IInteraction> sorted = interactionObserver.OrderBy( key => key.dataName != "None" ).ThenBy( key => key.dataName ).ToList();
+			for ( int i = 0; i < sorted.Count; i++ )
+				interactionObserver[i] = sorted[i];
 		}
 
 		public bool AddTrigger( string name, bool isMulti = false )

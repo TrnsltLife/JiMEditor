@@ -358,17 +358,23 @@ namespace JiME.Views
 		{
 			if ( scenario.scenarioTypeJourney != currentType )
 			{
-				var ret = MessageBox.Show( "Are you sure you want to change the Scenario Type?\n\nALL CHAPTER AND TILE DATA WILL BE RESET IF YOU SWITCH THE SCENARIO TYPE.\n\nObjectives, Events and Triggers will remain unchanged.", "Change Scenario Type", MessageBoxButton.YesNo, MessageBoxImage.Question );
+				string defaultTerrainEventsMessage = scenario.scenarioTypeJourney ? "The default Terrain: events will be removed since they are not needed for a Journey map."
+																				  : "New default Terrain: events will be added since they can be useful for a Battle map.";
+				var ret = MessageBox.Show( "Are you sure you want to change the Scenario Type?\n\nALL CHAPTER AND TILE DATA WILL BE RESET IF YOU SWITCH THE SCENARIO TYPE.\n\nYour custom Objectives, Events and Triggers will remain unchanged.\n\n" + defaultTerrainEventsMessage, "Change Scenario Type", MessageBoxButton.YesNo, MessageBoxImage.Question );
 				if ( ret == MessageBoxResult.Yes )
 				{
 					currentType = scenario.scenarioTypeJourney;
 					scenario.WipeChapters();
-					if ( scenario.scenarioTypeJourney )
+					if (scenario.scenarioTypeJourney)
+					{
 						scenario.chapterObserver[0].ToJourneyTile();
+						scenario.RemoveDefaultTerrainInteractions();
+					}
 					else
 					{
 						//scenario.chapterObserver[0].ToBattleTile();
 						scenario.chapterObserver[0].ToSquareTile();
+						scenario.AddDefaultTerrainInteractions();
 					}
 					scenario.RefilterGlobalTilePool();
 				}
