@@ -376,6 +376,19 @@ namespace JiME
 			}
 		}
 
+		virtual public void Move(double x, double y)
+        {
+			position = new Vector(position.X + x, position.Y + y);
+
+			if ((position.X + tokenPathShape.Width / 2) < 0 || (position.Y + tokenPathShape.Height / 2) < 0 ||
+				(position.X - tokenPathShape.Width / 2) > 512 || (position.Y - tokenPathShape.Height / 2) > 512)
+			{
+				position = lastPos;
+			}
+			lastPos = position;
+			Update();
+		}
+
 		void Prop( string name )
 		{
 			PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( name ) );

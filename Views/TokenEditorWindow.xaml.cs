@@ -170,9 +170,9 @@ namespace JiME.Views
 			if (selected != null)
 			{
 				if (e.Delta > 0)
-					selected.Rotate(1, canvas);
-				else if (e.Delta < 0)
 					selected.Rotate(-1, canvas);
+				else if (e.Delta < 0)
+					selected.Rotate(1, canvas);
 			}
 		}
 
@@ -272,15 +272,27 @@ namespace JiME.Views
 		{
 			if ( selected != null )
 			{
-				if ( e.Key == Key.Delete )
+				if (e.Key == Key.PageUp)
+					selected.Rotate(-1, canvas);
+				else if (e.Key == Key.PageDown)
+					selected.Rotate(1, canvas);
+				else if (e.Key == Key.Delete)
 				{
 					var s = tokenCombo.SelectedItem as Token;
-					if ( s != null )
-						tile.tokenList.Remove( s );
+					if (s != null)
+						tile.tokenList.Remove(s);
 					UpdateButtonsEnabled();
-					canvas.Children.Remove( s.tokenPathShape );
+					canvas.Children.Remove(s.tokenPathShape);
 					selected = null;
 				}
+				else if (e.Key == Key.Up)
+					selected.Move(0, -1);
+				else if (e.Key == Key.Down)
+					selected.Move(0, 1);
+				else if (e.Key == Key.Left)
+					selected.Move(-1, 0);
+				else if (e.Key == Key.Right)
+					selected.Move(1, 0);
 			}
 		}
 	}

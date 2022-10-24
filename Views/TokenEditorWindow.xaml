@@ -175,7 +175,9 @@
 				<StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
 					<!--<TextBlock Style="{StaticResource Heading}" Text="Add Up To 5 Tiles" Margin="0,0,100,0"/>
 					<TextBlock Style="{StaticResource Heading}" Text="Rotate: Page Up/Page Down" Margin="20"/>-->
-					<TextBlock Margin="10" Style="{StaticResource Heading}" Text="Remove Selected Token: Del" />
+					<TextBlock Style="{StaticResource Heading}" Text="Remove Token: Delete" Margin="10,0,40,0"/>
+					<TextBlock Style="{StaticResource Heading}" Text="Rotate: Pg Up/Pg Dn/Scroll Wheel" Margin="0,0,40,0"/>
+					<TextBlock Style="{StaticResource Heading}" Text="Nudge: Up/Down/Left/Right Arrows" Margin="0,0,40,0"/>
 				</StackPanel>
 
 				<Button Grid.Column="1" x:Name="okButton" Margin="10" Background="MediumSeaGreen" Click="OkButton_Click" IsDefault="True">

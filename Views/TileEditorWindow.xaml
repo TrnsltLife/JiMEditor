@@ -195,11 +195,12 @@
 
 					<StackPanel Orientation="Vertical" VerticalAlignment="Center">
 						<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,0,0,0">
-							<TextBlock Style="{StaticResource Heading}" Text="Add Up To 5 Tiles" Margin="0,0,0,0"/>
-							<TextBlock Style="{StaticResource Heading}" Text="Rotate: Page Up/Page Down" Margin="80,0"/>
-							<TextBlock Style="{StaticResource Heading}" Text="Remove Selected Tile: Del" />
+							<TextBlock Style="{StaticResource Heading}" Text="Add Up To 5 Tiles" Margin="0,0,40,0"/>
+							<TextBlock Style="{StaticResource Heading}" Text="Rotate: Page Up/Page Down/Scroll Wheel" Margin="40,0"/>
+							<TextBlock Style="{StaticResource Heading}" Text="Remove Selected Tile: Del"  Margin="40,0"/>
+							<TextBlock Style="{StaticResource Heading}" Text="Edit Tokens: Double-Click Tile" />
 						</StackPanel>
-						<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,20,0,0">
+						<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,20,0,0" Visibility="Collapsed">
 							<TextBlock Style="{StaticResource SubTextWhite}" VerticalAlignment="Bottom" Text="Tile ID: "/>
 							<TextBlock x:Name="infoTileID" Style="{StaticResource Heading}" VerticalAlignment="Bottom" Text="" FontFamily="/Assets/#LoTR JiME Icons"/>
 

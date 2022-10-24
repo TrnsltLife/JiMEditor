@@ -133,9 +133,9 @@ namespace JiME.Views
 			if ( selected != null )
 			{
 				if ( e.Key == Key.PageUp )
-					selected.Rotate( 1, canvas );
+					selected.Rotate(-1, canvas );
 				else if ( e.Key == Key.PageDown )
-					selected.Rotate( -1, canvas );
+					selected.Rotate(1, canvas );
 				else if ( e.Key == Key.Delete )
 				{
 					RemoveTile(selected, true);
@@ -326,9 +326,9 @@ namespace JiME.Views
 			if ( selected != null )
             {
 				if (e.Delta > 0)
-					selected.Rotate(1, canvas);
-				else if (e.Delta < 0)
 					selected.Rotate(-1, canvas);
+				else if (e.Delta < 0)
+					selected.Rotate(1, canvas);
             }
         }
 
