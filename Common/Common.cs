@@ -65,6 +65,7 @@ namespace JiME
 		string triggerName { get; set; }
 	}
 
+
 	public interface IInteraction
 	{
 		string dataName { get; set; }
@@ -233,6 +234,12 @@ namespace JiME
 		public string effect { get; set; }
     }
 
+	public class DefaultTerrainInteractions
+    {
+		[JsonConverter(typeof(InteractionConverter))]
+		public List<IInteraction> interactions { get; set; }
+	}
+
 	public static class Utils
 	{
 		/// <summary>
@@ -256,6 +263,7 @@ namespace JiME
 		public static ImageSource[] tileSourceA, tileSourceB;
 		public static DefaultStats[] defaultStats;
 		public static DefaultActivations[] defaultActivations;
+		public static IInteraction[] defaultTerrainInteractions;
 
 		public static void Init()
 		{
@@ -320,6 +328,9 @@ namespace JiME
 
 			//load default enemy activation stats
 			defaultActivations = LoadDefaultActivations().ToArray();
+
+			//load default terrain interactions
+			defaultTerrainInteractions = LoadDefaultTerrainInteractions().ToArray();
 		}
 
 		public static float RemapValue( float value, float low1, float high1, float low2, float high2 )
@@ -399,6 +410,25 @@ namespace JiME
 				JToken token = list.SelectToken("activations");
 				List<DefaultActivations> ret = token.ToObject(typeof(List<DefaultActivations>)) as List<DefaultActivations>;
 				Console.WriteLine("Default Activations Loaded:");
+				return ret;
+			}
+		}
+
+		static List<IInteraction> LoadDefaultTerrainInteractions()
+        {
+			var assembly = Assembly.GetExecutingAssembly();
+			string resourceName = assembly.GetManifestResourceNames()
+				.Single(str => str.Contains(".terrain-interactions.json"));
+
+			using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+			using (StreamReader reader = new StreamReader(stream))
+			{
+				string json = reader.ReadToEnd();
+				var list = JObject.Parse(json);
+				JToken token = list.SelectToken("interactions");
+				var defTerInt = list.ToObject(typeof(DefaultTerrainInteractions)) as DefaultTerrainInteractions;
+				List<IInteraction> ret = defTerInt.interactions.ToList<IInteraction>();
+				Console.WriteLine("Default Terrain Interactions Loaded:");
 				return ret;
 			}
 		}

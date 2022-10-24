@@ -388,6 +388,7 @@
     </Resource>
     <EmbeddedResource Include="Assets\enemy-activation-defaults.json" />
     <EmbeddedResource Include="Assets\enemy-activation-defaults-original.json" />
+    <EmbeddedResource Include="Assets\terrain-interactions.json" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

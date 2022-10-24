@@ -397,6 +397,15 @@ namespace JiME
 			AddTrigger( "Objective Complete" );
 			//AddInteraction( Interaction.EmptyInteraction() );
 
+			//Add the default terrain interactions
+			if (interactionObserver.Count <= 1)
+			{
+				foreach(InteractionBase terrainInteraction in Utils.defaultTerrainInteractions)
+                {
+					interactionObserver.Add(terrainInteraction);
+                }
+			}
+
 			//default objective - always at least 1 in the scenario
 			Objective obj = new Objective( "Default Objective" ) { triggerName = "Objective Complete" };
 			objectiveObserver.Add( obj );
