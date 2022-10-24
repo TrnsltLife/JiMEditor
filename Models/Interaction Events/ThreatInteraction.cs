@@ -57,7 +57,8 @@ namespace JiME
 
 			triggerDefeatedName = "None";
 			includedEnemies = new bool[Collection.MONSTERS().Length].Fill( false );
-			for (int i = 0; i < 7; i++) { includedEnemies[i] = true; }
+			//include the enemies from the Core Set by default - commented out
+			//for (int i = 0; i < 7; i++) { includedEnemies[i] = true; }
 			basePoolPoints = 10;
 			difficultyBias = DifficultyBias.Medium;
 
