@@ -134,6 +134,7 @@
 					</Border>
 
 					<!--color key-->
+					<!--
 					<Border Style="{StaticResource callout}" Background="{StaticResource bgColor}" Margin="0,10,0,0">
 						<StackPanel>
 							<TextBlock Text="Color Key" Style="{StaticResource Heading}" HorizontalAlignment="Center"/>
@@ -158,6 +159,7 @@
 							</UniformGrid>
 						</StackPanel>
 					</Border>
+					-->
 				</StackPanel>
 			</Border>
 		</Grid>
