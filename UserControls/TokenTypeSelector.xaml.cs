@@ -62,8 +62,6 @@ namespace JiME.UserControls
 		protected override void OnInitialized(EventArgs e)
         {
 			base.OnInitialized(e);
-			Debug.Log("TokenTypeSelector OnInitalized");
-			Debug.Log("interaction: " + interaction + " scenario: " + scenario);
 			InitializeSelections();
 		}
 
@@ -181,7 +179,18 @@ namespace JiME.UserControls
 				isTokenCB.IsEnabled = false;
 			}
 			if (interaction is PersistentInteractionBase)
+			{
 				persistentMessage.Visibility = Visibility.Visible;
+			}
+			if(interaction is TextInteraction)
+            {
+				skipInteractionCB.Visibility = Visibility.Visible;
+				if ((bool)persCB.IsChecked)
+				{
+					skipInteractionCB.IsEnabled = true;
+					skipInteractionCB.FontStyle = FontStyles.Normal;
+				}
+			}
 
 			//PersonType and TerrainType Visibility
 			if (interaction.isTokenInteraction && interaction.tokenType == TokenType.Person)
@@ -244,10 +253,11 @@ namespace JiME.UserControls
 				personType.Visibility = Visibility.Collapsed;
 				terrainType.Visibility = Visibility.Collapsed;
 			}
+			UpdateHasActivated();
 		}
 
 		public void AssignValuesFromSelections()
-        {
+		{
 			//TokenType
 			if (searchRadio.IsChecked.HasValue && searchRadio.IsChecked.Value)
 				interaction.tokenType = TokenType.Search;
@@ -315,6 +325,34 @@ namespace JiME.UserControls
 				interaction.terrainType = TerrainType.Wall;
 			if (webRadio.IsChecked.HasValue && webRadio.IsChecked.Value)
 				interaction.terrainType = TerrainType.Web;
+
+			//Only allow isPersistent and hasActivated values to be set if they are visible and checked; otherwise set them to false
+			if (interaction is PersistentInteractionBase)
+			{
+				if ((bool)isTokenCB.IsChecked)
+				{
+					((PersistentInteractionBase)interaction).isPersistent = (bool)persCB.IsChecked;
+					if (interaction is TextInteraction)
+					{
+						if ((bool)persCB.IsChecked)
+						{
+							((TextInteraction)interaction).hasActivated = (bool)skipInteractionCB.IsChecked;
+						}
+						else
+						{
+							((TextInteraction)interaction).hasActivated = false;
+						}
+					}
+				}
+				else
+				{
+					((PersistentInteractionBase)interaction).isPersistent = false;
+					if (interaction is TextInteraction)
+					{
+						((TextInteraction)interaction).hasActivated = false;
+					}
+				}
+			}
 		}
 
 		private void tokenTypeClick(object sender, RoutedEventArgs e)
@@ -336,6 +374,37 @@ namespace JiME.UserControls
 			else
 			{
 				terrainType.Visibility = Visibility.Collapsed;
+			}
+		}
+
+		private void persCB_Click(object sender, RoutedEventArgs e)
+		{
+			UpdateHasActivated();
+		}
+
+		private void UpdateHasActivated()
+        {
+			if (interaction is TextInteraction)
+			{
+				if ((bool)isTokenCB.IsChecked && (bool)persCB.IsChecked)
+				{
+					skipInteractionCB.FontStyle = FontStyles.Normal;
+					skipInteractionCB.IsEnabled = true;
+				}
+				else
+				{
+					skipInteractionCB.FontStyle = FontStyles.Italic;
+					skipInteractionCB.IsEnabled = false;
+				}
+
+				if((bool)isTokenCB.IsChecked)
+                {
+					skipInteractionCB.Visibility = Visibility.Visible;
+                }
+                else
+                {
+					skipInteractionCB.Visibility = Visibility.Collapsed;
+				}
 			}
 		}
 

@@ -20,14 +20,24 @@
 				<ColumnDefinition Width="auto"/>
 			</Grid.ColumnDefinitions>
 
-			<CheckBox x:Name="isTokenCB" Content="This Event is a Token Interaction" Foreground="White" IsChecked="{Binding interaction.isTokenInteraction}" VerticalAlignment="Center" Click="isTokenCB_Click"/>
+			<CheckBox x:Name="isTokenCB" Content="This Event is a Token Interaction" Foreground="White" IsChecked="{Binding interaction.isTokenInteraction}" VerticalAlignment="Top" Click="isTokenCB_Click"/>
 
-			<StackPanel Grid.Column="1" Orientation="Horizontal" Name="persistentOption" Visibility="{Binding ElementName=isTokenCB, Path=IsChecked, Converter={StaticResource bvis}}" Margin="50,0,0,0">
-				<CheckBox x:Name="persCB" Content="This Event's Token is Persistent" Foreground="White" VerticalAlignment="Center" IsChecked="{Binding interaction.isPersistent}"/>
-				<Button x:Name="editPersText" Content="Edit Persistent Text" Foreground="White" Background="MediumSeaGreen" Margin="10,0,0,0" Click="editPersText_Click" IsEnabled="{Binding interaction.isPersistent}"/>
+			<StackPanel Grid.Column="1" Orientation="Vertical">
+				<StackPanel Orientation="Horizontal" Name="persistentOption" Visibility="{Binding ElementName=isTokenCB, Path=IsChecked, Converter={StaticResource bvis}}" Margin="50,0,0,0">
+					<CheckBox x:Name="persCB" Content="This Event's Token is Persistent" Foreground="White" VerticalAlignment="Center" IsChecked="{Binding interaction.isPersistent}" Click="persCB_Click"/>
+					<Button x:Name="editPersText" Content="Edit Persistent Text" Foreground="White" Background="MediumSeaGreen" Margin="10,0,0,0" Click="editPersText_Click" IsEnabled="{Binding interaction.isPersistent}"/>
+				</StackPanel>
+				<CheckBox x:Name="skipInteractionCB" Foreground="White" VerticalAlignment="Center" IsChecked="{Binding interaction.hasActivated}" FontStyle="Italic" Margin="50,0,0,0" Visibility="Collapsed" IsEnabled="{Binding ElementName=persCB, Path=IsChecked}">
+					<WrapPanel>
+					<TextBlock>Skip the </TextBlock>
+					<TextBlock FontFamily="/Assets/#LoTR JiME Icons" Text=" I " Foreground="White" VerticalAlignment="Center"/>
+					<TextBlock>Interaction button and the Flavor Text and Event Text.</TextBlock>
+					<TextBlock Text="Just show the Persistent Text + Continue button when the token is clicked." Foreground="White" VerticalAlignment="Center" TextWrapping="WrapWithOverflow"/>
+					</WrapPanel>
+				</CheckBox>
 			</StackPanel>
 
-			<Button Grid.Column="2" x:Name="tokenHelp" Background="#FFC98800" Click="tokenHelp_Click" Width="32" Height="32" Margin="10,0,0,0" HorizontalAlignment="Right">
+			<Button Grid.Column="2" x:Name="tokenHelp" Background="#FFC98800" Click="tokenHelp_Click" Width="32" Height="32" Margin="10,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Top">
 				<Image Source="/JiME;component/Assets/help.png" Stretch="Uniform"/>
 			</Button>
 

@@ -6,6 +6,7 @@ namespace JiME
 	{
 		bool _isPersistent;
 		string _persistentText;
+		bool _hasActivated; //if true, the Interaction will never display the ->> Action button
 		public bool isPersistent
 		{
 			get => _isPersistent;
@@ -24,6 +25,15 @@ namespace JiME
 				NotifyPropertyChanged( "persistentText" );
 			}
 		}
+		public bool hasActivated
+		{
+			get => _hasActivated;
+			set
+			{
+				_hasActivated = value;
+				NotifyPropertyChanged("hasActivated");
+			}
+		}
 
 		public PersistentInteractionBase( string name ) : base( name )
 		{
@@ -31,6 +41,7 @@ namespace JiME
 
 			isPersistent = false;
 			persistentText = "";
+			hasActivated = false;
 		}
 	}
 }
