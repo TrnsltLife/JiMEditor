@@ -355,8 +355,8 @@ namespace JiME
 			//snapped.Y = ( from snapy in Utils.dragSnapY where clickPoint.Y.WithinTolerance( snapy, Utils.tolerance ) select snapy ).FirstOr( -1 );
 
 			position = clickPoint;
-			if (position.X < 0 || position.Y < 0 ||
-				(position.X + tokenPathShape.Width) > 512 || (position.Y + tokenPathShape.Height) > 512)
+			if ((position.X + tokenPathShape.Width/2) < 0 || (position.Y + tokenPathShape.Height/2) < 0 ||
+				(position.X - tokenPathShape.Width/2) > 512 || (position.Y - tokenPathShape.Height/2) > 512)
 			{
 				position = lastPos;
 			}
