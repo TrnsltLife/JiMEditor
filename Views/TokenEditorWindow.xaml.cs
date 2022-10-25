@@ -258,7 +258,7 @@ namespace JiME.Views
 				selected.tokenType = ( (IInteraction)( (ComboBox)sender )?.SelectedItem ).tokenType;
 				selected.personType = ( (IInteraction)( (ComboBox)sender )?.SelectedItem ).personType;
 				selected.terrainType = ((IInteraction)((ComboBox)sender)?.SelectedItem).terrainType;
-				selected.dataName = selected.tokenType.ToString();
+				//selected.dataName = selected.tokenType.ToString();
 				selected.Rehydrate(canvas);
 			}
 

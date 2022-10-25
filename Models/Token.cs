@@ -62,6 +62,7 @@ namespace JiME
 			{
 				_tokenType = value;
 				Prop( "tokenType" );
+				UpdateDataName();
 			}
 		}
 
@@ -72,6 +73,7 @@ namespace JiME
 			{
 				_personType = value;
 				Prop( "personType" );
+				UpdateDataName();
 			}
 		}
 
@@ -82,6 +84,7 @@ namespace JiME
 			{
 				_terrainType = value;
 				Prop("terrainType");
+				UpdateDataName();
 			}
 		}
 
@@ -100,6 +103,22 @@ namespace JiME
 				}
 			}
 		}
+
+		public void UpdateDataName()
+        {
+			if(tokenType == TokenType.Person)
+            {
+				dataName = tokenType.ToString() + ": " + personType.ToString();
+            }
+			else if(tokenType == TokenType.Terrain)
+            {
+				dataName = tokenType.ToString() + ": " + terrainType.ToString();
+            }
+			else
+            {
+				dataName = tokenType.ToString();
+            }
+        }
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -159,13 +178,15 @@ namespace JiME
 
 		public Token( TokenType ttype )
 		{
-			dataName = ttype.ToString();
-			GUID = Guid.NewGuid();
-			triggerName = "None";
-			triggeredByName = "None";
 			tokenType = ttype;
 			personType = PersonType.None;
 			terrainType = TerrainType.None;
+
+			UpdateDataName();
+
+			GUID = Guid.NewGuid();
+			triggerName = "None";
+			triggeredByName = "None";
 			position = new Vector( 256, 256 );
 
 			BuildShape();
