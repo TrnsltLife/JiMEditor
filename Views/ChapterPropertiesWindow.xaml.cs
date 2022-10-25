@@ -255,14 +255,14 @@ namespace JiME.Views
 
 			int fixedTokenCount = 0;
 			if ( chapter.tileObserver.Count > 0 )
-				fixedTokenCount = chapter.tileObserver.Select( x => (HexTile)x ).Select( x => x.tokenList.Count ).Aggregate( ( acc, cur ) => acc + cur );
+				fixedTokenCount = chapter.tileObserver.Select( x => (BaseTile)x ).Select( x => x.tokenList.Count ).Aggregate( ( acc, cur ) => acc + cur );
 
 			selectedInfoText.Text = $"There are {numinters} Events in the selected Group.";
 			fixedCountText.Text = $"There are {fixedTokenCount} fixed Tokens in this Block.";
 
 			int numspaces = chapter.tileObserver.Aggregate( 0, ( acc, cur ) =>
 			{
-				return acc + ( cur.idNumber / 100 ) % 10;
+				return acc + ((cur.idNumber == 998 || cur.idNumber == 999) ? 33 : ( cur.idNumber / 100 ) % 10);
 			} );
 			spaceInfoText2.Text = $"There are {numspaces} total spaces available on this Block's tiles to place Tokens.";
 
