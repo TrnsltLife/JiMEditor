@@ -29,13 +29,13 @@ namespace JiME.Views
 			}
 		}
 
-		public RewardInteractionWindow( Scenario s, RewardInteraction inter = null )
+		public RewardInteractionWindow( Scenario s, RewardInteraction inter = null, bool showCancelButton = false )
 		{
 			InitializeComponent();
 			DataContext = this;
 
 			scenario = s;
-			cancelButton.Visibility = inter == null ? Visibility.Visible : Visibility.Collapsed;
+			cancelButton.Visibility = (inter == null || showCancelButton) ? Visibility.Visible : Visibility.Collapsed;
 			interaction = inter ?? new RewardInteraction( "New Reward Event" );
 
 			isThreatTriggered = scenario.threatObserver.Any( x => x.triggerName == interaction.dataName );

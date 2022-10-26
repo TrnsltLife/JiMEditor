@@ -65,6 +65,23 @@ namespace JiME
 			monsterCollection = new ObservableCollection<Monster>();
 		}
 
+		public ThreatInteraction Clone()
+		{
+			ThreatInteraction interact = new ThreatInteraction("");
+			base.CloneInto(interact);
+			interact.triggerDefeatedName = this.triggerDefeatedName;
+			interact.includedEnemies = (bool[])this.includedEnemies.Clone();
+			interact.basePoolPoints = this.basePoolPoints;
+			interact.difficultyBias = this.difficultyBias;
+			interact.triggerDefeatedName = this.triggerDefeatedName;
+			interact.monsterCollection = new ObservableCollection<Monster>();
+			foreach(var monster in this.monsterCollection)
+            {
+				interact.monsterCollection.Add(monster.Clone());
+            }
+			return interact;
+		}
+
 		new public void RenameTrigger( string oldName, string newName )
 		{
 			base.RenameTrigger( oldName, newName );

@@ -481,6 +481,47 @@ namespace JiME
 			}
 		}
 
+		public Monster Clone()
+		{
+			Monster m = new Monster();
+			m.dataName = this.dataName;
+			m.GUID = Guid.NewGuid();
+			m.bonuses = this.bonuses;
+			m.id = this.id;
+			m.activationsId = this.activationsId;
+			m.count = this.count;
+			m.health = this.health;
+			m.shieldValue = this.shieldValue;
+			m.sorceryValue = this.sorceryValue;
+			m.moveA = this.moveA;
+			m.moveB = this.moveB;
+			m.groupLimit = this.groupLimit;
+			m.figureLimit = this.figureLimit;
+			m.damage = this.damage;
+			m.loreReward = this.loreReward;
+			m.movementValue = this.movementValue;
+			m.maxMovementValue = this.maxMovementValue;
+			m.isRanged = this.isRanged;
+			m.isFearsome = this.isFearsome;
+			m.isLarge = this.isLarge;
+			m.isBloodThirsty = this.isBloodThirsty;
+			m.isArmored = this.isArmored;
+			m.isElite = this.isElite;
+			m.defaultStats = this.defaultStats;
+			m.isEasy = this.isEasy;
+			m.isNormal = this.isNormal;
+			m.isHard = this.isHard;
+			m.cost = (int[])this.cost.Clone();
+			m.moveSpecial = (string[])this.moveSpecial.Clone();
+			m.tag = (string[])this.tag.Clone();
+			m.special = (string[])this.special.Clone();
+			m.isEmpty = this.isEmpty;
+			m.triggerName = this.triggerName;
+			m.negatedBy = this.negatedBy;
+			m.monsterType = this.monsterType;
+			return m;
+		}
+
 		public void NotifyPropertyChanged( string propName )
 		{
 			PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( propName ) );

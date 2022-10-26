@@ -30,7 +30,7 @@ namespace JiME.Views
 			}
 		}
 
-		public MultiEventWindow( Scenario s, MultiEventInteraction inter = null )
+		public MultiEventWindow( Scenario s, MultiEventInteraction inter = null , bool showCancelButton = false)
 		{
 			scenario = s;
 			interaction = inter ?? new MultiEventInteraction("New Multi-Event");
@@ -38,7 +38,7 @@ namespace JiME.Views
 			InitializeComponent();
 			DataContext = this;
 
-			cancelButton.Visibility = inter == null ? Visibility.Visible : Visibility.Collapsed;
+			cancelButton.Visibility = (inter == null || showCancelButton) ? Visibility.Visible : Visibility.Collapsed;
 
 			triggerRB.IsChecked = interaction.usingTriggers;
 			eventRB.IsChecked = !interaction.usingTriggers;

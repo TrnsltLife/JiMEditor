@@ -42,17 +42,24 @@ namespace JiME
 
 			interactionsUC.onAddEvent += OnAddEvent;
 			interactionsUC.onRemoveEvent += OnRemoveEvent;
+			interactionsUC.onSettingsEvent += OnSettingsInteraction;
+			interactionsUC.onDuplicateEvent += OnDuplicateInteraction;
+
 			triggersUC.onAddEvent += OnAddTrigger;
 			triggersUC.onRemoveEvent += OnRemoveTrigger;
-			interactionsUC.onSettingsEvent += OnSettingsInteraction;
 			triggersUC.onSettingsEvent += OnSettingsTrigger;
+			triggersUC.onDuplicateEvent += OnDuplicateTrigger;
+
 			objectivesUC.onAddEvent += OnAddObjective;
 			objectivesUC.onRemoveEvent += OnRemoveObjective;
 			objectivesUC.onSettingsEvent += OnSettingsObjective;
+			objectivesUC.onDuplicateEvent += OnDuplicateObjective;
+
 			activationsUC.onAddEvent += OnAddActivations;
 			activationsUC.onRemoveEvent += OnRemoveActivations;
 			activationsUC.onSettingsEvent += OnSettingsActivations;
 			activationsUC.onDuplicateEvent += OnDuplicateActivations;
+
 			//Debug.Log( this.FindResource( "mylist" ).GetType() );
 
 			//setup source of UI lists (scenario has to be created first!)
@@ -85,10 +92,15 @@ namespace JiME
 		void OnRemoveEvent( object sender, EventArgs e )
 		{
 			//TODO check if USED by a THREAT
-			int idx = interactionsUC.dataListView.SelectedIndex;
-			if ( idx != -1 )
-				scenario.RemoveData( interactionsUC.dataListView.SelectedItem );
-			interactionsUC.dataListView.SelectedIndex = 0;
+
+			var ret = MessageBox.Show("Are you sure you want to delete this Event?\n\nALL OF ITS DATA WILL BE DELETED.", "Delete Event", MessageBoxButton.YesNo, MessageBoxImage.Question);
+			if (ret == MessageBoxResult.Yes)
+			{
+				int idx = interactionsUC.dataListView.SelectedIndex;
+				if (idx != -1)
+					scenario.RemoveData(interactionsUC.dataListView.SelectedItem);
+				interactionsUC.dataListView.SelectedIndex = 0;
+			}
 		}
 
 		void OnAddTrigger( object sender, EventArgs e )
@@ -115,10 +127,27 @@ namespace JiME
 				return;
 			}
 
+			var ret = MessageBox.Show("Are you sure you want to delete this Trigger?", "Delete Trigger", MessageBoxButton.YesNo, MessageBoxImage.Question);
+			if (ret == MessageBoxResult.Yes)
+			{
+				int idx = triggersUC.dataListView.SelectedIndex;
+				if (idx != -1)
+					scenario.RemoveData(triggersUC.dataListView.SelectedItem);
+				triggersUC.dataListView.SelectedIndex = 0;
+			}
+		}
+
+		void OnDuplicateTrigger(object sender, EventArgs e)
+		{
 			int idx = triggersUC.dataListView.SelectedIndex;
-			if ( idx != -1 )
-				scenario.RemoveData( triggersUC.dataListView.SelectedItem );
-			triggersUC.dataListView.SelectedIndex = 0;
+			Trigger trig = ((Trigger)triggersUC.dataListView.Items[idx]).Clone();
+
+			TriggerEditorWindow tew = new TriggerEditorWindow(scenario, trig, true);
+			if (tew.ShowDialog() == true)
+			{
+				//scenario.triggersObserver.Add(trig);
+				//The TriggerEditorWindow's OK button actually handles adding the Trigger to the scenario.triggersObserver.
+			}
 		}
 
 		void OnAddObjective( object sender, EventArgs e )
@@ -128,15 +157,33 @@ namespace JiME
 
 		void OnRemoveObjective( object sender, EventArgs e )
 		{
-			if ( scenario.objectiveObserver.Count > 1 )
+			if (scenario.objectiveObserver.Count > 1)
 			{
-				int idx = objectivesUC.dataListView.SelectedIndex;
-				if ( idx != -1 )
-					scenario.RemoveData( objectivesUC.dataListView.Items[idx] );
-				objectivesUC.dataListView.SelectedIndex = 0;
+				var ret = MessageBox.Show("Are you sure you want to delete this Objective?\n\nALL ITS INFORMATION WILL BE DELETED.", "Delete Objective", MessageBoxButton.YesNo, MessageBoxImage.Question);
+				if (ret == MessageBoxResult.Yes)
+				{
+					int idx = objectivesUC.dataListView.SelectedIndex;
+					if (idx != -1)
+						scenario.RemoveData(objectivesUC.dataListView.Items[idx]);
+					objectivesUC.dataListView.SelectedIndex = 0;
+				}
 			}
 			else
-				MessageBox.Show( "There must be at least one Objective.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
+			{
+				MessageBox.Show("There must be at least one Objective.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
+		}
+
+		void OnDuplicateObjective(object sender, EventArgs e)
+		{
+			int idx = objectivesUC.dataListView.SelectedIndex;
+			Objective obj = ((Objective)objectivesUC.dataListView.Items[idx]).Clone();
+
+			ObjectiveEditorWindow oew = new ObjectiveEditorWindow(scenario, obj, true);
+			if (oew.ShowDialog() == true)
+			{
+				scenario.objectiveObserver.Add(obj);
+			}
 		}
 
 		void OnSettingsInteraction( object sender, EventArgs e )
@@ -224,8 +271,16 @@ namespace JiME
 			MonsterActivations act = (MonsterActivations)activationsUC.dataListView.Items[idx];
 			if (idx != -1 && act.id >= 1000) //Don't allow removing the basic enemy activations. Only allow removing built-in custom activations and user custom activations.
 			{
-				scenario.RemoveData(activationsUC.dataListView.Items[idx]);
-				activationsUC.dataListView.SelectedIndex = Math.Max(idx - 1, 0);
+				var ret = MessageBox.Show("Are you sure you want to delete this Enemy Attack Group?\n\nALL DESCRIPTIONS AND DAMAGE WILL BE DELETED.", "Delete Enemy Attack Group", MessageBoxButton.YesNo, MessageBoxImage.Question);
+				if (ret == MessageBoxResult.Yes)
+				{
+					scenario.RemoveData(activationsUC.dataListView.Items[idx]);
+					activationsUC.dataListView.SelectedIndex = Math.Max(idx - 1, 0);
+				}
+			}
+			else
+            {
+				MessageBox.Show("You can't delete the default Enemy Attack Groups, but you can modify them.", "Cannot Delete Enemy Attack Group", MessageBoxButton.OK, MessageBoxImage.Information);
 			}
 		}
 
@@ -235,6 +290,77 @@ namespace JiME
 			MonsterActivations act = (MonsterActivations)activationsUC.dataListView.Items[idx];
 			ActivationsEditorWindow ow = new ActivationsEditorWindow(scenario, ((MonsterActivations)activationsUC.dataListView.SelectedItem), false);
 			ow.ShowDialog();
+		}
+
+		void OnDuplicateInteraction(object sender, EventArgs e)
+		{
+			int idx = interactionsUC.dataListView.SelectedIndex;
+			if (interactionsUC.dataListView.SelectedItem is TextInteraction)
+			{
+				TextInteraction interact = ((TextInteraction)interactionsUC.dataListView.Items[idx]).Clone();
+				TextInteractionWindow bw = new TextInteractionWindow(scenario, interact, true);
+				if (bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
+			}
+			else if (interactionsUC.dataListView.SelectedItem is BranchInteraction)
+			{
+				BranchInteraction interact = ((BranchInteraction)interactionsUC.dataListView.Items[idx]).Clone();
+				BranchInteractionWindow bw = new BranchInteractionWindow(scenario, (BranchInteraction)interact, true);
+				if (bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
+			}
+			else if (interactionsUC.dataListView.SelectedItem is TestInteraction)
+			{
+				TestInteraction interact = ((TestInteraction)interactionsUC.dataListView.Items[idx]).Clone();
+				TestInteractionWindow bw = new TestInteractionWindow(scenario, (TestInteraction)interact, true);
+				if (bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
+			}
+			else if (interactionsUC.dataListView.SelectedItem is DecisionInteraction)
+			{
+				DecisionInteraction interact = ((DecisionInteraction)interactionsUC.dataListView.Items[idx]).Clone();
+				DecisionInteractionWindow bw = new DecisionInteractionWindow(scenario, (DecisionInteraction)interact, true);
+				if (bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
+			}
+			else if (interactionsUC.dataListView.SelectedItem is ThreatInteraction)
+			{
+				ThreatInteraction interact = ((ThreatInteraction)interactionsUC.dataListView.Items[idx]).Clone();
+				ThreatInteractionWindow bw = new ThreatInteractionWindow(scenario, (ThreatInteraction)interact, true);
+				if (bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
+			}
+			else if (interactionsUC.dataListView.SelectedItem is MultiEventInteraction)
+			{
+				MultiEventInteraction interact = ((MultiEventInteraction)interactionsUC.dataListView.Items[idx]).Clone();
+				MultiEventWindow bw = new MultiEventWindow(scenario, (MultiEventInteraction)interact, true);
+				if (bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
+			}
+			else if (interactionsUC.dataListView.SelectedItem is PersistentTokenInteraction)
+			{
+				PersistentTokenInteraction interact = ((PersistentTokenInteraction)interactionsUC.dataListView.Items[idx]).Clone();
+				PersistentInteractionWindow bw = new PersistentInteractionWindow(scenario, (PersistentTokenInteraction)interact, true);
+				if (bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
+			}
+			else if (interactionsUC.dataListView.SelectedItem is ConditionalInteraction)
+			{
+				ConditionalInteraction interact = ((ConditionalInteraction)interactionsUC.dataListView.Items[idx]).Clone();
+				ConditionalInteractionWindow bw = new ConditionalInteractionWindow(scenario, (ConditionalInteraction)interact, true);
+				if (bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
+			}
+			else if (interactionsUC.dataListView.SelectedItem is DialogInteraction)
+			{
+				DialogInteraction interact = ((DialogInteraction)interactionsUC.dataListView.Items[idx]).Clone();
+				DialogInteractionWindow bw = new DialogInteractionWindow(scenario, (DialogInteraction)interact, true);
+				if (bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
+			}
+			else if (interactionsUC.dataListView.SelectedItem is ReplaceTokenInteraction)
+			{
+				ReplaceTokenInteraction interact = ((ReplaceTokenInteraction)interactionsUC.dataListView.Items[idx]).Clone();
+				ReplaceTokenInteractionWindow bw = new ReplaceTokenInteractionWindow(scenario, (ReplaceTokenInteraction)interact, true);
+				if (bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
+			}
+			else if (interactionsUC.dataListView.SelectedItem is RewardInteraction)
+			{
+				RewardInteraction interact = ((RewardInteraction)interactionsUC.dataListView.Items[idx]).Clone();
+				RewardInteractionWindow bw = new RewardInteractionWindow(scenario, (RewardInteraction)interact, true);
+				if(bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
+			}
 		}
 
 		void OnDuplicateActivations(object sender, EventArgs e)
@@ -625,16 +751,20 @@ namespace JiME
 
 		private void RemoveChapterButton_Click( object sender, RoutedEventArgs e )
 		{
-			Chapter c = ( (Button)e.Source ).DataContext as Chapter;
-			foreach ( var tile in c.tileObserver )
-				scenario.globalTilePool.Add( tile.idNumber );
-			TileSorter sorter = new TileSorter();
-			List<int> foo = scenario.globalTilePool.ToList();
-			foo.Sort( sorter );
-			scenario.globalTilePool.Clear();
-			foreach ( int s in foo )
-				scenario.globalTilePool.Add( s );
-			scenario.RemoveData( c );
+			var ret = MessageBox.Show("Are you sure you want to delete this Tile Block?\n\nALL TILES AND TOKENS WILL BE DELETED.", "Delete Tile Block", MessageBoxButton.YesNo, MessageBoxImage.Question);
+			if (ret == MessageBoxResult.Yes)
+			{
+				Chapter c = ((Button)e.Source).DataContext as Chapter;
+				foreach (var tile in c.tileObserver)
+					scenario.globalTilePool.Add(tile.idNumber);
+				TileSorter sorter = new TileSorter();
+				List<int> foo = scenario.globalTilePool.ToList();
+				foo.Sort(sorter);
+				scenario.globalTilePool.Clear();
+				foreach (int s in foo)
+					scenario.globalTilePool.Add(s);
+				scenario.RemoveData(c);
+			}
 		}
 
 		private void ChapterPropsButton_Click( object sender, RoutedEventArgs e )

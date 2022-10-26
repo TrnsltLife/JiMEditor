@@ -29,7 +29,7 @@ namespace JiME.Views
 			}
 		}
 
-		public BranchInteractionWindow( Scenario s, BranchInteraction inter = null )
+		public BranchInteractionWindow( Scenario s, BranchInteraction inter = null, bool showCancelButton = false )
 		{
 			scenario = s;
 			interaction = inter ?? new BranchInteraction("New Branch Event");
@@ -37,7 +37,7 @@ namespace JiME.Views
 			InitializeComponent();
 			DataContext = this;
 
-			cancelButton.Visibility = inter == null ? Visibility.Visible : Visibility.Collapsed;
+			cancelButton.Visibility = (inter == null || showCancelButton) ? Visibility.Visible : Visibility.Collapsed;
 
 			eventTestRB.IsChecked = interaction.branchTestEvent;
 			triggerTestRB.IsChecked = !interaction.branchTestEvent;

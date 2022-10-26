@@ -58,6 +58,20 @@ namespace JiME
 			choice1Trigger = choice2Trigger = choice3Trigger = "None";
 		}
 
+		public DecisionInteraction Clone()
+		{
+			DecisionInteraction interact = new DecisionInteraction("");
+			base.CloneInto(interact);
+			interact.choice1 = this.choice1;
+			interact.choice2 = this.choice2;
+			interact.choice3 = this.choice3;
+			interact.choice1Trigger = this.choice1Trigger;
+			interact.choice2Trigger = this.choice2Trigger;
+			interact.choice3Trigger = this.choice3Trigger;
+			interact.isThreeChoices = this.isThreeChoices;
+			return interact;
+		}
+
 		new public void RenameTrigger( string oldName, string newName )
 		{
 			base.RenameTrigger( oldName, newName );

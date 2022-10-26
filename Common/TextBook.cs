@@ -54,6 +54,21 @@ namespace JiME
 		{
 			PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( name ) );
 		}
+
+		public TextBookData Clone()
+        {
+			TextBookData book = new TextBookData();
+			book.dataName = "Copy of " + this.dataName;
+			book.triggerName = this.triggerName;
+			book.GUID = Guid.NewGuid();
+			book.isEmpty = this.isEmpty;
+			book.pages = new List<string>();
+			foreach(var page in this.pages)
+            {
+				book.pages.Add(page);
+            }
+			return book;
+        }
 	}
 
 	public class TextBookController

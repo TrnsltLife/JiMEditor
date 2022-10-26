@@ -30,13 +30,13 @@ namespace JiME.Views
 			}
 		}
 
-		public ConditionalInteractionWindow( Scenario s, ConditionalInteraction inter = null )
+		public ConditionalInteractionWindow( Scenario s, ConditionalInteraction inter = null, bool showCancelButton = false )
 		{
 			InitializeComponent();
 			DataContext = this;
 
 			scenario = s;
-			cancelButton.Visibility = inter == null ? Visibility.Visible : Visibility.Collapsed;
+			cancelButton.Visibility = (inter == null || showCancelButton) ? Visibility.Visible : Visibility.Collapsed;
 			interaction = inter ?? new ConditionalInteraction( "New Conditional Event" );
 
 

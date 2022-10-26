@@ -28,6 +28,16 @@ namespace JiME
 			isTokenInteraction = true;
 		}
 
+		public PersistentTokenInteraction Clone()
+		{
+			PersistentTokenInteraction interact = new PersistentTokenInteraction("");
+			base.CloneInto(interact);
+			interact.eventToActivate = this.eventToActivate;
+			interact.alternativeTextTrigger = this.alternativeTextTrigger;
+			interact.alternativeBookData = this.alternativeBookData.Clone();
+			return interact;
+		}
+
 		new public void RenameTrigger( string oldName, string newName )
 		{
 			base.RenameTrigger( oldName, newName );

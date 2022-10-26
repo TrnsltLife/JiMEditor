@@ -37,6 +37,25 @@ namespace JiME
 			isSilent = true;
 		}
 
+		public MultiEventInteraction Clone()
+		{
+			MultiEventInteraction interact = new MultiEventInteraction("");
+			base.CloneInto(interact);
+			interact.usingTriggers = this.usingTriggers;
+			interact.isSilent = this.isSilent;
+			interact.eventList = new ObservableCollection<string>();
+			foreach(var item in this.eventList)
+            {
+				interact.eventList.Add( item );
+            }
+			interact.triggerList = new ObservableCollection<string>();
+			foreach (var item in this.triggerList)
+			{
+				interact.triggerList.Add(item);
+			}
+			return interact;
+		}
+
 		new public void RenameTrigger( string oldName, string newName )
 		{
 			base.RenameTrigger( oldName, newName );
