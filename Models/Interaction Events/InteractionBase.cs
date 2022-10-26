@@ -12,6 +12,25 @@ namespace JiME
 		PersonType _personType;
 		TerrainType _terrainType;
 
+		public virtual void CloneInto(InteractionBase interact)
+		{
+			interact.GUID = Guid.NewGuid();
+			interact.dataName = "Copy of " + this.dataName;
+			interact.triggerName = this.triggerName;
+			interact.triggerAfterName = this.triggerAfterName;
+			interact.isTokenInteraction = this.isTokenInteraction;
+			interact.loreReward = this.loreReward;
+			interact.xpReward = this.xpReward;
+			interact.threatReward = this.threatReward;
+			interact.tokenType = this.tokenType;
+			interact.personType = this.personType;
+			interact.terrainType = this.terrainType;
+			interact.isEmpty = this.isEmpty;
+			interact.textBookData = this.textBookData.Clone();
+			interact.eventBookData = this.eventBookData.Clone();
+			interact.interactionType = this.interactionType;
+		}
+
 		public string dataName
 		{
 			get { return _dataName; }

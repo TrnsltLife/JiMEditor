@@ -100,6 +100,22 @@ namespace JiME
 			c1Trigger = c2Trigger = c3Trigger = "None";
 		}
 
+		public DialogInteraction Clone()
+		{
+			DialogInteraction interact = new DialogInteraction("");
+			base.CloneInto(interact);
+			interact.choice1 = this.choice1;
+			interact.choice2 = this.choice2;
+			interact.choice3 = this.choice3;
+			interact.c1Trigger = this.c1Trigger;
+			interact.c2Trigger = this.c2Trigger;
+			interact.c3Trigger = this.c3Trigger;
+			interact.c1Text = this.c1Text;
+			interact.c2Text = this.c2Text;
+			interact.c3Text = this.c3Text;
+			return interact;
+		}
+
 		new public void RenameTrigger( string oldName, string newName )
 		{
 			base.RenameTrigger( oldName, newName );

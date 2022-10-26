@@ -117,6 +117,29 @@ namespace JiME
 			progressBookData.pages.Add( "Default Progress Text.\n\nThis text is shown if the Test is Cumulative and the current value is greater than 0 but less than the Success Value for completion. Use it as a way to indicate progress towards competing the Test." );
 		}
 
+		public TestInteraction Clone()
+		{
+			TestInteraction interact = new TestInteraction("");
+			base.CloneInto(interact);
+			interact.successTrigger = this.successTrigger;
+			interact.failTrigger = this.failTrigger;
+			interact.successValue = this.successValue;
+			interact.isCumulative = this.isCumulative;
+			interact.passFail = this.passFail;
+			interact.testAttribute = this.testAttribute;
+			interact.altTestAttribute = this.altTestAttribute;
+			interact.noAlternate = this.noAlternate;
+			interact.passBookData = this.passBookData.Clone();
+			interact.failBookData = this.failBookData.Clone();
+			interact.progressBookData = this.progressBookData.Clone();
+			interact.rewardXP = this.rewardXP;
+			interact.rewardLore = this.rewardLore;
+			interact.rewardThreat = this.rewardThreat;
+			interact.failThreat = this.failThreat;
+			return interact;
+		}
+
+
 		new public void RenameTrigger( string oldName, string newName )
 		{
 			base.RenameTrigger( oldName, newName );

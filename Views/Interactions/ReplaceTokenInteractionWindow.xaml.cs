@@ -32,7 +32,7 @@ namespace JiME.Views
 		public ObservableCollection<IInteraction> eventToReplace { get; set; }
 		public ObservableCollection<IInteraction> replaceWith { get; set; }
 
-		public ReplaceTokenInteractionWindow( Scenario s, ReplaceTokenInteraction inter = null )
+		public ReplaceTokenInteractionWindow( Scenario s, ReplaceTokenInteraction inter = null, bool showCancelButton = false )
 		{
 			scenario = s;
 			interaction = inter ?? new ReplaceTokenInteraction("New Replace Token Event");
@@ -41,7 +41,7 @@ namespace JiME.Views
 
 			DataContext = this;
 
-			cancelButton.Visibility = inter == null ? Visibility.Visible : Visibility.Collapsed;
+			cancelButton.Visibility = (inter == null || showCancelButton) ? Visibility.Visible : Visibility.Collapsed;
 
 			isThreatTriggered = scenario.threatObserver.Any( x => x.triggerName == interaction.dataName );
 			if ( isThreatTriggered )

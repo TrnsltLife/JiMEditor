@@ -138,17 +138,26 @@ namespace JiME.Views
 					selected.Rotate(1, canvas );
 				else if ( e.Key == Key.Delete )
 				{
-					RemoveTile(selected, true);
-					selected = null;
-					//sort list
-					TileSorter sorter = new TileSorter();
-					List<int> foo = scenario.globalTilePool.ToList();
-					foo.Sort( sorter );
-					scenario.globalTilePool.Clear();
-					foreach ( int s in foo )
-						scenario.globalTilePool.Add( s );
-					tilePool.SelectedIndex = 0;
+					DeleteTileAction();
 				}
+			}
+		}
+
+		private void DeleteTileAction()
+		{
+			var ret = MessageBox.Show("Are you sure you want to delete this Tile?\n\nALL ITS TOKENS WILL BE DELETED.", "Delete Tile", MessageBoxButton.YesNo, MessageBoxImage.Question);
+			if (ret == MessageBoxResult.Yes)
+			{
+				RemoveTile(selected, true);
+				selected = null;
+				//sort list
+				TileSorter sorter = new TileSorter();
+				List<int> foo = scenario.globalTilePool.ToList();
+				foo.Sort(sorter);
+				scenario.globalTilePool.Clear();
+				foreach (int s in foo)
+					scenario.globalTilePool.Add(s);
+				tilePool.SelectedIndex = 0;
 			}
 		}
 
@@ -190,16 +199,7 @@ namespace JiME.Views
 		{
 			if ( selected != null )
 			{
-				RemoveTile(selected, true);
-				selected = null;
-				//sort list
-				TileSorter sorter = new TileSorter();
-				List<int> foo = scenario.globalTilePool.ToList();
-				foo.Sort( sorter );
-				scenario.globalTilePool.Clear();
-				foreach ( int s in foo )
-					scenario.globalTilePool.Add( s );
-				tilePool.SelectedIndex = 0;
+				DeleteTileAction();
 			}
 		}
 

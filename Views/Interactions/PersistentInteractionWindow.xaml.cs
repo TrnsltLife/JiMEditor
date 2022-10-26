@@ -31,7 +31,7 @@ namespace JiME.Views
 			}
 		}
 
-		public PersistentInteractionWindow( Scenario s, PersistentTokenInteraction inter = null )
+		public PersistentInteractionWindow( Scenario s, PersistentTokenInteraction inter = null , bool showCancelButton = false)
 		{
 			scenario = s;
 			interaction = inter ?? new PersistentTokenInteraction("New Persistent Event");
@@ -40,7 +40,7 @@ namespace JiME.Views
 			InitializeComponent();
 			DataContext = this;
 
-			cancelButton.Visibility = inter == null ? Visibility.Visible : Visibility.Collapsed;
+			cancelButton.Visibility = (inter == null || showCancelButton) ? Visibility.Visible : Visibility.Collapsed;
 
 			//interactions that are NOT Token Interactions
 			interactionObserver = new ObservableCollection<string>( scenario.interactionObserver.Where( x => x.isTokenInteraction ).Select( x => x.dataName ) );

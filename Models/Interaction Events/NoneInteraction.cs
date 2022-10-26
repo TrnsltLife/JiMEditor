@@ -20,5 +20,12 @@ namespace JiME
 			};
 			return empty;
 		}
+
+		public NoneInteraction Clone()
+		{
+			NoneInteraction interact = new NoneInteraction("");
+			base.CloneInto(interact);
+			return interact;
+		}
 	}
 }

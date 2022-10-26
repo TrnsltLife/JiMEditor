@@ -45,5 +45,15 @@ namespace JiME
 			eventBookData.pages = new List<string>();
 			eventBookData.pages.Add( "" );
 		}
+
+		public RewardInteraction Clone()
+		{
+			RewardInteraction interact = new RewardInteraction("");
+			base.CloneInto(interact);
+			interact.rewardLore = this.rewardLore;
+			interact.rewardXP = this.rewardXP;
+			interact.rewardThreat = this.rewardThreat;
+			return interact;
+		}
 	}
 }

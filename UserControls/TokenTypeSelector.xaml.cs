@@ -170,7 +170,7 @@ namespace JiME.UserControls
 				isTokenCB.IsEnabled = false;
 			}
 
-			//Special Instructions Visibility
+			//Visibility for various elements
 			if(interaction is ThreatInteraction)
 				threatMessage.Visibility = Visibility.Visible;
 			if (interaction is PersistentTokenInteraction)
@@ -191,12 +191,23 @@ namespace JiME.UserControls
 					skipInteractionCB.FontStyle = FontStyles.Normal;
 				}
 			}
+			if(!scenario.scenarioTypeJourney) //if it's a battle map, enable Terrain
+            {
+				terrainRadio.IsEnabled = true;
+				terrainRadio.FontStyle = FontStyles.Normal;
+            }
 
 			//PersonType and TerrainType Visibility
 			if (interaction.isTokenInteraction && interaction.tokenType == TokenType.Person)
+			{
 				personType.Visibility = Visibility.Visible;
+				if (interaction.personType == PersonType.None) { interaction.personType = PersonType.Human; }
+			}
 			else if (interaction.isTokenInteraction && interaction.tokenType == TokenType.Terrain)
+			{
 				terrainType.Visibility = Visibility.Visible;
+				if (interaction.terrainType == TerrainType.None) { interaction.terrainType = TerrainType.Boulder; }
+			}
 
 			//Persistent Text Visibility
 			persCB.Visibility = (interaction is PersistentInteractionBase) ? Visibility.Visible : Visibility.Collapsed;

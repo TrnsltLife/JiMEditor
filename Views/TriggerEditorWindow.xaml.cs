@@ -58,6 +58,28 @@ namespace JiME.Views
 			isNew = true;
 		}
 
+		public TriggerEditorWindow(Scenario s, Trigger trigger, bool showCancelButton = false)
+        {
+			InitializeComponent();
+			DataContext = this;
+			scenario = s;
+			nameTB.Text = trigger.dataName;
+			nameTB.SelectAll();
+			multiCB.IsChecked = trigger.isMultiTrigger;
+			campaignCB.IsChecked = trigger.isCampaignTrigger;
+
+			if (scenario.projectType == ProjectType.Standalone)
+				campaignCB.Visibility = Visibility.Collapsed;
+
+			if (campaignCB.IsChecked == true)
+			{
+				nameTB.IsEnabled = false;
+				multiCB.IsEnabled = false;
+			}
+
+			isNew = true;
+		}
+
 		private void OkButton_Click( object sender, RoutedEventArgs e )
 		{
 			triggerName = nameTB.Text.Trim();

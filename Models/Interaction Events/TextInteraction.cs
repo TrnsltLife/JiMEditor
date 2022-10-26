@@ -7,5 +7,12 @@ namespace JiME
 		public TextInteraction( string name ) : base( name )
 		{
 		}
+
+		public TextInteraction Clone()
+		{
+			TextInteraction interact = new TextInteraction("");
+			base.CloneInto(interact);
+			return interact;
+		}
 	}
 }

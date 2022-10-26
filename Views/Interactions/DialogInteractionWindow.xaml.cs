@@ -29,7 +29,7 @@ namespace JiME.Views
 			}
 		}
 
-		public DialogInteractionWindow( Scenario s, DialogInteraction inter = null )
+		public DialogInteractionWindow( Scenario s, DialogInteraction inter = null, bool showCancelButton = false )
 		{
 			scenario = s;
 			interaction = inter ?? new DialogInteraction("New Dialog Event");
@@ -37,7 +37,7 @@ namespace JiME.Views
 			InitializeComponent();
 			DataContext = this;
 
-			cancelButton.Visibility = inter == null ? Visibility.Visible : Visibility.Collapsed;
+			cancelButton.Visibility = (inter == null || showCancelButton) ? Visibility.Visible : Visibility.Collapsed;
 
 			isThreatTriggered = scenario.threatObserver.Any( x => x.triggerName == interaction.dataName );
 			if ( isThreatTriggered )

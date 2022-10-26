@@ -39,7 +39,7 @@ namespace JiME.Views
 			}
 		}
 
-		public ThreatInteractionWindow( Scenario s, ThreatInteraction inter = null )
+		public ThreatInteractionWindow( Scenario s, ThreatInteraction inter = null , bool showCancelButton = false)
 		{
 			scenario = s;
 			interaction = inter ?? new ThreatInteraction("New Threat Event");
@@ -47,7 +47,7 @@ namespace JiME.Views
 			InitializeComponent();
 			DataContext = this;
 
-			cancelButton.Visibility = inter == null ? Visibility.Visible : Visibility.Collapsed;
+			cancelButton.Visibility = (inter == null || showCancelButton) ? Visibility.Visible : Visibility.Collapsed;
 
 			isThreatTriggered = scenario.threatObserver.Any( x => x.triggerName == interaction.dataName );
 			if ( isThreatTriggered )
@@ -244,8 +244,12 @@ namespace JiME.Views
 
 		private void DeleteButton_Click( object sender, RoutedEventArgs e )
 		{
-			Monster m = ( (Button)sender ).DataContext as Monster;
-			interaction.monsterCollection.Remove( m );
+			var ret = MessageBox.Show("Are you sure you want to delete this Scripted Enemy?\n\nTHIS CANNOT BE UNDONE.", "Delete Scripted Enemy", MessageBoxButton.YesNo, MessageBoxImage.Question);
+			if (ret == MessageBoxResult.Yes)
+			{
+				Monster m = ((Button)sender).DataContext as Monster;
+				interaction.monsterCollection.Remove(m);
+			}
 		}
 
 		void PropChanged( string name )

@@ -68,6 +68,17 @@ namespace JiME
 			isCampaignTrigger = false;
 		}
 
+		public Trigger Clone()
+		{
+			Trigger trig = new Trigger("Copy of " + this.dataName);
+			trig.triggerValue = this.triggerValue;
+			trig.isMultiTrigger = this.isMultiTrigger;
+			trig.isCampaignTrigger = this.isCampaignTrigger;
+			trig.GUID = Guid.NewGuid();
+			trig.isEmpty = this.isEmpty;
+			return trig;
+		}
+
 		void NotifyChange( string prop )
 		{
 			PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( prop ) );

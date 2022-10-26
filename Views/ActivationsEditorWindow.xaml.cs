@@ -108,9 +108,13 @@ namespace JiME.Views
 
 		private void DeleteButton_Click( object sender, RoutedEventArgs e )
 		{
-			MonsterActivationItem mai = ((Button)sender).DataContext as MonsterActivationItem;
-			activations.activations.Remove(mai);
-			activations.RenumberActivations();
+			var ret = MessageBox.Show("Are you sure you want to delete this Enemy Attack Description?\n\nTHIS CANNOT BE UNDONE.", "Delete Enemy Attack Description", MessageBoxButton.YesNo, MessageBoxImage.Question);
+			if (ret == MessageBoxResult.Yes)
+			{
+				MonsterActivationItem mai = ((Button)sender).DataContext as MonsterActivationItem;
+				activations.activations.Remove(mai);
+				activations.RenumberActivations();
+			}
 		}
 
 		void PropChanged( string name )

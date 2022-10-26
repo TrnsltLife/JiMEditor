@@ -26,6 +26,19 @@ namespace JiME
 			finishedTrigger = "None";
 		}
 
+		public ConditionalInteraction Clone()
+		{
+			ConditionalInteraction interact = new ConditionalInteraction("");
+			base.CloneInto(interact);
+			interact.finishedTrigger = this.finishedTrigger;
+			interact.triggerList = new ObservableCollection<string>();
+			foreach( string trigger in this.triggerList )
+            {
+				interact.triggerList.Add(trigger);
+            }
+			return interact;
+		}
+
 		new public void RenameTrigger( string oldName, string newName )
 		{
 			base.RenameTrigger( oldName, newName );

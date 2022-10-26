@@ -29,7 +29,7 @@ namespace JiME.Views
 			}
 		}
 
-		public TestInteractionWindow( Scenario s, TestInteraction inter = null )
+		public TestInteractionWindow( Scenario s, TestInteraction inter = null, bool showCancelButton = false )
 		{
 			scenario = s;
 			interaction = inter ?? new TestInteraction("New Stat Test");
@@ -37,7 +37,7 @@ namespace JiME.Views
 			InitializeComponent();
 			DataContext = this;
 
-			cancelButton.Visibility = inter == null ? Visibility.Visible : Visibility.Collapsed;
+			cancelButton.Visibility = (inter == null || showCancelButton) ? Visibility.Visible : Visibility.Collapsed;
 
 			mightRB.IsChecked = interaction.testAttribute == Ability.Might;
 			agilityRB.IsChecked = interaction.testAttribute == Ability.Agility;

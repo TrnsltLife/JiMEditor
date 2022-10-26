@@ -372,7 +372,6 @@ namespace JiME.Views
 					}
 					else
 					{
-						//scenario.chapterObserver[0].ToBattleTile();
 						scenario.chapterObserver[0].ToSquareTile();
 						scenario.AddDefaultTerrainInteractions();
 					}

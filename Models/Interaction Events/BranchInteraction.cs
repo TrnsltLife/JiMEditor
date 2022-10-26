@@ -43,6 +43,20 @@ namespace JiME
 			eventBookData.pages.Add( "" );
 		}
 
+		public BranchInteraction Clone()
+        {
+			BranchInteraction interact = new BranchInteraction("");
+			base.CloneInto(interact);
+			interact.branchTestEvent = this.branchTestEvent;
+			interact.triggerNotSetTrigger = this.triggerNotSetTrigger;
+			interact.triggerTest = this.triggerTest;
+			interact.triggerIsSet = this.triggerIsSet;
+			interact.triggerNotSet = this.triggerNotSet;
+			interact.triggerIsSetTrigger = this.triggerIsSetTrigger;
+			interact.triggerNotSetTrigger = this.triggerNotSetTrigger;
+			return interact;
+        }
+
 		new public void RenameTrigger( string oldName, string newName )
 		{
 			base.RenameTrigger( oldName, newName );

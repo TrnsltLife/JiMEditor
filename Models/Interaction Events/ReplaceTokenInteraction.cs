@@ -55,5 +55,17 @@ namespace JiME
 			noText = true;
 			replaceWithGUID = Guid.Empty;
 		}
+
+		public ReplaceTokenInteraction Clone()
+		{
+			ReplaceTokenInteraction interact = new ReplaceTokenInteraction("");
+			base.CloneInto(interact);
+			interact.eventToReplace = this.eventToReplace;
+			interact.replaceWithEvent = this.replaceWithEvent;
+			interact.noText = this.noText;
+			interact.replaceWithGUID = this.replaceWithGUID;
+			return interact;
+		}
+
 	}
 }

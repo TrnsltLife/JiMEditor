@@ -43,5 +43,14 @@ namespace JiME
 			persistentText = "";
 			hasActivated = false;
 		}
+
+		public void CloneInto(PersistentInteractionBase interact)
+		{
+			base.CloneInto( interact);
+			interact.isPersistent = this.isPersistent;
+			interact.persistentText = this.persistentText;
+			interact.hasActivated = this.hasActivated;
+		}
+
 	}
 }

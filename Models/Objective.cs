@@ -149,6 +149,24 @@ namespace JiME
 			return obj;
 		}
 
+		public Objective Clone()
+		{
+			Objective obj = new Objective("Copy of " + this.dataName);
+			obj.eventName = this.eventName;
+			obj.triggerName = this.triggerName;
+			obj.objectiveReminder = this.objectiveReminder;
+			obj.nextTrigger = this.nextTrigger;
+			obj.triggeredByName = this.triggeredByName;
+			obj.skipSummary = this.skipSummary;
+			obj.loreReward = this.loreReward;
+			obj.xpReward = this.xpReward;
+			obj.threatReward = this.threatReward;
+			obj.GUID = Guid.NewGuid();
+			obj.isEmpty = this.isEmpty;
+			obj.textBookData = this.textBookData.Clone();
+			return obj;
+		}
+
 		public void RenameTrigger( string oldName, string newName )
 		{
 			if ( triggerName == oldName )
