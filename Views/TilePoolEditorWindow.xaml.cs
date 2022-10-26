@@ -38,10 +38,12 @@ namespace JiME.Views
 
 		public TilePoolEditorWindow( Scenario s, Chapter c )
 		{
+			scenario = s;
+			scenario.RefilterGlobalTilePool();
+
 			InitializeComponent();
 			DataContext = this;
 
-			scenario = s;
 			chapter = c;
 			selected = null;
 		}
@@ -82,6 +84,7 @@ namespace JiME.Views
 
 		private void Global_MouseDoubleClick( object sender, System.Windows.Input.MouseButtonEventArgs e )
 		{
+			if(global == null || global.SelectedItem == null) { return; }
 			int item = (int)global.SelectedItem;
 			AddTile( item );
 		}

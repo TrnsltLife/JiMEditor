@@ -239,13 +239,20 @@ namespace JiME
 				else if(e.Action == NotifyCollectionChangedAction.Reset)
                 {
 					filteredGlobalTilePool.Clear();
-                }
+				}
 				else if(e.Action == NotifyCollectionChangedAction.Replace && e.NewStartingIndex >= 0)
                 {
 					int i = 0;
 					foreach (var item in e.NewItems)
 					{
-						filteredGlobalTilePool[e.NewStartingIndex + i] = (int)item;
+						if (e.NewStartingIndex + i >= filteredGlobalTilePool.Count)
+						{
+							filteredGlobalTilePool.Append((int)item);
+						}
+						else
+						{
+							filteredGlobalTilePool[e.NewStartingIndex + i] = (int)item;
+						}
 						i++;
 					}
                 }
@@ -322,6 +329,10 @@ namespace JiME
 			s.threatObserver = new ObservableCollection<Threat>( fm.threats );
 			s.chapterObserver = new ObservableCollection<Chapter>( fm.chapters );
 			s.collectionObserver = new ObservableCollection<Collection>(fm.collections);
+			if(!s.collectionObserver.Contains(Collection.CORE_SET))
+            {
+				s.collectionObserver.Add(Collection.CORE_SET);
+            }
 			s.globalTilePool = new ObservableCollection<int>( fm.globalTiles );
 			s.filteredGlobalTilePool = new ObservableCollection<int>(s.globalTilePool.Where(tileNumber => s.collectionObserver.Contains(Collection.FromTileNumber(tileNumber))).ToList());
 			s.AddCollectionChangedLambda();

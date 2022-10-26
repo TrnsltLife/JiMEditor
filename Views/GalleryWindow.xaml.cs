@@ -14,6 +14,8 @@ namespace JiME.Views
 	{
 		int _page, _maxSelect;
 		string _selectedTiles, _max;
+		int indexOffset = 0;
+		int indexLimit = 0;
 
 		public ObservableCollection<GalleryTile> tileObserver { get; set; }
 		public Scenario scenario { get; set; }
@@ -70,19 +72,38 @@ namespace JiME.Views
 
 			tileObserver = new ObservableCollection<GalleryTile>();
 
-			tileCount = Utils.tileSourceA.Length;
-			galleryTiles = new GalleryTile[tileCount];
 			int[] ids = Utils.LoadTiles().ToArray();
+			if (scenario.scenarioTypeJourney)
+			{
+				//Load the hex tiles
+				indexOffset = 0;
+				indexLimit = 2;
+				tileCount = Utils.tileSourceA.Length - indexLimit;
+				galleryTiles = new GalleryTile[tileCount];
+			}
+			else
+            {
+				//Just the battle tiles
+				indexOffset = 42; //TODO Change this after adding the new tiles for Spreading War
+				indexLimit = 0;
+				tileCount = 2;
+				galleryTiles = new GalleryTile[2];
+				ids = new int[] { 998, 999 };
+            }
+
 			for ( int i = 0; i < tileCount; i++ )
 			{
 				galleryTiles[i] = new GalleryTile();
 				galleryTiles[i].id = ids[i];
-				galleryTiles[i].source = Utils.tileSourceA[i];
+				Debug.Log("Utils.tileSourceA.Count = " + Utils.tileSourceA.Length + " vs attempted index of " + (i + indexOffset));
+				galleryTiles[i].source = Utils.tileSourceA[i + indexOffset];
 				galleryTiles[i].enabled = galleryTiles[i].enabled && scenario.IsCollectionEnabled(galleryTiles[i].collection);
 			}
 
-			for ( int i = 0; i < 4; i++ )
-				tileObserver.Add( galleryTiles[i] );
+			for (int i = 0; i < 4 && i < tileCount; i++)
+			{
+				tileObserver.Add(galleryTiles[i]);
+			}
 
 			page = 1;
 			left.IsEnabled = false;
@@ -121,12 +142,12 @@ namespace JiME.Views
 			{
 				if ( !galleryTiles[i].selected && side )
 				{
-					galleryTiles[i].source = Utils.tileSourceA[i];
+					galleryTiles[i].source = Utils.tileSourceA[i + indexOffset];
 					galleryTiles[i].side = "A";
 				}
 				else if ( !galleryTiles[i].selected && !side )
 				{
-					galleryTiles[i].source = Utils.tileSourceB[i];
+					galleryTiles[i].source = Utils.tileSourceB[i + indexOffset];
 					galleryTiles[i].side = "B";
 				}
 			}
