@@ -15,7 +15,7 @@ namespace JiME
 	{
 		string _scenarioName, _fileName, _objectiveName, _fileVersion, _specialInstructions;
 		bool _isDirty, _scenarioTypeJourney, _useTileGraphics;
-		int _threatMax, _loreReward, _xpReward, _shadowFear, _loreStartValue;
+		int _threatMax, _loreReward, _xpReward, _shadowFear, _loreStartValue, _xpStartValue;
 		int[] _wallTypes;
 		Guid _scenarioGUID, _campaignGUID;
 		//titleChangedToken is ONLY used to trigger the window Title converter
@@ -145,6 +145,11 @@ namespace JiME
 		{
 			get => _xpReward;
 			set { _xpReward = value; PropChanged( "xpReward" ); }
+		}
+		public int xpStartValue
+		{
+			get => _xpStartValue;
+			set { _xpStartValue = value; PropChanged("xpStartValue"); }
 		}
 		public int shadowFear
 		{
@@ -344,6 +349,7 @@ namespace JiME
 			s.xpReward = fm.xpReward;
 			s.shadowFear = fm.shadowFear;
 			s.loreStartValue = fm.loreStartValue;
+			s.xpStartValue = fm.xpStartValue;
 			s.scenarioGUID = fm.scenarioGUID;
 			s.campaignGUID = fm.campaignGUID;
 			s.specialInstructions = fm.specialInstructions ?? "";
@@ -386,7 +392,7 @@ namespace JiME
 			threatMax = 60;
 			scenarioTypeJourney = true;
 			objectiveName = "None";
-			loreReward = loreStartValue = xpReward = 0;
+			loreReward = loreStartValue = xpReward = xpStartValue = 0;
 			shadowFear = 2;
 			fileVersion = Utils.formatVersion;
 			useTileGraphics = true;

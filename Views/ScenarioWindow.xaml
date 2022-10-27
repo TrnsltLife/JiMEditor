@@ -114,6 +114,7 @@
 						<ColumnDefinition Width="auto"/>
 						<ColumnDefinition Width="auto"/>
 						<ColumnDefinition Width="auto"/>
+						<ColumnDefinition Width="auto"/>
 						<ColumnDefinition Width="*"/>
 					</Grid.ColumnDefinitions>
 
@@ -122,20 +123,24 @@
 						<ComboBox Name="objectiveCB" ItemsSource="{Binding scenario.objectiveObserver}" DisplayMemberPath="dataName" SelectedValue="{Binding scenario.objectiveName}" SelectedValuePath="dataName" Margin="0,5,0,0"/>
 					</StackPanel>
 
-					<StackPanel Grid.Column="1" Margin="30,0,20,0" Orientation="Horizontal">
-						<TextBlock Text="Shadow Phase Fear:" Style="{StaticResource Heading}"/>
-						<TextBox Text="{Binding scenario.shadowFear}" Width="32" Margin="10,0,0,0" VerticalAlignment="Center"/>
+					<StackPanel Grid.Column="1" Margin="20,0,0,0" Orientation="Vertical">
+						<TextBlock Text="Shadow Phase Fear:" Style="{StaticResource Heading}" HorizontalAlignment="Left"/>
+						<TextBox Text="{Binding scenario.shadowFear}" Width="64" HorizontalAlignment="Left"/>
 					</StackPanel>
 
-					<StackPanel Grid.Column="2" Orientation="Horizontal">
-						<!--rewards-->
-						<StackPanel Orientation="Horizontal">
-							<TextBlock Text="Starting Lore:" Style="{StaticResource Heading}" VerticalAlignment="Center" Margin="0,0,10,0"/>
-							<TextBox Width="32" VerticalAlignment="Center" Text="{Binding scenario.loreStartValue}"/>
-						</StackPanel>
+					<!--starting values-->
+					<StackPanel Grid.Column="2" Margin="20,0,0,0" Orientation="Vertical">
+						<TextBlock Text="Starting Lore:" Style="{StaticResource Heading}" HorizontalAlignment="Left"/>
+						<TextBox Width="64" HorizontalAlignment="Left" Text="{Binding scenario.loreStartValue}"/>
 					</StackPanel>
 
-					<Button x:Name="specialBtn" Grid.Column="3" Content="Story / Special Instructions..." Background="DodgerBlue" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right" Click="specialBtn_Click" Height="36" FontWeight="Bold" FontSize="14"/>
+					<!--starting values-->
+					<StackPanel Grid.Column="3" Margin="20,0,0,0" Orientation="Vertical">
+						<TextBlock Text="Starting XP:" Style="{StaticResource Heading}" HorizontalAlignment="Left"/>
+						<TextBox Width="64" HorizontalAlignment="Left" Text="{Binding scenario.xpStartValue}"/>
+					</StackPanel>
+
+					<Button x:Name="specialBtn" Grid.Column="4" Content="Story / Special Instructions..." Background="DodgerBlue" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right" Click="specialBtn_Click" Height="36" FontWeight="Bold" FontSize="14"/>
 				</Grid>
 
 				<TextBlock TextWrapping="Wrap" Style="{StaticResource SubText}" Text="The Story/Special Instructions text and Starting Lore are shown to Players in the Companion App before embarking on the Scenario." Margin="0,5,0,0"/>

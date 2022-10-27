@@ -36,6 +36,7 @@ namespace JiME
 		public int loreReward { get; set; }
 		public int loreStartValue { get; set; }
 		public int xpReward { get; set; }
+		public int xpStartValue { get; set; }
 		public int shadowFear { get; set; }
 		public bool useTileGraphics { get; set; }
 
@@ -70,6 +71,7 @@ namespace JiME
 			loreReward = source.loreReward;
 			loreStartValue = source.loreStartValue;
 			xpReward = source.xpReward;
+			xpStartValue = source.xpStartValue;
 			shadowFear = source.shadowFear;
 			useTileGraphics = source.useTileGraphics;
 
