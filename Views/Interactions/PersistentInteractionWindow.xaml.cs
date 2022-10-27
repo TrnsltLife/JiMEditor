@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
+using JiME.UserControls;
 
 namespace JiME.Views
 {
@@ -55,6 +56,8 @@ namespace JiME.Views
 			}
 
 			oldName = interaction.dataName;
+
+			altTB.Document = RichTextBoxIconEditor.CreateFlowDocumentFromSimpleHtml(interaction.alternativeBookData.pages[0], "", "FontFamily=\"Segoe UI\" FontSize=\"12\"");
 		}
 
 		private void ComboBox_SelectionChanged( object sender, SelectionChangedEventArgs e )
@@ -170,7 +173,8 @@ namespace JiME.Views
 			if ( tw.ShowDialog() == true )
 			{
 				interaction.alternativeBookData.pages = tw.textBookController.pages;
-				altTB.Text = tw.textBookController.pages[0];
+				//altTB.Text = tw.textBookController.pages[0];
+				altTB.Document = RichTextBoxIconEditor.CreateFlowDocumentFromSimpleHtml(interaction.alternativeBookData.pages[0], "", "FontFamily=\"Segoe UI\" FontSize=\"12\"");
 			}
 		}
 

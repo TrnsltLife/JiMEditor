@@ -159,7 +159,8 @@
 									<ColumnDefinition Width="auto"/>
 								</Grid.ColumnDefinitions>
 								<Border BorderBrush="white" BorderThickness="1" Padding="5" Margin="0,5">
-									<TextBlock x:Name="altTB" Text="{Binding interaction.alternativeBookData.pages[0]}" TextTrimming="WordEllipsis" VerticalAlignment="Center" Height="19" Foreground="White"/>
+									<!-- <TextBlock x:Name="altTB" Text="{Binding interaction.alternativeBookData.pages[0]}" TextTrimming="WordEllipsis" VerticalAlignment="Center" Height="19" Foreground="White"/> -->
+									<FlowDocumentScrollViewer x:Name="altTB" Document="{Binding AlternativeFlowDocument}" MaxHeight="32" Foreground="White" VerticalScrollBarVisibility="Disabled"/>
 								</Border>
 								<Button Grid.Column="1" x:Name="editAltButton" Background="CornflowerBlue" Margin="10,0,0,0" Click="editAltButton_Click" Width="46" Height="46">
 									<Image Source="/JiME;component/Assets/edit.png"/>

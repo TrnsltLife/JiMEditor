@@ -279,11 +279,15 @@ namespace JiME.Views
 
 		private void RemoveResolutionButton_Click( object sender, RoutedEventArgs e )
 		{
-			if ( scenario.resolutionObserver.Count > 1 )
-				scenario.RemoveData( resolutionCB.SelectedItem as TextBookData );
-			if ( scenario.resolutionObserver.Count == 1 )
-				resolutionCB.SelectedIndex = 0;
-			scenario.PruneScenarioEnd();
+			var ret = MessageBox.Show("Are you sure you want to delete this Resolution?\n\nALL ITS DATA WILL BE DELETED.", "Delete Resolution", MessageBoxButton.YesNo, MessageBoxImage.Question);
+			if (ret == MessageBoxResult.Yes)
+			{
+				if (scenario.resolutionObserver.Count > 1)
+					scenario.RemoveData(resolutionCB.SelectedItem as TextBookData);
+				if (scenario.resolutionObserver.Count == 1)
+					resolutionCB.SelectedIndex = 0;
+				scenario.PruneScenarioEnd();
+			}
 		}
 
 		private void EventInteractionCB_SelectionChanged( object sender, SelectionChangedEventArgs e )
@@ -341,17 +345,21 @@ namespace JiME.Views
 
 		private void RemoveThreat_Click( object sender, RoutedEventArgs e )
 		{
-			scenario.RemoveData( ( (ThreatList)( (Button)sender ).DataContext ).theThreat );
-			threatCollection.Clear();
+			var ret = MessageBox.Show("Are you sure you want to delete this Threat?\n\nALL ITS DATA WILL BE DELETED.", "Delete Threat Block", MessageBoxButton.YesNo, MessageBoxImage.Question);
+			if (ret == MessageBoxResult.Yes)
+			{
+				scenario.RemoveData(((ThreatList)((Button)sender).DataContext).theThreat);
+				threatCollection.Clear();
 
-			//sort by threshold
-			List<Threat> sorted = scenario.threatObserver.OrderBy( key => key.threshold ).ToList();
-			for ( int i = 0; i < sorted.Count; i++ )
-				scenario.threatObserver[i] = sorted[i];
+				//sort by threshold
+				List<Threat> sorted = scenario.threatObserver.OrderBy(key => key.threshold).ToList();
+				for (int i = 0; i < sorted.Count; i++)
+					scenario.threatObserver[i] = sorted[i];
 
-			//recreate list of events
-			foreach ( Threat t in scenario.threatObserver )
-				threatCollection.Add( new ThreatList( t, scenario.interactionObserver.Where( x => !x.isTokenInteraction ).ToArray() ) );
+				//recreate list of events
+				foreach (Threat t in scenario.threatObserver)
+					threatCollection.Add(new ThreatList(t, scenario.interactionObserver.Where(x => !x.isTokenInteraction).ToArray()));
+			}
 		}
 
 		private void RadioType_Checked( object sender, RoutedEventArgs e )

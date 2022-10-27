@@ -190,6 +190,32 @@ namespace JiME.UserControls
 			}
 		}
 
+		public static FlowDocument CreateFlowDocumentFromSimpleHtml(string html, string paragraphReplacement="\r\n", string paragraphAttributes="")
+		{
+			string originalHtml = html;
+			if (html == null) { return null; }
+			//Create a FlowDocument from the simple HTML in order to show the icons in the detail view. However, just transform internal paragraphs into spaces.
+			//html = Regex.Replace(html, "\r\n", "</Paragraph><Paragraph>");
+			html = Regex.Replace(html, "\r\n", paragraphReplacement);
+			html = Regex.Replace(html, "<b>", "<Run FontFamily=\"LoTR JiME Icons\">");
+			html = Regex.Replace(html, "</b>", "</Run>");
+			html = "<Paragraph " + paragraphAttributes + ">" + html + "</Paragraph>";
+			html = "<?xml version=\"1.0\" encoding=\"utf-16\"?><FlowDocument PagePadding=\"5,0,5,0\" AllowDrop=\"True\" NumberSubstitution.CultureSource=\"User\" xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\">" + html + "</FlowDocument>";
+
+			try
+			{
+				return (FlowDocument)XamlReader.Parse(html);
+			}
+			catch
+			{
+				System.Windows.Forms.MessageBox.Show("An error occurred while trying to load your text. The underlying HTML may have been corrupted and you may need to fix it in the .jime file. Copy it with Ctrl+C. Here's what it looks like:\r\n\r\n" + originalHtml,
+					"Error Loading Text",
+					System.Windows.Forms.MessageBoxButtons.OK,
+					System.Windows.Forms.MessageBoxIcon.Error);
+			}
+			return null;
+		}
+
 
 		private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
 		{

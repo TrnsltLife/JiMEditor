@@ -19,9 +19,9 @@
 		</Grid.RowDefinitions>
 
 		<StackPanel  Margin="5,5,5,0">
-			<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Text="In the Companion App, a Tile Block activates by first showing the Optional Flavor Text, followed by the random or fixed Tile layout for this Block."/>
+			<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Text="In the Companion App, a Tile Block first shows the Flavor Text, if any, followed by the random or fixed Tile layout for this Block."/>
 
-			<Border Style="{StaticResource callout}" Margin="0,10,0,0">
+			<Border Style="{StaticResource callout}" Margin="0,0,0,0">
 				<StackPanel>
 					<UniformGrid Columns="2">
 						<StackPanel>
@@ -70,7 +70,7 @@
 				</StackPanel>
 			</Border>-->
 
-			<Border Style="{StaticResource callout}" Margin="0,10">
+			<Border Style="{StaticResource callout}" Margin="0,5">
 				<StackPanel>
 					<TextBlock Text="Block Tiles" Style="{StaticResource Heading}"/>
 					<StackPanel Orientation="Horizontal">
@@ -81,20 +81,22 @@
 								<Image Source="/JiME;component/Assets/edit.png" Height="24"/>
 							</StackPanel>
 						</Button>
+						<StackPanel Orientation="Vertical" Width="300" Margin="10,5,0,0" >
+							<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Height="40">
+							Use the Tile Editor to define which tiles are in this Block. <Bold>The Start Block cannot use random tiles</Bold>.
+							</TextBlock>
+						</StackPanel>
 					</StackPanel>
-					<TextBlock Style="{StaticResource SubText}" Margin="0,5,0,0" TextWrapping="Wrap">
-						Use the Tile Editor to define which tiles are in this Block. <Bold>The Start Block cannot use random tiles</Bold>.
-					</TextBlock>
 
 					<!--pre-explored toggle-->
 					<!--<TextBlock Text="Pre-Exploration" Style="{StaticResource Heading}" Margin="0,10,0,0"/>-->
-					<CheckBox x:Name="preExCB" IsChecked="{Binding chapter.isPreExplored}" Content="This Block starts already Explored (Start Block only)" Foreground="White" Margin="0,10,0,0"/>
+					<CheckBox x:Name="preExCB" IsChecked="{Binding chapter.isPreExplored}" Content="This Block starts already Explored (Start Block only)" Foreground="White" Margin="0,5,0,0"/>
 					<TextBlock x:Name="preExText" Style="{StaticResource SubText}" Text="If this is the Start Block, you can decide whether the tiles are pre-explored. With this option CHECKED (default), the Block begins with its tiles already Explored (no Explore Token on them), and any Interactive Tokens on its tiles start revealed. With this option NOT CHECKED, all tiles in the Block except the one marked as the player start tile are unexplored, and any Interactive Tokens start unrevealed." Margin="0,5,0,0" TextWrapping="Wrap"/>
 				</StackPanel>
 			</Border>
 
 			<!--random token interactions-->
-			<Border x:Name="randomBlock" Style="{StaticResource callout}" Margin="0,0,0,10">
+			<Border x:Name="randomBlock" Style="{StaticResource callout}" Margin="0,0,0,0">
 				<StackPanel>
 					<StackPanel Orientation="Horizontal">
 						<TextBlock Style="{StaticResource Heading}" Text="Random Token Interaction Group"/>
@@ -109,7 +111,7 @@
 					<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Margin="0,5,0,0" >
 <Bold>The Start Block cannot use Token Interaction Groups. Only Events that are marked Token Interaction can be in a Group.</Bold>
 					</TextBlock>
-					<UniformGrid Columns="2" Margin="0,10,0,0">
+					<UniformGrid Columns="2" Margin="0,5,0,0">
 						<ComboBox Name="randInter" ItemsSource="{Binding randomInteractions}" VerticalAlignment="Center" SelectionChanged="randInter_SelectionChanged" IsEnabled="{Binding chapter.usesRandomGroups}"/>
 						<StackPanel Margin="10,0">
 							<TextBlock x:Name="selectedInfoText" Style="{StaticResource SubText}" TextWrapping="Wrap" Text="There are X Token Interactions in the selected group." VerticalAlignment="Center" FontWeight="Bold"/>
@@ -119,7 +121,7 @@
 
 					<TextBlock Text="NOTE: If you set this Group and you later change one or more Events in the Group to no longer be a Token Interaction, the Group will no longer be a valid Token Interaction Group." TextWrapping="Wrap" Style="{StaticResource Heading}" Margin="0,5,0,0"/>
 
-					<TextBlock x:Name="spaceInfoText2" Style="{StaticResource Heading}" Text="There are X spaces available on this Block's tiles to place Tokens." Margin="0,10,0,0"/>
+					<TextBlock x:Name="spaceInfoText2" Style="{StaticResource Heading}" Text="There are X spaces available on this Block's tiles to place Tokens." Margin="0,5,0,0"/>
 
 					<StackPanel Orientation="Horizontal">
 						<TextBlock x:Name="numIntersUsedText" Style="{StaticResource SubText}" Text="Randomly use how many of the Events from the selected Interaction Group, up to a maximum of X?" VerticalAlignment="Center"/>
@@ -129,7 +131,7 @@
 			</Border>
 
 			<!--text-->
-			<Border x:Name="flavorBox" Style="{StaticResource callout}" IsEnabled="{Binding chapter.isEmpty, Converter={StaticResource binv}}" Margin="0,0,0,10">
+			<Border x:Name="flavorBox" Style="{StaticResource callout}" IsEnabled="{Binding chapter.isEmpty, Converter={StaticResource binv}}" Margin="0,5,0,5">
 				<StackPanel>
 					<TextBlock Text="Flavor Text" Style="{StaticResource Heading}"/>
 					<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap">
@@ -141,7 +143,8 @@
 							<ColumnDefinition Width="auto"/>
 						</Grid.ColumnDefinitions>
 						<Border BorderBrush="white" BorderThickness="1" Padding="5" Margin="0,5">
-							<TextBlock x:Name="flavorTB" Text="{Binding chapter.flavorBookData.pages[0]}" TextTrimming="WordEllipsis" VerticalAlignment="Center" Height="19" Foreground="White"/>
+							<!-- <TextBlock x:Name="flavorTB" Text="{Binding chapter.flavorBookData.pages[0]}" TextTrimming="WordEllipsis" VerticalAlignment="Center" Height="19" Foreground="White"/> -->
+							<FlowDocumentScrollViewer x:Name="flavorTB" Document="{Binding FlavorFlowDocument}" MaxHeight="32" Foreground="White" VerticalScrollBarVisibility="Disabled"/>
 						</Border>
 						<Button Grid.Column="1" x:Name="editFlavorButton" Background="CornflowerBlue" Margin="10,0,0,0" Click="EditFlavorButton_Click" Width="46" Height="46">
 							<Image Source="/JiME;component/Assets/edit.png"/>
@@ -153,24 +156,38 @@
 
 			<!--trigger when explored-->
 			<Border x:Name="exploreBox" Style="{StaticResource callout}" Margin="0,0,0,10" IsEnabled="{Binding chapter.isEmpty, Converter={StaticResource binv}}">
-				<StackPanel>
-					<TextBlock Text="Trigger On Exploration (Optional):" Style="{StaticResource Heading}"/>
-					<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Text="This Trigger is set when any Tile in this Block is first explored. It is only triggered once."/>
+				<Grid>
+					<StackPanel>
+						<TextBlock Text="Trigger On Exploration (Optional):" Style="{StaticResource Heading}"/>
+						<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Text="This Trigger is set when any Tile in this Block is first explored. It is only triggered once."/>
 
-					<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-						<ComboBox x:Name="nextTriggerCB" ItemsSource="{Binding scenario.triggersObserver}" HorizontalAlignment="Left" VerticalAlignment="Center" DisplayMemberPath="dataName" MinWidth="250" SelectedValuePath="dataName" SelectedValue="{Binding chapter.exploreTrigger}"/>
+						<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+							<ComboBox x:Name="nextTriggerCB" ItemsSource="{Binding scenario.triggersObserver}" HorizontalAlignment="Left" VerticalAlignment="Center" DisplayMemberPath="dataName" MinWidth="250" SelectedValuePath="dataName" SelectedValue="{Binding chapter.exploreTrigger}"/>
 
-						<Button x:Name="addExploreTriggerButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="AddExploreTriggerButton_Click">
-							<Image Source="/JiME;component/Assets/add2.png"/>
+							<Button x:Name="addExploreTriggerButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="AddExploreTriggerButton_Click">
+								<Image Source="/JiME;component/Assets/add2.png"/>
+							</Button>
+						</StackPanel>
+					</StackPanel>
+
+					<!--footer-->
+					<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+						<Button x:Name="okButton" Margin="10" Background="MediumSeaGreen" Click="OkButton_Click" IsDefault="True">
+							<Image Source="/JiME;component/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
+						</Button>
+
+						<Button x:Name="cancelButton" Margin="0,10,10,10" Background="{StaticResource bgCancelDelete}" Click="CancelButton_Click" IsCancel="True">
+							<Image Source="/JiME;component/Assets/cancel.png" Stretch="Uniform" Width="32" Margin="5"/>
 						</Button>
 					</StackPanel>
-				</StackPanel>
+				</Grid>
 			</Border>
 
 		</StackPanel>
 
+		<!--footer-->
+		<!--
 		<StackPanel Grid.Row="1">
-			<!--footer-->
 			<Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Silver" HorizontalAlignment="Stretch" Background="#FF46464A">
 				<WrapPanel HorizontalAlignment="Right" >
 
@@ -184,6 +201,7 @@
 				</WrapPanel>
 			</Border>
 		</StackPanel>
+		-->
 	</Grid>
 
 </Window>

@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System;
 using System.Windows.Controls;
+using JiME.UserControls;
 
 namespace JiME.Views
 {
@@ -120,8 +121,11 @@ namespace JiME.Views
 		private void EditFlavorButton_Click( object sender, RoutedEventArgs e )
 		{
 			TextEditorWindow tw = new TextEditorWindow( scenario, EditMode.Flavor, chapter.flavorBookData );
-			if ( tw.ShowDialog() == true )
+			if (tw.ShowDialog() == true)
+			{
 				chapter.flavorBookData.pages = tw.textBookController.pages;
+				flavorTB.Document = RichTextBoxIconEditor.CreateFlowDocumentFromSimpleHtml(chapter.flavorBookData.pages[0], "", "FontFamily=\"Segoe UI\" FontSize=\"12\"");
+			}
 		}
 
 		private void Window_ContentRendered( object sender, System.EventArgs e )
@@ -271,6 +275,8 @@ namespace JiME.Views
 
 			max = Math.Min( requestedInters, max );
 			numIntersUsed.Text = max.ToString();
+
+			flavorTB.Document = RichTextBoxIconEditor.CreateFlowDocumentFromSimpleHtml(chapter.flavorBookData.pages[0], "", "FontFamily=\"Segoe UI\" FontSize=\"12\"");
 		}
 	}
 }
