@@ -48,6 +48,7 @@
 
 		<StackPanel x:Name="tokenTypeBox" Orientation="Horizontal" Visibility="{Binding ElementName=isTokenCB, Path=IsChecked, Converter={StaticResource bvis}}">
 			<TextBlock Style="{StaticResource Heading}" Text="Token Type:" Margin="0,0,10,0"/>
+			<RadioButton x:Name="noneRadio" Content="None" Margin="0,0,20,0" Click="tokenTypeClick" Visibility="Collapsed"/>
 			<RadioButton x:Name="personRadio" Content="Person" Margin="0,0,20,0" Click="tokenTypeClick"/>
 			<RadioButton x:Name="searchRadio" Content="Search" Margin="0,0,20,0" Click="tokenTypeClick"/>
 			<RadioButton x:Name="threatRadio" Content="Threat" Margin="0,0,20,0" Click="tokenTypeClick"/>

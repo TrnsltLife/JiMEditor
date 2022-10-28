@@ -242,6 +242,7 @@ namespace JiME.UserControls
 			webRadio.IsChecked = interaction.terrainType == TerrainType.Web && interaction.tokenType == TokenType.Terrain;
 
 			//TokenType
+			noneRadio.IsChecked = interaction.tokenType == TokenType.None;
 			personRadio.IsChecked = interaction.tokenType == TokenType.Person;
 			searchRadio.IsChecked = interaction.tokenType == TokenType.Search;
 			darkRadio.IsChecked = interaction.tokenType == TokenType.Darkness;
@@ -270,6 +271,8 @@ namespace JiME.UserControls
 		public void AssignValuesFromSelections()
 		{
 			//TokenType
+			if (noneRadio.IsChecked.HasValue && noneRadio.IsChecked.Value)
+				interaction.tokenType = TokenType.None;
 			if (searchRadio.IsChecked.HasValue && searchRadio.IsChecked.Value)
 				interaction.tokenType = TokenType.Search;
 			if (personRadio.IsChecked.HasValue && personRadio.IsChecked.Value)
