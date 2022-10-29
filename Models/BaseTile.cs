@@ -88,6 +88,18 @@ namespace JiME
 
 		protected Point clickV;
 
+		public static BaseTile CreateTile(int n, bool skipBuild = false)
+        {
+			if(n == 998 || n == 999)
+            {
+				return new SquareTile(n, skipBuild);
+            }
+			else
+            {
+				return new HexTile(n, skipBuild);
+            }
+        }
+
 		public BaseTile() {}
 
 		public BaseTile( int n, bool skipBuild = false )

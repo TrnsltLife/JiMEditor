@@ -367,14 +367,14 @@ namespace JiME.Views
 				foreach ( var t in gw.selectedData )
 				{
 					int color = GetUnusedColor();
-					BaseTile hex = new BaseTile( t.Item1 );
-					hex.useGraphic = scenario.useTileGraphics;
-					hex.ChangeColor( color );
+					BaseTile tile = BaseTile.CreateTile( t.Item1 );
+					tile.useGraphic = scenario.useTileGraphics;
+					tile.ChangeColor( color );
 					//ChangeTileSide() also rehydrates and adds tile image
 					//This is why no need to call canvas.Children.Add(hex.hexPathShape)
-					hex.ChangeTileSide( t.Item2, canvas );
-					chapter.AddTile( hex );
-					selected = hex;
+					tile.ChangeTileSide( t.Item2, canvas );
+					chapter.AddTile(tile);
+					selected = tile;
 					selected.Select();
 					radioA.IsChecked = selected.tileSide == "A";
 					radioB.IsChecked = selected.tileSide == "B";
