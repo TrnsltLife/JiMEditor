@@ -81,7 +81,7 @@
 								<StackPanel HorizontalAlignment="Left">
 									<TextBlock Text="Triggered By (Optional):" Style="{StaticResource Heading}"/>
 									<StackPanel Orientation="Horizontal">
-										<ComboBox VerticalAlignment="Center" Name="triggeredByCB" Width="250" ItemsSource="{Binding scenario.triggersObserver}" DisplayMemberPath="dataName" SelectedValue="{Binding interaction.triggerName}" SelectedValuePath="dataName" HorizontalAlignment="Left" IsEnabled="{Binding ElementName=isTokenCB, Path=IsChecked, Converter={StaticResource binv}}"/>
+										<ComboBox VerticalAlignment="Center" Name="triggeredByCB" Width="250" ItemsSource="{Binding scenario.triggersObserver}" DisplayMemberPath="dataName" SelectedValue="{Binding interaction.triggerName}" SelectedValuePath="dataName" HorizontalAlignment="Left" IsEnabled="{Binding interaction.isTokenInteraction, Converter={StaticResource binv}}"/>
 										<Button x:Name="addMainTriggerButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="addMainTriggerButton_Click" IsEnabled="{Binding ElementName=isTokenCB, Path=IsChecked, Converter={StaticResource binv}}">
 											<Image Source="/JiME;component/Assets/add2.png"/>
 										</Button>
