@@ -13,7 +13,7 @@ namespace JiME
 	/// </summary>
 	public class Scenario : INotifyPropertyChanged
 	{
-		string _scenarioName, _fileName, _objectiveName, _fileVersion, _specialInstructions;
+		string _scenarioName, _fileName, _objectiveName, _fileVersion, _specialInstructions, _coverImage;
 		bool _isDirty, _scenarioTypeJourney, _useTileGraphics;
 		int _threatMax, _loreReward, _xpReward, _shadowFear, _loreStartValue, _xpStartValue;
 		int[] _wallTypes;
@@ -183,6 +183,17 @@ namespace JiME
 				PropChanged( "specialInstructions" );
 			}
 		}
+
+		public string coverImage
+		{
+			get => _coverImage;
+			set
+			{
+				_coverImage = value;
+				PropChanged("coverImage");
+			}
+		}
+
 		public bool useTileGraphics
 		{
 			get => _useTileGraphics;
@@ -353,6 +364,7 @@ namespace JiME
 			s.scenarioGUID = fm.scenarioGUID;
 			s.campaignGUID = fm.campaignGUID;
 			s.specialInstructions = fm.specialInstructions ?? "";
+			s.coverImage = fm.coverImage;
 			s.useTileGraphics = fm.useTileGraphics;
 			s.scenarioEndStatus = new Dictionary<string, bool>( fm.scenarioEndStatus );
 
@@ -389,6 +401,7 @@ namespace JiME
 			scenarioGUID = Guid.NewGuid();
 			campaignGUID = Guid.NewGuid();
 			specialInstructions = "";
+			coverImage = null;
 			threatMax = 60;
 			scenarioTypeJourney = true;
 			objectiveName = "None";
