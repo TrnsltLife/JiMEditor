@@ -11,7 +11,6 @@ namespace JiME.Views
 	/// </summary>
 	public partial class ImageEditorWindow : Window
 	{
-		public Scenario scenario { get; set; }
 		public string coverImage { get; set; }
 
 		public ImageEditorWindow( Scenario s )
@@ -24,11 +23,26 @@ namespace JiME.Views
 				this.HideMinimizeAndMaximizeButtons();
 			};
 
-			scenario = s;
 			coverImage = s.coverImage;
 
 			UpdateInfo();
 		}
+
+		public ImageEditorWindow(Campaign c)
+		{
+			InitializeComponent();
+			DataContext = this;
+
+			SourceInitialized += (x, y) =>
+			{
+				this.HideMinimizeAndMaximizeButtons();
+			};
+
+			coverImage = c.coverImage;
+
+			UpdateInfo();
+		}
+
 
 		private BitmapSource BitmapFromBase64()
 		{

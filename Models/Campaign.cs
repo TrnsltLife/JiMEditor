@@ -8,7 +8,7 @@ namespace JiME
 {
 	public class Campaign : INotifyPropertyChanged
 	{
-		string _campaignName, _fileVersion;
+		string _campaignName, _fileVersion, _coverImage;
 
 		public Guid campaignGUID;
 		public string campaignName
@@ -29,6 +29,16 @@ namespace JiME
 				PropChanged( "fileVersion" );
 			}
 		}
+		public string coverImage
+		{
+			get => _coverImage;
+			set
+			{
+				_coverImage = value;
+				PropChanged("coverImage");
+			}
+		}
+
 		public string storyText { get; set; }
 		public string description { get; set; }
 
@@ -49,6 +59,7 @@ namespace JiME
 			storyText = "";
 			description = "";
 			fileVersion = Utils.formatVersion;
+			coverImage = null;
 		}
 
 		void PropChanged( string name )
