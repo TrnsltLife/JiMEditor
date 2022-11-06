@@ -191,6 +191,9 @@
     <Compile Include="Views\ScenarioWindow.xaml.cs">
       <DependentUpon>ScenarioWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ImageEditorWindow.xaml.cs">
+      <DependentUpon>ImageEditorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TextEditorWindow.xaml.cs">
       <DependentUpon>TextEditorWindow.xaml</DependentUpon>
     </Compile>
@@ -326,6 +329,10 @@
     <Page Include="Views\ScenarioWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ImageEditorWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\TextEditorWindow.xaml">
       <SubType>Designer</SubType>

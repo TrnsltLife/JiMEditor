@@ -219,6 +219,15 @@ namespace JiME.Views
 			}
 		}
 
+		private void imageBtn_Click(object sender, RoutedEventArgs e)
+        {
+			ImageEditorWindow ie = new ImageEditorWindow(scenario);
+			if(ie.ShowDialog() == true)
+            {
+				scenario.coverImage = ie.coverImage;
+            }
+        }
+
 		private void ResolutionEditButton_Click( object sender, RoutedEventArgs e )
 		{
 			if ( resolutionCB.SelectedIndex < 0 )

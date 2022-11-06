@@ -56,6 +56,15 @@ namespace JiME.Views
 			SaveCampaign();
 		}
 
+		private void imageBtn_Click(object sender, RoutedEventArgs e)
+		{
+			ImageEditorWindow ie = new ImageEditorWindow(campaign);
+			if (ie.ShowDialog() == true)
+			{
+				campaign.coverImage = ie.coverImage;
+			}
+		}
+
 		private void removeScenario_Click( object sender, RoutedEventArgs e )
 		{
 			bool doDelete = false;

@@ -24,6 +24,7 @@ namespace JiME
 		public Guid scenarioGUID { get; set; }
 		public Guid campaignGUID { get; set; }
 		public string specialInstructions { get; set; }
+		public string coverImage { get; set; }
 		public string fileVersion { get; set; }
 		public string fileName { get; set; }
 		public string saveDate { get; set; }
@@ -65,6 +66,7 @@ namespace JiME
 			scenarioGUID = source.scenarioGUID;
 			campaignGUID = source.campaignGUID;
 			specialInstructions = source.specialInstructions;
+			coverImage = source.coverImage;
 			fileName = source.fileName;
 			fileVersion = Utils.formatVersion;
 			saveDate = source.saveDate;
