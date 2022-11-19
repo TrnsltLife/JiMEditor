@@ -13,6 +13,10 @@
 
 	<StackPanel Orientation="Vertical" Margin="0,0,0,0">
 		<StackPanel Orientation="Horizontal">
+			<Button Content="B" FontWeight="Bold" Command="{x:Static EditingCommands.ToggleBold}" CommandTarget="{Binding ElementName=iconRTB}"></Button>
+			<Button Content="I" FontStyle="Italic" Command="{x:Static EditingCommands.ToggleItalic}" CommandTarget="{Binding ElementName=iconRTB}"></Button>
+			<Button Content="Clear" Click="ClearFormattingButton_Click" Margin="0,0,5,0"></Button>
+
 			<Button Content="M" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
 			<Button Content="Z" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
 			<Button Content="A" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
@@ -41,26 +45,24 @@
 			<Button Content="c" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click" Margin="0,0,5,0"></Button>
 
 			<Button Content="I" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
-			<Button Content="L" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click" Margin="0,0,5,0"></Button>
-
-			<Button Content="Clear Formatting" Click="ClearFormattingButton_Click"></Button>
+			<Button Content="L" FontFamily="/Assets/#LoTR JiME Icons" Click="InsertButton_Click"></Button>
 		</StackPanel>
 		<RichTextBox x:Name="iconRTB" Margin="0,5" HorizontalAlignment="Stretch" AcceptsReturn="true" MinHeight="64" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
 			<RichTextBox.CommandBindings>
-				<CommandBinding Command="AlignCenter" CanExecute="CommandBinding_CanExecute" />
-				<CommandBinding Command="AlignJustify" CanExecute="CommandBinding_CanExecute" />
-				<CommandBinding Command="AlignLeft" CanExecute="CommandBinding_CanExecute" />
-				<CommandBinding Command="AlignRight" CanExecute="CommandBinding_CanExecute" />
-				<CommandBinding Command="DecreaseFontSize" CanExecute="CommandBinding_CanExecute" />
-				<CommandBinding Command="DecreaseIndentation" CanExecute="CommandBinding_CanExecute" />
-				<CommandBinding Command="IncreaseFontSize" CanExecute="CommandBinding_CanExecute" />
+				<CommandBinding Command="AlignCenter" CanExecute="CommandBinding_CannotExecute" />
+				<CommandBinding Command="AlignJustify" CanExecute="CommandBinding_CannotExecute" />
+				<CommandBinding Command="AlignLeft" CanExecute="CommandBinding_CannotExecute" />
+				<CommandBinding Command="AlignRight" CanExecute="CommandBinding_CannotExecute" />
+				<CommandBinding Command="DecreaseFontSize" CanExecute="CommandBinding_CannotExecute" />
+				<CommandBinding Command="DecreaseIndentation" CanExecute="CommandBinding_CannotExecute" />
+				<CommandBinding Command="IncreaseFontSize" CanExecute="CommandBinding_CannotExecute" />
 				<CommandBinding Command="ToggleBold" CanExecute="CommandBinding_CanExecute" />
-				<CommandBinding Command="ToggleBullets" CanExecute="CommandBinding_CanExecute" />
+				<CommandBinding Command="ToggleBullets" CanExecute="CommandBinding_CannotExecute" />
 				<CommandBinding Command="ToggleItalic" CanExecute="CommandBinding_CanExecute" />
-				<CommandBinding Command="ToggleNumbering" CanExecute="CommandBinding_CanExecute" />
-				<CommandBinding Command="ToggleSubscript" CanExecute="CommandBinding_CanExecute" />
-				<CommandBinding Command="ToggleSuperscript" CanExecute="CommandBinding_CanExecute" />
-				<CommandBinding Command="ToggleUnderline" CanExecute="CommandBinding_CanExecute" />
+				<CommandBinding Command="ToggleNumbering" CanExecute="CommandBinding_CannotExecute" />
+				<CommandBinding Command="ToggleSubscript" CanExecute="CommandBinding_CannotExecute" />
+				<CommandBinding Command="ToggleSuperscript" CanExecute="CommandBinding_CannotExecute" />
+				<CommandBinding Command="ToggleUnderline" CanExecute="CommandBinding_CannotExecute" />
 			</RichTextBox.CommandBindings>
 		</RichTextBox>
 		<!--

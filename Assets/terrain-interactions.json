@@ -52,7 +52,7 @@
       "textBookData": {
         "dataName": "Default Text",
         "pages": [
-          "You may <b>I</b> interact with barrels to test <b>W</b>; 2. If you pass, apply 4 hits and stun to a nearby enemy and discard the barrels.\r\nInteracting with barrels does not provoke attacks."
+          "You may <font=\"Icon\">I</font> interact with barrels to test <font=\"Icon\">W</font>; 2. If you pass, apply 4 hits and stun to a nearby enemy and discard the barrels.\r\nInteracting with barrels does not provoke attacks."
         ],
         "triggerName": "None",
         "GUID": "19c86a57-79e0-4420-ae30-e1f65bede5ec",
@@ -61,7 +61,7 @@
       "eventBookData": {
         "dataName": "Default Text",
         "pages": [
-          "You may <b>I</b> interact with barrels to test <b>W</b>; 2. If you pass, apply 4 hits and stun to a nearby enemy and discard the barrels.\r\nInteracting with barrels does not provoke attacks."
+          "You may <font=\"Icon\">I</font> interact with barrels to test <font=\"Icon\">W</font>; 2. If you pass, apply 4 hits and stun to a nearby enemy and discard the barrels.\r\nInteracting with barrels does not provoke attacks."
         ],
         "triggerName": "None",
         "GUID": "c7fce0eb-b56c-4365-baba-e463fea1d8c1",
@@ -110,7 +110,7 @@
     },
     {
       "isPersistent": true,
-      "persistentText": "If you test to negate <b>D</b> or <b>F</b> while in a space with a boulder, you may convert 1 <b>f</b> to 1 <b>s</b>.",
+      "persistentText": "If you test to negate <font=\"Icon\">D</font> or <font=\"Icon\">F</font> while in a space with a boulder, you may convert 1 <font=\"Icon\">f</font> to 1 <font=\"Icon\">s</font>.",
       "hasActivated": true,
       "dataName": "Terrain: Boulder",
       "GUID": "a9000a1b-ae0f-4f80-8d75-73e19b0ed10e",
@@ -146,7 +146,7 @@
     },
     {
       "isPersistent": true,
-      "persistentText": "After you end your turn in a space with a bush, you may test <b>W</b>; 2. If you pass, become hidden.",
+      "persistentText": "After you end your turn in a space with a bush, you may test <font=\"Icon\">W</font>; 2. If you pass, become hidden.",
       "hasActivated": true,
       "dataName": "Terrain: Bush",
       "GUID": "396e6a1f-0fef-4b17-9cce-7a9fbad58a09",
@@ -232,7 +232,7 @@
       "textBookData": {
         "dataName": "Default Text",
         "pages": [
-          "You may <b>I</b> interact with a chest to test <b>Z</b>; 2. If you pass, discard the chest and <b>L</b> lore increases by 4."
+          "You may <font=\"Icon\">I</font> interact with a chest to test <font=\"Icon\">Z</font>; 2. If you pass, discard the chest and <font=\"Icon\">L</font> lore increases by 4."
         ],
         "triggerName": "None",
         "GUID": "72726203-3826-48c6-a819-1b69cbe590b1",
@@ -241,7 +241,7 @@
       "eventBookData": {
         "dataName": "Default Text",
         "pages": [
-          "You may <b>I</b> interact with a chest to test <b>Z</b>; 2. If you pass, discard the chest and <b>L</b> lore increases by 4."
+          "You may <font=\"Icon\">I</font> interact with a chest to test <font=\"Icon\">Z</font>; 2. If you pass, discard the chest and <font=\"Icon\">L</font> lore increases by 4."
         ],
         "triggerName": "None",
         "GUID": "9026de33-7b30-4f64-8537-11093a4726e9",
@@ -254,7 +254,7 @@
     },
     {
       "isPersistent": true,
-      "persistentText": "While a figure is in a space with elevation, their <b>R</b> attacks can target a figure 1 additional space away.\r\nFigures in a space with elevation are in range only if the attacker is in a space with elevation.",
+      "persistentText": "While a figure is in a space with elevation, their <font=\"Icon\">R</font> attacks can target a figure 1 additional space away.\r\nFigures in a space with elevation are in range only if the attacker is in a space with elevation.",
       "hasActivated": true,
       "dataName": "Terrain: Elevation",
       "GUID": "67aa4129-64e4-458d-9ee2-b17450c157e6",
@@ -290,7 +290,7 @@
     },
     {
       "isPersistent": true,
-      "persistentText": "When you would move through a fence, test <b>A</b>; 1. If you fail, forfeit that movement instead.\r\nAfter an enemy moves through a fence, their movement immediately ends (even if this prevents reaching their target).",
+      "persistentText": "When you would move through a fence, test <font=\"Icon\">A</font>; 1. If you fail, forfeit that movement instead.\r\nAfter an enemy moves through a fence, their movement immediately ends (even if this prevents reaching their target).",
       "hasActivated": true,
       "dataName": "Terrain: Fence",
       "GUID": "719249f3-23f5-4fcb-ba9e-b4b8f5fa48de",
@@ -326,7 +326,7 @@
     },
     {
       "isPersistent": true,
-      "persistentText": "If you attack while in a space with a fire pit, you may discard a card with <b>f</b> from the test to add pierce or smite.",
+      "persistentText": "If you attack while in a space with a fire pit, you may discard a card with <font=\"Icon\">f</font> from the test to add pierce or smite.",
       "hasActivated": true,
       "dataName": "Terrain: Fire Pit",
       "GUID": "d6142c3a-bb7f-4ca2-abf3-340c4f753dcb",
@@ -362,7 +362,7 @@
     },
     {
       "isPersistent": true,
-      "persistentText": "If you would suffer <b>F</b> while in a space with a fountain, that <b>F</b> is suffered facedown.\r\nIf you test to negate <b>D</b> or <b>F</b> while in a space with a fountain, you may reveal 1 additional card.",
+      "persistentText": "If you would suffer <font=\"Icon\">F</font> while in a space with a fountain, that <font=\"Icon\">F</font> is suffered facedown.\r\nIf you test to negate <font=\"Icon\">D</font> or <font=\"Icon\">F</font> while in a space with a fountain, you may reveal 1 additional card.",
       "hasActivated": true,
       "dataName": "Terrain: Fountain",
       "GUID": "9a2ef915-a89c-4361-8689-98a72b05219d",
@@ -398,7 +398,7 @@
     },
     {
       "isPersistent": true,
-      "persistentText": "You may <b>I</b> interact with a log to test <b>A</b>; 1. If you pass, gain 1 inspiration and become determined.\r\nInteracting with a log does not provoke attacks.",
+      "persistentText": "You may <font=\"Icon\">I</font> interact with a log to test <font=\"Icon\">A</font>; 1. If you pass, gain 1 inspiration and become determined.\r\nInteracting with a log does not provoke attacks.",
       "hasActivated": true,
       "dataName": "Terrain: Log",
       "GUID": "2bb07be7-6d1a-4ee3-b847-a7c38a70b3c1",
@@ -434,7 +434,7 @@
     },
     {
       "isPersistent": true,
-      "persistentText": "If you would suffer <b>D</b> while in a space with mist, that <b>D</b> is suffered facedown.\r\nWhen you attack an enemy that is in a space with mist, you cannot convert <b>f</b> to <b>s</b>.",
+      "persistentText": "If you would suffer <font=\"Icon\">D</font> while in a space with mist, that <font=\"Icon\">D</font> is suffered facedown.\r\nWhen you attack an enemy that is in a space with mist, you cannot convert <font=\"Icon\">f</font> to <font=\"Icon\">s</font>.",
       "hasActivated": true,
       "dataName": "Terrain: Mist",
       "GUID": "56b13d98-e7f6-4122-a5b1-9f193bfc1fba",
@@ -470,7 +470,7 @@
     },
     {
       "isPersistent": true,
-      "persistentText": "After you move into a space with a pit, test <b>A</b>; 2. If you fail, suffer 2 <b>D</b>.",
+      "persistentText": "After you move into a space with a pit, test <font=\"Icon\">A</font>; 2. If you fail, suffer 2 <font=\"Icon\">D</font>.",
       "hasActivated": true,
       "dataName": "Terrain: Pit",
       "GUID": "0072babc-c4b8-4f58-9862-c734fa0a32e3",
@@ -506,7 +506,7 @@
     },
     {
       "isPersistent": true,
-      "persistentText": "At the start of your turn, if you are in a space with a pond, gain 1 inspiration.\r\nAfter you move into a space with a pond, test <b>S</b>; 2. If you fail, you cannot move out of that space this turn.",
+      "persistentText": "At the start of your turn, if you are in a space with a pond, gain 1 inspiration.\r\nAfter you move into a space with a pond, test <font=\"Icon\">S</font>; 2. If you fail, you cannot move out of that space this turn.",
       "hasActivated": true,
       "dataName": "Terrain: Pond",
       "GUID": "d862b6cb-422f-4736-9577-4895ed5885dc",
@@ -542,7 +542,7 @@
     },
     {
       "isPersistent": true,
-      "persistentText": "While in a space with rubble, you may use the rubble as an equipped item.\r\nUse the <b>W</b> stat for the combat test. It is a <b>R</b> weapon.\r\n1<b>s</b>: 2 hits\r\n2<b>s</b>: 1 hit, pierce",
+      "persistentText": "While in a space with rubble, you may use the rubble as an equipped item.\r\nUse the <font=\"Icon\">W</font> stat for the combat test. It is a <font=\"Icon\">R</font> weapon.\r\n1<font=\"Icon\">s</font>: 2 hits\r\n2<font=\"Icon\">s</font>: 1 hit, pierce",
       "hasActivated": true,
       "dataName": "Terrain: Rubble",
       "GUID": "0f6eb3a3-0a1a-46d5-b401-a0634688689c",
@@ -686,7 +686,7 @@
     },
     {
       "isPersistent": true,
-      "persistentText": "You may <b>I</b> interact with a table to test <b>S</b>; 1. If you pass, gain 1 inspiration and become emboldened.\r\nInteracting with a table does not provoke attacks.",
+      "persistentText": "You may <font=\"Icon\">I</font> interact with a table to test <font=\"Icon\">S</font>; 1. If you pass, gain 1 inspiration and become emboldened.\r\nInteracting with a table does not provoke attacks.",
       "hasActivated": true,
       "dataName": "Terrain: Table",
       "GUID": "d1786255-104a-4e02-a4d4-e4d846198711",
@@ -722,7 +722,7 @@
     },
     {
       "isPersistent": true,
-      "persistentText": "After a hero moves through a trench, they suffer 2 facedown <b>D</b>.\r\nAfter an enemy moves through a trench, apply 2 hits to that enemy. (This may change the enemy attack.)",
+      "persistentText": "After a hero moves through a trench, they suffer 2 facedown <font=\"Icon\">D</font>.\r\nAfter an enemy moves through a trench, apply 2 hits to that enemy. (This may change the enemy attack.)",
       "hasActivated": true,
       "dataName": "Terrain: Trench",
       "GUID": "cd47e8dd-313a-4522-b5bd-c24f2a391a8e",
@@ -794,7 +794,7 @@
     },
     {
       "isPersistent": true,
-      "persistentText": "When you would move out of a space with a web, test <b>M</b>; 1. If you fail, forfeit that movement instead.",
+      "persistentText": "When you would move out of a space with a web, test <font=\"Icon\">M</font>; 1. If you fail, forfeit that movement instead.",
       "hasActivated": true,
       "dataName": "Terrain: Web",
       "GUID": "83232690-60f8-4825-b53d-627c035cf888",
