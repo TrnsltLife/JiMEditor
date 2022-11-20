@@ -51,24 +51,16 @@
 				</StackPanel>
 			</Border>
 
-			<!--<Border x:Name="hintBlock" Style="{StaticResource callout}" Margin="0,10,0,0">
+			<Border x:Name="hintBlock" Style="{StaticResource callout}" Margin="0,10,0,0">
 				<StackPanel>
 					<TextBlock Text="Block Hinting (Optional):" Style="{StaticResource Heading}"/>
-
-					-->
-			<!--dynamic setting-->
-			<!--<CheckBox x:Name="dynamicCB" Foreground="White" Content="This Block is Dynamic" VerticalAlignment="Center" IsChecked="{Binding chapter.isDynamic}" Margin="0,5,0,0"/>
-					<TextBlock Text="If a Tile Block MAY or MAY NOT be activated during a Scenario, mark it as Dynamic. For example, this is useful for optional side quests that may not always appear duing a Scenario. This helps the Companion App build the Scenario properly. Dynamic Blocks don't have a Fog of War." Margin="0,5,0,0" Style="{StaticResource SubText}" TextWrapping="Wrap"/>-->
-
-			<!--<TextBlock Text="Block Hinting (Optional):" Style="{StaticResource Heading}" Margin="0,10,0,0"/>-->
-			<!--
 
 					<TextBlock Text="Optionally choose the Tile Block you'd prefer this Block to attach to in the Companion App. During Scenario creation, the Companion App will attempt to make this Block attach to the one you select below. If it can't (because it doesn't fit) or you select 'None', a random Block will be used instead." Style="{StaticResource SubText}" TextWrapping="Wrap"/>
 
 					<ComboBox ItemsSource="{Binding scenario.chapterObserver}" DisplayMemberPath="dataName" SelectedValue="{Binding chapter.attachHint}" SelectedValuePath="dataName" HorizontalAlignment="Left" Width="250" IsEnabled="{Binding chapter.isEmpty, Converter={StaticResource binv}}" VerticalAlignment="Center" Margin="0,5,0,0"/>
 
 				</StackPanel>
-			</Border>-->
+			</Border>
 
 			<Border Style="{StaticResource callout}" Margin="0,5">
 				<StackPanel>
