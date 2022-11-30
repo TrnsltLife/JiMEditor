@@ -51,7 +51,7 @@ namespace JiME.Models
         public static readonly Collection SPREADING_WAR = new Collection(5, "Spreading War", "w",
             //new string[] { "Fell Beast", "Warg Rider",  "Siege Engine", "War Oliphaunt", "Soldier", "Uruk Warrior", },
             new Monster[] {new Monster(21), new Monster(22), new Monster(23), new Monster(24), new Monster(25), new Monster(26)},
-            new int[] {}, //tileId
+            new int[] {103, 104, 222, 223, 224, 225, 226, 227, 314, 315, 316, 317, 318, 319, 320, 403, 404, 500}, //tileId
             //         Barricade, Chest, Fence, Fountain, Pond, Trench
             new int[] {        4,     4,     9,        1,    1,      9 }, //terrainCount
             true, true
