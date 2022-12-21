@@ -47,6 +47,7 @@ namespace JiME
 				throw new Exception( "Could not properly load scenario projects." );
 			}
 
+			editorVersion.Text = "v." + Utils.appVersion;
 			formatVersion.Text = "Scenario Format Version: v." + Utils.formatVersion;
 		}
 

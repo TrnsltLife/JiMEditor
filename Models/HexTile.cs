@@ -109,11 +109,24 @@ namespace JiME
 				pivotPathShape = new Path();
 				pivotPathShape.Stroke = Brushes.Magenta;
 				pivotPathShape.StrokeThickness = 2;
-				pivotPathShape.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+				pivotPathShape.Fill = new SolidColorBrush(Color.FromRgb(0, 255, 255));
 				PathFigure[] pivotfigures = new PathFigure[1];
 				pivotfigures[0] = BuildRectangle(new Point(-1, -1), 3, 3);
 				pivotPathShape.Data = new PathGeometry(pivotfigures);
 				pivotPathShape.DataContext = this;
+			}
+
+			if(printClick)
+            {
+				//Click point for dragging
+				clickPathShape = new Path();
+				clickPathShape.Stroke = Brushes.Yellow;
+				clickPathShape.StrokeThickness = 2;
+				clickPathShape.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 0));
+				PathFigure[] clickfigures = new PathFigure[1];
+				clickfigures[0] = BuildRectangle(new Point(clickV.X + -1, clickV.Y + -1), 3, 3);
+				clickPathShape.Data = new PathGeometry(clickfigures);
+				clickPathShape.DataContext = this;
 			}
 		}
 
@@ -175,6 +188,13 @@ namespace JiME
 
 			if ( snapped != new Vector( -1, -1 ) )
 				Update();
+		}
+
+		override public void Move(double x, double y)
+		{
+			position = new Vector(position.X + (x * 48), position.Y + (y * 55.4256256d / 2));
+
+			Update();
 		}
 	}
 }
