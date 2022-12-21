@@ -58,9 +58,12 @@
 		</Grid.RowDefinitions>
 
 		<!--title-->
-		<TextBlock FontSize="30" Text="Your Journey"/>
+		<StackPanel Orientation="Horizontal">
+			<TextBlock FontSize="30" Text="JiMEditor"/>
+			<TextBlock x:Name="editorVersion" Style="{StaticResource Heading}" VerticalAlignment="Bottom" Margin="20,5"/>
+		</StackPanel>
 		<TextBlock Grid.Column="1" HorizontalAlignment="Right" FontSize="14" VerticalAlignment="Center">
-			A Scenario Editor For <Italic>Journeys in Middle Earth</Italic>.
+			A Scenario Editor For <Italic>Your Journey</Italic>.
 		</TextBlock>
 
 		<!--recents-->
