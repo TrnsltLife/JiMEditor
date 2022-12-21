@@ -5,7 +5,7 @@ A Scenario editor for the Journeys in Middle Earth board game. The scenarios are
 ## Download the latest release
 If you just want to download and run the app, grab it here: 
 
-[Download the Newest Release!](https://github.com/TrnsltLife/JiMEditor/releases/tag/v0.20)! Featuring tiles from Shadowed Paths, enemies from all the expansions, enemy attack descriptions, text boxes that allow you to edit with special icons, and more!
+[Download the Newest Release!](https://github.com/TrnsltLife/JiMEditor/releases/tag/v0.21)! Featuring tiles from Spreading War, Battle Maps with Terrain Tokens, enemies from all the expansions, enemy attack descriptions, text boxes that allow you to edit with special icons, bold and italic, and more!
 
 [Download GlowPuff's original releases](https://github.com/GlowPuff/JiMEditor/releases)
 
