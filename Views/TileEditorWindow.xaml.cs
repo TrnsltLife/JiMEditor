@@ -53,6 +53,7 @@ namespace JiME.Views
 
 			//Uncomment these for visual debugging
 			//HexTile.printPivot = true;
+			//HexTile.printClick = true;
 			//HexTile.printRect = true;
 			//SquareTile.printPivot = true;
 
@@ -140,6 +141,14 @@ namespace JiME.Views
 				{
 					DeleteTileAction();
 				}
+				else if (e.Key == Key.Up)
+					selected.Move(0, -1);
+				else if (e.Key == Key.Down)
+					selected.Move(0, 1);
+				else if (e.Key == Key.Left)
+					selected.Move(-1, 0);
+				else if (e.Key == Key.Right)
+					selected.Move(1, 0);
 			}
 		}
 

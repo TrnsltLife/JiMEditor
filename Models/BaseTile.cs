@@ -83,6 +83,10 @@ namespace JiME
 		public static bool printPivot = false;
 		[JsonIgnore]
 		public Path pivotPathShape;
+		[JsonIgnore]
+		public static bool printClick = false;
+		[JsonIgnore]
+		public Path clickPathShape;
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -219,6 +223,8 @@ namespace JiME
 				Canvas.SetZIndex(rectPathShape, 100);
 			if(printPivot)
 				Canvas.SetZIndex(pivotPathShape, 103);
+			if (printClick)
+				Canvas.SetZIndex(clickPathShape, 104);
 		}
 
 		virtual public void Unselect()
@@ -231,6 +237,8 @@ namespace JiME
 				Canvas.SetZIndex(rectPathShape, 0);
 			if (printPivot)
 				Canvas.SetZIndex(pivotPathShape, 3);
+			if (printClick)
+				Canvas.SetZIndex(clickPathShape, 4);
 		}
 
 		virtual public void Rehydrate( Canvas parentCanvas )
@@ -284,6 +292,14 @@ namespace JiME
 				Canvas.SetTop(pivotPathShape, 0);
 			}
 
+			//Pivot point for debugging
+			if (printClick)
+			{
+				canvas.Children.Add(clickPathShape);
+				Canvas.SetLeft(clickPathShape, 0);
+				Canvas.SetTop(clickPathShape, 0);
+			}
+
 			parentCanvas.Children.Add(canvas);
 			Update();
 		}
@@ -335,7 +351,9 @@ namespace JiME
 			if ( grp?.Children.Count == 2 ) //HexTile
 			{
 				Vector gv = new Vector( ( (TranslateTransform)grp.Children[0] ).X, ( (TranslateTransform)grp.Children[0] ).Y );
+
 				clickV = e.GetPosition( parentCanvas );
+
 				Debug.Log("canvas X:" + gv.X + " Y:" + gv.Y);
 				Debug.Log("click   X: " + clickV.X + " Y:" + clickV.Y);
 				//clickV.X -= gv.X;
@@ -360,7 +378,6 @@ namespace JiME
 			Vector snapped = new Vector();
 			snapped.X = ( from snapx in Utils.dragSnapX where clickPoint.X.WithinTolerance( snapx, Utils.tolerance ) select snapx ).FirstOr( -1 );
 			snapped.Y = ( from snapy in Utils.dragSnapY where clickPoint.Y.WithinTolerance( snapy, Utils.tolerance ) select snapy ).FirstOr( -1 );
-
 			position = snapped;
 
 			if ( snapped != new Vector( -1, -1 ) )
@@ -395,6 +412,13 @@ namespace JiME
 				p.Y = (from snapy in Utils.sqrSnapY where p.Y.WithinTolerance(snapy, 5) select snapy).FirstOr(-1);
 			}
 			return p;
+		}
+
+		virtual public void Move(double x, double y)
+		{
+			position = new Vector(position.X + (x * 48), position.Y + (y * 55.4256256d / 2));
+
+			Update();
 		}
 
 		virtual public void RenameTrigger( string oldName, string newName )

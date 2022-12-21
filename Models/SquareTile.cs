@@ -93,6 +93,19 @@ namespace JiME
 				pivotPathShape.Data = new PathGeometry(pivotfigures);
 				pivotPathShape.DataContext = this;
 			}
+
+			if (printClick)
+			{
+				//Click point for dragging
+				clickPathShape = new Path();
+				clickPathShape.Stroke = Brushes.Magenta;
+				clickPathShape.StrokeThickness = 2;
+				clickPathShape.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 0));
+				PathFigure[] clickfigures = new PathFigure[1];
+				clickfigures[0] = BuildRectangle(new Point(-1, -1), 3, 3);
+				clickPathShape.Data = new PathGeometry(clickfigures);
+				clickPathShape.DataContext = this;
+			}
 		}
 
 		/// <summary>
@@ -144,11 +157,17 @@ namespace JiME
 			Vector snapped = new Vector();
 			snapped.X = (int)(clickPoint.X / 25) * 25;
 			snapped.Y = (int)(clickPoint.Y / 25) * 25;
-
 			position = snapped;
 
 			if ( snapped != new Vector( -1, -1 ) )
 				Update();
+		}
+
+		override public void Move(double x, double y)
+		{
+			position = new Vector(position.X + (x * 25), position.Y + (y * 25));
+
+			Update();
 		}
 	}
 }
