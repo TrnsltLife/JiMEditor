@@ -14,10 +14,14 @@ namespace JiME
 	{
 		public Scenario scenario { get; set; }
 
-		public MainWindow(Guid campaignGUID) : this(null)
+		public MainWindow(Guid campaignGUID) : this((Scenario)null)
 		{
 			scenario.campaignGUID = campaignGUID;
 		}
+
+        public MainWindow(Procedural.IProceduralGenerator generator) : this(generator.GenerateScenario())
+        {
+        }
 
 		public MainWindow(Scenario s = null)
 		{

@@ -119,6 +119,8 @@
     <Compile Include="Models\Threat.cs" />
     <Compile Include="Models\Token.cs" />
     <Compile Include="Models\Trigger.cs" />
+    <Compile Include="Procedural\DummyGenerator.cs" />
+    <Compile Include="Procedural\IProceduralGenerator.cs" />
     <Compile Include="UserControls\TokenTypeSelector.xaml.cs">
       <DependentUpon>TokenTypeSelector.xaml</DependentUpon>
     </Compile>

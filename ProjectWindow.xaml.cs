@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using JiME.Views;
@@ -19,6 +21,8 @@ namespace JiME
 
 		public bool scrollVisible { get; set; }
 
+        private Dictionary<string, Type> generatorTypes;
+
 		public ProjectWindow()
 		{
 			InitializeComponent();
@@ -33,8 +37,15 @@ namespace JiME
 			projectCollection = new ObservableCollection<ProjectItem>();
 			projectLV.ItemsSource = projectCollection;
 
-			//poll Project folder for files and populate Recent list
-			var projects = FileManager.GetProjects();
+            // Find the generators
+            generatorTypes = System.Reflection.Assembly.GetExecutingAssembly().GetTypes()
+                .Where(t => !t.IsInterface && typeof(Procedural.IProceduralGenerator).IsAssignableFrom(t))
+                .ToDictionary(t => t.Name, t => t);
+            this.generators.ItemsSource = generatorTypes.Keys;
+            this.generators.SelectedIndex = 0;
+
+            //poll Project folder for files and populate Recent list
+            var projects = FileManager.GetProjects();
 			if ( projects != null )
 			{
 				foreach ( ProjectItem pi in projects )
@@ -92,7 +103,19 @@ namespace JiME
 			Close();
 		}
 
-		private void CampaignButton_Click( object sender, RoutedEventArgs e )
+        private void RandomScenarioButton_Click(object sender, RoutedEventArgs e)
+        {
+            var generatorType = this.generatorTypes[(string)this.generators.SelectedItem];
+            var generatorInstance = (Procedural.IProceduralGenerator)generatorType.GetConstructor(new Type[] { }).Invoke(new object[] { });
+
+            MainWindow mainWindow = new MainWindow(generatorInstance);
+            mainWindow.Show();
+            Close();
+        }
+
+        
+
+        private void CampaignButton_Click( object sender, RoutedEventArgs e )
 		{
 			CampaignWindow campaignWindow = new CampaignWindow();
 			campaignWindow.Show();
@@ -129,5 +152,5 @@ namespace JiME
 		{
 			this.DragMove();
 		}
-	}
+    }
 }
