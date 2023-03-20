@@ -82,9 +82,81 @@ namespace JiME.Visualization
         }
 
         private string getTriggerName(string dataName) => "TRIG_" + dataName;
-        private string getObjectiveName(string dataName) => "OBJ_" + dataName;
+        private string getThreatName(string dataName) => "Threat_" + dataName;
+        private string getObjectiveName(string dataName) => "OBJ_" + dataName;        
         private string getResolutionName(string dataName) => "RES_" + dataName;
+        private string getChapterName(string dataName) => "CHAP_" + dataName;
+        private string getActivationName(string dataName) => "ACT_" + dataName;
         private string getInteractionName(string dataName) => "INT_" + dataName;
+        private string getInteractionGroupName(string groupNameAndNumber) => "INTGRP_" + groupNameAndNumber;
+
+        private void getTriggerOrEventVertex(Dictionary<string, DataVertex> dict, string dataName, Action<DataVertex> action)
+        {
+            if (dataName?.Length > 0 && dataName != "None")
+            {
+                // First try trigger
+                var trigName = getTriggerName(dataName);
+                if (dict.ContainsKey(trigName))
+                {
+                    action(dict[trigName]);
+                    return;
+                }
+
+                // Then try event
+                var eventName = getInteractionName(dataName);
+                if (dict.ContainsKey(eventName))
+                {
+                    action(dict[eventName]);
+                    return;
+                }
+
+                // Not found
+                throw new Exception("Could not find trigger or interaction with dataName: " + dataName);
+            }
+        }
+
+        private void HandleCollection<T>(IEnumerable<T> collection, Func<T, DataVertex> vertexHandler, Action<T, DataVertex> edgeHandler = null)
+        {
+            // First add all vertices
+            var res = new List<Tuple<T, DataVertex>>();
+            foreach (var x in collection)
+            {
+                var vertex = vertexHandler(x);
+                res.Add(Tuple.Create(x, vertex));
+            }
+
+            // Then do the edges (afterwards because these might refer to items in collection)
+            if (edgeHandler != null)
+            {
+                foreach (var x in res)
+                {
+                    edgeHandler(x.Item1, x.Item2);
+                }
+            }
+        }
+
+        private DataVertex IntegrationGroupCheck(Dictionary<string, DataVertex> dict, Graph dataGraph, string dataName)
+        {
+            if (dataName.Contains("GRP"))
+            {
+                var trimmed = dataName.Trim();
+                var groupNameAndNumber = trimmed.Substring(trimmed.IndexOf("GRP"));
+                var groupName = getInteractionGroupName(groupNameAndNumber);
+                if (!dict.ContainsKey(groupName))
+                {
+                    // Create the group vertex
+                    var vertex = new DataVertex("G:" + groupNameAndNumber);
+                    dict.Add(groupName, vertex);
+                    dataGraph.AddVertex(vertex);
+                    return vertex;
+                } else
+                {
+                    // Return existing group
+                    return dict[groupName];
+                }
+            }
+            return null;
+        }
 
         private void SetupGraph()
         {
@@ -94,6 +166,8 @@ namespace JiME.Visualization
             }
 
             // TODO: Graph setup should be done in the model side (at least vertex and edge creation parts)
+            // TODO: Rename triggers???
+            // TODO: Some flavor text has things like "player may use 1 token to do X or Y", this might be really hard to include in random generation...
 
             // SETUP GRAPH
 
@@ -111,115 +185,282 @@ namespace JiME.Visualization
 
             // TODO: Data vertex types should be handled and shown in different color / shapes etc.
 
-            // Prepare triggers first as they don't have any edge definitions
-            foreach (var trigger in scenario.triggersObserver)
+            // Prepare triggers first as they are the clue that ties everything together and need to be available
+            HandleCollection(scenario.triggersObserver, x =>
             {
                 // Vertex for the trigger
-                var vertex = new DataVertex("T:" + trigger.dataName);
-                vertexDict.Add(getTriggerName(trigger.dataName), vertex);
+                var vertex = new DataVertex("T:" + x.dataName);
+                vertexDict.Add(getTriggerName(x.dataName), vertex);
                 dataGraph.AddVertex(vertex);
-            }
+                return vertex;
+            });
 
             // Then prepare objectives and link to triggers
-            foreach (var objective in scenario.objectiveObserver)
+            HandleCollection(scenario.objectiveObserver, x =>
             {
                 // Vertex for the objective
-                var vertex = new DataVertex("O:" + objective.dataName);
-                vertexDict.Add(getObjectiveName(objective.dataName), vertex);
+                var vertex = new DataVertex("O:" + x.dataName);
+                vertexDict.Add(getObjectiveName(x.dataName), vertex);
                 dataGraph.AddVertex(vertex);
-
+                return vertex;
+            },
+            (x, vertex) =>
+            {
                 // Scenario default objective
-                if (scenario.objectiveName == objective.dataName)
+                if (scenario.objectiveName == x.dataName)
                 {
                     dataGraph.AddEdge(new DataEdge(startVertex, vertex) { Text = "initiates" });
                 }
 
                 // Object is triggered by... (made available)
-                if (objective.triggeredByName?.Length > 0 && objective.triggeredByName != "None")
+                getTriggerOrEventVertex(vertexDict, x.triggeredByName, v =>
                 {
-                    dataGraph.AddEdge(new DataEdge(vertexDict[getTriggerName(objective.triggeredByName)], vertex) { Text = "initiates" });
-                }
+                    dataGraph.AddEdge(new DataEdge(v, vertex) { Text = "initiates" });
+                });
 
                 // Object is completed by...
-                if (objective.triggerName?.Length > 0 && objective.triggerName != "None")
+                getTriggerOrEventVertex(vertexDict, x.triggerName, v =>
                 {
-                    dataGraph.AddEdge(new DataEdge(vertexDict[getTriggerName(objective.triggerName)], vertex) { Text = "completes" });
-                }
+                    dataGraph.AddEdge(new DataEdge(v, vertex) { Text = "completes" });
+                });
 
                 // Object causes further trigger if completed...
-                if (objective.nextTrigger?.Length > 0 && objective.nextTrigger != "None")
+                getTriggerOrEventVertex(vertexDict, x.nextTrigger, v =>
                 {
-                    dataGraph.AddEdge(new DataEdge(vertex, vertexDict[getTriggerName(objective.nextTrigger)]) { Text = "on completion" });
-                }
-            }
+                    dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "on completion" });
+                });
+            });
 
-            // Then prepare objectives and link to triggers
-            foreach (var resolution in scenario.resolutionObserver)
+            // Then prepare resolutions and link to triggers
+            HandleCollection(scenario.resolutionObserver, x =>
             {
-                // Vertex for the objective
-                var vertex = new DataVertex("R:" + resolution.dataName);
-                vertexDict.Add(getResolutionName(resolution.dataName), vertex);
+                // Vertex for the resolution
+                var vertex = new DataVertex("R:" + x.dataName);
+                vertexDict.Add(getResolutionName(x.dataName), vertex);
                 dataGraph.AddVertex(vertex);
-
+                return vertex;
+            },
+            (x, vertex) =>
+            {
                 // Object is completed by...
-                if (resolution.triggerName?.Length > 0 && resolution.triggerName != "None")
+                getTriggerOrEventVertex(vertexDict, x.triggerName, v =>
                 {
-                    dataGraph.AddEdge(new DataEdge(vertexDict[getTriggerName(resolution.triggerName)], vertex) { Text = "triggers" });
-                }
-            }
+                    dataGraph.AddEdge(new DataEdge(v, vertex) { Text = "triggers" });
+                });
+            });
 
             // Then prepare interactions and link to triggers
-            foreach (var interaction in scenario.interactionObserver)
+            HandleCollection(scenario.interactionObserver, x =>
             {
-                // Vertex for the objective
-                var vertex = new DataVertex("I:" + interaction.dataName);
-                vertexDict.Add(getInteractionName(interaction.dataName), vertex);
+                // Vertex for the interaction
+                var vertex = new DataVertex("I:" + x.dataName);
+                vertexDict.Add(getInteractionName(x.dataName), vertex);
                 dataGraph.AddVertex(vertex);
 
-                // Rest depends on interaction type
-                switch(interaction.interactionType)
+                // Create interaction group if needed
+                var groupVertex = IntegrationGroupCheck(vertexDict, dataGraph, x.dataName);
+                if (groupVertex != null)
                 {
-                    case InteractionType.Decision:
-                        {
-                            var x = (DecisionInteraction)interaction;
-                            if (x.triggerName?.Length > 0 && x.triggerName != "None")
-                            {
-                                dataGraph.AddEdge(new DataEdge(vertexDict[getTriggerName(x.triggerName)], vertex) { Text = "initiates" });
-                            }
-                            else
-                            {
-                                // Special case: No initiation trigger so triggered from the start?
-                                // TODO: Or is it? Could this never be triggered?
-                                dataGraph.AddEdge(new DataEdge(startVertex, vertex) { Text = "initiates" });
-                            }
-                            if (x.triggerAfterName?.Length > 0 && x.triggerAfterName != "None")
-                            {
-                                dataGraph.AddEdge(new DataEdge(vertex, vertexDict[getTriggerName(x.triggerAfterName)]) { Text = "triggers" });
-                            }
-                            if (x.choice1Trigger?.Length > 0 && x.choice1Trigger != "None")
-                            {
-                                dataGraph.AddEdge(new DataEdge(vertex, vertexDict[getTriggerName(x.choice1Trigger)]) { Text = "\"" + x.choice1 + "\"" });
-                            }
-                            if (x.choice2Trigger?.Length > 0 && x.choice2Trigger != "None")
-                            {
-                                dataGraph.AddEdge(new DataEdge(vertex, vertexDict[getTriggerName(x.choice2Trigger)]) { Text = "\"" + x.choice2 + "\"" });
-                            }
-                            if (x.choice3Trigger?.Length > 0 && x.choice3Trigger != "None")
-                            {
-                                dataGraph.AddEdge(new DataEdge(vertex, vertexDict[getTriggerName(x.choice3Trigger)]) { Text = "\"" + x.choice3 + "\"" });
-                            }
-                            // TODO: Other properties
-                            break;
-                        }
-
-                    // TODO: other types
-                    default:
-                        throw new NotImplementedException("Graph preparation not implemented for interaction type: " + interaction.interactionType.ToString());
+                    dataGraph.AddEdge(new DataEdge(groupVertex, vertex) { Text = "includes" });
                 }
+
+                // Return actual vertex
+                return vertex;
+            },
+            (x, vertex) =>
+            {
+                // Base interaction triggers
+                if (x is InteractionBase)
+                {
+                    var x2 = x as InteractionBase;
+                    getTriggerOrEventVertex(vertexDict, x2.triggerName, v =>
+                    {
+                        dataGraph.AddEdge(new DataEdge(v, vertex) { Text = "initiates" });
+                    });
+                    /*else
+                    {
+                        // Special case: No initiation trigger so triggered from the start?
+                        // TODO: Or is it? Could this never be triggered?
+                        dataGraph.AddEdge(new DataEdge(startVertex, vertex) { Text = "initiates" });
+                    }*/
+                    getTriggerOrEventVertex(vertexDict, x2.triggerAfterName, v =>
+                    {
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "triggers" });
+                    });
+                    // TODO: other properties?
+                }
+
+                // Rest depends on interaction type
+                if (x is DecisionInteraction)
+                {
+                    var x2 = (DecisionInteraction)x;
+                    getTriggerOrEventVertex(vertexDict, x2.choice1Trigger, v =>
+                    {
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"" + x2.choice1 + "\"" });
+                    });
+                    getTriggerOrEventVertex(vertexDict, x2.choice2Trigger, v =>
+                    {
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"" + x2.choice2 + "\"" });
+                    });
+                    getTriggerOrEventVertex(vertexDict, x2.choice3Trigger, v =>
+                    {
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"" + x2.choice3 + "\"" });
+                    });
+                    // TODO: Other properties
+                }
+                else if (x is TestInteraction)
+                {
+                    var x2 = (TestInteraction)x;
+                    getTriggerOrEventVertex(vertexDict, x2.successTrigger, v =>
+                    {
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"PASS\"" });
+                    });
+                    getTriggerOrEventVertex(vertexDict, x2.failTrigger, v =>
+                    {
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"FAIL\"" });
+                    });
+                    // TODO: Other properties
+                }
+                else if (x is ConditionalInteraction)
+                {
+                    var x2 = (ConditionalInteraction)x;
+                    getTriggerOrEventVertex(vertexDict, x2.finishedTrigger, v =>
+                    {
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"FINISHED\"" });
+                    });
+                    if (x2.triggerList != null)
+                    {
+                        foreach (var t in x2.triggerList)
+                        {
+                            getTriggerOrEventVertex(vertexDict, t, v =>
+                            {
+                                dataGraph.AddEdge(new DataEdge(v, vertex) { Text = "\"CONDITION\"" });
+                            });
+                        }
+                    }
+                    // TODO: Other properties
+                }
+                else if (x is PersistentTokenInteraction)
+                {
+                    var x2 = (PersistentTokenInteraction)x;
+                    getTriggerOrEventVertex(vertexDict, x2.eventToActivate, v =>
+                    {
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"ACTIVATE\"" });
+                    });
+                    getTriggerOrEventVertex(vertexDict, x2.alternativeTextTrigger, v =>
+                    {
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"ALT. TEXT\"" });
+                    });
+                    // TODO: Other properties
+                }
+                else if (x is ThreatInteraction)
+                {
+                    var x2 = (ThreatInteraction)x;
+                    getTriggerOrEventVertex(vertexDict, x2.triggerDefeatedName, v =>
+                    {
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"DEFEATED\"" });
+                    });
+                    // TODO: Other properties
+                }
+                else if (x is TextInteraction)
+                {
+                    // No triggers
+                    // TODO: Other properties
+                }
+                else // TODO: other types
+                {
+                    throw new NotImplementedException("Graph preparation not implemented for interaction type: " + x.GetType().Name);
+                }
+            });
+
+            // Then prepare tile blocks and link to triggers
+            HandleCollection(scenario.chapterObserver, x =>
+            {
+                // Vertex for the scenario/tileset
+                var vertex = new DataVertex("C:" + x.dataName);
+                vertexDict.Add(getChapterName(x.dataName), vertex);
+                dataGraph.AddVertex(vertex);
+                return vertex;
+            },
+            (x, vertex) =>
+            {
+                // Pre-explored from the start
+                // TODO: this is not right, "start" tiles had this false
+                /*if (x.isPreExplored)
+                {
+                    dataGraph.AddEdge(new DataEdge(startVertex, vertex) { Text = "explores" });
+                }*/
+
+                if (vertexDict.ContainsKey(getInteractionGroupName(x.randomInteractionGroup ?? "")))
+                {
+                    var groupVertex = vertexDict[getInteractionGroupName(x.randomInteractionGroup)];
+                    dataGraph.AddEdge(new DataEdge(vertex, groupVertex) { Text = "activates" });
+                }
+
+                // Object is explored by...
+                getTriggerOrEventVertex(vertexDict, x.triggeredBy, v =>
+                {
+                    dataGraph.AddEdge(new DataEdge(v, vertex) { Text = "reveals" });
+                });
+                getTriggerOrEventVertex(vertexDict, x.triggerName, v =>
+                {
+                    dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "triggers" });
+                });
+
+                // Object is explored by...
+                getTriggerOrEventVertex(vertexDict, x.exploreTrigger, v =>
+                {
+                    dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "explore triggers" });
+                });
+            });
+
+            // Then prepare monster activations and link to triggers
+            HandleCollection(scenario.activationsObserver, x =>
+            {
+                // Vertex for the activation
+                var vertex = new DataVertex("A:" + x.dataName);
+                vertexDict.Add(getActivationName(x.dataName), vertex);
+                dataGraph.AddVertex(vertex);
+                return vertex;
+            },
+            (x, vertex) =>
+            {
+                // Object is activated by...
+                getTriggerOrEventVertex(vertexDict, x.triggerName, v =>
+                {
+                    dataGraph.AddEdge(new DataEdge(v, vertex) { Text = "activates" });
+                });
+            });
+
+            // Check each threat theshold (ordered by threshold)
+            if (!scenario.threatNotUsed)
+            {
+                DataVertex prevThreat = startVertex;
+                HandleCollection(scenario.threatObserver.OrderBy(x => x.threshold), x =>
+                {
+                // Vertex for the threat
+                var vertex = new DataVertex("Threat Level: " + x.threshold);
+                    vertexDict.Add(getThreatName(x.dataName + "_" + x.threshold), vertex);
+                    dataGraph.AddVertex(vertex);
+                    return vertex;
+                },
+                (x, vertex) =>
+                {
+                // Link to previous threat
+                dataGraph.AddEdge(new DataEdge(prevThreat, vertex, weight: 2) { Text = null });
+                    prevThreat = vertex;
+
+                // Object is completed by...
+                getTriggerOrEventVertex(vertexDict, x.triggerName, v =>
+                    {
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "initiates" });
+                    });
+                });
+                var maxThreatVertex = new DataVertex("Max Threat: " + scenario.threatMax);
+                vertexDict.Add(getThreatName("MAX THREAT"), maxThreatVertex);
+                dataGraph.AddVertex(maxThreatVertex);
+                dataGraph.AddEdge(new DataEdge(prevThreat, maxThreatVertex, weight: 2) { Text = null });
             }
-
-
-            // TODO: other stuff like MonsterActivations, Threats etc.
 
             // SETUP GRAPHAREA
             //Lets create logic core and filled data graph with edges and vertices
