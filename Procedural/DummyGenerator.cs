@@ -10,8 +10,28 @@ namespace JiME.Procedural
     {
         public Scenario GenerateScenario()
         {
-            var s = new Scenario(); // <-- This creates the scenario with "defaults"
-            s.scenarioName = "DummyScenario";
+            var s = new Scenario("DummyScenario");
+
+            s.AddInteraction(new DecisionInteraction("What to do?")
+            { 
+                   isThreeChoices = false,
+                   choice1 = "Complete objective",
+                   choice1Trigger = "Complete objective",
+                   choice2 = "Fail objective",
+                   choice2Trigger = "End In Failure"
+            });
+
+            s.AddTrigger("Complete objective");
+            
+            s.AddObjective(new Objective("DummyObjective") { triggerName = "Complete objective", nextTrigger = "End In Success" });
+            s.objectiveName = s.objectiveObserver.Where(o => o.dataName != "None").First().dataName;
+
+            s.AddTrigger("End In Success");
+            s.AddTrigger("End In Failure");
+
+            s.AddResolution(new TextBookData("Success!") { triggerName = "End In Success" } , true);
+            s.AddResolution(new TextBookData("Failure!") { triggerName = "End In Failure" }, false);
+
 
             return s;
         }

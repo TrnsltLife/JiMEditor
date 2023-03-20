@@ -220,6 +220,14 @@
     <Compile Include="Views\TriggerEditorWindow.xaml.cs">
       <DependentUpon>TriggerEditorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Visualization\GraphWindow.xaml.cs">
+      <DependentUpon>GraphWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Visualization\Models\DataEdge.cs" />
+    <Compile Include="Visualization\Models\DataVertex.cs" />
+    <Compile Include="Visualization\Models\Graph.cs" />
+    <Compile Include="Visualization\GraphArea.cs" />
+    <Compile Include="Visualization\Models\GraphLogic.cs" />
     <Page Include="Assets\Shapes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -366,6 +374,9 @@
     </Page>
     <Page Include="Views\TriggerEditorWindow.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Visualization\GraphWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
@@ -697,6 +708,9 @@
     <Resource Include="Assets\package.png" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="GraphX">
+      <Version>3.0.0</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.2</Version>
     </PackageReference>
@@ -1002,5 +1016,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -439,7 +439,14 @@ namespace JiME
 			}
 		}
 
-		private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e )
+        private void ScenarioVisualizationButton_Click(object sender, RoutedEventArgs e)
+        {
+            var sw = new Visualization.GraphWindow(scenario);
+            sw.Owner = this;
+            sw.Show();
+        }
+
+        private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e )
 		{
 			if ( scenario.isDirty )
 			{
