@@ -56,9 +56,9 @@ namespace JiME.Visualization.Models
             Interaction,
             InteractionGroup,
 
-            /**
-             * TileSet
-             */
+            /// <summary>
+            /// TileSet
+            /// </summary>
             Chapter,
             Tile,
             Token,

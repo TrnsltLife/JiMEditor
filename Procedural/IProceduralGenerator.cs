@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 
 namespace JiME.Procedural
 {
+    public interface IProceduralGenerator<TGeneratorParameters> : IProceduralGenerator
+    {
+        TGeneratorParameters GetDefaultParameters();
+        Scenario GenerateScenario(TGeneratorParameters parameters);
+    }
+
     public interface IProceduralGenerator
     {
-        Scenario GenerateScenario();
     }
 }

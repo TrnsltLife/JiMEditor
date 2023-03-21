@@ -8,9 +8,9 @@ using GraphX.Controls.Models;
 
 namespace JiME.Visualization.Views
 {
-    /**
-     * UIElement creation factory for DataVertex class
-     */
+    /// <summary>
+    /// UIElement creation factory for DataVertex class
+    /// </summary>
     public class GraphVertexLabelFactory : ILabelFactory<UIElement>
     {
         public IEnumerable<UIElement> CreateLabel<TCtrl>(TCtrl control)

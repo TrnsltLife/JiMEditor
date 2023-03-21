@@ -8,9 +8,9 @@ using GraphX.Controls.Models;
 
 namespace JiME.Visualization.Views
 {
-    /**
-     * UIElement creation factory for DataEdge class
-     */
+    /// <summary>
+    /// UIElement creation factory for DataEdge class
+    /// </summary>
     public class GraphEdgeLabelFactory : ILabelFactory<UIElement>
     {
         public IEnumerable<UIElement> CreateLabel<TCtrl>(TCtrl control)

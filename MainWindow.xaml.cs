@@ -19,10 +19,6 @@ namespace JiME
 			scenario.campaignGUID = campaignGUID;
 		}
 
-        public MainWindow(Procedural.IProceduralGenerator generator) : this(generator.GenerateScenario())
-        {
-        }
-
 		public MainWindow(Scenario s = null)
 		{
 			System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;

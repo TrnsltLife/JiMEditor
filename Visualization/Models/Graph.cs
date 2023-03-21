@@ -234,6 +234,27 @@ namespace JiME.Visualization.Models
                     // No triggers
                     // TODO: Other properties
                 }
+
+                // Special case: StoryPointInteractionsa re only used during procedural generation for debug purposes
+                else if (x is Procedural.SimpleGenerator.StoryPointInteraction)
+                {
+                    var x2 = (Procedural.SimpleGenerator.StoryPointInteraction)x;
+
+                    // Starting point needs to be handled separately if it is triggered by None since that is not handled in InteractionBase
+                    if (x2.triggerName == null || x2.triggerName.Length == 0 || x2.triggerName == "None")
+                    {
+                        dataGraph.AddEdge(new DataEdge(startVertex, vertex) { Text = "initiates" });
+                    }
+
+                    // Endpoints are simple
+                    foreach (var otherAfter in x2.OtherAfterTriggers)
+                    {
+                        getTriggerOrEventVertex(vertexDict, otherAfter, v =>
+                        {
+                            dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"ENDING\"" });
+                        });
+                    }
+                }
                 else // TODO: other types
                 {
                     throw new NotImplementedException("Graph preparation not implemented for interaction type: " + x.GetType().Name);

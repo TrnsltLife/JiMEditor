@@ -105,10 +105,16 @@ namespace JiME
 
         private void RandomScenarioButton_Click(object sender, RoutedEventArgs e)
         {
+            // Generate generator
             var generatorType = this.generatorTypes[(string)this.generators.SelectedItem];
-            var generatorInstance = (Procedural.IProceduralGenerator)generatorType.GetConstructor(new Type[] { }).Invoke(new object[] { });
+            var generatorInstance = generatorType.GetConstructor(new Type[] { }).Invoke(new object[] { });
 
-            MainWindow mainWindow = new MainWindow(generatorInstance);
+            // Generate Scenario
+            var parameters = generatorType.GetMethod("GetDefaultParameters").Invoke(generatorInstance, new object[] { });
+            var scenario = (Scenario)generatorType.GetMethod("GenerateScenario").Invoke(generatorInstance, new object[] { parameters });
+
+            // Create main window with Scenario
+            MainWindow mainWindow = new MainWindow(scenario);
             mainWindow.Show();
             Close();
         }
