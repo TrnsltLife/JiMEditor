@@ -220,13 +220,16 @@
     <Compile Include="Views\TriggerEditorWindow.xaml.cs">
       <DependentUpon>TriggerEditorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Visualization\GraphWindow.xaml.cs">
+    <Compile Include="Visualization\Views\GraphControlFactory.cs" />
+    <Compile Include="Visualization\Views\GraphEdgeLabelFactory.cs" />
+    <Compile Include="Visualization\Views\GraphVertexLabelFactory.cs" />
+    <Compile Include="Visualization\Views\GraphWindow.xaml.cs">
       <DependentUpon>GraphWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Visualization\Models\DataEdge.cs" />
     <Compile Include="Visualization\Models\DataVertex.cs" />
     <Compile Include="Visualization\Models\Graph.cs" />
-    <Compile Include="Visualization\GraphArea.cs" />
+    <Compile Include="Visualization\Views\GraphArea.cs" />
     <Compile Include="Visualization\Models\GraphLogic.cs" />
     <Page Include="Assets\Shapes.xaml">
       <SubType>Designer</SubType>
@@ -376,7 +379,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Visualization\GraphWindow.xaml">
+    <Page Include="Visualization\Views\GraphWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

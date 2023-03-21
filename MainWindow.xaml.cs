@@ -441,8 +441,10 @@ namespace JiME
 
         private void ScenarioVisualizationButton_Click(object sender, RoutedEventArgs e)
         {
-            var sw = new Visualization.GraphWindow(scenario);
+            var sw = new Visualization.Views.GraphWindow(scenario);
             sw.Owner = this;
+            sw.WindowState = WindowState.Maximized;
+            sw.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             sw.Show();
         }
 

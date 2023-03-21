@@ -16,7 +16,7 @@ using GraphX.Common.Enums;
 using GraphX.Logic.Algorithms.LayoutAlgorithms;
 using GraphX.Controls;
 
-namespace JiME.Visualization
+namespace JiME.Visualization.Views
 {
     /// <summary>
     /// Interaction logic for GraphWindow.xaml

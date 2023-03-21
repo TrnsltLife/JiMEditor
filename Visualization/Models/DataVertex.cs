@@ -17,10 +17,11 @@ namespace JiME.Visualization.Models
 
     public class DataVertex : VertexBase
     {
-        /// <summary>
-        /// Some string property for example purposes
-        /// </summary>
-        public string Text { get; set; }
+        public string Text { get; private set; }
+
+        public Type VertexType { get; private set; }
+
+        public object Source { get; private set; }
 
         #region Calculated or static props
 
@@ -35,13 +36,33 @@ namespace JiME.Visualization.Models
         /// Default parameterless constructor for this class
         /// (required for YAXLib serialization)
         /// </summary>
-        public DataVertex() : this(string.Empty)
+        public DataVertex() : this(string.Empty, Type.Start, null)
         {
         }
 
-        public DataVertex(string text = "")
+        public DataVertex(string text, Type type, object source)
         {
             Text = text;
+            VertexType = type;
+            Source = source;
+        }
+
+        public enum Type
+        {
+            Start,
+            Trigger,
+            Objective,
+            Resolution,
+            Interaction,
+            InteractionGroup,
+
+            /**
+             * TileSet
+             */
+            Chapter,
+            Tile,
+            Token,
+            ThreatLevel
         }
     }
 }

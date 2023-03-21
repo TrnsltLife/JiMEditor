@@ -28,7 +28,7 @@ namespace JiME.Visualization.Models
 
             // Add specific START vertex to work as root node
             var startVertexId = "START";
-            var startVertex = new DataVertex("START");
+            var startVertex = new DataVertex("START", DataVertex.Type.Start, null);
             vertexDict.Add(startVertexId, startVertex);
             dataGraph.AddVertex(startVertex);
 
@@ -37,8 +37,14 @@ namespace JiME.Visualization.Models
             // Prepare triggers first as they are the clue that ties everything together and need to be available
             HandleCollection(scenario.triggersObserver, x =>
             {
+                // Skip "None" named objects TODO: Are these a special thing that should be always included?
+                if (x.dataName == "None")
+                {
+                    return null;
+                }
+
                 // Vertex for the trigger
-                var vertex = new DataVertex("T:" + x.dataName);
+                var vertex = new DataVertex(x.dataName, DataVertex.Type.Trigger, x);
                 vertexDict.Add(getTriggerName(x.dataName), vertex);
                 dataGraph.AddVertex(vertex);
                 return vertex;
@@ -47,8 +53,14 @@ namespace JiME.Visualization.Models
             // Then prepare objectives and link to triggers
             HandleCollection(scenario.objectiveObserver, x =>
             {
+                // Skip "None" named objects TODO: Are these a special thing that should be always included?
+                if (x.dataName == "None")
+                {
+                    return null;
+                }
+
                 // Vertex for the objective
-                var vertex = new DataVertex("O:" + x.dataName);
+                var vertex = new DataVertex(x.dataName, DataVertex.Type.Objective, x);
                 vertexDict.Add(getObjectiveName(x.dataName), vertex);
                 dataGraph.AddVertex(vertex);
                 return vertex;
@@ -84,7 +96,7 @@ namespace JiME.Visualization.Models
             HandleCollection(scenario.resolutionObserver, x =>
             {
                 // Vertex for the resolution
-                var vertex = new DataVertex("R:" + x.dataName);
+                var vertex = new DataVertex(x.dataName, DataVertex.Type.Resolution, x);
                 vertexDict.Add(getResolutionName(x.dataName), vertex);
                 dataGraph.AddVertex(vertex);
                 return vertex;
@@ -101,8 +113,14 @@ namespace JiME.Visualization.Models
             // Then prepare interactions and link to triggers
             HandleCollection(scenario.interactionObserver, x =>
             {
+                // Skip "None" named objects TODO: Are these a special thing that should be always included?
+                if (x.dataName == "None")
+                {
+                    return null;
+                }
+
                 // Vertex for the interaction
-                var vertex = new DataVertex("I:" + x.dataName);
+                var vertex = new DataVertex(x.dataName, DataVertex.Type.Interaction, x);
                 vertexDict.Add(getInteractionName(x.dataName), vertex);
                 dataGraph.AddVertex(vertex);
 
@@ -226,7 +244,7 @@ namespace JiME.Visualization.Models
             HandleCollection(scenario.chapterObserver, x =>
             {
                 // Vertex for the scenario/tileset
-                var vertex = new DataVertex("C:" + x.dataName);
+                var vertex = new DataVertex(x.dataName, DataVertex.Type.Chapter, x);
                 vertexDict.Add(getChapterName(x.dataName), vertex);
                 dataGraph.AddVertex(vertex);
                 return vertex;
@@ -236,7 +254,7 @@ namespace JiME.Visualization.Models
                 HandleCollection(x.tileObserver.OfType<BaseTile>(), tileX =>
                 {
                     // Vertex for the scenario/tileset
-                    var tileVertex = new DataVertex("T:" + tileX.idNumber);
+                    var tileVertex = new DataVertex(tileX.idNumber.ToString(), DataVertex.Type.Tile, tileX);
                     vertexDict.Add(getTileName(tileX.GUID.ToString()), tileVertex);
                     dataGraph.AddVertex(tileVertex);
                     return tileVertex;
@@ -255,7 +273,7 @@ namespace JiME.Visualization.Models
                     HandleCollection(tileX.tokenList, tokenX =>
                     {
                         // Vertex for the scenario/tileset
-                        var tokenVertex = new DataVertex("T:" + tokenX.dataName);
+                        var tokenVertex = new DataVertex(tokenX.dataName, DataVertex.Type.Token, tokenX);
                         vertexDict.Add(getTokenName(tokenX.GUID.ToString()), tokenVertex);
                         dataGraph.AddVertex(tokenVertex);
                         return tokenVertex;
@@ -313,7 +331,7 @@ namespace JiME.Visualization.Models
             HandleCollection(scenario.activationsObserver, x =>
             {
                 // Vertex for the activation
-                var vertex = new DataVertex("A:" + x.dataName);
+                var vertex = new DataVertex(x.dataName);
                 vertexDict.Add(getActivationName(x.dataName), vertex);
                 dataGraph.AddVertex(vertex);
                 return vertex;
@@ -334,7 +352,7 @@ namespace JiME.Visualization.Models
                 HandleCollection(scenario.threatObserver.OrderBy(x => x.threshold), x =>
                 {
                     // Vertex for the threat
-                    var vertex = new DataVertex("Threat Level: " + x.threshold);
+                    var vertex = new DataVertex("Threat Level: " + x.threshold, DataVertex.Type.ThreatLevel, x);
                     vertexDict.Add(getThreatName(x.dataName + "_" + x.threshold), vertex);
                     dataGraph.AddVertex(vertex);
                     return vertex;
@@ -351,7 +369,7 @@ namespace JiME.Visualization.Models
                     dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "initiates" });
                 });
                 });
-                var maxThreatVertex = new DataVertex("Max Threat: " + scenario.threatMax);
+                var maxThreatVertex = new DataVertex("Max Threat: " + scenario.threatMax, DataVertex.Type.ThreatLevel, null);
                 vertexDict.Add(getThreatName("MAX THREAT"), maxThreatVertex);
                 dataGraph.AddVertex(maxThreatVertex);
                 dataGraph.AddEdge(new DataEdge(prevThreat, maxThreatVertex, weight: 2) { Text = null });
@@ -404,7 +422,10 @@ namespace JiME.Visualization.Models
             foreach (var x in collection)
             {
                 var vertex = vertexHandler(x);
-                res.Add(Tuple.Create(x, vertex));
+                if (vertex != null)
+                {
+                    res.Add(Tuple.Create(x, vertex));
+                }                
             }
 
             // Then do the edges (afterwards because these might refer to items in collection)
@@ -427,7 +448,7 @@ namespace JiME.Visualization.Models
                 if (!dict.ContainsKey(groupName))
                 {
                     // Create the group vertex
-                    var vertex = new DataVertex("G:" + groupNameAndNumber);
+                    var vertex = new DataVertex(groupNameAndNumber, DataVertex.Type.InteractionGroup, null);
                     dict.Add(groupName, vertex);
                     dataGraph.AddVertex(vertex);
                     return vertex;
