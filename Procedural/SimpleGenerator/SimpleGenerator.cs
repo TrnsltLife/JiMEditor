@@ -14,9 +14,7 @@ namespace JiME.Procedural.SimpleGenerator
             var ctx = new SimpleGeneratorContext(parameters);
 
             // Step 1. Generate basic objective structure and StoryPoints to fill in
-            GenerateObjectivesAndStoryPoints(ctx,
-                printStoryPointsToConsole: true, // Always print, only visualize if we don't plan to fill StoryPoints with actual story
-                visualizeStoryPointsInScenario: ctx.Parameters.DebugSkipStoryPointsFillIn);
+            GenerateObjectivesAndStoryPoints(ctx, visualizeStoryPointsInScenario: ctx.Parameters.DebugSkipStoryPointsFillIn);
 
             // Step 2. Fill in the story points with interactions
             if (!ctx.Parameters.DebugSkipStoryPointsFillIn)
@@ -28,7 +26,7 @@ namespace JiME.Procedural.SimpleGenerator
             return ctx.Scenario;
         }
 
-        private static void GenerateObjectivesAndStoryPoints(SimpleGeneratorContext ctx, bool printStoryPointsToConsole = false, bool visualizeStoryPointsInScenario = false)
+        private static void GenerateObjectivesAndStoryPoints(SimpleGeneratorContext ctx, bool visualizeStoryPointsInScenario = false)
         {
             // For now we just work towards single successful resolution
             AddResolution(ctx, true, "Scenario succeeded!");
@@ -127,19 +125,22 @@ namespace JiME.Procedural.SimpleGenerator
                 ctx.Scenario.objectiveName = startingObjective.dataName;
             }
 
+            // Debugging
+            Console.WriteLine("OBJECTIVES: " + ctx.Scenario.objectiveObserver.Count);
+
             // Story point debugging
             foreach (var sp in ctx.StoryPoints)
             {
-                if (printStoryPointsToConsole)
-                {
-                    Console.WriteLine(string.Format("StoryPoint: {0} -> {1} (Objective: {2})",
-                    sp.StartTriggerName,
-                    string.Format("[{0}]", string.Join(",", sp.EndTriggerNames)),
-                    sp.Objective.dataName));
-                }
+                // Print storypoint details
+                Console.WriteLine(string.Format("StoryPoint: {0} -> {1} (Objective: {2})",
+                sp.StartTriggerName,
+                string.Format("[{0}]", string.Join(",", sp.EndTriggerNames)),
+                sp.Objective.dataName));
+
+                // Visualization is done by adding dummy interaction that links the items
+                // which alters the Scenario so should not be done if filling StoryPoints for real later
                 if (visualizeStoryPointsInScenario)
-                {
-                    // Visualization is done by adding dummy interaction that links the items
+                {   
                     var spInteraction = new StoryPointInteraction("STORYPOINT: " + sp.Objective.dataName)
                     {
                         triggerName = sp.StartTriggerName,

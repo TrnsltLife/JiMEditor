@@ -11,7 +11,7 @@ namespace JiME.Procedural.SimpleGenerator
         /// <summary>
         /// Give string value to use fixed seed, give NULL or empty string to use random seed.
         /// </summary>
-        public string Seed = "5157902";    // "testing2";
+        public string Seed = "";    // "testing2";
 
         /// <summary>
         /// Tells whether the generator should stop after generating StoryPoints and before filling them with content

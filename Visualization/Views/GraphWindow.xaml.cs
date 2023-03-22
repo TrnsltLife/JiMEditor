@@ -131,5 +131,10 @@ namespace JiME.Visualization.Views
             //Finally assign logic core to GraphArea object
             graphArea.LogicCore = logicCore;
         }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            graphArea.ExportAsPng();
+        }
     }
 }

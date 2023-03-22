@@ -7,8 +7,12 @@
         xmlns:controls="http://schemas.panthernet.ru/graphx/"
         mc:Ignorable="d"
         Title="GraphWindow" Height="450" Width="800" MinHeight="500" MinWidth="700" WindowStartupLocation="CenterScreen" Background="#FF2D2D30" ResizeMode="CanResizeWithGrip">
-        <controls:ZoomControl x:Name="zoomctrl" Grid.Row="1"  Background="#FF4D4D50">
-            <local:GraphArea x:Name="graphArea" />
-        </controls:ZoomControl>
+        <Grid>
+            <controls:ZoomControl x:Name="zoomctrl" Grid.Row="1"  Background="#FF4D4D50">
+                <local:GraphArea x:Name="graphArea" />
+            </controls:ZoomControl>
+        <Button Name="SaveButton" Margin="0,10,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="Save image" Click="SaveButton_Click" />
+    </Grid>
+
 
 </Window>
