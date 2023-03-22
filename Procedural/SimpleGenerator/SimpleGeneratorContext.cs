@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JiME.Procedural.StoryElements;
 
 namespace JiME.Procedural.SimpleGenerator
 {
@@ -13,16 +14,10 @@ namespace JiME.Procedural.SimpleGenerator
         private int _nextTriggerId = 1;
 
         /// <summary>
-        /// Keeps track of triggers for revealing objectives that haven't been used yet
+        /// List of story points we need to fill with content.
+        /// Will be filled in backward order and mix and match MAIN and SIDE quest stories.
         /// </summary>
-        public List<string> UnconnectedObjectiveTriggers = new List<string>();
-
-        /// <summary>
-        /// List of story points we need to fill with content
-        /// </summary>
-        public List<StoryPoint> StoryPoints = new List<StoryPoint>();
-
-        
+        public List<StoryPoint> StoryPoints { get; set; } = new List<StoryPoint>();
 
         public SimpleGeneratorContext(SimpleGeneratorParameters parameters)
         {
@@ -43,27 +38,6 @@ namespace JiME.Procedural.SimpleGenerator
         /// Creates next unique trigger id
         /// </summary>
         public string CreateNextTriggerId() => (_nextTriggerId++).ToString();
-
-        /// <summary>
-        /// Takes a single random trigger out of the set
-        /// </summary>
-        public string TakeRandomObjectiveTrigger()
-        {
-            var i = Random.Next(UnconnectedObjectiveTriggers.Count);
-            var trigger = UnconnectedObjectiveTriggers[i];
-            UnconnectedObjectiveTriggers.RemoveAt(i);
-            return trigger;
-        }
-
-        /// <summary>
-        /// Takes all remaining unconnected triggeres from the set
-        /// </summary>
-        public List<string> TakeAllObjectiveTriggers()
-        {
-            var all = UnconnectedObjectiveTriggers.ToList();
-            UnconnectedObjectiveTriggers.Clear();
-            return all;
-        }
 
         /// <summary>
         /// Calculates random change against given integer percentage.

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JiME.Procedural.SimpleGenerator
+namespace JiME.Procedural.StoryElements
 {
     /// <summary>
     /// Placeholder for story element to be added towards some Objective
@@ -26,8 +26,14 @@ namespace JiME.Procedural.SimpleGenerator
         /// </summary>
         public Objective Objective { get; private set; }
 
-        public StoryPoint(Objective objective, string startTrigger, IEnumerable<string> endTriggers)
+        /// <summary>
+        /// True if this StoryPoint is part of the main quest, false if part of sidequests
+        /// </summary>
+        public bool PartOfMainQuest { get; private set; }
+
+        public StoryPoint(bool mainQuest, Objective objective, string startTrigger, IEnumerable<string> endTriggers)
         {
+            PartOfMainQuest = mainQuest;
             StartTriggerName = startTrigger;
             EndTriggerNames = endTriggers.ToList();
             Objective = objective;
@@ -36,6 +42,15 @@ namespace JiME.Procedural.SimpleGenerator
         public void ReplaceStartingTrigger(string newTrigger)
         {
             StartTriggerName = newTrigger;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("StoryPoint: {0} -> {1} (Objective: {2}, {3})",
+                StartTriggerName,
+                string.Format("[{0}]", string.Join(",", EndTriggerNames)),
+                Objective.dataName,
+                PartOfMainQuest ? "MAIN" : "SIDE");
         }
     }
 }

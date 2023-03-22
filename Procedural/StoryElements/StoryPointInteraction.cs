@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JiME.Procedural.SimpleGenerator
+namespace JiME.Procedural.StoryElements
 {
     /// <summary>
     /// Dummy interaction for Procedural generator purposes

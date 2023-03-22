@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace JiME.Procedural.SimpleGenerator
+namespace JiME.Procedural.StoryElements
 {
     /// <summary>
+    /// Tells what kind of story we are writing.
     /// Maps out a story archetype that exposes entension points that can be fulfilled by Story Templates.
     /// Story is divided in to Start, Middle and End phases that repserenst different parts of the voyage.
     /// </summary>
@@ -134,17 +135,17 @@ namespace JiME.Procedural.SimpleGenerator
             public string Comment { get; private set; }
 
             [JsonProperty]
-            public List<StoryDevelopment> MustHaveOneOf { get; private set; }
+            public List<StoryFragent> MustHaveOneOf { get; private set; }
 
             [JsonProperty]
-            public List<StoryDevelopment> CanHaveSomeOf { get; private set; }
+            public List<StoryFragent> CanHaveSomeOf { get; private set; }
 
             [JsonProperty]
             public List<StoryLocation> TakesPlaceInOneOf { get; private set; }
             // TODO: TakesPlaceIn "Woodlands", "Cave", "STARTING_AREA"
         }
 
-        public enum StoryDevelopment
+        public enum StoryFragent
         {
             KillMonster,
             FindWeaknessInTarget,

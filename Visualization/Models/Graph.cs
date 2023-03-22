@@ -144,12 +144,12 @@ namespace JiME.Visualization.Models
                     {
                         dataGraph.AddEdge(new DataEdge(v, vertex) { Text = "initiates" });
                     });
-                    /*else
+                    if (x2.triggerName?.Length == 0 || x2.triggerName == "None")
                     {
                         // Special case: No initiation trigger so triggered from the start?
                         // TODO: Or is it? Could this never be triggered?
                         dataGraph.AddEdge(new DataEdge(startVertex, vertex) { Text = "initiates" });
-                    }*/
+                    }
                     getTriggerOrEventVertex(vertexDict, x2.triggerAfterName, v =>
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "triggers" });
@@ -236,15 +236,9 @@ namespace JiME.Visualization.Models
                 }
 
                 // Special case: StoryPointInteractionsa re only used during procedural generation for debug purposes
-                else if (x is Procedural.SimpleGenerator.StoryPointInteraction)
+                else if (x is Procedural.StoryElements.StoryPointInteraction)
                 {
-                    var x2 = (Procedural.SimpleGenerator.StoryPointInteraction)x;
-
-                    // Starting point needs to be handled separately if it is triggered by None since that is not handled in InteractionBase
-                    if (x2.triggerName == null || x2.triggerName.Length == 0 || x2.triggerName == "None")
-                    {
-                        dataGraph.AddEdge(new DataEdge(startVertex, vertex) { Text = "initiates" });
-                    }
+                    var x2 = (Procedural.StoryElements.StoryPointInteraction)x;
 
                     // Endpoints are simple
                     foreach (var otherAfter in x2.OtherAfterTriggers)
@@ -275,7 +269,7 @@ namespace JiME.Visualization.Models
                 HandleCollection(x.tileObserver.OfType<BaseTile>(), tileX =>
                 {
                     // Vertex for the scenario/tileset
-                    var tileVertex = new DataVertex(tileX.idNumber.ToString(), DataVertex.Type.Tile, tileX);
+                    var tileVertex = new DataVertex(tileX.idNumber.ToString() + tileX.tileSide, DataVertex.Type.Tile, tileX);
                     vertexDict.Add(getTileName(tileX.GUID.ToString()), tileVertex);
                     dataGraph.AddVertex(tileVertex);
                     return tileVertex;

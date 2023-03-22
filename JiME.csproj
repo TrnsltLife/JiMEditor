@@ -123,9 +123,11 @@
     <Compile Include="Procedural\SimpleGenerator\SimpleGenerator.cs" />
     <Compile Include="Procedural\SimpleGenerator\SimpleGeneratorParameters.cs" />
     <Compile Include="Procedural\IProceduralGenerator.cs" />
-    <Compile Include="Procedural\SimpleGenerator\StoryArchetype.cs" />
-    <Compile Include="Procedural\SimpleGenerator\StoryPoint.cs" />
-    <Compile Include="Procedural\SimpleGenerator\StoryPointInteraction.cs" />
+    <Compile Include="Procedural\StoryElements\StoryGenerator.cs" />
+    <Compile Include="Procedural\StoryElements\StoryTemplate.cs" />
+    <Compile Include="Procedural\StoryElements\StoryArchetype.cs" />
+    <Compile Include="Procedural\StoryElements\StoryPoint.cs" />
+    <Compile Include="Procedural\StoryElements\StoryPointInteraction.cs" />
     <Compile Include="UserControls\TokenTypeSelector.xaml.cs">
       <DependentUpon>TokenTypeSelector.xaml</DependentUpon>
     </Compile>
@@ -472,6 +474,7 @@
     <EmbeddedResource Include="Assets\enemy-activation-defaults-original.json" />
     <EmbeddedResource Include="Assets\terrain-interactions.json" />
     <EmbeddedResource Include="Assets\Procedural\story-archetypes.json" />
+    <EmbeddedResource Include="Assets\Procedural\story-templates.json" />
     <None Include="Procedural\README.md" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JiME.Procedural.StoryElements;
 
 namespace JiME.Procedural.SimpleGenerator
 {
@@ -11,7 +12,7 @@ namespace JiME.Procedural.SimpleGenerator
         /// <summary>
         /// Give string value to use fixed seed, give NULL or empty string to use random seed.
         /// </summary>
-        public string Seed = "";    // "testing2";
+        public string Seed = "testing2";    // "testing";
 
         /// <summary>
         /// The basic archetype of the Scenario we want to generate. Null if should use random
@@ -19,17 +20,22 @@ namespace JiME.Procedural.SimpleGenerator
         public StoryArchetype.Type? StoryArchetype = null;
 
         /// <summary>
-        /// Miminum number of objectives to create
+        /// The story template name used to fill the StoryArchetype stories. Null if should use random
         /// </summary>
-        public int MinObjectiveCount = 3;
+        public string StoryTemplate = null;
 
         /// <summary>
-        /// Maximum number of objectives to create. Note: Might craeate one more if we need to tie things to START of Scenario
+        /// Miminum number of objectives in the MAIN STORY
         /// </summary>
-        public int MaxObjectiveCount = 8;
+        public int MinMainStoryObjectiveCount = 3;
 
         /// <summary>
-        /// Percentage change that branches occur on each Objective. 0 means no branching at all.
+        /// Maximum number of objectives in the MAIN STORY
+        /// </summary>
+        public int MaxMainStoryObjectiveCount = 6;
+
+        /// <summary>
+        /// Percentage change that branches occur on StoryPoint for each Objective. 0% means no branching at all.
         /// </summary>
         public int BranchingProbability = 20;
 

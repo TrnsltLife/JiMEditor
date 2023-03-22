@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JiME.Procedural.StoryElements;
 
 namespace JiME.Procedural.SimpleGenerator
 {
+    /// <summary>
+    /// Simple generator that generates a linear main objective chain and some possible side objectives
+    /// </summary>
     class SimpleGenerator : IProceduralGenerator<SimpleGeneratorParameters>
     {
         public SimpleGeneratorParameters GetDefaultParameters() => new SimpleGeneratorParameters();
@@ -13,131 +17,69 @@ namespace JiME.Procedural.SimpleGenerator
             // Set up the context for generating a Scenario
             var ctx = new SimpleGeneratorContext(parameters);
 
-            // Step 1. Generate basic objective structure and StoryPoints to fill in
-            GenerateObjectivesAndStoryPoints(ctx, visualizeStoryPointsInScenario: ctx.Parameters.DebugSkipStoryPointsFillIn);
+            // Step 1. Generate linear MAIN STORY objective structure and (possibly branching) StoryPoints to fill in later
+            GenerateMainStoryObjectivesAndStoryPoints(ctx, visualizeStoryPointsInScenario: ctx.Parameters.DebugSkipStoryPointsFillIn);
 
-            // Step 2. Fill in the StoryPoints with interactions
+            // TODO: Step 2. Generate side-quest objective structure and StoryPoints to fill in later
+
+            // Step 3. Fill in the StoryPoints with interactions
             if (!ctx.Parameters.DebugSkipStoryPointsFillIn)
             {
                 GenerateStoryTemplateAndFillInStoryPoints(ctx);
             }
 
-            // Step 3. TODO: side quests etc? threats? monster activations?
+            // Check errors and return finished scenario
+            var checker = new ErrorChecker();
+            checker.CheckErrors(ctx.Scenario);
+            foreach (var error in checker.Errors)
+            {
+                Console.WriteLine("SimpleGenerator ERROR: " + error);
+            }
 
             // Return finished scenario
             return ctx.Scenario;
         }
 
-        private static void GenerateObjectivesAndStoryPoints(SimpleGeneratorContext ctx, bool visualizeStoryPointsInScenario = false)
+        private static void GenerateMainStoryObjectivesAndStoryPoints(SimpleGeneratorContext ctx, bool visualizeStoryPointsInScenario = false)
         {
+            // Everything we generate here is for the main quest
+            var mainQuest = true;
+
             // For now we just work towards single successful resolution
-            AddResolution(ctx, true, "Scenario succeeded!");
+            var resolution = AddResolution(ctx, true, "Scenario succeeded!");
+            var nextHopTrigger = resolution.triggerName;
 
-            // Create objectives for the good resolutions by processing all triggers
-            int objectiveCount = ctx.Random.Next(ctx.Parameters.MinObjectiveCount, ctx.Parameters.MaxObjectiveCount + 1);
-            while(ctx.Scenario.objectiveObserver.Count <= objectiveCount)
+            // Create objectives back from the resolution up to desired objective count
+            int objectiveCount = ctx.Random.Next(ctx.Parameters.MinMainStoryObjectiveCount, ctx.Parameters.MaxMainStoryObjectiveCount + 1);
+            while(--objectiveCount >= 0)
             {
-                AddObjective(ctx, "Objective");
-            }
-
-            // Now if we have just a single unconnected trigger (from objective can make that the starting objective)
-            if (ctx.UnconnectedObjectiveTriggers.Count == 1)
-            {
-                // Just single unconnected -> use that as default
-                var singleTrigger = ctx.UnconnectedObjectiveTriggers.Single();
-                var singleObjective = ctx.Scenario.objectiveObserver
-                    .Single(o => o.triggeredByName == singleTrigger);
-                ctx.Scenario.objectiveName = singleObjective.dataName;
-
-                // Also clear the trigger from the objective
-                singleObjective.triggeredByName = "None";
-
-                // Also find the story point for this objective and update that
-                var storyPoint = ctx.StoryPoints.Single(sp => sp.Objective.GUID == singleObjective.GUID);
-                storyPoint.ReplaceStartingTrigger("None");
-
-                // Also remove the trigger for the objective since that is no longer needed
-                var triggerToRemove = ctx.Scenario.triggersObserver
-                    .Single(t => t.dataName == singleTrigger);
-                ctx.Scenario.triggersObserver.Remove(triggerToRemove);
-            }
-            else
-            {
-                // Multiple unconnected objectives, need to create new objective to start them all
-
-                // First fetch all the objectives that need updating
-                var allUnconnectedTriggers = ctx.TakeAllObjectiveTriggers();
-                var triggerNameToUse = allUnconnectedTriggers.First();
-                var triggersNamesToRemove = allUnconnectedTriggers.Skip(1).ToList();
-
-                // For unconnected objective triggers we simply use the same trigger to trigger all the objectives
-                var unconnectedObjectivesToReLink = ctx.Scenario.objectiveObserver
-                    .Where(o => triggersNamesToRemove.Contains(o.triggeredByName))
-                    .ToList();
-                foreach (var obj in unconnectedObjectivesToReLink)
+                if (objectiveCount == 0)
                 {
-                    // Make them all use the same trigger
-                    var originalTriggerName = obj.triggeredByName;
-                    obj.triggeredByName = triggerNameToUse;
+                    // Creating the last objective
+                    var obj = AddObjective(ctx, mainQuest, nextHopTrigger, "Objective",
+                        createStartingObjective: true);
+                    nextHopTrigger = null; // <-- This is not created for the starting object
 
-                    // Also find the story point for this objective and update that
-                    var storyPoint = ctx.StoryPoints.SingleOrDefault(sp => sp.Objective.GUID == obj.GUID);
-                    storyPoint?.ReplaceStartingTrigger(triggerNameToUse);                    
-
-                    // Also remove the unused trigger
-                    var unusedTrigger = ctx.Scenario.triggersObserver.Single(t => t.dataName == originalTriggerName);
-                    ctx.Scenario.triggersObserver.Remove(unusedTrigger);
-                }
-
-                // For unconnected conditionals we simply create a new StoryPoint that handles it
-                // And make sure that the original trigger is no longer part of the conditional list
-                var allUnconnectedConditionals = ctx.Scenario.interactionObserver
-                    .OfType<ConditionalInteraction>()
-                    .Where(c => c.triggerList.Any(ct => allUnconnectedTriggers.Contains(ct)))
-                    .ToList();
-                foreach (var conditional in allUnconnectedConditionals)
+                    // Also set this to appear on start of scenario
+                    ctx.Scenario.objectiveName = obj.dataName;
+                } 
+                else
                 {
-                    // Find the objective this conditional points to
-                    var obj = ctx.Scenario.objectiveObserver.Single(o => o.triggerName == conditional.finishedTrigger);
-
-                    // Remove the new objective completion trigger from the original conditional trigger list
-                    conditional.triggerList.Remove(triggerNameToUse);
-
-                    // Find the items in this conditional that are in the unused list
-                    var openEndpoints = conditional.triggerList
-                        .Where(ct => triggersNamesToRemove.Contains(ct))
-                        .ToList();
-                    
-                    // Create a StoryPoint between items (if there is anything on the list to connect to)
-                    if (openEndpoints.Count > 0)
-                    {
-                        ctx.StoryPoints.Add(new StoryPoint(
-                            obj, // For the objective coming after the conditional
-                            triggerNameToUse, // Starting from the newly created objective
-                            openEndpoints)); // To all the unused endpoints of the conditional
-                    }
+                    // Creating intermediate objective
+                    var obj = AddObjective(ctx, mainQuest, nextHopTrigger, "Objective",
+                        createStartingObjective: false);
+                    nextHopTrigger = obj.triggeredByName;
                 }
-
-                // Now everything uses the triggerNameToUse -> create new objective that triggers it
-                var startingObjective = AddObjective(ctx, "start", 
-                    onCompletionTriggerOverride: triggerNameToUse, 
-                    createOpenedTrigger: false, // This also means StoryPoint is not created
-                    forceNoBranching: true,
-                    dataNameOverride: "start");
-                ctx.Scenario.objectiveName = startingObjective.dataName;
             }
 
             // Debugging
-            Console.WriteLine("OBJECTIVES: " + ctx.Scenario.objectiveObserver.Count);
+            Console.WriteLine("MAIN OBJECTIVES: " + ctx.Scenario.objectiveObserver.Count);
 
             // Story point debugging
             foreach (var sp in ctx.StoryPoints)
             {
                 // Print storypoint details
-                Console.WriteLine(string.Format("StoryPoint: {0} -> {1} (Objective: {2})",
-                sp.StartTriggerName,
-                string.Format("[{0}]", string.Join(",", sp.EndTriggerNames)),
-                sp.Objective.dataName));
+                Console.WriteLine(sp.ToString());
 
                 // Visualization is done by adding dummy interaction that links the items
                 // which alters the Scenario so should not be done if filling StoryPoints for real later
@@ -151,34 +93,48 @@ namespace JiME.Procedural.SimpleGenerator
                     ctx.Scenario.AddInteraction(spInteraction);
                 }
             }
-
-            /*
-            s.AddInteraction(new DecisionInteraction("What to do?")
-            { 
-                   isThreeChoices = false,
-                   choice1 = "Complete objective",
-                   choice1Trigger = "Complete objective",
-                   choice2 = "Fail objective",
-                   choice2Trigger = "End In Failure"
-            });
-
-            */
         }
         
         private static void GenerateStoryTemplateAndFillInStoryPoints(SimpleGeneratorContext ctx)
         {
-            // Select archetype
+            // Prepare StoryGenerator with StoryArchetype and StoryTemplate
             var archetype = ctx.Parameters.StoryArchetype.HasValue
                 ? StoryArchetype.GetArchetype(ctx.Parameters.StoryArchetype.Value)
                 : StoryArchetype.GetRandomArchetype(ctx.Random);
+            var template = ctx.Parameters.StoryTemplate?.Length > 0
+                ? StoryTemplate.GetTemplate(ctx.Parameters.StoryTemplate)
+                : StoryTemplate.GetRandomTemplate(ctx.Random);
+            var generator = new StoryGenerator(archetype, template, ctx.Random);
 
+            // Fill in the Scenario level details
+            generator.FillInScenarioDetails(ctx.Scenario);
+
+            // Disect the MAIN STORY points (Note: storypoints are in reverse order
+            var mainStoryPoints_StartPhase = new List<StoryPoint>();
+            var mainStoryPoints_MiddlePhase = new List<StoryPoint>();
+            var mainStoryPoints_EndPhase = new List<StoryPoint>();
+
+            // We simple add single MAIN story point to both start and end and rest to middle
+            var mainStoryPoints = ctx.StoryPoints.Where(sp => sp.PartOfMainQuest).Reverse().ToList();
+            mainStoryPoints_StartPhase.Add(mainStoryPoints.First());
+            mainStoryPoints_MiddlePhase.AddRange(mainStoryPoints.Skip(1).Take(mainStoryPoints.Count - 2));
+            mainStoryPoints_EndPhase.Add(mainStoryPoints.Last());
+
+            // TODO: Disect side quest storypoints somehow to the different phases
+
+            // Fill in storypoints for each phase
+            generator.FillInPhaseStoryPoint(ctx.Scenario, StoryGenerator.StoryPhase.Start, mainStoryPoints_StartPhase);
+            generator.FillInPhaseStoryPoint(ctx.Scenario, StoryGenerator.StoryPhase.Middle, mainStoryPoints_MiddlePhase);
+            generator.FillInPhaseStoryPoint(ctx.Scenario, StoryGenerator.StoryPhase.End, mainStoryPoints_EndPhase);
+
+            // Create the starting Chapter / TileSet
             // TODO: terrain types need to be mapped to tile numbers, tile sides need to be taken in to account
-
         }
 
 
-        private static void AddResolution(SimpleGeneratorContext ctx, bool success, string text)
+        private static TextBookData AddResolution(SimpleGeneratorContext ctx, bool success, string text)
         {
+            // Create the trigger that triggers this resolution
             var triggerName = ctx.CreateNextTriggerId();
 
             // Create resolution
@@ -192,34 +148,39 @@ namespace JiME.Procedural.SimpleGenerator
             // Create trigger for it
             ctx.Scenario.AddTrigger(triggerName);
 
-            // Mark triggers that are needed for the resolutions
-            ctx.UnconnectedObjectiveTriggers.Add(triggerName);
+            return resolutionText;
         }
 
-        private static Objective AddObjective(SimpleGeneratorContext ctx, string text, string onCompletionTriggerOverride = null, bool createOpenedTrigger = true, bool forceNoBranching = false, string dataNameOverride = null)
+        /// <summary>
+        /// Creates a new Objective and the matching StoryPoint for the scenario
+        /// </summary>
+        /// <param name="ctx">Context</param>
+        /// <param name="mainQuest">Whether this objective is part of the linear main quest or not</param>
+        /// <param name="onCompletionTrigger">Trigger that is fired when the objective completes</param>
+        /// <param name="text">Dummy text for the objective</param>
+        /// <param name="createStartingObjective">Whether to create the trigger that will trigger this objective, false if creating very first Objective for the scenario</param>
+        /// <returns>The created Objective</returns>
+        private static Objective AddObjective(SimpleGeneratorContext ctx, bool mainQuest, string onCompletionTrigger, string text, bool createStartingObjective = false)
         {
-            // Handle triggers
-            var objectiveOnCompletionTrigger = onCompletionTriggerOverride ?? ctx.TakeRandomObjectiveTrigger();
+            // Handle opened trigger if requested
             var objectiveOpenedTrigger = "None";
-            if (createOpenedTrigger)
+            if (!createStartingObjective)
             {
                 // Only create trigger that opens this on request
                 objectiveOpenedTrigger = ctx.CreateNextTriggerId();
-                ctx.UnconnectedObjectiveTriggers.Add(objectiveOpenedTrigger);
                 ctx.Scenario.AddTrigger(objectiveOpenedTrigger);
             }
             
-            // Completion trigger for the objective is always added
+            // Completion trigger for the objective is always added (but not added to unconnected as that only has the opened triggers)
             var objectiveCompletedTrigger = ctx.CreateNextTriggerId();
-            //ctx.UnconnectedObjectiveTriggers.Add(objectiveCompletedTrigger); TODO: this should not be added here!
             ctx.Scenario.AddTrigger(objectiveCompletedTrigger);
 
             // Create the objective
-            var objective = new Objective(dataNameOverride ?? objectiveOpenedTrigger)
+            var objective = new Objective(createStartingObjective ? "START" : "OBJECTIVE: " + objectiveOpenedTrigger)
             {
                 triggeredByName = objectiveOpenedTrigger,
                 triggerName = objectiveCompletedTrigger,
-                nextTrigger = objectiveOnCompletionTrigger,
+                nextTrigger = onCompletionTrigger,
                 textBookData = new TextBookData(objectiveOpenedTrigger)
                 {
                     pages = new List<string>() { text }
@@ -227,39 +188,48 @@ namespace JiME.Procedural.SimpleGenerator
             };
             ctx.Scenario.AddObjective(objective);
 
-            // Check if we branch here (requiring two or more objectives to complete)
-            if (!forceNoBranching && ctx.RandomChance(ctx.Parameters.BranchingProbability))
+            // Check if we have just a simple StoryPoint or a more complex one
+            if (!ctx.RandomChance(ctx.Parameters.BranchingProbability))
+            {
+                // No branching, simply add StoryPoint to this single objective to handle completing it
+                ctx.StoryPoints.Add(new StoryPoint(
+                    mainQuest,
+                    objective, // Story for this Objective
+                    objectiveOpenedTrigger, // From the point when the objective is revealed
+                    new List<string>() { objectiveCompletedTrigger })); // To the point that completes the objective
+            }
+            else
             {
                 // Do branching by introducing a ConditionalInteraction to before the objective
                 var conditional = new ConditionalInteraction(ctx.CreateNextTriggerId());
                 ctx.Scenario.AddInteraction(conditional);
 
                 // Conditional is the one triggering the just created objective to complete (and it is no longer free)
-                conditional.finishedTrigger = objective.triggerName;
+                conditional.finishedTrigger = objectiveCompletedTrigger;
 
                 // Create random amount of new Objectives for the conditional
+                var storyPointEndTriggers = new List<string>();
                 var newObjectiveCount = ctx.Random.Next(ctx.Parameters.BranchingMinBranches, ctx.Parameters.BranchingMaxBranches + 1);
                 for(int i = 0; i < newObjectiveCount; i++)
                 {
+                    // Add new triggerpoint to the scenario
                     var newTriggerId = ctx.CreateNextTriggerId();
-                    ctx.UnconnectedObjectiveTriggers.Add(newTriggerId);
                     ctx.Scenario.AddTrigger(newTriggerId);
-                    conditional.triggerList.Add(newTriggerId);
-                    /*AddObjective(ctx, "BranchedObjective",
-                        onCompletionTriggerOverride: newTriggerId,
-                        createOpenedTrigger: true, // These we want to leave as unset
-                        forceNoBranching: true, // <-- Or should we allow re-branching in here?
-                        dataNameOverride: null); */
+
+                    // One which is triggered by the StoryPoint
+                    storyPointEndTriggers.Add(newTriggerId);
+
+                    // And whose triggering is required for the conditional and therefore the objective to complete
+                    conditional.triggerList.Add(newTriggerId);                    
                 }
-                // In this case the StoryPoint will be added later if needed
-            }
-            else
-            {
-                // No branching, simply add StoryPoint to this single objective
-                ctx.StoryPoints.Add(new StoryPoint(
+
+                // Then add a StoryPoint to handle completing the objective
+                var multiStoryPoint = new StoryPoint(
+                    mainQuest,
                     objective, // Story for this Objective
                     objectiveOpenedTrigger, // From the point when the objective is revealed
-                    new List<string>() { objectiveCompletedTrigger })); // To the point that completes the objective
+                    storyPointEndTriggers); // The multiple points that complete the objective
+                ctx.StoryPoints.Add(multiStoryPoint);
             }
 
             return objective;
