@@ -22,6 +22,8 @@ namespace JiME.Procedural.SimpleGenerator
         /// </summary>
         public List<StoryPoint> StoryPoints = new List<StoryPoint>();
 
+        
+
         public SimpleGeneratorContext(SimpleGeneratorParameters parameters)
         {
             Parameters = parameters;

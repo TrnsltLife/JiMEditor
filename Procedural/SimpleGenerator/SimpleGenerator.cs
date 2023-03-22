@@ -16,11 +16,13 @@ namespace JiME.Procedural.SimpleGenerator
             // Step 1. Generate basic objective structure and StoryPoints to fill in
             GenerateObjectivesAndStoryPoints(ctx, visualizeStoryPointsInScenario: ctx.Parameters.DebugSkipStoryPointsFillIn);
 
-            // Step 2. Fill in the story points with interactions
+            // Step 2. Fill in the StoryPoints with interactions
             if (!ctx.Parameters.DebugSkipStoryPointsFillIn)
             {
-                // TODO: Not skipping this step -> fill actual storypoints
+                GenerateStoryTemplateAndFillInStoryPoints(ctx);
             }
+
+            // Step 3. TODO: side quests etc? threats? monster activations?
 
             // Return finished scenario
             return ctx.Scenario;
@@ -79,8 +81,8 @@ namespace JiME.Procedural.SimpleGenerator
                     obj.triggeredByName = triggerNameToUse;
 
                     // Also find the story point for this objective and update that
-                    var storyPoint = ctx.StoryPoints.Single(sp => sp.Objective.GUID == obj.GUID);
-                    storyPoint.ReplaceStartingTrigger(triggerNameToUse);
+                    var storyPoint = ctx.StoryPoints.SingleOrDefault(sp => sp.Objective.GUID == obj.GUID);
+                    storyPoint?.ReplaceStartingTrigger(triggerNameToUse);                    
 
                     // Also remove the unused trigger
                     var unusedTrigger = ctx.Scenario.triggersObserver.Single(t => t.dataName == originalTriggerName);
@@ -163,7 +165,16 @@ namespace JiME.Procedural.SimpleGenerator
             */
         }
         
+        private static void GenerateStoryTemplateAndFillInStoryPoints(SimpleGeneratorContext ctx)
+        {
+            // Select archetype
+            var archetype = ctx.Parameters.StoryArchetype.HasValue
+                ? StoryArchetype.GetArchetype(ctx.Parameters.StoryArchetype.Value)
+                : StoryArchetype.GetRandomArchetype(ctx.Random);
 
+            // TODO: terrain types need to be mapped to tile numbers, tile sides need to be taken in to account
+
+        }
 
 
         private static void AddResolution(SimpleGeneratorContext ctx, bool success, string text)
