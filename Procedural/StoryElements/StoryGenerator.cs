@@ -54,7 +54,7 @@ namespace JiME.Procedural.StoryElements
 
                 // Determine which story fragment to use as main fragment for this StoryPoint
                 // NOTE: Can only be the phases "MAIN" fragment if this is the last SP in the phase
-                StoryArchetype.StoryFragent mainFragmentForStoryPoint;
+                StoryArchetype.StoryFragment mainFragmentForStoryPoint;
                 if (isLastStoryPointInPhase && mainFragmentForPhaseNotUsed)
                 {
                     mainFragmentForStoryPoint = GetRandomFromEnumerable(phaseInfo.MustHaveOneOf);
@@ -86,14 +86,14 @@ namespace JiME.Procedural.StoryElements
             // TODO: SIDE STORY points as well?
         }
 
-        private void InventObjective(Objective o, StoryArchetype.StoryFragent mainStoryPoint, IEnumerable<StoryArchetype.StoryFragent> secondaryStoryPoints, StoryArchetype.StoryLocation phaseLocation)
+        private void InventObjective(Objective o, StoryArchetype.StoryFragment mainStoryPoint, IEnumerable<StoryArchetype.StoryFragment> secondaryStoryPoints, StoryArchetype.StoryLocation phaseLocation)
         {
             o.textBookData = new TextBookData() { pages = new List<string>() { mainStoryPoint.ToString() + " in " + phaseLocation.ToString() } };
             // TODO: name, texts etc. 
             // TODO: rewards etc.
         }
 
-        private void InventStory(Scenario s, string startTrigger, List<string> endTriggers, StoryArchetype.StoryFragent mainFragment, IEnumerable<StoryArchetype.StoryFragent> secondaryFragments, StoryArchetype.StoryLocation location)
+        private void InventStory(Scenario s, string startTrigger, List<string> endTriggers, StoryArchetype.StoryFragment mainFragment, IEnumerable<StoryArchetype.StoryFragment> secondaryFragments, StoryArchetype.StoryLocation location)
         {
             // TODO: handle multi-target stories better with more context, now we just do individual stories to each target (with different fragments)
             for(int i = 0; i < endTriggers.Count; i++)
@@ -102,7 +102,7 @@ namespace JiME.Procedural.StoryElements
                 var fragment = (i == 0) ? mainFragment : secondaryFragments.ToList()[i - 1];
 
                 // TODO: invent story elements from startTrigger to endTrigger based on fragment and other stuff
-                var dummySolution = new TextInteraction(fragment.ToString() + " in " + location.ToString());
+                var dummySolution = new TextInteraction(fragment.ToString() + " (" + location.ToString() + ")" + GenerateRandomNameSuffix());
                 dummySolution.triggerName = startTrigger;
                 dummySolution.triggerAfterName = endTriggers[i];
                 s.AddInteraction(dummySolution);
@@ -123,9 +123,6 @@ namespace JiME.Procedural.StoryElements
             }
         }
 
-        /// <summary>
-        /// Gets a random element the enumerable
-        /// </summary>
         private T GetRandomFromEnumerable<T>(IEnumerable<T> enumerable)
         {
             var index = _random.Next(enumerable.Count());
@@ -139,6 +136,8 @@ namespace JiME.Procedural.StoryElements
                 yield return GetRandomFromEnumerable(enumerable);
             }
         }
+
+        private string GenerateRandomNameSuffix() => string.Format(" ({0})", Guid.NewGuid().GetHashCode());
 
         public enum StoryPhase
         {

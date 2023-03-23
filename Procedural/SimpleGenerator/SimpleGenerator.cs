@@ -209,8 +209,8 @@ namespace JiME.Procedural.SimpleGenerator
 
                 // Create random amount of new Objectives for the conditional
                 var storyPointEndTriggers = new List<string>();
-                var newObjectiveCount = ctx.Random.Next(ctx.Parameters.BranchingMinBranches, ctx.Parameters.BranchingMaxBranches + 1);
-                for(int i = 0; i < newObjectiveCount; i++)
+                var branchCount = ctx.Random.Next(ctx.Parameters.BranchingMinBranches, ctx.Parameters.BranchingMaxBranches + 1);
+                for(int i = 0; i < branchCount; i++)
                 {
                     // Add new triggerpoint to the scenario
                     var newTriggerId = ctx.CreateNextTriggerId();

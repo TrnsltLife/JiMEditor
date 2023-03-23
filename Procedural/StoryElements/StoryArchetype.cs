@@ -135,23 +135,27 @@ namespace JiME.Procedural.StoryElements
             public string Comment { get; private set; }
 
             [JsonProperty]
-            public List<StoryFragent> MustHaveOneOf { get; private set; }
+            public List<StoryFragment> MustHaveOneOf { get; private set; }
 
             [JsonProperty]
-            public List<StoryFragent> CanHaveSomeOf { get; private set; }
+            public List<StoryFragment> CanHaveSomeOf { get; private set; }
 
             [JsonProperty]
             public List<StoryLocation> TakesPlaceInOneOf { get; private set; }
             // TODO: TakesPlaceIn "Woodlands", "Cave", "STARTING_AREA"
         }
 
-        public enum StoryFragent
+        // TODO: Consider removing this enum and relying on strings from JSON since we shouldn't need to actually use these in code and it makes things more flexible. 
+        public enum StoryFragment
         {
             KillMonster,
+            MonsterRetreats,
             FindWeaknessInTarget,
             FindStrengthInSelf,
-            TerrainSpecificFiller,
-            FindInfoAboutTarget
+            FindInfoAboutTarget,
+            InvestigateDestruction,
+            TalkToSurvivors,
+            ScoutOutTarget
         }
 
         public enum StoryLocation
