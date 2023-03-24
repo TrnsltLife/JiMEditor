@@ -175,6 +175,23 @@ namespace JiME.Visualization.Models
                     });
                     // TODO: Other properties
                 }
+                else if (x is DialogInteraction)
+                {
+                    var x2 = (DialogInteraction)x;
+                    getTriggerOrEventVertex(vertexDict, x2.c1Trigger, v =>
+                    {
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"" + x2.choice1 + "\"" });
+                    });
+                    getTriggerOrEventVertex(vertexDict, x2.c2Trigger, v =>
+                    {
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"" + x2.choice2 + "\"" });
+                    });
+                    getTriggerOrEventVertex(vertexDict, x2.c3Trigger, v =>
+                    {
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"" + x2.choice3 + "\"" });
+                    });
+                    // TODO: Other properties
+                }
                 else if (x is TestInteraction)
                 {
                     var x2 = (TestInteraction)x;

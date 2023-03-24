@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JiME.Models;
 
 namespace JiME.Procedural.StoryElements
 {
@@ -18,8 +15,7 @@ namespace JiME.Procedural.StoryElements
         private Func<string> _generateRandomId;
 
         private Chapter _startingTileSet;
-        private BaseTile _startingTile;
-        
+        private BaseTile _startingTile;        
 
         public StoryGenerator(StoryArchetype archetype, StoryTemplate template, Random random, Func<string> generateRandomId)
         {
@@ -35,13 +31,13 @@ namespace JiME.Procedural.StoryElements
         public void FillInScenarioDetails(Scenario s)
         {
             s.scenarioName = _template.Name; // TODO: do better here
-            s.threatNotUsed = true; // TODO: ???
+            s.specialInstructions = "";
             s.introBookData = new TextBookData("ScenarioIntroboook")
             {
                 pages = new List<string>() { "PLACEHOLDER INTROBOOK STUFF" }
             };
-
-            // TODO: setup extra core boxes etc here? or expect it to be pre-filled?
+            s.threatNotUsed = true; // TODO: ???
+            s.shadowFear = 2;
         }
         
         /// <summary>
@@ -84,7 +80,7 @@ namespace JiME.Procedural.StoryElements
                 tileSet.isRandomTiles = true;
             }
             s.AddChapter(tileSet);
-
+            
             // Create rest of tiles for the phase
             var phaseTileCount = phaseStoryPoints.Count();
             while(tileSet.tileObserver.Count < phaseTileCount)
@@ -92,7 +88,7 @@ namespace JiME.Procedural.StoryElements
                 CreateRandomTileAndAddtoTileset(s, tileSet, primaryLocation, secondaryLocations, mustBeFromPrimary: false);
             }
             var allPhaseTiles = tileSet.tileObserver.OfType<HexTile>().ToList(); // TODO: non-hex tile in some far future?
-
+            
             // Work through all the MAIN STORY storypoints in the phase
             var phaseMainStoryPoints = phaseStoryPoints.Where(sp => sp.PartOfMainQuest).ToList();
             var mainFragmentForPhaseNotUsed = true;
@@ -126,7 +122,7 @@ namespace JiME.Procedural.StoryElements
                 // Determine which tile in the set is linked to this storypoint
                 var randomPhaseTile = GetRandomFromEnumerable(allPhaseTiles);
                 allPhaseTiles.Remove(randomPhaseTile);
-
+                
                 // Write out the MAIN STORY storypoint
                 InventStory(s, 
                     sp.StartTriggerName, 
@@ -134,14 +130,15 @@ namespace JiME.Procedural.StoryElements
                     mainFragmentForStoryPoint, 
                     secondaryFragmentsForStoryPoint, 
                     phaseLocation,
-                    randomPhaseTile);           
+                    randomPhaseTile);    
             }
-
+            
             // TODO: SIDE STORY points as well?
         }
 
         private void InventObjective(Objective o, string mainStoryPoint, IEnumerable<string> secondaryStoryPoints, string phaseLocation)
         {
+            o.objectiveReminder = mainStoryPoint.ToString() + " in " + phaseLocation.ToString();
             o.textBookData = new TextBookData() { pages = new List<string>() { mainStoryPoint.ToString() + " in " + phaseLocation.ToString() } };
             // TODO: name, texts etc. 
             // TODO: rewards etc.
@@ -149,6 +146,9 @@ namespace JiME.Procedural.StoryElements
 
         private void InventStory(Scenario s, string startTrigger, List<string> endTriggers, string mainFragment, IEnumerable<string> secondaryFragments, string location, HexTile tile)
         {
+            // TODO: NEED TO CHECK HOW TOKEN INTERACTIONS WORK, DOES THIS BREAK IF WE HAVE MORE THAN ONE TOKEN WITH SAME TYPE?
+            // TODO: SOMETHING WRONG WITH TRIGGERING NEXT CHAPTER SHOW
+
             // TODO: handle multi-target stories better with more context, now we just do individual stories to each target (with different fragments)
             for(int i = 0; i < endTriggers.Count; i++)
             {
@@ -156,18 +156,30 @@ namespace JiME.Procedural.StoryElements
                 var fragment = (i == 0) ? mainFragment : secondaryFragments.ToList()[i - 1];
 
                 // TODO: invent story elements from startTrigger to endTrigger based on fragment and other stuff
-                var dummySolution = new ConditionalInteraction(fragment.ToString() + " (" + location.ToString() + ")" + GenerateRandomNameSuffix());
+                var dummySolution = new DialogInteraction(fragment.ToString() + " (" + location.ToString() + ")" + GenerateRandomNameSuffix());
+                dummySolution.eventBookData = new TextBookData()
+                {
+                    pages = new List<string>() { "What do you want to do?" }
+                };
+                dummySolution.choice1 = "Go forward";
+                dummySolution.c1Text = "You decided to go forward";
+                dummySolution.c1Trigger = endTriggers[i];
+                dummySolution.choice2 = ""; // This removes the option alltogether
+                dummySolution.choice3 = ""; // This removes the option alltogether
                 dummySolution.triggerName = startTrigger;
-                dummySolution.finishedTrigger = endTriggers[i];
+                dummySolution.isTokenInteraction = true;
+                dummySolution.tokenType = TokenType.Person;
                 s.AddInteraction(dummySolution);
 
-                // TODO: Do we need hardcoded fragment listing for different token types? or to create monsters etc.
-                var newTrigger = _generateRandomId();
-                s.AddTrigger(newTrigger);
                 var token = new Token(TokenType.Search);
-                token.triggerName = newTrigger;
+                token.tokenType = TokenType.Person;
+                token.personType = PersonType.Elf;
+                // TODO:token position? 
+                token.triggeredByName = startTrigger; // Token is shown when this Story begins
+                token.triggerName = dummySolution.dataName; // Token triggers the dialog
                 tile.tokenList.Add(token);
-                dummySolution.triggerList.Add(newTrigger);
+                
+                // TODO: Do we need hardcoded fragment listing for different token types? or to create monsters etc.
             }
         }
 

@@ -51,12 +51,17 @@ namespace JiME.Procedural.SimpleGenerator
         private void SetupScenario()
         {
             Scenario = new Scenario("SimpleScenario");
+            Scenario.scenarioGUID = Guid.NewGuid();
+            //Scenario.campaignGUID = Guid.NewGuid();
             Scenario.scenarioTypeJourney = true;
+            Scenario.projectType = ProjectType.Standalone;
             Scenario.fileVersion = Utils.formatVersion;
+            Scenario.useTileGraphics = true;
 
             // TODO: setup additional Collections based on parameters? CORE_SET is there by default
 
             // Add default stuff
+            //Scenario.AddDefaultTerrainInteractions();
             Scenario.triggersObserver.Add(Trigger.EmptyTrigger());
             Scenario.objectiveObserver.Add(Objective.EmptyObjective());
             Scenario.interactionObserver.Add(NoneInteraction.EmptyInteraction());

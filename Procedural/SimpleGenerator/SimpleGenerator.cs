@@ -123,9 +123,6 @@ namespace JiME.Procedural.SimpleGenerator
             generator.FillInPhaseStoryPoint(ctx.Scenario, StoryGenerator.StoryPhase.Start, mainStoryPoints_StartPhase);
             generator.FillInPhaseStoryPoint(ctx.Scenario, StoryGenerator.StoryPhase.Middle, mainStoryPoints_MiddlePhase);
             generator.FillInPhaseStoryPoint(ctx.Scenario, StoryGenerator.StoryPhase.End, mainStoryPoints_EndPhase);
-
-            // Create the starting Chapter / TileSet
-            // TODO: terrain types need to be mapped to tile numbers, tile sides need to be taken in to account
         }
 
 
