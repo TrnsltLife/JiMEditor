@@ -15,17 +15,18 @@ namespace JiME.Procedural.StoryElements
         private StoryArchetype _archetype;
         private StoryTemplate _template;
         private Random _random;
+        private Func<string> _generateRandomId;
 
-        private IEnumerable<Collection> _availableCollections;
-        private HashSet<int> _availableTiles;
+        private Chapter _startingTileSet;
+        private BaseTile _startingTile;
+        
 
-        public StoryGenerator(StoryArchetype archetype, StoryTemplate template, Random random, IEnumerable<Collection> availableCollections)
+        public StoryGenerator(StoryArchetype archetype, StoryTemplate template, Random random, Func<string> generateRandomId)
         {
             _archetype = archetype;
             _template = template;
             _random = random;
-            _availableCollections = availableCollections;
-            _availableTiles = _availableCollections.SelectMany(c => c.TileNumbers).ToHashSet();
+            _generateRandomId = generateRandomId;
         }
 
         /// <summary>
@@ -34,8 +35,15 @@ namespace JiME.Procedural.StoryElements
         public void FillInScenarioDetails(Scenario s)
         {
             s.scenarioName = _template.Name; // TODO: do better here
-        }
+            s.threatNotUsed = true; // TODO: ???
+            s.introBookData = new TextBookData("ScenarioIntroboook")
+            {
+                pages = new List<string>() { "PLACEHOLDER INTROBOOK STUFF" }
+            };
 
+            // TODO: setup extra core boxes etc here? or expect it to be pre-filled?
+        }
+        
         /// <summary>
         /// Fills in one particular phases StoryPoints and it's Objective inside the scenario
         /// Expects to get ALL phaseStoryPoints IN ORDER THAT THEY HAPPEN
@@ -48,13 +56,42 @@ namespace JiME.Procedural.StoryElements
             // Determine the location type the phase happens in            
             // TODO: here we should also take note that certain places are not available in all collections 
             var phaseLocation = GetRandomFromEnumerable(phaseInfo.TakesPlaceInOneOf);
-            var phaseLocationInfo = StoryLocation.GetLocation(phaseLocation);
-            
-            // TODO: where do we populate phase tiles?
-            var tile = GetRandomTile(phaseLocationInfo);
+            var primaryLocation = StoryLocation.GetLocation(phaseLocation);
+            var secondaryLocations = phaseInfo.TakesPlaceInOneOf
+                .Where(l => l != primaryLocation.Name)
+                .Select(l => StoryLocation.GetLocation(l))
+                .ToList();
 
-            // TODO: do we want to generate new terrain for each objective? or single one based on number of objetives in the phase?
-            // TODO: what if we don't have enough e.g. village tiles? we could have FillInLocationsFrom in archetype and use secondary locations
+            // Create location for the phase
+            Chapter tileSet;
+            if (phase == StoryPhase.Start)
+            {
+                // Start phase is a bit different since here we need to do the initial location
+                tileSet = new Chapter("Start");
+                _startingTileSet = tileSet;                
+
+                // Create the very first tile (must be from the primary location selected)
+                _startingTile = CreateRandomTileAndAddtoTileset(s, tileSet, primaryLocation, secondaryLocations, mustBeFromPrimary: true);
+                _startingTile.isStartTile = true;
+
+                // TODO: we should basically have random tiles except for the first one but isRandomTiles must not be set to the "Start" tileset
+            }
+            else
+            {
+                // Later phases just generate the tilese that appears when first main objective is revealed
+                tileSet = new Chapter(phase.ToString() + " " + primaryLocation.Name);
+                tileSet.triggeredBy = phaseStoryPoints.Where(sp => sp.PartOfMainQuest).First().StartTriggerName;
+                tileSet.isRandomTiles = true;
+            }
+            s.AddChapter(tileSet);
+
+            // Create rest of tiles for the phase
+            var phaseTileCount = phaseStoryPoints.Count();
+            while(tileSet.tileObserver.Count < phaseTileCount)
+            {
+                CreateRandomTileAndAddtoTileset(s, tileSet, primaryLocation, secondaryLocations, mustBeFromPrimary: false);
+            }
+            var allPhaseTiles = tileSet.tileObserver.OfType<HexTile>().ToList(); // TODO: non-hex tile in some far future?
 
             // Work through all the MAIN STORY storypoints in the phase
             var phaseMainStoryPoints = phaseStoryPoints.Where(sp => sp.PartOfMainQuest).ToList();
@@ -86,13 +123,18 @@ namespace JiME.Procedural.StoryElements
                     secondaryFragmentsForStoryPoint, 
                     phaseLocation);
 
+                // Determine which tile in the set is linked to this storypoint
+                var randomPhaseTile = GetRandomFromEnumerable(allPhaseTiles);
+                allPhaseTiles.Remove(randomPhaseTile);
+
                 // Write out the MAIN STORY storypoint
                 InventStory(s, 
                     sp.StartTriggerName, 
                     sp.EndTriggerNames, 
                     mainFragmentForStoryPoint, 
                     secondaryFragmentsForStoryPoint, 
-                    phaseLocation);           
+                    phaseLocation,
+                    randomPhaseTile);           
             }
 
             // TODO: SIDE STORY points as well?
@@ -105,7 +147,7 @@ namespace JiME.Procedural.StoryElements
             // TODO: rewards etc.
         }
 
-        private void InventStory(Scenario s, string startTrigger, List<string> endTriggers, string mainFragment, IEnumerable<string> secondaryFragments, string location)
+        private void InventStory(Scenario s, string startTrigger, List<string> endTriggers, string mainFragment, IEnumerable<string> secondaryFragments, string location, HexTile tile)
         {
             // TODO: handle multi-target stories better with more context, now we just do individual stories to each target (with different fragments)
             for(int i = 0; i < endTriggers.Count; i++)
@@ -114,10 +156,18 @@ namespace JiME.Procedural.StoryElements
                 var fragment = (i == 0) ? mainFragment : secondaryFragments.ToList()[i - 1];
 
                 // TODO: invent story elements from startTrigger to endTrigger based on fragment and other stuff
-                var dummySolution = new TextInteraction(fragment.ToString() + " (" + location.ToString() + ")" + GenerateRandomNameSuffix());
+                var dummySolution = new ConditionalInteraction(fragment.ToString() + " (" + location.ToString() + ")" + GenerateRandomNameSuffix());
                 dummySolution.triggerName = startTrigger;
-                dummySolution.triggerAfterName = endTriggers[i];
+                dummySolution.finishedTrigger = endTriggers[i];
                 s.AddInteraction(dummySolution);
+
+                // TODO: Do we need hardcoded fragment listing for different token types? or to create monsters etc.
+                var newTrigger = _generateRandomId();
+                s.AddTrigger(newTrigger);
+                var token = new Token(TokenType.Search);
+                token.triggerName = newTrigger;
+                tile.tokenList.Add(token);
+                dummySolution.triggerList.Add(newTrigger);
             }
         }
 
@@ -154,21 +204,71 @@ namespace JiME.Procedural.StoryElements
         /// <summary>
         /// Gets a random tile from this location but make sure that it is one of the available tiles and updates availableTileIds list
         /// </summary>
-        private StoryLocation.TileInfo GetRandomTile(StoryLocation location)
+        private StoryLocation.TileInfo GetRandomTileInfo(Scenario s, StoryLocation location)
         {
             // Determine which ids are actually valid
             var validTiles = location.KnownTiles.Values
-                .Where(t => _availableTiles.Contains(t.IdNumber))
+                .Where(t => s.globalTilePool.Contains(t.IdNumber))
                 .ToList();
             if (validTiles.Count == 0)
             {
-                // TODO: or should we return an error here?
-                throw new Exception("GetRandomTile() could not find any valid tiles!");
+                Console.WriteLine("WARNING: Couldn not find available " + location.Name + " tile anymore!");
+                return null;
             }
 
             // Then take one at random
             var tile = GetRandomFromEnumerable(validTiles);
-            _availableTiles.Remove(tile.IdNumber);
+            s.globalTilePool.Remove(tile.IdNumber);
+            return tile;
+        }
+
+        /// <summary>
+        /// Creates a new tile and adds it to the given Chapter 
+        /// </summary>
+        private BaseTile CreateRandomTileAndAddtoTileset(Scenario s, Chapter tileset, StoryLocation primaryLocation, IEnumerable<StoryLocation> secondaryLocations, bool mustBeFromPrimary = false)
+        {
+            // Gather tile info
+            var tileInfo = GetRandomTileInfo(s, primaryLocation);
+            if (tileInfo == null)
+            {
+                // Primary location did not yield valid tile
+                if (mustBeFromPrimary)
+                { 
+                    throw new Exception("Primary location did not contain valid tile!");
+                }
+
+                // Test secondaries
+                if (secondaryLocations != null)
+                {
+                    foreach (var secondaryLocation in secondaryLocations)
+                    {
+                        tileInfo = GetRandomTileInfo(s, secondaryLocation);
+                        if (tileInfo != null)
+                        {
+                            break;
+                        }
+                    }
+                }
+                if (tileInfo == null)
+                {
+                    throw new Exception("Primary or Secondary locations did not contain valid tile!");
+                }
+            }
+
+            // Create the tile itself and add the exploration token
+            // TODO: what does skipBuild mean? if false then we get some coordinate exception, might be just for the "Start" chapter since others use random tiles
+            var tile = new HexTile(tileInfo.IdNumber, skipBuild: true) 
+            {
+                tileSide = tileInfo.TileSide,
+                flavorBookData = new TextBookData()
+                {
+                    pages = new List<string>() { GetRandomFromEnumerable(tileInfo.ExplorationTexts) }
+                }
+            };
+            // TODO: exploration flavor text? is it per chapter or per tile?    
+
+            // Add the chapter and return created tile
+            tileset.AddTile(tile);
             return tile;
         }
 

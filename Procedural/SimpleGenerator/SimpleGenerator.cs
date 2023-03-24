@@ -101,8 +101,7 @@ namespace JiME.Procedural.SimpleGenerator
             var template = ctx.Parameters.StoryTemplate?.Length > 0
                 ? StoryTemplate.GetTemplate(ctx.Parameters.StoryTemplate)
                 : StoryTemplate.GetRandomTemplate(ctx.Random);
-            var collections = new List<Models.Collection>() { Models.Collection.CORE_SET }; // TODO: based on parameters!
-            var generator = new StoryGenerator(archetype, template, ctx.Random, collections);
+            var generator = new StoryGenerator(archetype, template, ctx.Random, ctx.CreateNextTriggerId);
 
             // Fill in the Scenario level details
             generator.FillInScenarioDetails(ctx.Scenario);

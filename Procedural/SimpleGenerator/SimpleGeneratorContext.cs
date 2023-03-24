@@ -22,7 +22,7 @@ namespace JiME.Procedural.SimpleGenerator
         public SimpleGeneratorContext(SimpleGeneratorParameters parameters)
         {
             Parameters = parameters;
-            Scenario = new Scenario("Simple Scenario");
+            SetupScenario();
 
             // If we don't have the seed, create it randomly
             var seedString = parameters.Seed?.Length > 0
@@ -46,6 +46,30 @@ namespace JiME.Procedural.SimpleGenerator
         {
             var rnd = Random.Next(1, 100);
             return rnd < probability;
+        }
+
+        private void SetupScenario()
+        {
+            Scenario = new Scenario("SimpleScenario");
+            Scenario.scenarioTypeJourney = true;
+            Scenario.fileVersion = Utils.formatVersion;
+
+            // TODO: setup additional Collections based on parameters? CORE_SET is there by default
+
+            // Add default stuff
+            Scenario.triggersObserver.Add(Trigger.EmptyTrigger());
+            Scenario.objectiveObserver.Add(Objective.EmptyObjective());
+            Scenario.interactionObserver.Add(NoneInteraction.EmptyInteraction());
+            foreach (DefaultActivations defAct in Utils.defaultActivations)
+            {
+                MonsterActivations act = new MonsterActivations(defAct);
+                Scenario.activationsObserver.Add(act);
+            }
+
+            // TODO: ???
+            Scenario.wallTypes = new int[22];
+            for (int i = 0; i < 22; i++)
+                Scenario.wallTypes[i] = 0;//0=none, 1=wall, 2=river
         }
     }
 }

@@ -5,7 +5,7 @@
             "Comment": "Start of the adventure where we find more information about what is happening",
             "MustHaveOneOf": [ "FindInfoAboutTarget" ],
             "CanHaveSomeOf": [ "InvestigateDestruction", "TalkToSurvivors" ],
-            "TakesPlaceInOneOf": [ "Woodlands", "Village" ]
+            "TakesPlaceInOneOf": [ "Village" ]
         },
         "Middle": {
             "Comment": "Buildup towards the big encounter and some way to gain an advantage",

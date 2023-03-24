@@ -14,6 +14,24 @@
                     "ExplorationTexts": [
                         "Slightly forested area with small ponds admist the trees."
                     ]
+                },
+                {
+                    "IdAndSide": "200A",
+                    "ExplorationTexts": [
+                        "Slightly forested area next to river."
+                    ]
+                },
+                {
+                    "IdAndSide": "201A",
+                    "ExplorationTexts": [
+                        "Slightly forested area boulders strewn around."
+                    ]
+                },
+                {
+                    "IdAndSide": "205A",
+                    "ExplorationTexts": [
+                        "Slightly forested area next to river."
+                    ]
                 }
             ]
         },
