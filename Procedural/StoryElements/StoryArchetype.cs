@@ -10,6 +10,8 @@ using Newtonsoft.Json.Linq;
 
 namespace JiME.Procedural.StoryElements
 {
+    // TODO: some locations are considered to be only accessible in certain core sets, we need to define those separately!
+
     /// <summary>
     /// Tells what kind of story we are writing.
     /// Maps out a story archetype that exposes entension points that can be fulfilled by Story Templates.
@@ -42,6 +44,16 @@ namespace JiME.Procedural.StoryElements
         /// </summary>
         [JsonProperty]
         public StoryPhase End { get; private set; }
+
+        /// <summary>
+        /// All possible story fragments as defined in story-archetypes.json
+        /// </summary>
+        public static IEnumerable<string> AllPossibleStoryFragments { get; private set; }
+
+        /// <summary>
+        /// All possible story locations as defined in story-archetypes.json
+        /// </summary>
+        public static IEnumerable<string> AllPossibleStoryLocations { get; private set; }
 
         #endregion
         #region Construction and fetching
@@ -80,6 +92,37 @@ namespace JiME.Procedural.StoryElements
                         .ToObject<List<StoryArchetype>>()
                         .ToDictionary(x => x.Archetype, x => x);
                     Console.WriteLine("Story Archetypes Loaded: " + s_archetypes.Count);
+
+                    // Also gather all story fragments to a list from the archetype list
+                    AllPossibleStoryFragments = s_archetypes.Values
+                        .SelectMany(a => a.Start.MustHaveOneOf
+                             .Union(a.Start.CanHaveSomeOf)
+                             .Union(a.Middle.MustHaveOneOf)
+                             .Union(a.Middle.CanHaveSomeOf)
+                             .Union(a.End.MustHaveOneOf)
+                             .Union(a.End.CanHaveSomeOf))
+                        .Distinct()
+                        .OrderBy(x => x)
+                        .ToList();
+                    Console.WriteLine("Story Fragments Identified:");
+                    foreach (var f in AllPossibleStoryFragments)
+                    {
+                        Console.WriteLine("  - " + f);
+                    }
+
+                    // Also gather all story locations to a list from the archetype list
+                    AllPossibleStoryLocations = s_archetypes.Values
+                        .SelectMany(a => a.Start.TakesPlaceInOneOf
+                             .Union(a.Middle.TakesPlaceInOneOf)
+                             .Union(a.End.TakesPlaceInOneOf))
+                        .Distinct()
+                        .OrderBy(x => x)
+                        .ToList();
+                    Console.WriteLine("Story Locations Identified:");
+                    foreach (var f in AllPossibleStoryLocations)
+                    {
+                        Console.WriteLine("  - " + f);
+                    }
                 }
             }
         }
@@ -134,42 +177,26 @@ namespace JiME.Procedural.StoryElements
             [JsonProperty]
             public string Comment { get; private set; }
 
+            /// <summary>
+            /// One of the story fragments defined in story-archetypes.json. This one contains the main story elements that NEED to be in the story.
+            /// </summary>
             [JsonProperty]
-            public List<StoryFragment> MustHaveOneOf { get; private set; }
+            public List<string> MustHaveOneOf { get; private set; }
 
+            /// <summary>
+            /// One of the story fragments defined in story-archetypes.json. This one contains the side story elements that COULD to be in the story.
+            /// </summary>
             [JsonProperty]
-            public List<StoryFragment> CanHaveSomeOf { get; private set; }
+            public List<string> CanHaveSomeOf { get; private set; }
 
+            /// <summary>
+            /// One of the StoryLocations defined in story-locations.json OR STARTING_LOCATION to the one that the story begun 
+            /// </summary>
             [JsonProperty]
-            public List<StoryLocation> TakesPlaceInOneOf { get; private set; }
+            public List<string> TakesPlaceInOneOf { get; private set; }
             // TODO: TakesPlaceIn "Woodlands", "Cave", "STARTING_AREA"
         }
 
-        // TODO: Consider removing this enum and relying on strings from JSON since we shouldn't need to actually use these in code and it makes things more flexible. 
-        public enum StoryFragment
-        {
-            KillMonster,
-            MonsterRetreats,
-            FindWeaknessInTarget,
-            FindStrengthInSelf,
-            FindInfoAboutTarget,
-            InvestigateDestruction,
-            TalkToSurvivors,
-            ScoutOutTarget
-        }
-
-        public enum StoryLocation
-        {
-            Woodland,
-            Cave,
-            Village,
-            Ruins,
-
-            /// <summary>
-            /// Special case that refers to the very first tile
-            /// </summary>
-            STARTING_AREA
-        }
         #endregion
     }
 }

@@ -5,19 +5,19 @@
             "Comment": "Start of the adventure where we find more information about what is happening",
             "MustHaveOneOf": [ "FindInfoAboutTarget" ],
             "CanHaveSomeOf": [ "InvestigateDestruction", "TalkToSurvivors" ],
-            "TakesPlaceInOneOf": [ "Woodland", "Village" ]
+            "TakesPlaceInOneOf": [ "Woodlands", "Village" ]
         },
         "Middle": {
             "Comment": "Buildup towards the big encounter and some way to gain an advantage",
             "MustHaveOneOf": [ "FindWeaknessInTarget", "FindStrengthInSelf" ],
             "CanHaveSomeOf": [ "InvestigateDestruction", "TalkToSurvivors" ],
-            "TakesPlaceInOneOf": [ "Woodland", "Cave" ]
+            "TakesPlaceInOneOf": [ "Woodlands", "Cave" ]
         },
         "End": {
             "Comment": "Usually kill the monster, might also have some other means of dispatching than killing? Possibly target escapes anyway",
             "MustHaveOneOf": [ "KillMonster", "MonsterRetreats" ],
             "CanHaveSomeOf": [ "ScoutOutTarget", "InvestigateDestruction" ],
-            "TakesPlaceInOneOf": [ "Cave", "Ruins" ]
+            "TakesPlaceInOneOf": [ "Cave", "Woodlands" ]
         }
     }
 ]}

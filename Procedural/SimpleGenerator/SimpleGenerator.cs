@@ -31,10 +31,7 @@ namespace JiME.Procedural.SimpleGenerator
             // Check errors and return finished scenario
             var checker = new ErrorChecker();
             checker.CheckErrors(ctx.Scenario);
-            foreach (var error in checker.Errors)
-            {
-                Console.WriteLine("SimpleGenerator ERROR: " + error);
-            }
+            Console.WriteLine("SimpleGenerator ERROR: " + checker.Errors);
 
             // Return finished scenario
             return ctx.Scenario;
@@ -104,7 +101,8 @@ namespace JiME.Procedural.SimpleGenerator
             var template = ctx.Parameters.StoryTemplate?.Length > 0
                 ? StoryTemplate.GetTemplate(ctx.Parameters.StoryTemplate)
                 : StoryTemplate.GetRandomTemplate(ctx.Random);
-            var generator = new StoryGenerator(archetype, template, ctx.Random);
+            var collections = new List<Models.Collection>() { Models.Collection.CORE_SET }; // TODO: based on parameters!
+            var generator = new StoryGenerator(archetype, template, ctx.Random, collections);
 
             // Fill in the Scenario level details
             generator.FillInScenarioDetails(ctx.Scenario);

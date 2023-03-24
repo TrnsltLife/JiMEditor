@@ -1,0 +1,49 @@
+{
+    "locations": [
+        {
+            "Name": "Woodlands",
+            "KnownTiles": [
+                {
+                    "IdAndSide": "100A",
+                    "ExplorationTexts": [
+                        "Slightly forested area with clearings between small batches of trees."
+                    ]
+                },
+                {
+                    "IdAndSide": "101A",
+                    "ExplorationTexts": [
+                        "Slightly forested area with small ponds admist the trees."
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Village",
+            "KnownTiles": [
+                {
+                    "IdAndSide": "300B",
+                    "ExplorationTexts": [
+                        "Small village normally bustling with people."
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Cave",
+            "KnownTiles": [
+                {
+                    "IdAndSide": "303B",
+                    "ExplorationTexts": [
+                        "Musty cave with a small pond streaming from the wall."
+                    ]
+                },
+                {
+                    "IdAndSide": "307B",
+                    "ExplorationTexts": [
+                        "Winding tunnels with some crystal mining happening in the past."
+                    ]
+                }
+            ]
+        }
+    ]
+}

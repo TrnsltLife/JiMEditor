@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JiME.Models;
 
 namespace JiME.Procedural.StoryElements
 {
@@ -15,11 +16,16 @@ namespace JiME.Procedural.StoryElements
         private StoryTemplate _template;
         private Random _random;
 
-        public StoryGenerator(StoryArchetype archetype, StoryTemplate template, Random random)
+        private IEnumerable<Collection> _availableCollections;
+        private HashSet<int> _availableTiles;
+
+        public StoryGenerator(StoryArchetype archetype, StoryTemplate template, Random random, IEnumerable<Collection> availableCollections)
         {
             _archetype = archetype;
             _template = template;
             _random = random;
+            _availableCollections = availableCollections;
+            _availableTiles = _availableCollections.SelectMany(c => c.TileNumbers).ToHashSet();
         }
 
         /// <summary>
@@ -39,10 +45,16 @@ namespace JiME.Procedural.StoryElements
             // See which phase we operate in
             var phaseInfo = GetPhaseInfo(phase);
 
-            // Determine the location type the phase happens in
+            // Determine the location type the phase happens in            
+            // TODO: here we should also take note that certain places are not available in all collections 
             var phaseLocation = GetRandomFromEnumerable(phaseInfo.TakesPlaceInOneOf);
-
+            var phaseLocationInfo = StoryLocation.GetLocation(phaseLocation);
+            
             // TODO: where do we populate phase tiles?
+            var tile = GetRandomTile(phaseLocationInfo);
+
+            // TODO: do we want to generate new terrain for each objective? or single one based on number of objetives in the phase?
+            // TODO: what if we don't have enough e.g. village tiles? we could have FillInLocationsFrom in archetype and use secondary locations
 
             // Work through all the MAIN STORY storypoints in the phase
             var phaseMainStoryPoints = phaseStoryPoints.Where(sp => sp.PartOfMainQuest).ToList();
@@ -54,7 +66,7 @@ namespace JiME.Procedural.StoryElements
 
                 // Determine which story fragment to use as main fragment for this StoryPoint
                 // NOTE: Can only be the phases "MAIN" fragment if this is the last SP in the phase
-                StoryArchetype.StoryFragment mainFragmentForStoryPoint;
+                string mainFragmentForStoryPoint;
                 if (isLastStoryPointInPhase && mainFragmentForPhaseNotUsed)
                 {
                     mainFragmentForStoryPoint = GetRandomFromEnumerable(phaseInfo.MustHaveOneOf);
@@ -86,14 +98,14 @@ namespace JiME.Procedural.StoryElements
             // TODO: SIDE STORY points as well?
         }
 
-        private void InventObjective(Objective o, StoryArchetype.StoryFragment mainStoryPoint, IEnumerable<StoryArchetype.StoryFragment> secondaryStoryPoints, StoryArchetype.StoryLocation phaseLocation)
+        private void InventObjective(Objective o, string mainStoryPoint, IEnumerable<string> secondaryStoryPoints, string phaseLocation)
         {
             o.textBookData = new TextBookData() { pages = new List<string>() { mainStoryPoint.ToString() + " in " + phaseLocation.ToString() } };
             // TODO: name, texts etc. 
             // TODO: rewards etc.
         }
 
-        private void InventStory(Scenario s, string startTrigger, List<string> endTriggers, StoryArchetype.StoryFragment mainFragment, IEnumerable<StoryArchetype.StoryFragment> secondaryFragments, StoryArchetype.StoryLocation location)
+        private void InventStory(Scenario s, string startTrigger, List<string> endTriggers, string mainFragment, IEnumerable<string> secondaryFragments, string location)
         {
             // TODO: handle multi-target stories better with more context, now we just do individual stories to each target (with different fragments)
             for(int i = 0; i < endTriggers.Count; i++)
@@ -138,6 +150,27 @@ namespace JiME.Procedural.StoryElements
         }
 
         private string GenerateRandomNameSuffix() => string.Format(" ({0})", Guid.NewGuid().GetHashCode());
+
+        /// <summary>
+        /// Gets a random tile from this location but make sure that it is one of the available tiles and updates availableTileIds list
+        /// </summary>
+        private StoryLocation.TileInfo GetRandomTile(StoryLocation location)
+        {
+            // Determine which ids are actually valid
+            var validTiles = location.KnownTiles.Values
+                .Where(t => _availableTiles.Contains(t.IdNumber))
+                .ToList();
+            if (validTiles.Count == 0)
+            {
+                // TODO: or should we return an error here?
+                throw new Exception("GetRandomTile() could not find any valid tiles!");
+            }
+
+            // Then take one at random
+            var tile = GetRandomFromEnumerable(validTiles);
+            _availableTiles.Remove(tile.IdNumber);
+            return tile;
+        }
 
         public enum StoryPhase
         {
