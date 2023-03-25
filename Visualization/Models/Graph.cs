@@ -44,7 +44,8 @@ namespace JiME.Visualization.Models
                 }
 
                 // Vertex for the trigger
-                var vertex = new DataVertex(x.dataName, DataVertex.Type.Trigger, x);
+                var multiSuffix = x.isMultiTrigger ? "*" : "";
+                var vertex = new DataVertex(x.dataName + multiSuffix, DataVertex.Type.Trigger, x);
                 vertexDict.Add(getTriggerName(x.dataName), vertex);
                 dataGraph.AddVertex(vertex);
                 return vertex;

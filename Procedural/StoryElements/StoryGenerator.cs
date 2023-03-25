@@ -78,11 +78,12 @@ namespace JiME.Procedural.StoryElements
                 tileSet = new Chapter(phase.ToString() + " " + primaryLocation.Name);
                 tileSet.triggeredBy = phaseStoryPoints.Where(sp => sp.PartOfMainQuest).First().StartTriggerName;
                 tileSet.isRandomTiles = true;
+                tileSet.isDynamic = true; // Add as dynamic since the fog of war overlaps the tiles otherwise
             }
             s.AddChapter(tileSet);
             
-            // Create rest of tiles for the phase
-            var phaseTileCount = phaseStoryPoints.Count();
+            // Create rest of tiles for the phase (max 5 tiles)
+            var phaseTileCount = Math.Min(5, phaseStoryPoints.Count());
             while(tileSet.tileObserver.Count < phaseTileCount)
             {
                 CreateRandomTileAndAddtoTileset(s, tileSet, primaryLocation, secondaryLocations, mustBeFromPrimary: false);
@@ -114,7 +115,7 @@ namespace JiME.Procedural.StoryElements
                 var secondaryFragmentsForStoryPoint = GetRandomFromEnumerable(phaseInfo.CanHaveSomeOf, sp.EndTriggerNames.Count - 1);
 
                 // Update the MAIN STORY objective information based on fragments
-                InventObjective(sp.Objective, 
+                InventObjective(s, sp.Objective, 
                     mainFragmentForStoryPoint, 
                     secondaryFragmentsForStoryPoint, 
                     phaseLocation);
@@ -136,9 +137,19 @@ namespace JiME.Procedural.StoryElements
             // TODO: SIDE STORY points as well?
         }
 
-        private void InventObjective(Objective o, string mainStoryPoint, IEnumerable<string> secondaryStoryPoints, string phaseLocation)
+        private void InventObjective(Scenario s, Objective o, string mainStoryPoint, IEnumerable<string> secondaryStoryPoints, string phaseLocation)
         {
-            o.objectiveReminder = mainStoryPoint.ToString() + " in " + phaseLocation.ToString();
+            // Switch the dataName to help debugging
+            var newDataName = mainStoryPoint.ToString() + " in " + phaseLocation.ToString() + " (" + o.triggeredByName + ")";
+            if (s.objectiveName == o.dataName)
+            {
+                // Also update starting objective if that changes
+                s.objectiveName = newDataName;
+            }
+            o.dataName = newDataName;
+
+            // Fill in the actual objective details
+            o.objectiveReminder = mainStoryPoint.ToString() + " in " + phaseLocation.ToString() + " (" + o.triggeredByName + ")";
             o.textBookData = new TextBookData() { pages = new List<string>() { mainStoryPoint.ToString() + " in " + phaseLocation.ToString() } };
             // TODO: name, texts etc. 
             // TODO: rewards etc.
@@ -146,9 +157,6 @@ namespace JiME.Procedural.StoryElements
 
         private void InventStory(Scenario s, string startTrigger, List<string> endTriggers, string mainFragment, IEnumerable<string> secondaryFragments, string location, HexTile tile)
         {
-            // TODO: NEED TO CHECK HOW TOKEN INTERACTIONS WORK, DOES THIS BREAK IF WE HAVE MORE THAN ONE TOKEN WITH SAME TYPE?
-            // TODO: SOMETHING WRONG WITH TRIGGERING NEXT CHAPTER SHOW
-
             // TODO: handle multi-target stories better with more context, now we just do individual stories to each target (with different fragments)
             for(int i = 0; i < endTriggers.Count; i++)
             {
@@ -161,21 +169,21 @@ namespace JiME.Procedural.StoryElements
                 {
                     pages = new List<string>() { "What do you want to do?" }
                 };
-                dummySolution.choice1 = "Go forward";
+                dummySolution.choice1 = "Trigger: " + endTriggers[i];
                 dummySolution.c1Text = "You decided to go forward";
                 dummySolution.c1Trigger = endTriggers[i];
                 dummySolution.choice2 = ""; // This removes the option alltogether
                 dummySolution.choice3 = ""; // This removes the option alltogether
                 dummySolution.triggerName = startTrigger;
-                dummySolution.isTokenInteraction = true;
-                dummySolution.tokenType = TokenType.Person;
+                dummySolution.isTokenInteraction = true; // Needs to be token interaction so that it can be triggered by a token
+                //dummySolution.tokenType = TokenType.Person;
+                //dummySolution.personType = PersonType.Elf;
                 s.AddInteraction(dummySolution);
 
+                
                 var token = new Token(TokenType.Search);
-                token.tokenType = TokenType.Person;
-                token.personType = PersonType.Elf;
                 // TODO:token position? 
-                token.triggeredByName = startTrigger; // Token is shown when this Story begins
+                token.triggeredByName = startTrigger; // Only reveal the token when the correct objective has been activated    
                 token.triggerName = dummySolution.dataName; // Token triggers the dialog
                 tile.tokenList.Add(token);
                 
@@ -276,8 +284,7 @@ namespace JiME.Procedural.StoryElements
                 {
                     pages = new List<string>() { GetRandomFromEnumerable(tileInfo.ExplorationTexts) }
                 }
-            };
-            // TODO: exploration flavor text? is it per chapter or per tile?    
+            };   
 
             // Add the chapter and return created tile
             tileset.AddTile(tile);

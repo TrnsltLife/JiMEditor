@@ -140,7 +140,7 @@ namespace JiME.Procedural.SimpleGenerator
             ctx.Scenario.AddResolution(resolutionText, success);
 
             // Create trigger for it
-            ctx.Scenario.AddTrigger(triggerName);
+            ctx.Scenario.AddTrigger(triggerName, isMulti: true);
 
             return resolutionText;
         }
@@ -162,12 +162,12 @@ namespace JiME.Procedural.SimpleGenerator
             {
                 // Only create trigger that opens this on request
                 objectiveOpenedTrigger = ctx.CreateNextTriggerId();
-                ctx.Scenario.AddTrigger(objectiveOpenedTrigger);
+                ctx.Scenario.AddTrigger(objectiveOpenedTrigger, isMulti: true);
             }
             
             // Completion trigger for the objective is always added (but not added to unconnected as that only has the opened triggers)
             var objectiveCompletedTrigger = ctx.CreateNextTriggerId();
-            ctx.Scenario.AddTrigger(objectiveCompletedTrigger);
+            ctx.Scenario.AddTrigger(objectiveCompletedTrigger, isMulti: true);
 
             // Create the objective
             var objective = new Objective(createStartingObjective ? "START" : "OBJECTIVE: " + objectiveOpenedTrigger)
@@ -208,7 +208,7 @@ namespace JiME.Procedural.SimpleGenerator
                 {
                     // Add new triggerpoint to the scenario
                     var newTriggerId = ctx.CreateNextTriggerId();
-                    ctx.Scenario.AddTrigger(newTriggerId);
+                    ctx.Scenario.AddTrigger(newTriggerId, isMulti: true);
 
                     // One which is triggered by the StoryPoint
                     storyPointEndTriggers.Add(newTriggerId);

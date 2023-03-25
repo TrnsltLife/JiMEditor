@@ -10,7 +10,8 @@ using Newtonsoft.Json.Linq;
 
 namespace JiME.Procedural.StoryElements
 {
-    // TODO: We need to take care of TILESETS from different expansions when getting random stuff
+    // TODO: we need to generate rest of the stuff in story-locations.json
+    // TODO: consider ditching exploration texts since those are not necessary (or at least allow to leave them empty)
 
     /// <summary>
     /// Gives more information and a possible tile list for certain location e.g. "Woodlands" or "Cave"

@@ -39,7 +39,7 @@ namespace JiME.Procedural.SimpleGenerator
         /// <summary>
         /// Percentage change that branches occur on StoryPoint for each Objective. 0% means no branching at all.
         /// </summary>
-        public int BranchingProbability = 20;  //  TODO: too much branching? at least we should have an upper limit
+        public int BranchingProbability = 0;  //  TODO: too much branching? at least we should have an upper limit
 
         /// <summary>
         /// If branching, minimum number of branches to have
