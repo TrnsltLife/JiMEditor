@@ -10,8 +10,8 @@ using Newtonsoft.Json.Linq;
 
 namespace JiME.Procedural.StoryElements
 {
-    // TODO: we need to generate rest of the stuff in story-locations.json
-    // TODO: consider ditching exploration texts since those are not necessary (or at least allow to leave them empty)
+    // TODO: Some locations in story-locations.json could be split up, e.g. dungeons has multiple different styles that could be their own sets
+    //       perhaps naming them with numbet suffix and always just choose one the location sun-types?
 
     /// <summary>
     /// Gives more information and a possible tile list for certain location e.g. "Woodlands" or "Cave"

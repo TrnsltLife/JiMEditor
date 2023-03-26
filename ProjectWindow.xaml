@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JiME"
         mc:Ignorable="d"
-        Title="Your Journey" Height="480" Width="800" Background="{StaticResource bgColor}" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" MouseDown="Window_MouseDown">
+        Title="Your Journey" Height="460" Width="800" Background="{StaticResource bgColor}" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" MouseDown="Window_MouseDown">
 
 	<Window.Resources>
 		<Style TargetType="ScrollBar">
@@ -131,7 +131,6 @@
 
                     </Grid>
                 </Button>
-                <ComboBox Name="generators" Margin="70,0,20,0" /> <!-- TODO: Very ugly here, should be inside the button but that caused click priority problems -->
             </StackPanel>
         </StackPanel>
 

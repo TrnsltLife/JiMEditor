@@ -58,7 +58,28 @@ namespace JiME.Procedural.SimpleGenerator
             Scenario.fileVersion = Utils.formatVersion;
             Scenario.useTileGraphics = true;
 
-            // TODO: setup additional Collections based on parameters? CORE_SET is there by default
+            // Setup additional Collections based on parameters? CORE_SET is there by default
+            if (Parameters.Has_VILLAINS_OF_ERIADOR)
+            {
+                Scenario.collectionObserver.Add(Models.Collection.VILLAINS_OF_ERIADOR);
+            }
+            if (Parameters.Has_SHADOWED_PATHS)
+            {
+                Scenario.collectionObserver.Add(Models.Collection.SHADOWED_PATHS);
+            }
+            if (Parameters.Has_DWELLERS_IN_DARKNESS)
+            {
+                Scenario.collectionObserver.Add(Models.Collection.DWELLERS_IN_DARKNESS);
+            }
+            if (Parameters.Has_SPREADING_WAR)
+            {
+                Scenario.collectionObserver.Add(Models.Collection.SPREADING_WAR);
+            }
+            if (Parameters.Has_SCOURGES_OF_THE_WASTES)
+            {
+                Scenario.collectionObserver.Add(Models.Collection.SCOURGES_OF_THE_WASTES);
+            }
+            Scenario.RefilterGlobalTilePool();
 
             // Add default stuff
             //Scenario.AddDefaultTerrainInteractions();

@@ -24,6 +24,31 @@ namespace JiME.Procedural.SimpleGenerator
         /// </summary>
         public string StoryTemplate = null;
 
+        /// <summary>
+        /// Include the VILLAINS_OF_ERIADOR expansion
+        /// </summary>
+        public bool Has_VILLAINS_OF_ERIADOR = false;
+
+        /// <summary>
+        /// Include the SHADOWED_PATHS expansion
+        /// </summary>
+        public bool Has_SHADOWED_PATHS = false;
+
+        /// <summary>
+        /// Include the DWELLERS_IN_DARKNESS expansion
+        /// </summary>
+        public bool Has_DWELLERS_IN_DARKNESS = false;
+
+        /// <summary>
+        /// Include the SPREADING_WAR expansion
+        /// </summary>
+        public bool Has_SPREADING_WAR = false;
+
+        /// <summary>
+        /// Include the SCOURGES_OF_THE_WASTES expansion
+        /// </summary>
+        public bool Has_SCOURGES_OF_THE_WASTES = false;
+
         // TODO: Story length or e.g. StoryPoint coun as parameter?
 
         /// <summary>

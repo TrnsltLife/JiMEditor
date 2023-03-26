@@ -37,13 +37,6 @@ namespace JiME
 			projectCollection = new ObservableCollection<ProjectItem>();
 			projectLV.ItemsSource = projectCollection;
 
-            // Find the generators
-            generatorTypes = System.Reflection.Assembly.GetExecutingAssembly().GetTypes()
-                .Where(t => !t.IsInterface && typeof(Procedural.IProceduralGenerator).IsAssignableFrom(t))
-                .ToDictionary(t => t.Name, t => t);
-            this.generators.ItemsSource = generatorTypes.Keys;
-            this.generators.SelectedIndex = 0;
-
             //poll Project folder for files and populate Recent list
             var projects = FileManager.GetProjects();
 			if ( projects != null )
@@ -106,20 +99,17 @@ namespace JiME
         private void RandomScenarioButton_Click(object sender, RoutedEventArgs e)
         {
             // Generate generator
-            var generatorType = this.generatorTypes[(string)this.generators.SelectedItem];
-            var generatorInstance = generatorType.GetConstructor(new Type[] { }).Invoke(new object[] { });
+            var generatorInstance = new Procedural.SimpleGenerator.SimpleGenerator();
 
             // Generate Scenario
-            var parameters = generatorType.GetMethod("GetDefaultParameters").Invoke(generatorInstance, new object[] { });
-            var scenario = (Scenario)generatorType.GetMethod("GenerateScenario").Invoke(generatorInstance, new object[] { parameters });
+            var parameters = generatorInstance.GetDefaultParameters(); // TODO: open up parameter modification window, show last used params  by default?
+            var scenario = generatorInstance.GenerateScenario(parameters); 
 
             // Create main window with Scenario
             MainWindow mainWindow = new MainWindow(scenario);
             mainWindow.Show();
             Close();
         }
-
-        
 
         private void CampaignButton_Click( object sender, RoutedEventArgs e )
 		{

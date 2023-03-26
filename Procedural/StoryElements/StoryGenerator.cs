@@ -280,11 +280,11 @@ namespace JiME.Procedural.StoryElements
             var tile = new HexTile(tileInfo.IdNumber, skipBuild: true) 
             {
                 tileSide = tileInfo.TileSide,
-                flavorBookData = new TextBookData()
+                flavorBookData = !(tileInfo.ExplorationTexts?.Count > 0) ? null : new TextBookData()
                 {
                     pages = new List<string>() { GetRandomFromEnumerable(tileInfo.ExplorationTexts) }
                 }
-            };   
+            };
 
             // Add the chapter and return created tile
             tileset.AddTile(tile);
