@@ -102,7 +102,7 @@ namespace JiME
             var generatorInstance = new Procedural.SimpleGenerator.SimpleGenerator();
 
             // Generate Scenario
-            var parameters = generatorInstance.GetDefaultParameters(); // TODO: open up parameter modification window, show last used params  by default?
+            var parameters = generatorInstance.GetDefaultParameters(); // TODO: open up parameter modification window, show last used params by default?
             var scenario = generatorInstance.GenerateScenario(parameters); 
 
             // Create main window with Scenario

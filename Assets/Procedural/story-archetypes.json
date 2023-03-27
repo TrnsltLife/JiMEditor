@@ -9,8 +9,8 @@
         },
         "Middle": {
             "Comment": "Buildup towards the big encounter and some way to gain an advantage",
-            "MustHaveOneOf": [ "FindWeaknessInTarget", "FindStrengthInSelf" ],
-            "CanHaveSomeOf": [ "InvestigateDestruction", "TalkToSurvivors" ],
+            "MustHaveOneOf": [ "FindTargetLocation" ],
+            "CanHaveSomeOf": [ "InvestigateDestruction", "TalkToSurvivors", "FindWeaknessInTarget", "FindStrengthInSelf" ],
             "TakesPlaceInOneOf": [ "Woodlands", "DarkForest", "Ruins" ]
         },
         "End": {

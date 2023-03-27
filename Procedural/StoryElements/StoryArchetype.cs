@@ -194,7 +194,6 @@ namespace JiME.Procedural.StoryElements
             /// </summary>
             [JsonProperty]
             public List<string> TakesPlaceInOneOf { get; private set; }
-            // TODO: TakesPlaceIn "Woodlands", "Cave", "STARTING_AREA"
         }
 
         #endregion

@@ -17,9 +17,6 @@ namespace JiME.Visualization.Models
     {
         public static Graph Generate(Scenario scenario)
         {
-            // TODO: Rename triggers???
-            // TODO: Some flavor text has things like "player may use 1 token to do X or Y", this might be really hard to include in random generation...
-
             //Lets make new data graph instance
             var dataGraph = new Graph();
 
@@ -32,12 +29,10 @@ namespace JiME.Visualization.Models
             vertexDict.Add(startVertexId, startVertex);
             dataGraph.AddVertex(startVertex);
 
-            // TODO: Data vertex types should be handled and shown in different color / shapes etc.
-
             // Prepare triggers first as they are the clue that ties everything together and need to be available
             HandleCollection(scenario.triggersObserver, x =>
             {
-                // Skip "None" named objects TODO: Are these a special thing that should be always included?
+                // Skip "None" named objects
                 if (x.dataName == "None")
                 {
                     return null;
@@ -54,7 +49,7 @@ namespace JiME.Visualization.Models
             // Then prepare objectives and link to triggers
             HandleCollection(scenario.objectiveObserver, x =>
             {
-                // Skip "None" named objects TODO: Are these a special thing that should be always included?
+                // Skip "None" named objects
                 if (x.dataName == "None")
                 {
                     return null;
@@ -114,7 +109,7 @@ namespace JiME.Visualization.Models
             // Then prepare interactions and link to triggers
             HandleCollection(scenario.interactionObserver, x =>
             {
-                // Skip "None" named objects TODO: Are these a special thing that should be always included?
+                // Skip "None" named objects
                 if (x.dataName == "None")
                 {
                     return null;

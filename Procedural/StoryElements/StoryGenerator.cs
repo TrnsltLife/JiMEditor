@@ -174,7 +174,7 @@ namespace JiME.Procedural.StoryElements
                 dummySolution.c1Trigger = endTriggers[i];
                 dummySolution.choice2 = ""; // This removes the option alltogether
                 dummySolution.choice3 = ""; // This removes the option alltogether
-                dummySolution.triggerName = startTrigger;
+                //dummySolution.triggerName = startTrigger; // This must not be set as it causes wrong triggers to fie in the App, this is triggered only by the token
                 dummySolution.isTokenInteraction = true; // Needs to be token interaction so that it can be triggered by a token
                 //dummySolution.tokenType = TokenType.Person;
                 //dummySolution.personType = PersonType.Elf;
@@ -280,14 +280,18 @@ namespace JiME.Procedural.StoryElements
             var tile = new HexTile(tileInfo.IdNumber, skipBuild: true) 
             {
                 tileSide = tileInfo.TileSide,
-                flavorBookData = !(tileInfo.ExplorationTexts?.Count > 0) ? null : new TextBookData()
+                flavorBookData = new TextBookData()
                 {
-                    pages = new List<string>() { GetRandomFromEnumerable(tileInfo.ExplorationTexts) }
+                    pages = new List<string>() // <-- This needs to always exist at this level to avoid NULL ref!
                 }
             };
+            if (tileInfo.ExplorationTexts?.Count > 0)
+            {
+                tile.flavorBookData.pages.Add(GetRandomFromEnumerable(tileInfo.ExplorationTexts));
+            } 
 
-            // Add the chapter and return created tile
-            tileset.AddTile(tile);
+                // Add the chapter and return created tile
+                tileset.AddTile(tile);
             return tile;
         }
 
