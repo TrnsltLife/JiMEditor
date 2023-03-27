@@ -1,0 +1,49 @@
+{
+    "fragments": [
+        {
+            "Name": "FindInfoAboutTarget",
+			"Comment": "",
+            "Interactions": [ { "Type": "Dialog" } ]
+        },
+		{
+            "Name": "InvestigateDestruction",
+			"Comment": "",
+            "Interactions": [ { "Type": "Dialog" } ]
+        },
+		{
+            "Name": "TalkToSurvivors",
+			"Comment": "",
+            "Interactions": [ { "Type": "Dialog" } ]
+        },
+		{
+            "Name": "FindTargetLocation",
+			"Comment": "",
+            "Interactions": [ { "Type": "Dialog" } ]
+        },
+		{
+            "Name": "FindWeaknessInTarget",
+			"Comment": "",
+            "Interactions": [ { "Type": "Dialog" } ]
+        },
+		{
+            "Name": "FindStrengthInSelf",
+			"Comment": "",
+            "Interactions": [ { "Type": "Dialog" } ]
+        },
+		{
+            "Name": "KillMonster",
+			"Comment": "",
+            "Interactions": [ { "Type": "Dialog" } ]
+        },
+		{
+            "Name": "MonsterRetreats",
+			"Comment": "",
+            "Interactions": [ { "Type": "Dialog" } ]
+        },
+		{
+            "Name": "ScoutOutTarget",
+			"Comment": "",
+            "Interactions": [ { "Type": "Dialog" } ]
+        }
+    ]
+}

@@ -21,8 +21,6 @@ namespace JiME
 
 		public bool scrollVisible { get; set; }
 
-        private Dictionary<string, Type> generatorTypes;
-
 		public ProjectWindow()
 		{
 			InitializeComponent();

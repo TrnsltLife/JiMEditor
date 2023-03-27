@@ -119,11 +119,15 @@
     <Compile Include="Models\Threat.cs" />
     <Compile Include="Models\Token.cs" />
     <Compile Include="Models\Trigger.cs" />
+    <Compile Include="Procedural\GenerationLogic\FragmentUtils.cs" />
+    <Compile Include="Procedural\GenerationLogic\GeneratorUtils.cs" />
+    <Compile Include="Procedural\GenerationLogic\LocationUtils.cs" />
     <Compile Include="Procedural\SimpleGenerator\SimpleGeneratorContext.cs" />
     <Compile Include="Procedural\SimpleGenerator\SimpleGenerator.cs" />
     <Compile Include="Procedural\SimpleGenerator\SimpleGeneratorParameters.cs" />
     <Compile Include="Procedural\IProceduralGenerator.cs" />
-    <Compile Include="Procedural\StoryElements\StoryGenerator.cs" />
+    <Compile Include="Procedural\GenerationLogic\StoryGenerator.cs" />
+    <Compile Include="Procedural\StoryElements\StoryFragment.cs" />
     <Compile Include="Procedural\StoryElements\StoryLocation.cs" />
     <Compile Include="Procedural\StoryElements\StoryTemplate.cs" />
     <Compile Include="Procedural\StoryElements\StoryArchetype.cs" />
@@ -477,6 +481,7 @@
     <EmbeddedResource Include="Assets\Procedural\story-archetypes.json" />
     <EmbeddedResource Include="Assets\Procedural\story-templates.json" />
     <EmbeddedResource Include="Assets\Procedural\story-locations.json" />
+    <EmbeddedResource Include="Assets\Procedural\story-fragments.json" />
     <None Include="Procedural\README.md" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

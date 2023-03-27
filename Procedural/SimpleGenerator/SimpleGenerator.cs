@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JiME.Procedural.GenerationLogic;
 using JiME.Procedural.StoryElements;
 
 namespace JiME.Procedural.SimpleGenerator

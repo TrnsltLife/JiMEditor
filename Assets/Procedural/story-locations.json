@@ -47,7 +47,6 @@
             "Name": "DarkForest",
             "KnownTiles": [
                 { "IdAndSide": "104A" },
-				{ "IdAndSide": "104A" },
 				{ "IdAndSide": "210A" },
 				{ "IdAndSide": "211A" },
 				{ "IdAndSide": "212A" },
@@ -135,13 +134,11 @@
 				{ "IdAndSide": "215B" },
 				{ "IdAndSide": "216B" },
 				{ "IdAndSide": "217B" },
-				{ "IdAndSide": "212B" },
 				{ "IdAndSide": "223B" },
 				{ "IdAndSide": "225B" },
 				{ "IdAndSide": "226B" },
 				{ "IdAndSide": "312B" },
 				{ "IdAndSide": "316B" },
-				{ "IdAndSide": "317B" },
 				{ "IdAndSide": "402B" },
 				{ "IdAndSide": "500B" }
             ]

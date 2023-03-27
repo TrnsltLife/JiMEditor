@@ -9,6 +9,7 @@ namespace JiME.Procedural.SimpleGenerator
 {
     class SimpleGeneratorParameters
     {
+        #region Basic parameters
         /// <summary>
         /// Give string value to use fixed seed, give NULL or empty string to use random seed.
         /// </summary>
@@ -51,6 +52,9 @@ namespace JiME.Procedural.SimpleGenerator
 
         // TODO: Story length or e.g. StoryPoint coun as parameter?
 
+        #endregion
+        #region Advanced parameters
+
         /// <summary>
         /// Miminum number of objectives in the MAIN STORY
         /// </summary>
@@ -76,9 +80,14 @@ namespace JiME.Procedural.SimpleGenerator
         /// </summary>
         public int BranchingMaxBranches = 3;
 
+        #endregion
+        #region Debug parameters
+
         /// <summary>
         /// Tells whether the generator should stop after generating StoryPoints and before filling them with content
         /// </summary>
         public bool DebugSkipStoryPointsFillIn = false;
+
+        #endregion
     }
 }
