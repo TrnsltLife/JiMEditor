@@ -3,47 +3,71 @@
         {
             "Name": "FindInfoAboutTarget",
 			"Comment": "",
-            "Interactions": [ { "Type": "Dialog" } ]
+            "Interactions": [ 
+				{ "Type": "Dialog", "TokenHint": "Search" },
+				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Wit", "StatTestType": "Cumulative" },
+				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Wisdom", "StatTestType": "Cumulative" }				
+			]
         },
 		{
             "Name": "InvestigateDestruction",
 			"Comment": "",
-            "Interactions": [ { "Type": "Dialog" } ]
+            "Interactions": [ 
+				{ "Type": "Dialog", "TokenHint": "Search" },
+				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Wit", "AltStatHint": "Wisdom", "StatTestType": "Cumulative" }
+			]
         },
 		{
             "Name": "TalkToSurvivors",
 			"Comment": "",
-            "Interactions": [ { "Type": "Dialog" } ]
+            "Interactions": [ 
+				{ "Type": "Dialog", "TokenHint": "Search" },
+				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Wit", "AltStatHint": "Wisdom", "StatTestType": "OneTry" }
+			]
         },
 		{
             "Name": "FindTargetLocation",
 			"Comment": "",
-            "Interactions": [ { "Type": "Dialog" } ]
+            "Interactions": [ 
+				{ "Type": "Dialog", "TokenHint": "Search" },
+				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Agility", "StatTestType": "OneTry" }	
+			]
         },
 		{
             "Name": "FindWeaknessInTarget",
 			"Comment": "",
-            "Interactions": [ { "Type": "Dialog" } ]
+            "Interactions": [ 
+				{ "Type": "Dialog", "TokenHint": "Search" },
+				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Wit", "AltStatHint": "Might", "StatTestType": "Cumulative" }
+			]
         },
 		{
             "Name": "FindStrengthInSelf",
 			"Comment": "",
-            "Interactions": [ { "Type": "Dialog" } ]
+            "Interactions": [ 
+				{ "Type": "Dialog", "TokenHint": "Search" }	
+			]
         },
 		{
             "Name": "KillMonster",
 			"Comment": "",
-            "Interactions": [ { "Type": "Dialog" } ]
+            "Interactions": [ 
+				{ "Type": "Dialog", "TokenHint": "Search" }	
+			]
         },
 		{
             "Name": "MonsterRetreats",
 			"Comment": "",
-            "Interactions": [ { "Type": "Dialog" } ]
+            "Interactions": [ 
+				{ "Type": "Dialog", "TokenHint": "Search" }	
+			]
         },
 		{
             "Name": "ScoutOutTarget",
 			"Comment": "",
-            "Interactions": [ { "Type": "Dialog" } ]
+            "Interactions": [ 
+				{ "Type": "Dialog", "TokenHint": "Search" }	
+			]
         }
     ]
 }
