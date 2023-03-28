@@ -23,6 +23,7 @@ namespace JiME.Procedural.StoryElements
         [JsonProperty]
         public string Name{ get; private set; }
 
+        // TODO: public bool IsValidForCollections(IEnumerable<Collection>()) { Check if can be used with current collections }
  
         #endregion
         #region Construction and fetching

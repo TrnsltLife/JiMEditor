@@ -47,6 +47,9 @@ namespace JiME.Procedural.GenerationLogic
         /// </summary>
         public void FillInPhaseStoryPoint(Scenario s, StoryPhase phase, IEnumerable<StoryPoint> phaseStoryPoints)
         {
+            // TODO: If single phase has multiple of same fragment, we should combine those in to one! Perhaps needs to be done even earlier in branching phase
+            // TODO: utilize token/interaction groups somehow? may not be necessary since this is "random" anyway so no need to add second layer?
+
             // See which phase we operate in
             var phaseInfo = GetPhaseInfo(phase);
 

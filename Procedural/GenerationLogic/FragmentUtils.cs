@@ -48,6 +48,10 @@ namespace JiME.Procedural.GenerationLogic
                         CreateStatTestInteraction(fragment, interactionInfo, s, random, startTrigger, endTriggers[i], location, tile);
                         break;
 
+                    case InteractionType.Threat:
+                        CreateThreatInteraction(fragment, interactionInfo, s, random, startTrigger, endTriggers[i], location, tile);
+                        break;
+
                     default:
                         throw new Exception("FragmentUtils: Unhandled interaction type " + interactionInfo.Type.ToString());
                 }
@@ -140,11 +144,11 @@ namespace JiME.Procedural.GenerationLogic
                 {
                     pages = new List<string>() { "Test SUCCESSFUL, threat decreases" }
                 };
-                statTest.successValue = 4; // TDOO: where to get a good value here?
+                statTest.successValue = 4; // TODO: where to get a good value here?
                 statTest.successTrigger = endTrigger;
                 statTest.rewardXP = 0;
                 statTest.rewardLore = 0;
-                statTest.rewardThreat = 5; // TDOO: where to get a good value here?
+                statTest.rewardThreat = 5; // TODO: where to get a good value here?
 
                 // Progress
                 statTest.progressBookData = new TextBookData()
@@ -158,9 +162,54 @@ namespace JiME.Procedural.GenerationLogic
                     pages = new List<string>() { "Test FAILED, threat increases" }
                 }; ;
                 statTest.failTrigger = endTrigger; // Failure also progresses things for now, TODO: Perhaps add some more interactions if failed? e.g. have to fight a monster
-                statTest.failThreat = 5; // TDOO: where to get a good value here?
+                statTest.failThreat = 5; // TODO: where to get a good value here?
                 
                 return statTest;
+            });
+        }
+        #endregion
+        #region Interaction - Threat
+        private static void CreateThreatInteraction(
+            string fragmentName,
+            StoryFragment.InteractionInfo info,
+            Scenario s,
+            Random random,
+            string startTrigger,
+            string endTrigger,
+            string location,
+            HexTile tile)
+        {
+            // TODO: invent story elements from startTrigger to endTrigger based on fragment and other stuff
+            // TODO: scale difficulty etc. properly
+
+            AddTokenInteraction(s, tile, startTrigger, info, () =>
+            {
+                var threatTest = new ThreatInteraction("Threat!" + GenerateRandomNameSuffix());
+
+                // Token interaction flavor text
+                threatTest.textBookData = new TextBookData()
+                {
+                    pages = new List<string>() { "Group of enemies are nearby" }
+                };
+                // Test main flavor text
+                threatTest.eventBookData = new TextBookData()
+                {
+                    pages = new List<string>() { "The enemies are attacking!" }
+                };
+
+                // Setup enemies
+                // TODO: setup based on story template and possibly randomize
+                // TODO: AddMonster vs includedMonsters + basePoolPoints etc.
+                threatTest.AddMonster(PrepareMonster(MonsterType.OrcHunter)); // TODO: other parameters?
+                threatTest.AddMonster(PrepareMonster(MonsterType.GoblinScout)); // TODO: other parameters?
+                threatTest.AddMonster(PrepareMonster(MonsterType.OrcMarauder)); // TODO: other parameters?
+                //threatTest.basePoolPoints = 10;
+                //threatTest.difficultyBias = DifficultyBias.Medium;
+
+                // Progress when threat has been defeated
+                threatTest.triggerDefeatedName = endTrigger;
+
+                return threatTest;
             });
         }
         #endregion
@@ -185,6 +234,18 @@ namespace JiME.Procedural.GenerationLogic
             token.triggerName = i.dataName; // Token triggers the dialog
             // TODO: token flavor text?
             tile.tokenList.Add(token);
+        }
+
+        private static Monster PrepareMonster(MonsterType type)
+        {
+            return new Monster((int)type)
+            {
+                count = 1,
+                defaultStats = true,
+                isEasy = true,
+                isNormal = true,
+                isHard = true
+            };
         }
 
         #endregion

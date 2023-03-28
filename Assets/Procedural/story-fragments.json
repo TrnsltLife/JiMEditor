@@ -5,16 +5,15 @@
 			"Comment": "",
             "Interactions": [ 
 				{ "Type": "Dialog", "TokenHint": "Search" },
-				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Wit", "StatTestType": "Cumulative" },
-				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Wisdom", "StatTestType": "Cumulative" }				
+				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Wit", "AltStatHint": "Wisdom", "StatTestType": "Cumulative" }
 			]
         },
 		{
             "Name": "InvestigateDestruction",
 			"Comment": "",
             "Interactions": [ 
-				{ "Type": "Dialog", "TokenHint": "Search" },
-				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Wit", "AltStatHint": "Wisdom", "StatTestType": "Cumulative" }
+				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Wit", "AltStatHint": "Wisdom", "StatTestType": "Cumulative" },
+				{ "Type": "Threat", "TokenHint": "Search" }	
 			]
         },
 		{
@@ -45,28 +44,29 @@
             "Name": "FindStrengthInSelf",
 			"Comment": "",
             "Interactions": [ 
-				{ "Type": "Dialog", "TokenHint": "Search" }	
+				{ "Type": "Dialog", "TokenHint": "Search" },
+				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Spirit", "StatTestType": "Retryable" }	
 			]
         },
 		{
             "Name": "KillMonster",
 			"Comment": "",
             "Interactions": [ 
-				{ "Type": "Dialog", "TokenHint": "Search" }	
+				{ "Type": "Threat", "TokenHint": "Threat" }	
 			]
         },
 		{
-            "Name": "MonsterRetreats",
+            "Name": "MonsterReThreats",
 			"Comment": "",
             "Interactions": [ 
-				{ "Type": "Dialog", "TokenHint": "Search" }	
+				{ "Type": "Threat", "TokenHint": "Threat" }	
 			]
         },
 		{
             "Name": "ScoutOutTarget",
 			"Comment": "",
             "Interactions": [ 
-				{ "Type": "Dialog", "TokenHint": "Search" }	
+				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Agility", "AltStatHint": "Spirit", "StatTestType": "Retryable" }	
 			]
         }
     ]
