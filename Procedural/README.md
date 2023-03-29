@@ -9,7 +9,7 @@
   - (DONE) Implement more interactions to StoryGenerator
   - (DONE) Implement first StoryTemplate to give flavor to the story (and fill in Objective details and StoryPoints with those)
   - (DONE) Implement Threat track generation
-  - Implement monster activations and random terrain interactions
+  - (DONE) Implement monster activations and random terrain interactions
   - Lots of smaller TODO's that need to  be checked
 
 - Improvements 

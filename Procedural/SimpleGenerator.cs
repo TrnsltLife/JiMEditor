@@ -4,16 +4,16 @@ using System.Linq;
 using JiME.Procedural.GenerationLogic;
 using JiME.Procedural.StoryElements;
 
-namespace JiME.Procedural.SimpleGenerator
+namespace JiME.Procedural
 {
     /// <summary>
     /// Simple generator that generates a linear main objective chain and some possible side objectives
     /// </summary>
-    class SimpleGenerator : IProceduralGenerator<SimpleGeneratorParameters>
+    class SimpleGenerator
     {
         public SimpleGeneratorParameters GetDefaultParameters() => new SimpleGeneratorParameters();
 
-        public Scenario GenerateScenario(SimpleGeneratorParameters parameters)
+        public SimpleGeneratorContext GenerateScenario(SimpleGeneratorParameters parameters)
         {
             // Set up the context for generating a Scenario
             var ctx = new SimpleGeneratorContext(parameters);
@@ -35,7 +35,7 @@ namespace JiME.Procedural.SimpleGenerator
             Console.WriteLine("SimpleGenerator ERROR: " + checker.Errors);
 
             // Return finished scenario
-            return ctx.Scenario;
+            return ctx;
         }
 
         private static void GenerateMainStoryObjectivesAndStoryPoints(SimpleGeneratorContext ctx, bool visualizeStoryPointsInScenario = false)
@@ -102,6 +102,7 @@ namespace JiME.Procedural.SimpleGenerator
             ctx.StoryTemplate = ctx.Parameters.StoryTemplate?.Length > 0
                 ? StoryTemplate.GetTemplate(ctx.Parameters.StoryTemplate)
                 : StoryTemplate.GetRandomTemplate(ctx.Random);
+            ctx.StoryTemplate.AdjustForCollections(ctx.Scenario.collectionObserver); // <-- Remove unavailable monsters etc
             var generator = new StoryGenerator(ctx);
 
             // Fill in the Scenario level details
@@ -184,7 +185,7 @@ namespace JiME.Procedural.SimpleGenerator
             ctx.Scenario.AddObjective(objective);
 
             // Check if we have just a simple StoryPoint or a more complex one
-            if (!ctx.RandomChance(ctx.Parameters.BranchingProbability))
+            if (!GeneratorUtils.RandomChance(ctx.Random, ctx.Parameters.BranchingProbability))
             {
                 // No branching, simply add StoryPoint to this single objective to handle completing it
                 ctx.AllStoryPoints.Add(new StoryPoint(

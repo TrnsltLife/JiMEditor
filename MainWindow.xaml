@@ -174,7 +174,7 @@
 			</Button>
 
             <Button x:Name="scenarioVisualizationButton" Margin="10,0,0,0" ToolTip="Visualize Scenario" Background="{StaticResource bgButtonColor}" Style="{StaticResource btn}"  Click="ScenarioVisualizationButton_Click" >
-                <Image Source="Assets/addobjective.png" Height="24" Stretch="UniformToFill"/> <!-- TODO: custom icon -->
+                <Image Source="Assets/magnifier.png" Height="24" Stretch="UniformToFill"/>
             </Button>
 
             <Separator Margin="10,0,5,0" Opacity=".25"/>

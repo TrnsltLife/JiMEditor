@@ -10,7 +10,7 @@ namespace JiME.Procedural.GenerationLogic
     {
         // TODO: some way to override token types from the StoryTemplate would be nice  
 
-        public static void FillInObjective(SimpleGenerator.SimpleGeneratorContext ctx, Objective o, string mainStoryPoint, IEnumerable<string> secondaryStoryPoints, string phaseLocation)
+        public static void FillInObjective(SimpleGeneratorContext ctx, Objective o, string mainStoryPoint, IEnumerable<string> secondaryStoryPoints, string phaseLocation)
         {
             // Switch the dataName to help debugging
             var newDataName = mainStoryPoint.ToString() + " in " + phaseLocation.ToString() + " (" + o.triggeredByName + ")";
@@ -36,7 +36,7 @@ namespace JiME.Procedural.GenerationLogic
             }
         }
 
-        public static void FillInStoryPoint(SimpleGenerator.SimpleGeneratorContext ctx, string startTrigger, List<string> endTriggers, string mainFragment, IEnumerable<string> secondaryFragments, string location, HexTile tile, StoryGenerator.StoryPhase phase)
+        public static void FillInStoryPoint(SimpleGeneratorContext ctx, string startTrigger, List<string> endTriggers, string mainFragment, IEnumerable<string> secondaryFragments, string location, HexTile tile, StoryGenerator.StoryPhase phase)
         {
             // TODO: handle multi-target stories better with more context, now we just do individual stories to each target (with different fragments)
             for (int i = 0; i < endTriggers.Count; i++)
@@ -69,7 +69,7 @@ namespace JiME.Procedural.GenerationLogic
 
         #region Interaction - Dialog
         private static void CreateDialogInteraction(
-            SimpleGenerator.SimpleGeneratorContext ctx, 
+            SimpleGeneratorContext ctx, 
             string fragmentName,
             StoryFragment.InteractionInfo info,
             string startTrigger,
@@ -78,7 +78,6 @@ namespace JiME.Procedural.GenerationLogic
             HexTile tile,
             StoryGenerator.StoryPhase phase)
         {
-            // TODO: invent story elements from startTrigger to endTrigger based on fragment and other stuff
             AddTokenInteraction(ctx, tile, startTrigger, info, () =>
             {
                 var dialogInfo = ctx.StoryTemplate.GenerateDialogInteractionInfo(ctx.Random, fragmentName, ctx.TemplateContext);
@@ -100,7 +99,7 @@ namespace JiME.Procedural.GenerationLogic
 
                 if (!dialogInfo.Choice1Triggers && !dialogInfo.Choice2Triggers && !dialogInfo.Choice3Triggers)
                 {
-                    throw new Exception("None of the dialog choices triggered the end trigger"); // TODO: how to inform the user about this? bug in data!
+                    ctx.GeneratorWarnings.Add(dialog.dataName + ": None of the dialog choices advance the story! See used StoryTemplate!");
                 }
 
                 // Handle what happens to the token
@@ -123,7 +122,7 @@ namespace JiME.Procedural.GenerationLogic
         #endregion
         #region Interaction - StatTest
         private static void CreateStatTestInteraction(
-            SimpleGenerator.SimpleGeneratorContext ctx, 
+            SimpleGeneratorContext ctx, 
             string fragmentName,
             StoryFragment.InteractionInfo info,
             string startTrigger,
@@ -132,8 +131,6 @@ namespace JiME.Procedural.GenerationLogic
             HexTile tile,
             StoryGenerator.StoryPhase phase)
         {
-            // TODO: invent story elements from startTrigger to endTrigger based on fragment and other stuff
-
             AddTokenInteraction(ctx, tile, startTrigger, info, () =>
             {
                 var testInfo = ctx.StoryTemplate.GenerateStatTestInteractionInfo(ctx.Random, fragmentName, ctx.TemplateContext);
@@ -190,7 +187,7 @@ namespace JiME.Procedural.GenerationLogic
         #endregion
         #region Interaction - Threat
         private static void CreateThreatInteraction(
-            SimpleGenerator.SimpleGeneratorContext ctx, 
+            SimpleGeneratorContext ctx, 
             string fragmentName,
             StoryFragment.InteractionInfo info,
             string startTrigger,
@@ -199,8 +196,7 @@ namespace JiME.Procedural.GenerationLogic
             HexTile tile,
             StoryGenerator.StoryPhase phase)
         {
-            // TODO: invent story elements from startTrigger to endTrigger based on fragment and other stuff
-            // TODO: scale difficulty etc. properly
+            // TODO: scale difficulty etc. properly, or is that managed already by the system?
 
             AddTokenInteraction(ctx, tile, startTrigger, info, () =>
             {
@@ -215,8 +211,8 @@ namespace JiME.Procedural.GenerationLogic
                     ctx.MainAntagonistEncounterCreated = true;
 
                     // Add main antagonist monster
-                    var bossType = ctx.StoryTemplate.AntagonistMonsterIsOneOf.GetRandomFromEnumerable(ctx.Random);                    
-                    threatTest.AddMonster(new Monster((int)bossType) // TODO: limit boss type based on collections
+                    var bossType = ctx.StoryTemplate.AntagonistMonsterIsOneOf_Filtered.GetRandomFromEnumerable(ctx.Random);                    
+                    threatTest.AddMonster(new Monster((int)bossType)
                     {
                         dataName = ctx.TemplateContext.GetAntagonistName(),
                         isLarge = true,  // TODO: randomize these?
@@ -244,10 +240,9 @@ namespace JiME.Procedural.GenerationLogic
                 }
 
                 // Setup filler enemies
-                // TODO: limit antagonist helper types based on collections
                 threatTest.difficultyBias = DifficultyBias.Medium;
                 threatTest.basePoolPoints = 10;
-                threatTest.includedEnemies = GeneratorUtils.PrepareIncludedMonsters(ctx.StoryTemplate.AntagonistHelperMonstersAreSomeOf.ToArray());
+                threatTest.includedEnemies = GeneratorUtils.PrepareIncludedMonsters(ctx.StoryTemplate.AntagonistHelperMonstersAreSomeOf_Filtered.ToArray());
 
                 // Progress when threat has been defeated
                 threatTest.triggerDefeatedName = endTrigger;
@@ -260,7 +255,7 @@ namespace JiME.Procedural.GenerationLogic
 
         private static string GenerateRandomNameSuffix() => string.Format(" ({0})", Guid.NewGuid().GetHashCode());
 
-        private static void AddTokenInteraction<TInteraction>(SimpleGenerator.SimpleGeneratorContext ctx, HexTile tile, string startTrigger, StoryFragment.InteractionInfo info, Func<TInteraction> setupAction) where TInteraction : InteractionBase
+        private static void AddTokenInteraction<TInteraction>(SimpleGeneratorContext ctx, HexTile tile, string startTrigger, StoryFragment.InteractionInfo info, Func<TInteraction> setupAction) where TInteraction : InteractionBase
         {
             // Create the interaction with specific setup
             var i = setupAction();

@@ -97,14 +97,21 @@ namespace JiME
         private void RandomScenarioButton_Click(object sender, RoutedEventArgs e)
         {
             // Generate generator
-            var generatorInstance = new Procedural.SimpleGenerator.SimpleGenerator();
+            var generatorInstance = new Procedural.SimpleGenerator();
+
+            // Set up parameters
+            var parameters = generatorInstance.GetDefaultParameters(); // TODO: open up parameter modification window, show last used params by default?
 
             // Generate Scenario
-            var parameters = generatorInstance.GetDefaultParameters(); // TODO: open up parameter modification window, show last used params by default?
-            var scenario = generatorInstance.GenerateScenario(parameters); 
+            var ctx = generatorInstance.GenerateScenario(parameters); 
+
+            if (ctx.GeneratorWarnings.Count > 0)
+            {
+                MessageBox.Show(string.Join(Environment.NewLine, ctx.GeneratorWarnings), "WARNINGS", MessageBoxButton.OK);
+            }
 
             // Create main window with Scenario
-            MainWindow mainWindow = new MainWindow(scenario);
+            MainWindow mainWindow = new MainWindow(ctx.Scenario);
             mainWindow.Show();
             Close();
         }

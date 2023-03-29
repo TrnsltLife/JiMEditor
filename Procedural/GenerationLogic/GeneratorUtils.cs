@@ -9,6 +9,15 @@ namespace JiME.Procedural.GenerationLogic
 {
     static class GeneratorUtils
     {
+        /// <summary>
+        /// Calculates random change against given integer percentage.
+        /// i.e. input 25 gives true approx 1/4 times
+        public static bool RandomChance(Random r, int probability)
+        {
+            var rnd = r.Next(1, 100);
+            return rnd < probability;
+        }
+
         public static T GetRandomEnum<T>(Random random, params T[] except) where T : struct, IConvertible
         {
             if (!typeof(T).IsEnum)

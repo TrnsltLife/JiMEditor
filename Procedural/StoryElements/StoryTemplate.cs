@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 
 using JiME.Procedural.GenerationLogic;
 using System.Text.RegularExpressions;
+using JiME.Models;
 
 namespace JiME.Procedural.StoryElements
 {
@@ -34,6 +35,8 @@ namespace JiME.Procedural.StoryElements
 
         [JsonProperty]
         public List<MonsterType> AntagonistMonsterIsOneOf { get; private set; }
+
+
 
         [JsonProperty]
         public List<MonsterType> AntagonistHelperMonstersAreSomeOf { get; private set; }
@@ -62,8 +65,20 @@ namespace JiME.Procedural.StoryElements
         [JsonProperty]
         public List<string> ThreatLevelIncreasesTexts { get; private set; }
 
-        // TODO: public bool IsValidForCollections(IEnumerable<Collection>()) { Check if can be used with current collections }
-        // TODO: Or "AdjustForCollections()" which would filter out extras
+        // Some filtered lists for Collection adjustment
+
+        [JsonIgnore]
+        public IEnumerable<MonsterType> AntagonistMonsterIsOneOf_Filtered { get; private set; }
+
+        [JsonIgnore]
+        public IEnumerable<MonsterType> AntagonistHelperMonstersAreSomeOf_Filtered { get; private set; }
+
+        public void AdjustForCollections(IEnumerable<Collection> collections)
+        {
+            var availableMonsterTypes = collections.SelectMany(c => c.Monsters.Select(m => m.monsterType)).ToList();
+            AntagonistMonsterIsOneOf_Filtered = AntagonistMonsterIsOneOf.Intersect(availableMonsterTypes);
+            AntagonistHelperMonstersAreSomeOf_Filtered = AntagonistHelperMonstersAreSomeOf.Intersect(availableMonsterTypes);
+        }
 
         #endregion
         #region Data getters

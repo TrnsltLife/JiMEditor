@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using JiME.Procedural.StoryElements;
 
-namespace JiME.Procedural.SimpleGenerator
+namespace JiME.Procedural
 {
     class SimpleGeneratorContext
     {
         public SimpleGeneratorParameters Parameters { get; private set; }
         public Scenario Scenario { get; private set; }
         public Random Random { get; private set; }
+
+        public List<string> GeneratorWarnings { get; private set; } = new List<string>();
 
         private int _nextTriggerId = 1;
 
@@ -46,15 +48,6 @@ namespace JiME.Procedural.SimpleGenerator
         /// </summary>
         public string CreateNextTriggerId() => (_nextTriggerId++).ToString();
 
-        /// <summary>
-        /// Calculates random change against given integer percentage.
-        /// i.e. input 25 gives true approx 1/4 times
-        public bool RandomChance(int probability)
-        {
-            var rnd = Random.Next(1, 100);
-            return rnd < probability;
-        }
-
         private void SetupScenario()
         {
             Scenario = new Scenario("SimpleScenario");
@@ -89,7 +82,6 @@ namespace JiME.Procedural.SimpleGenerator
             Scenario.RefilterGlobalTilePool();
 
             // Add default stuff
-            //Scenario.AddDefaultTerrainInteractions();
             Scenario.triggersObserver.Add(Trigger.EmptyTrigger());
             Scenario.objectiveObserver.Add(Objective.EmptyObjective());
             Scenario.interactionObserver.Add(NoneInteraction.EmptyInteraction());
@@ -98,6 +90,13 @@ namespace JiME.Procedural.SimpleGenerator
                 MonsterActivations act = new MonsterActivations(defAct);
                 Scenario.activationsObserver.Add(act);
             }
+            /*foreach (InteractionBase terrainInteraction in Utils.defaultTerrainInteractions)
+            {
+                if (!Scenario.interactionObserver.Contains(terrainInteraction))
+                {
+                    Scenario.interactionObserver.Add(terrainInteraction);
+                }
+            }*/
 
             // TODO: ???
             Scenario.wallTypes = new int[22];

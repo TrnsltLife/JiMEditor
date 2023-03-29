@@ -122,10 +122,9 @@
     <Compile Include="Procedural\GenerationLogic\FragmentUtils.cs" />
     <Compile Include="Procedural\GenerationLogic\GeneratorUtils.cs" />
     <Compile Include="Procedural\GenerationLogic\LocationUtils.cs" />
-    <Compile Include="Procedural\SimpleGenerator\SimpleGeneratorContext.cs" />
-    <Compile Include="Procedural\SimpleGenerator\SimpleGenerator.cs" />
-    <Compile Include="Procedural\SimpleGenerator\SimpleGeneratorParameters.cs" />
-    <Compile Include="Procedural\IProceduralGenerator.cs" />
+    <Compile Include="Procedural\SimpleGeneratorContext.cs" />
+    <Compile Include="Procedural\SimpleGenerator.cs" />
+    <Compile Include="Procedural\SimpleGeneratorParameters.cs" />
     <Compile Include="Procedural\GenerationLogic\StoryGenerator.cs" />
     <Compile Include="Procedural\StoryElements\StoryFragment.cs" />
     <Compile Include="Procedural\StoryElements\StoryLocation.cs" />
@@ -1035,6 +1034,9 @@
     <Resource Include="Assets\TilesB\500.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\magnifier.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

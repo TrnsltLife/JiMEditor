@@ -348,25 +348,6 @@ namespace JiME.Visualization.Models
                 });
             });
 
-            // Then prepare monster activations and link to triggers
-            /*  TODO: Should we ever add these? Only if linked to something since this contains even the unused ones
-            HandleCollection(scenario.activationsObserver, x =>
-            {
-                // Vertex for the activation
-                var vertex = new DataVertex(x.dataName);
-                vertexDict.Add(getActivationName(x.dataName), vertex);
-                dataGraph.AddVertex(vertex);
-                return vertex;
-            },
-            (x, vertex) =>
-            {
-                // Object is activated by...
-                getTriggerOrEventVertex(vertexDict, x.triggerName, v =>
-                {
-                    dataGraph.AddEdge(new DataEdge(v, vertex) { Text = "activates" });
-                });
-            });*/
-
             // Check each threat theshold (ordered by threshold)
             if (!scenario.threatNotUsed)
             {

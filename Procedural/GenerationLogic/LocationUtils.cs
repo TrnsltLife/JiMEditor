@@ -12,11 +12,11 @@ namespace JiME.Procedural.GenerationLogic
         /// <summary>
         /// Gets a random tile from this location but make sure that it is one of the available tiles and updates availableTileIds list
         /// </summary>
-        public static StoryLocation.TileInfo GetRandomTileInfo(SimpleGenerator.SimpleGeneratorContext ctx, StoryLocation location)
+        public static StoryLocation.TileInfo GetRandomTileInfo(SimpleGeneratorContext ctx, StoryLocation location)
         {
             // Determine which ids are actually valid
             var validTiles = location.KnownTiles.Values
-                .Where(t => ctx.Scenario.globalTilePool.Contains(t.IdNumber))
+                .Where(t => ctx.Scenario.filteredGlobalTilePool.Contains(t.IdNumber))
                 .ToList();
             if (validTiles.Count == 0)
             {
@@ -26,14 +26,14 @@ namespace JiME.Procedural.GenerationLogic
 
             // Then take one at random
             var tile = validTiles.GetRandomFromEnumerable(ctx.Random);
-            ctx.Scenario.globalTilePool.Remove(tile.IdNumber);
+            ctx.Scenario.filteredGlobalTilePool.Remove(tile.IdNumber);
             return tile;
         }
 
         /// <summary>
         /// Creates a new tile and adds it to the given Chapter 
         /// </summary>
-        public static BaseTile CreateRandomTileAndAddtoTileset(SimpleGenerator.SimpleGeneratorContext ctx, Chapter tileset, StoryLocation primaryLocation, IEnumerable<StoryLocation> secondaryLocations, bool mustBeFromPrimary = false)
+        public static BaseTile CreateRandomTileAndAddtoTileset(SimpleGeneratorContext ctx, Chapter tileset, StoryLocation primaryLocation, IEnumerable<StoryLocation> secondaryLocations, bool mustBeFromPrimary = false)
         {
             // Gather tile info
             var tileInfo = GetRandomTileInfo(ctx, primaryLocation);

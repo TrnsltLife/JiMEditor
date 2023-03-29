@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using JiME.Procedural.StoryElements;
 
-namespace JiME.Procedural.SimpleGenerator
+namespace JiME.Procedural   
 {
     class SimpleGeneratorParameters
     {

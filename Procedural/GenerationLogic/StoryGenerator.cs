@@ -10,12 +10,12 @@ namespace JiME.Procedural.GenerationLogic
     /// </summary>
     class StoryGenerator
     {
-        private SimpleGenerator.SimpleGeneratorContext _ctx;
+        private SimpleGeneratorContext _ctx;
 
         private Chapter _startingTileSet;
         private BaseTile _startingTile;        
 
-        public StoryGenerator(SimpleGenerator.SimpleGeneratorContext ctx)
+        public StoryGenerator(SimpleGeneratorContext ctx)
         {
             _ctx = ctx;
         }
