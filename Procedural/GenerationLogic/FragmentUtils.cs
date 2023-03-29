@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JiME.Models;
 using JiME.Procedural.StoryElements;
 
 namespace JiME.Procedural.GenerationLogic
 {
     static class FragmentUtils
     {
-        public static void FillInObjective(Scenario s, Objective o, string mainStoryPoint, IEnumerable<string> secondaryStoryPoints, string phaseLocation)
+        public static void FillInObjective(SimpleGenerator.SimpleGeneratorContext ctx, Objective o, string mainStoryPoint, IEnumerable<string> secondaryStoryPoints, string phaseLocation)
         {
             // Switch the dataName to help debugging
             var newDataName = mainStoryPoint.ToString() + " in " + phaseLocation.ToString() + " (" + o.triggeredByName + ")";
-            if (s.objectiveName == o.dataName)
+            if (ctx.Scenario.objectiveName == o.dataName)
             {
                 // Also update starting objective if that changes
-                s.objectiveName = newDataName;
+                ctx.Scenario.objectiveName = newDataName;
             }
             o.dataName = newDataName;
 
@@ -27,7 +28,7 @@ namespace JiME.Procedural.GenerationLogic
             // TODO: rewards etc.
         }
 
-        public static void FillInStoryPoint(Scenario s, Random random, string startTrigger, List<string> endTriggers, string mainFragment, IEnumerable<string> secondaryFragments, string location, HexTile tile)
+        public static void FillInStoryPoint(SimpleGenerator.SimpleGeneratorContext ctx, string startTrigger, List<string> endTriggers, string mainFragment, IEnumerable<string> secondaryFragments, string location, HexTile tile)
         {
             // TODO: handle multi-target stories better with more context, now we just do individual stories to each target (with different fragments)
             for (int i = 0; i < endTriggers.Count; i++)
@@ -37,19 +38,19 @@ namespace JiME.Procedural.GenerationLogic
                 var fragmentInfo = StoryFragment.GetFragment(fragment);
 
                 // Randomly select interaction type for the fragment
-                var interactionInfo = fragmentInfo.Interactions.GetRandomFromEnumerable(random);
+                var interactionInfo = fragmentInfo.Interactions.GetRandomFromEnumerable(ctx.Random);
                 switch (interactionInfo.Type)
                 {
                     case InteractionType.Dialog:
-                        CreateDialogInteraction(fragment, interactionInfo, s, random, startTrigger, endTriggers[i], location, tile);
+                        CreateDialogInteraction(ctx, fragment, interactionInfo, startTrigger, endTriggers[i], location, tile);
                         break;
 
                     case InteractionType.StatTest:
-                        CreateStatTestInteraction(fragment, interactionInfo, s, random, startTrigger, endTriggers[i], location, tile);
+                        CreateStatTestInteraction(ctx, fragment, interactionInfo, startTrigger, endTriggers[i], location, tile);
                         break;
 
                     case InteractionType.Threat:
-                        CreateThreatInteraction(fragment, interactionInfo, s, random, startTrigger, endTriggers[i], location, tile);
+                        CreateThreatInteraction(ctx, fragment, interactionInfo, startTrigger, endTriggers[i], location, tile);
                         break;
 
                     default:
@@ -60,17 +61,16 @@ namespace JiME.Procedural.GenerationLogic
 
         #region Interaction - Dialog
         private static void CreateDialogInteraction(
+            SimpleGenerator.SimpleGeneratorContext ctx, 
             string fragmentName,
             StoryFragment.InteractionInfo info,
-            Scenario s,
-            Random random,
             string startTrigger,
             string endTrigger,
             string location,
             HexTile tile)
         {
             // TODO: invent story elements from startTrigger to endTrigger based on fragment and other stuff
-            AddTokenInteraction(s, tile, startTrigger, info, () =>
+            AddTokenInteraction(ctx, tile, startTrigger, info, () =>
             {
                 var dialog = new DialogInteraction("Dialog" + GenerateRandomNameSuffix());
                 dialog.eventBookData = new TextBookData()
@@ -90,10 +90,9 @@ namespace JiME.Procedural.GenerationLogic
         #endregion
         #region Interaction - StatTest
         private static void CreateStatTestInteraction(
+            SimpleGenerator.SimpleGeneratorContext ctx, 
             string fragmentName,
             StoryFragment.InteractionInfo info,
-            Scenario s,
-            Random random,
             string startTrigger,
             string endTrigger,
             string location,
@@ -101,7 +100,7 @@ namespace JiME.Procedural.GenerationLogic
         {
             // TODO: invent story elements from startTrigger to endTrigger based on fragment and other stuff
 
-            AddTokenInteraction(s, tile, startTrigger, info, () =>
+            AddTokenInteraction(ctx, tile, startTrigger, info, () =>
             {
                 var mainStat = info.StatHint ?? Ability.Random;
                 var statTest = new TestInteraction("Test " + mainStat.ToString() + GenerateRandomNameSuffix());
@@ -170,10 +169,9 @@ namespace JiME.Procedural.GenerationLogic
         #endregion
         #region Interaction - Threat
         private static void CreateThreatInteraction(
+            SimpleGenerator.SimpleGeneratorContext ctx, 
             string fragmentName,
             StoryFragment.InteractionInfo info,
-            Scenario s,
-            Random random,
             string startTrigger,
             string endTrigger,
             string location,
@@ -182,7 +180,7 @@ namespace JiME.Procedural.GenerationLogic
             // TODO: invent story elements from startTrigger to endTrigger based on fragment and other stuff
             // TODO: scale difficulty etc. properly
 
-            AddTokenInteraction(s, tile, startTrigger, info, () =>
+            AddTokenInteraction(ctx, tile, startTrigger, info, () =>
             {
                 var threatTest = new ThreatInteraction("Threat!" + GenerateRandomNameSuffix());
 
@@ -197,14 +195,15 @@ namespace JiME.Procedural.GenerationLogic
                     pages = new List<string>() { "The enemies are attacking!" }
                 };
 
-                // Setup enemies
+                // Setup specific enemies (bosses etc)
+                // TODO: setup based on story template and possibly randomize / scale
+                threatTest.AddMonster(PrepareBossMonster(MonsterType.OrcMarauder)); // TODO: other parameters?
+
+                // Setup filler enemies
                 // TODO: setup based on story template and possibly randomize
-                // TODO: AddMonster vs includedMonsters + basePoolPoints etc.
-                threatTest.AddMonster(PrepareMonster(MonsterType.OrcHunter)); // TODO: other parameters?
-                threatTest.AddMonster(PrepareMonster(MonsterType.GoblinScout)); // TODO: other parameters?
-                threatTest.AddMonster(PrepareMonster(MonsterType.OrcMarauder)); // TODO: other parameters?
-                //threatTest.basePoolPoints = 10;
                 //threatTest.difficultyBias = DifficultyBias.Medium;
+                //threatTest.basePoolPoints = 10;
+                //threatTest.includedEnemies = PrepareIncludedMonsters(MonsterType.GoblinScout, MonsterType.OrcHunter);
 
                 // Progress when threat has been defeated
                 threatTest.triggerDefeatedName = endTrigger;
@@ -217,7 +216,7 @@ namespace JiME.Procedural.GenerationLogic
 
         private static string GenerateRandomNameSuffix() => string.Format(" ({0})", Guid.NewGuid().GetHashCode());
 
-        private static void AddTokenInteraction<TInteraction>(Scenario s, HexTile tile, string startTrigger, StoryFragment.InteractionInfo info, Func<TInteraction> setupAction) where TInteraction : InteractionBase
+        private static void AddTokenInteraction<TInteraction>(SimpleGenerator.SimpleGeneratorContext ctx, HexTile tile, string startTrigger, StoryFragment.InteractionInfo info, Func<TInteraction> setupAction) where TInteraction : InteractionBase
         {
             // Create the interaction with specific setup
             var i = setupAction();
@@ -225,10 +224,12 @@ namespace JiME.Procedural.GenerationLogic
             // Finalize the interaction
             i.triggerName = "None"; // We must not set a starting trigger since this is triggered by a Token
             i.isTokenInteraction = true; // Needs to be token interaction so that it can be triggered by a token
-            s.AddInteraction(i); // Add the trigger itself
+            i.tokenType = info.TokenHint ?? TokenType.Search;
+            i.personType = ctx.SidestanderTokenType;
+            ctx.Scenario.AddInteraction(i); // Add the trigger itself
 
             // Create token to trigger it
-            var token = new Token(info.TokenHint ?? TokenType.Search);
+            var token = new Token(info.TokenHint ?? TokenType.Search, ctx.SidestanderTokenType);
             // TODO:token position? 
             token.triggeredByName = startTrigger; // Only reveal the token when the correct objective has been activated    
             token.triggerName = i.dataName; // Token triggers the dialog
@@ -236,7 +237,7 @@ namespace JiME.Procedural.GenerationLogic
             tile.tokenList.Add(token);
         }
 
-        private static Monster PrepareMonster(MonsterType type)
+        private static Monster PrepareBossMonster(MonsterType type)
         {
             return new Monster((int)type)
             {
@@ -246,6 +247,16 @@ namespace JiME.Procedural.GenerationLogic
                 isNormal = true,
                 isHard = true
             };
+        }
+
+        private static bool[] PrepareIncludedMonsters(params MonsterType[] monsters)
+        {
+            var includedEnemies = new bool[Collection.MONSTERS().Length].Fill(false);
+            foreach(var monster in monsters)
+            {
+                includedEnemies[(int)monster] = true;
+            }
+            return includedEnemies;
         }
 
         #endregion

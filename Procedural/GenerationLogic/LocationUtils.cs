@@ -12,11 +12,11 @@ namespace JiME.Procedural.GenerationLogic
         /// <summary>
         /// Gets a random tile from this location but make sure that it is one of the available tiles and updates availableTileIds list
         /// </summary>
-        public static StoryLocation.TileInfo GetRandomTileInfo(Scenario s, Random random, StoryLocation location)
+        public static StoryLocation.TileInfo GetRandomTileInfo(SimpleGenerator.SimpleGeneratorContext ctx, StoryLocation location)
         {
             // Determine which ids are actually valid
             var validTiles = location.KnownTiles.Values
-                .Where(t => s.globalTilePool.Contains(t.IdNumber))
+                .Where(t => ctx.Scenario.globalTilePool.Contains(t.IdNumber))
                 .ToList();
             if (validTiles.Count == 0)
             {
@@ -25,18 +25,18 @@ namespace JiME.Procedural.GenerationLogic
             }
 
             // Then take one at random
-            var tile = validTiles.GetRandomFromEnumerable(random);
-            s.globalTilePool.Remove(tile.IdNumber);
+            var tile = validTiles.GetRandomFromEnumerable(ctx.Random);
+            ctx.Scenario.globalTilePool.Remove(tile.IdNumber);
             return tile;
         }
 
         /// <summary>
         /// Creates a new tile and adds it to the given Chapter 
         /// </summary>
-        public static BaseTile CreateRandomTileAndAddtoTileset(Scenario s, Random random, Chapter tileset, StoryLocation primaryLocation, IEnumerable<StoryLocation> secondaryLocations, bool mustBeFromPrimary = false)
+        public static BaseTile CreateRandomTileAndAddtoTileset(SimpleGenerator.SimpleGeneratorContext ctx, Chapter tileset, StoryLocation primaryLocation, IEnumerable<StoryLocation> secondaryLocations, bool mustBeFromPrimary = false)
         {
             // Gather tile info
-            var tileInfo = GetRandomTileInfo(s, random, primaryLocation);
+            var tileInfo = GetRandomTileInfo(ctx, primaryLocation);
             if (tileInfo == null)
             {
                 // Primary location did not yield valid tile
@@ -50,7 +50,7 @@ namespace JiME.Procedural.GenerationLogic
                 {
                     foreach (var secondaryLocation in secondaryLocations)
                     {
-                        tileInfo = GetRandomTileInfo(s, random, secondaryLocation);
+                        tileInfo = GetRandomTileInfo(ctx, secondaryLocation);
                         if (tileInfo != null)
                         {
                             break;
@@ -75,7 +75,7 @@ namespace JiME.Procedural.GenerationLogic
             };
             if (tileInfo.ExplorationTexts?.Count > 0)
             {
-                tile.flavorBookData.pages.Add(tileInfo.ExplorationTexts.GetRandomFromEnumerable(random));
+                tile.flavorBookData.pages.Add(tileInfo.ExplorationTexts.GetRandomFromEnumerable(ctx.Random));
             }
 
             // Add the chapter and return created tile

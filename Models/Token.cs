@@ -176,11 +176,11 @@ namespace JiME
 		};
 
 
-		public Token( TokenType ttype )
+		public Token( TokenType ttype, PersonType ptype = PersonType.None, TerrainType tetype = TerrainType.None )
 		{
 			tokenType = ttype;
-			personType = PersonType.None;
-			terrainType = TerrainType.None;
+			personType = ptype;
+			terrainType = tetype;
 
 			UpdateDataName();
 

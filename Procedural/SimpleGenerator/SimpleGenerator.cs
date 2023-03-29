@@ -74,7 +74,7 @@ namespace JiME.Procedural.SimpleGenerator
             Console.WriteLine("MAIN OBJECTIVES: " + ctx.Scenario.objectiveObserver.Count);
 
             // Story point debugging
-            foreach (var sp in ctx.StoryPoints)
+            foreach (var sp in ctx.AllStoryPoints)
             {
                 // Print storypoint details
                 Console.WriteLine(sp.ToString());
@@ -96,16 +96,16 @@ namespace JiME.Procedural.SimpleGenerator
         private static void GenerateStoryTemplateAndFillInStoryPoints(SimpleGeneratorContext ctx)
         {
             // Prepare StoryGenerator with StoryArchetype and StoryTemplate
-            var archetype = ctx.Parameters.StoryArchetype.HasValue
+            ctx.StoryArchetype = ctx.Parameters.StoryArchetype.HasValue
                 ? StoryArchetype.GetArchetype(ctx.Parameters.StoryArchetype.Value)
                 : StoryArchetype.GetRandomArchetype(ctx.Random);
-            var template = ctx.Parameters.StoryTemplate?.Length > 0
+            ctx.StoryTemplate = ctx.Parameters.StoryTemplate?.Length > 0
                 ? StoryTemplate.GetTemplate(ctx.Parameters.StoryTemplate)
                 : StoryTemplate.GetRandomTemplate(ctx.Random);
-            var generator = new StoryGenerator(archetype, template, ctx.Random, ctx.CreateNextTriggerId);
+            var generator = new StoryGenerator(ctx);
 
             // Fill in the Scenario level details
-            generator.FillInScenarioDetails(ctx.Scenario);
+            generator.FillInScenarioDetails();
 
             // Disect the MAIN STORY points (Note: storypoints are in reverse order
             var mainStoryPoints_StartPhase = new List<StoryPoint>();
@@ -113,7 +113,7 @@ namespace JiME.Procedural.SimpleGenerator
             var mainStoryPoints_EndPhase = new List<StoryPoint>();
 
             // We simple add single MAIN story point to both start and end and rest to middle
-            var mainStoryPoints = ctx.StoryPoints.Where(sp => sp.PartOfMainQuest).Reverse().ToList();
+            var mainStoryPoints = ctx.AllStoryPoints.Where(sp => sp.PartOfMainQuest).Reverse().ToList();
             mainStoryPoints_StartPhase.Add(mainStoryPoints.First());
             mainStoryPoints_MiddlePhase.AddRange(mainStoryPoints.Skip(1).Take(mainStoryPoints.Count - 2));
             mainStoryPoints_EndPhase.Add(mainStoryPoints.Last());
@@ -121,9 +121,9 @@ namespace JiME.Procedural.SimpleGenerator
             // TODO: Disect side quest storypoints somehow to the different phases
 
             // Fill in storypoints for each phase
-            generator.FillInPhaseStoryPoint(ctx.Scenario, StoryGenerator.StoryPhase.Start, mainStoryPoints_StartPhase);
-            generator.FillInPhaseStoryPoint(ctx.Scenario, StoryGenerator.StoryPhase.Middle, mainStoryPoints_MiddlePhase);
-            generator.FillInPhaseStoryPoint(ctx.Scenario, StoryGenerator.StoryPhase.End, mainStoryPoints_EndPhase);
+            generator.FillInPhaseStoryPoint(StoryGenerator.StoryPhase.Start, mainStoryPoints_StartPhase);
+            generator.FillInPhaseStoryPoint(StoryGenerator.StoryPhase.Middle, mainStoryPoints_MiddlePhase);
+            generator.FillInPhaseStoryPoint(StoryGenerator.StoryPhase.End, mainStoryPoints_EndPhase);
         }
 
 
@@ -187,7 +187,7 @@ namespace JiME.Procedural.SimpleGenerator
             if (!ctx.RandomChance(ctx.Parameters.BranchingProbability))
             {
                 // No branching, simply add StoryPoint to this single objective to handle completing it
-                ctx.StoryPoints.Add(new StoryPoint(
+                ctx.AllStoryPoints.Add(new StoryPoint(
                     mainQuest,
                     objective, // Story for this Objective
                     objectiveOpenedTrigger, // From the point when the objective is revealed
@@ -224,7 +224,7 @@ namespace JiME.Procedural.SimpleGenerator
                     objective, // Story for this Objective
                     objectiveOpenedTrigger, // From the point when the objective is revealed
                     storyPointEndTriggers); // The multiple points that complete the objective
-                ctx.StoryPoints.Add(multiStoryPoint);
+                ctx.AllStoryPoints.Add(multiStoryPoint);
             }
 
             return objective;

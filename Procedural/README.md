@@ -6,7 +6,7 @@
 # Milestones and Tasks
 - First playtesting
   - (DONE) Implement story generator basic skeleton that outputs a Scenario that can be clicked through in the Companion App
-  - Implement more interactions to StoryGenerator
+  - (DONE) Implement more interactions to StoryGenerator
   - Implement first StoryTemplate to give flavor to the story (and fill in Objective details and StoryPoints with those)
   - Implement Threat track generation
   - Implement monster activations and random terrain interactions

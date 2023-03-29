@@ -4,7 +4,7 @@
             "Name": "FindInfoAboutTarget",
 			"Comment": "",
             "Interactions": [ 
-				{ "Type": "Dialog", "TokenHint": "Search" },
+				{ "Type": "Dialog", "TokenHint": "Person" },
 				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Wit", "AltStatHint": "Wisdom", "StatTestType": "Cumulative" }
 			]
         },
@@ -20,7 +20,7 @@
             "Name": "TalkToSurvivors",
 			"Comment": "",
             "Interactions": [ 
-				{ "Type": "Dialog", "TokenHint": "Search" },
+				{ "Type": "Dialog", "TokenHint": "Person" },
 				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Wit", "AltStatHint": "Wisdom", "StatTestType": "OneTry" }
 			]
         },
@@ -28,7 +28,7 @@
             "Name": "FindTargetLocation",
 			"Comment": "",
             "Interactions": [ 
-				{ "Type": "Dialog", "TokenHint": "Search" },
+				{ "Type": "Dialog", "TokenHint": "Person" },
 				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Agility", "StatTestType": "OneTry" }	
 			]
         },
@@ -36,7 +36,7 @@
             "Name": "FindWeaknessInTarget",
 			"Comment": "",
             "Interactions": [ 
-				{ "Type": "Dialog", "TokenHint": "Search" },
+				{ "Type": "Dialog", "TokenHint": "Person" },
 				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Wit", "AltStatHint": "Might", "StatTestType": "Cumulative" }
 			]
         },
@@ -44,7 +44,7 @@
             "Name": "FindStrengthInSelf",
 			"Comment": "",
             "Interactions": [ 
-				{ "Type": "Dialog", "TokenHint": "Search" },
+				{ "Type": "Dialog", "TokenHint": "Person" },
 				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Spirit", "StatTestType": "Retryable" }	
 			]
         },

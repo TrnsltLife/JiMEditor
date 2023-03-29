@@ -140,12 +140,6 @@ namespace JiME.Visualization.Models
                     {
                         dataGraph.AddEdge(new DataEdge(v, vertex) { Text = "initiates" });
                     });
-                    if (x2.triggerName?.Length == 0 || x2.triggerName == "None")
-                    {
-                        // Special case: No initiation trigger so triggered from the start?
-                        // TODO: Or is it? Could this never be triggered?
-                        dataGraph.AddEdge(new DataEdge(startVertex, vertex) { Text = "initiates" });
-                    }
                     getTriggerOrEventVertex(vertexDict, x2.triggerAfterName, v =>
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "triggers" });

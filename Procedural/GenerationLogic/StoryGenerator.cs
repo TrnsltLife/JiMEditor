@@ -10,42 +10,40 @@ namespace JiME.Procedural.GenerationLogic
     /// </summary>
     class StoryGenerator
     {
-        private StoryArchetype _archetype;
-        private StoryTemplate _template;
-        private Random _random;
-        private Func<string> _generateRandomId;
+        private SimpleGenerator.SimpleGeneratorContext _ctx;
 
         private Chapter _startingTileSet;
         private BaseTile _startingTile;        
 
-        public StoryGenerator(StoryArchetype archetype, StoryTemplate template, Random random, Func<string> generateRandomId)
+        public StoryGenerator(SimpleGenerator.SimpleGeneratorContext ctx)
         {
-            _archetype = archetype;
-            _template = template;
-            _random = random;
-            _generateRandomId = generateRandomId;
+            _ctx = ctx;
         }
 
         /// <summary>
         /// Fills in basic scenario level detais for flavor
         /// </summary>
-        public void FillInScenarioDetails(Scenario s)
+        public void FillInScenarioDetails()
         {
-            s.scenarioName = _template.Name; // TODO: do better here
-            s.specialInstructions = "";
-            s.introBookData = new TextBookData("ScenarioIntroboook")
+            // Fill in basic scenario details
+            _ctx.Scenario.scenarioName = _ctx.StoryTemplate.Name; // TODO: do better here
+            _ctx.Scenario.specialInstructions = "";
+            _ctx.Scenario.introBookData = new TextBookData("ScenarioIntroboook")
             {
                 pages = new List<string>() { "PLACEHOLDER INTROBOOK STUFF" }
             };
-            s.threatNotUsed = true; // TODO: ???
-            s.shadowFear = 2;
+            _ctx.Scenario.threatNotUsed = true; // TODO: ???
+            _ctx.Scenario.shadowFear = 2;
+
+            // Do some basic decisions
+            _ctx.SidestanderTokenType = GeneratorUtils.GetRandomEnum<PersonType>(_ctx.Random, except: PersonType.None);
         }
         
         /// <summary>
         /// Fills in one particular phases StoryPoints and it's Objective inside the scenario
         /// Expects to get ALL phaseStoryPoints IN ORDER THAT THEY HAPPEN
         /// </summary>
-        public void FillInPhaseStoryPoint(Scenario s, StoryPhase phase, IEnumerable<StoryPoint> phaseStoryPoints)
+        public void FillInPhaseStoryPoint(StoryPhase phase, IEnumerable<StoryPoint> phaseStoryPoints)
         {
             // TODO: If single phase has multiple of same fragment, we should combine those in to one! Perhaps needs to be done even earlier in branching phase
             // TODO: utilize token/interaction groups somehow? may not be necessary since this is "random" anyway so no need to add second layer?
@@ -55,7 +53,7 @@ namespace JiME.Procedural.GenerationLogic
 
             // Determine the location type the phase happens in            
             // TODO: here we should also take note that certain places are not available in all collections 
-            var phaseLocation = phaseInfo.TakesPlaceInOneOf.GetRandomFromEnumerable(_random);
+            var phaseLocation = phaseInfo.TakesPlaceInOneOf.GetRandomFromEnumerable(_ctx.Random);
             var primaryLocation = StoryLocation.GetLocation(phaseLocation);
             var secondaryLocations = phaseInfo.TakesPlaceInOneOf
                 .Where(l => l != primaryLocation.Name)
@@ -71,7 +69,7 @@ namespace JiME.Procedural.GenerationLogic
                 _startingTileSet = tileSet;                
 
                 // Create the very first tile (must be from the primary location selected)
-                _startingTile = LocationUtils.CreateRandomTileAndAddtoTileset(s, _random, tileSet, primaryLocation, secondaryLocations, mustBeFromPrimary: true);
+                _startingTile = LocationUtils.CreateRandomTileAndAddtoTileset(_ctx, tileSet, primaryLocation, secondaryLocations, mustBeFromPrimary: true);
                 _startingTile.isStartTile = true;
 
                 // TODO: we should basically have random tiles except for the first one but isRandomTiles must not be set to the "Start" tileset
@@ -84,13 +82,13 @@ namespace JiME.Procedural.GenerationLogic
                 tileSet.isRandomTiles = true;
                 tileSet.isDynamic = true; // Add as dynamic since the fog of war overlaps the tiles otherwise
             }
-            s.AddChapter(tileSet);
+            _ctx.Scenario.AddChapter(tileSet);
             
             // Create rest of tiles for the phase (max 5 tiles)
             var phaseTileCount = Math.Min(5, phaseStoryPoints.Count());
             while(tileSet.tileObserver.Count < phaseTileCount)
             {
-                LocationUtils.CreateRandomTileAndAddtoTileset(s, _random, tileSet, primaryLocation, secondaryLocations, mustBeFromPrimary: false);
+                LocationUtils.CreateRandomTileAndAddtoTileset(_ctx, tileSet, primaryLocation, secondaryLocations, mustBeFromPrimary: false);
             }
             var allPhaseTiles = tileSet.tileObserver.OfType<HexTile>().ToList(); // TODO: non-hex tile in some far future?
             
@@ -107,29 +105,29 @@ namespace JiME.Procedural.GenerationLogic
                 string mainFragmentForStoryPoint;
                 if (isLastStoryPointInPhase && mainFragmentForPhaseNotUsed)
                 {
-                    mainFragmentForStoryPoint = phaseInfo.MustHaveOneOf.GetRandomFromEnumerable(_random);
+                    mainFragmentForStoryPoint = phaseInfo.MustHaveOneOf.GetRandomFromEnumerable(_ctx.Random);
                     mainFragmentForPhaseNotUsed = false;
                 }
                 else
                 {
-                    mainFragmentForStoryPoint = phaseInfo.CanHaveSomeOf.GetRandomFromEnumerable(_random);
+                    mainFragmentForStoryPoint = phaseInfo.CanHaveSomeOf.GetRandomFromEnumerable(_ctx.Random);
                 }
 
                 // Fetch out secondary fragments for the SP if it has more than one endTrigger
-                var secondaryFragmentsForStoryPoint = phaseInfo.CanHaveSomeOf.GetRandomFromEnumerable(_random, sp.EndTriggerNames.Count - 1);
+                var secondaryFragmentsForStoryPoint = phaseInfo.CanHaveSomeOf.GetRandomFromEnumerable(_ctx.Random, sp.EndTriggerNames.Count - 1);
 
                 // Update the MAIN STORY objective information based on fragments
-                FragmentUtils.FillInObjective(s, sp.Objective, 
+                FragmentUtils.FillInObjective(_ctx, sp.Objective, 
                     mainFragmentForStoryPoint, 
                     secondaryFragmentsForStoryPoint, 
                     phaseLocation);
 
                 // Determine which tile in the set is linked to this storypoint
-                var randomPhaseTile = allPhaseTiles.GetRandomFromEnumerable(_random);
+                var randomPhaseTile = allPhaseTiles.GetRandomFromEnumerable(_ctx.Random);
                 allPhaseTiles.Remove(randomPhaseTile);
 
                 // Write out the MAIN STORY storypoint
-                FragmentUtils.FillInStoryPoint(s, _random,
+                FragmentUtils.FillInStoryPoint(_ctx,
                     sp.StartTriggerName, 
                     sp.EndTriggerNames, 
                     mainFragmentForStoryPoint, 
@@ -146,11 +144,11 @@ namespace JiME.Procedural.GenerationLogic
             switch(phase)
             {
                 case StoryPhase.Start:
-                    return _archetype.Start;
+                    return _ctx.StoryArchetype.Start;
                 case StoryPhase.Middle:
-                    return _archetype.Middle;
+                    return _ctx.StoryArchetype.Middle;
                 case StoryPhase.End:
-                    return _archetype.End;
+                    return _ctx.StoryArchetype.End;
                 default: throw new NotImplementedException();
             }
         }      

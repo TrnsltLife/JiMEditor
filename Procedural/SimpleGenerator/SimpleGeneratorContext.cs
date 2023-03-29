@@ -11,13 +11,23 @@ namespace JiME.Procedural.SimpleGenerator
         public Scenario Scenario { get; private set; }
         public Random Random { get; private set; }
 
+
+
         private int _nextTriggerId = 1;
 
         /// <summary>
         /// List of story points we need to fill with content.
         /// Will be filled in backward order and mix and match MAIN and SIDE quest stories.
         /// </summary>
-        public List<StoryPoint> StoryPoints { get; set; } = new List<StoryPoint>();
+        public List<StoryPoint> AllStoryPoints { get; set; } = new List<StoryPoint>();
+
+        public StoryArchetype StoryArchetype { get; set; }
+        public StoryTemplate StoryTemplate { get; set; }
+
+        /// <summary>
+        /// Token type used for bystanders found int the mission
+        /// </summary>
+        public PersonType SidestanderTokenType { get; set; }
 
         public SimpleGeneratorContext(SimpleGeneratorParameters parameters)
         {
