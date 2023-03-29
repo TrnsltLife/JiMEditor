@@ -36,8 +36,30 @@ namespace JiME.Procedural.GenerationLogic
             {
                 pages = new List<string>() { _ctx.StoryTemplate.GenerateScenarioIntroduction(_ctx.Random, _ctx.StoryArchetype.Archetype, _ctx.TemplateContext) }
             };
-            _ctx.Scenario.threatNotUsed = true; // TODO: ???
             _ctx.Scenario.shadowFear = 2;
+
+            // Implement threat levels
+            GeneratorUtils.CalculateThreatValues(
+                _ctx.Parameters.ThreatIntervalMin,
+                _ctx.Parameters.ThreatIntervalMax,
+                _ctx.Parameters.MaxThreat,
+                _ctx.Random, (newThreat, threatDiff) =>
+                {
+                    var threatAction = new ThreatInteraction( "Threat Action: " + newThreat);
+                    // TODO: limit antagonist helper types based on collections
+                    threatAction.difficultyBias = DifficultyBias.Medium;
+                    threatAction.basePoolPoints = _ctx.Parameters.ThreatDiffMonsterPoolMultiplier * threatDiff;
+                    threatAction.includedEnemies = GeneratorUtils.PrepareIncludedMonsters(_ctx.StoryTemplate.AntagonistHelperMonstersAreSomeOf.ToArray());
+                    threatAction.eventBookData = GeneratorUtils.CreateTextBook(_ctx.StoryTemplate.GenerateThreatLevelIncreaseText(_ctx.Random, _ctx.TemplateContext));
+                    _ctx.Scenario.AddInteraction(threatAction);
+
+                    _ctx.Scenario.threatObserver.Add(new Threat("Threat Level: " + newThreat, thresholdValue: newThreat)
+                    {
+                        triggerName = threatAction.dataName
+                    });
+                });
+            _ctx.Scenario.threatNotUsed = false;
+            _ctx.Scenario.threatMax = _ctx.Parameters.MaxThreat;
         }
         
         /// <summary>
@@ -137,7 +159,7 @@ namespace JiME.Procedural.GenerationLogic
                     randomPhaseTile,
                     phase);    
             }
-            
+
             // TODO: SIDE STORY points as well?
         }
 

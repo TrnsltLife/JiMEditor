@@ -59,6 +59,9 @@ namespace JiME.Procedural.StoryElements
         [JsonProperty]
         public Dictionary<string, List<string>> Resolutions { get; private set; }
 
+        [JsonProperty]
+        public List<string> ThreatLevelIncreasesTexts { get; private set; }
+
         // TODO: public bool IsValidForCollections(IEnumerable<Collection>()) { Check if can be used with current collections }
         // TODO: Or "AdjustForCollections()" which would filter out extras
 
@@ -78,6 +81,12 @@ namespace JiME.Procedural.StoryElements
         public string GenerateScenarioIntroduction(Random r, StoryArchetype.Type archetype, TemplateContext tokenCtx)
         {
             var text = ScenarioIntroductions[archetype].GetRandomFromEnumerable(r);
+            return ProcessTextTemplate(text, r, tokenCtx);
+        }
+
+        public string GenerateThreatLevelIncreaseText(Random r, TemplateContext tokenCtx)
+        {
+            var text = ThreatLevelIncreasesTexts.GetRandomFromEnumerable(r);
             return ProcessTextTemplate(text, r, tokenCtx);
         }
 

@@ -24,6 +24,12 @@
 			"AntagonistMonsterIsOneOf": [ "OrcMarauder", "OrcHunter", "OrcTaskmaster" ],
 			"AntagonistHelperMonstersAreSomeOf": [ "OrcMarauder", "OrcHunter", "GoblinScout" ],
 			
+			"ThreatLevelIncreasesTexts": [
+				"{names:ANTAGONIST}'s army is on the move...",
+				"The enemy has found us!",
+				"They are coming..."
+			],
+			
 			"BystandersAreOneOf": [ "HUMAN", "ELF", "DWARF", "HOBBIT" ],
 			
 			"ScenarioIntroductions": {

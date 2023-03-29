@@ -80,6 +80,14 @@ namespace JiME.Procedural.SimpleGenerator
         /// </summary>
         public int BranchingMaxBranches = 3;
 
+        public int MaxThreat = 60;
+
+        public int ThreatIntervalMin = 8;
+
+        public int ThreatIntervalMax = 12;
+
+        public int ThreatDiffMonsterPoolMultiplier = 2;
+
         #endregion
         #region Debug parameters
 

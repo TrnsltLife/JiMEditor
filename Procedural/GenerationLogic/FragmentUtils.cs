@@ -24,7 +24,7 @@ namespace JiME.Procedural.GenerationLogic
             // Fill in the actual objective details
             var objectiveInfo = ctx.StoryTemplate.GenerateObjectiveInformation(ctx.Random, mainStoryPoint, ctx.TemplateContext);
             o.objectiveReminder = objectiveInfo.Reminder;
-            o.textBookData = CreateTextBook(objectiveInfo.IntroText);
+            o.textBookData = GeneratorUtils.CreateTextBook(objectiveInfo.IntroText);
             // TODO: rewards etc.
 
             // Also check if this objective ends a scenario
@@ -84,7 +84,7 @@ namespace JiME.Procedural.GenerationLogic
                 var dialogInfo = ctx.StoryTemplate.GenerateDialogInteractionInfo(ctx.Random, fragmentName, ctx.TemplateContext);
 
                 var dialog = new DialogInteraction("Dialog" + GenerateRandomNameSuffix());
-                dialog.eventBookData = CreateTextBook(dialogInfo.ActionText);
+                dialog.eventBookData = GeneratorUtils.CreateTextBook(dialogInfo.ActionText);
 
                 // TODO: how to have more meaningful dialog options with different rewards etc? perhaps add additional reward interactions?
                 // Note: "" removes the option altogether
@@ -146,10 +146,10 @@ namespace JiME.Procedural.GenerationLogic
                 statTest.noAlternate = testInfo.AltStatHint == null;
 
                 // Token interaction flavor text
-                statTest.textBookData = CreateTextBook(testInfo.TokenText);
+                statTest.textBookData = GeneratorUtils.CreateTextBook(testInfo.TokenText);
 
                 // Test main flavor text
-                statTest.eventBookData = CreateTextBook(testInfo.ActionText);
+                statTest.eventBookData = GeneratorUtils.CreateTextBook(testInfo.ActionText);
 
                 // Setup test type
                 if (testInfo.StatTestType == StoryTemplate.StatTestInteractionInfo.TypeEnum.OneTry)
@@ -169,7 +169,7 @@ namespace JiME.Procedural.GenerationLogic
                 }
 
                 // Success
-                statTest.passBookData = CreateTextBook(testInfo.SuccessText);
+                statTest.passBookData = GeneratorUtils.CreateTextBook(testInfo.SuccessText);
                 statTest.successValue = testInfo.SuccessValue;
                 statTest.successTrigger = endTrigger;
                 statTest.rewardXP = 0;
@@ -177,10 +177,10 @@ namespace JiME.Procedural.GenerationLogic
                 statTest.rewardThreat = 5; // TODO: where to get a good value here?
 
                 // Progress
-                statTest.progressBookData = CreateTextBook(testInfo.ProgressText);
+                statTest.progressBookData = GeneratorUtils.CreateTextBook(testInfo.ProgressText);
 
                 // Failure
-                statTest.failBookData = CreateTextBook(testInfo.FailureText);
+                statTest.failBookData = GeneratorUtils.CreateTextBook(testInfo.FailureText);
                 statTest.failTrigger = endTrigger; // Failure also progresses things for now, TODO: Perhaps add some more interactions if failed? e.g. have to fight a monster
                 statTest.failThreat = 5; // TODO: where to get a good value here?
                 
@@ -229,25 +229,25 @@ namespace JiME.Procedural.GenerationLogic
                     });
 
                     // Token interaction flavor text
-                    threatTest.textBookData = CreateTextBook(storyInfo.AntagonistTokenText);
+                    threatTest.textBookData = GeneratorUtils.CreateTextBook(storyInfo.AntagonistTokenText);
 
                     // Test main flavor text
-                    threatTest.eventBookData = CreateTextBook(storyInfo.AntagonistActionText);
+                    threatTest.eventBookData = GeneratorUtils.CreateTextBook(storyInfo.AntagonistActionText);
                 }
                 else
                 {
                     // Token interaction flavor text
-                    threatTest.textBookData = CreateTextBook(storyInfo.NormalTokenText);
+                    threatTest.textBookData = GeneratorUtils.CreateTextBook(storyInfo.NormalTokenText);
 
                     // Test main flavor text
-                    threatTest.eventBookData = CreateTextBook(storyInfo.NormalActionText); 
+                    threatTest.eventBookData = GeneratorUtils.CreateTextBook(storyInfo.NormalActionText); 
                 }
 
                 // Setup filler enemies
                 // TODO: limit antagonist helper types based on collections
                 threatTest.difficultyBias = DifficultyBias.Medium;
                 threatTest.basePoolPoints = 10;
-                threatTest.includedEnemies = PrepareIncludedMonsters(ctx.StoryTemplate.AntagonistHelperMonstersAreSomeOf.ToArray());
+                threatTest.includedEnemies = GeneratorUtils.PrepareIncludedMonsters(ctx.StoryTemplate.AntagonistHelperMonstersAreSomeOf.ToArray());
 
                 // Progress when threat has been defeated
                 threatTest.triggerDefeatedName = endTrigger;
@@ -279,24 +279,6 @@ namespace JiME.Procedural.GenerationLogic
             token.triggerName = i.dataName; // Token triggers the dialog
             // TODO: token flavor text?
             tile.tokenList.Add(token);
-        }
-
-        private static bool[] PrepareIncludedMonsters(params MonsterType[] monsters)
-        {
-            var includedEnemies = new bool[Collection.MONSTERS().Length].Fill(false);
-            foreach(var monster in monsters)
-            {
-                includedEnemies[(int)monster] = true;
-            }
-            return includedEnemies;
-        }
-
-        private static TextBookData CreateTextBook(string content)
-        {
-            return new TextBookData()
-            {
-                pages = new List<string>() { content ?? "" }
-            };
         }
 
         #endregion

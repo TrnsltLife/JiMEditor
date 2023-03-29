@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JiME.Models;
 
 namespace JiME.Procedural.GenerationLogic
 {
@@ -32,6 +33,34 @@ namespace JiME.Procedural.GenerationLogic
             for (int i = 0; i < count; i++)
             {
                 yield return GetRandomFromEnumerable(enumerable, random);
+            }
+        }
+
+        public static bool[] PrepareIncludedMonsters(params MonsterType[] monsters)
+        {
+            var includedEnemies = new bool[Collection.MONSTERS().Length].Fill(false);
+            foreach (var monster in monsters)
+            {
+                includedEnemies[(int)monster] = true;
+            }
+            return includedEnemies;
+        }
+
+        public static TextBookData CreateTextBook(string content)
+        {
+            return new TextBookData()
+            {
+                pages = new List<string>() { content ?? "" }
+            };
+        }
+
+        public static void CalculateThreatValues(int minInterval, int maxInterval, int maxThreat, Random r,  Action<int, int> action)
+        {
+            int lastThreat = 0;
+            for(int threat = r.Next(minInterval, maxInterval); threat < maxThreat; threat = threat + r.Next(minInterval, maxInterval))
+            {
+                action(threat, threat - lastThreat);
+                lastThreat = threat;
             }
         }
     }
