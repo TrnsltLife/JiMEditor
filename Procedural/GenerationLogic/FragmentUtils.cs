@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using JiME.Models;
 using JiME.Procedural.StoryElements;
 
@@ -22,9 +20,9 @@ namespace JiME.Procedural.GenerationLogic
             o.dataName = newDataName;
 
             // Fill in the actual objective details
-            o.objectiveReminder = mainStoryPoint.ToString() + " in " + phaseLocation.ToString() + " (" + o.triggeredByName + ")";
-            o.textBookData = new TextBookData() { pages = new List<string>() { mainStoryPoint.ToString() + " in " + phaseLocation.ToString() } };
-            // TODO: name, texts etc. 
+            var objectiveInfo = ctx.StoryTemplate.GenerateObjectiveInformation(ctx.Random, mainStoryPoint, ctx.TemplateContext);
+            o.objectiveReminder = objectiveInfo.Item1;
+            o.textBookData = CreateTextBook(objectiveInfo.Item2);
             // TODO: rewards etc.
         }
 
@@ -74,10 +72,8 @@ namespace JiME.Procedural.GenerationLogic
             AddTokenInteraction(ctx, tile, startTrigger, info, () =>
             {
                 var dialog = new DialogInteraction("Dialog" + GenerateRandomNameSuffix());
-                dialog.eventBookData = new TextBookData()
-                {
-                    pages = new List<string>() { "What do you want to do?" }
-                };
+                dialog.eventBookData = CreateTextBook("What do you want to do?");
+
                 dialog.choice1 = "Trigger: " + endTrigger;
                 dialog.c1Text = "You decided to go forward";
                 dialog.c1Trigger = endTrigger;
@@ -113,15 +109,10 @@ namespace JiME.Procedural.GenerationLogic
                 statTest.noAlternate = info.AltStatHint == null;
 
                 // Token interaction flavor text
-                statTest.textBookData = new TextBookData()
-                {
-                    pages = new List<string>() { "Are you sure you want to start testing?" }
-                };
+                statTest.textBookData = CreateTextBook("Are you sure you want to start testing?");
+
                 // Test main flavor text
-                statTest.eventBookData = new TextBookData()
-                {
-                    pages = new List<string>() { "This TEST will be very hard!" }
-                };
+                statTest.eventBookData = CreateTextBook("This TEST will be very hard!!");
 
                 // Setup test type
                 if (info.StatTestType == StoryFragment.StatTestType.OneTry)
@@ -187,36 +178,40 @@ namespace JiME.Procedural.GenerationLogic
             {
                 var threatTest = new ThreatInteraction("Threat!" + GenerateRandomNameSuffix());
 
-                // Token interaction flavor text
-                threatTest.textBookData = new TextBookData()
-                {
-                    pages = new List<string>() { "Group of enemies are nearby" }
-                };
-                // Test main flavor text
-                threatTest.eventBookData = new TextBookData()
-                {
-                    pages = new List<string>() { "The enemies are attacking!" }
-                };
+
 
                 // Setup the specific ANTAGONIST monster if it is relevant here
                 if (phase == StoryGenerator.StoryPhase.End && !ctx.MainAntagonistEncounterCreated)
                 {
                     ctx.MainAntagonistEncounterCreated = true;
 
-                    // Main antagonist type
+                    // Add main antagonist monster
                     var bossType = ctx.StoryTemplate.AntagonistMonsterIsOneOf.GetRandomFromEnumerable(ctx.Random);                    
                     threatTest.AddMonster(new Monster((int)bossType) // TODO: limit boss type based on collections
                     {
                         dataName = ctx.TemplateContext.GetAntagonistName(),
-                        isLarge = true,
-                        isFearsome = true, // TODO: randomize these?
+                        isLarge = true,  // TODO: randomize these?
                         isArmored = true,
                         count = 1,
-                        defaultStats = true,
+                        defaultStats = true, // TODO: bit enhanced stats?
                         isEasy = true,
-                        isNormal = true,
+                        isNormal = true, // TODO: differences for different difficulty levels?
                         isHard = true
                     });
+
+                    // Token interaction flavor text
+                    threatTest.textBookData = CreateTextBook("Group of enemies are nearby");
+
+                    // Test main flavor text
+                    threatTest.eventBookData = CreateTextBook("The enemies are attacking!");
+                }
+                else
+                {
+                    // Token interaction flavor text
+                    threatTest.textBookData = CreateTextBook("Group of enemies are nearby");
+
+                    // Test main flavor text
+                    threatTest.eventBookData = CreateTextBook("The enemies are attacking!"); 
                 }
 
                 // Setup filler enemies
@@ -265,6 +260,14 @@ namespace JiME.Procedural.GenerationLogic
                 includedEnemies[(int)monster] = true;
             }
             return includedEnemies;
+        }
+
+        private static TextBookData CreateTextBook(string content)
+        {
+            return new TextBookData()
+            {
+                pages = new List<string>() { content }
+            };
         }
 
         #endregion

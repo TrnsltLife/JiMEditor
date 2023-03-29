@@ -41,6 +41,9 @@ namespace JiME.Procedural.StoryElements
         [JsonProperty]
         public Dictionary<StoryArchetype.Type, List<string>> ScenarioIntroductions { get; private set; }
 
+        [JsonProperty]
+        public Dictionary<string, List<ObjectiveFragmentInfo>> ScenarioObjectives { get; private set; }
+
         // TODO: public bool IsValidForCollections(IEnumerable<Collection>()) { Check if can be used with current collections }
         // TODO: Or "AdjustForCollections()" which would filter out extras
 
@@ -61,6 +64,18 @@ namespace JiME.Procedural.StoryElements
         {
             var text = ScenarioIntroductions[archetype].GetRandomFromEnumerable(r);
             return ProcessTextTemplate(text, r, tokenCtx);
+        }
+
+        /// <summary>
+        /// Generates reminder text and intro text for an objective
+        /// </summary>
+        public Tuple<string, string> GenerateObjectiveInformation(Random r, string storyFragment, TemplateContext tokenCtx)
+        {
+            var objectInfo = ScenarioObjectives[storyFragment].GetRandomFromEnumerable(r);
+            return Tuple.Create(
+                ProcessTextTemplate(objectInfo.Reminder, r, tokenCtx),
+                ProcessTextTemplate(objectInfo.IntroText, r, tokenCtx)
+            );
         }
 
         /// <summary>
@@ -218,6 +233,18 @@ namespace JiME.Procedural.StoryElements
                 var key = "names:" + KEYWORD_ANTAGONIST;
                 return PersistentTranslations[key]; // TODO: how to make sure this has been generated?
             }
+        }
+
+        /// <summary>
+        /// Info about 
+        /// </summary>
+        public class ObjectiveFragmentInfo
+        {
+            [JsonProperty]
+            public string Reminder { get; private set; }
+
+            [JsonProperty]
+            public string IntroText { get; private set; }
         }
 
         #endregion

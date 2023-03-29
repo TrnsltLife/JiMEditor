@@ -27,6 +27,63 @@
 				"OvercomingTheMonster": [
 					"{names:ANTAGONIST} the Orc Chieftain and his gang have been terrorizing {adjectives:BYSTANDER} settlement nearby. You need to investigate and drive the orcs out."
 				]
+			},
+			
+			"ScenarioObjectives": {
+				"FindInfoAboutTarget": [
+					{ 
+						"Reminder": "Find information about attackers", 
+						"IntroText": "The orcs have ravaged the area and you need to ask people for more information." 
+					}
+				], 
+				"InvestigateDestruction": [
+					{ 
+						"Reminder": "Find out what happened", 
+						"IntroText": "The destruction caused by the vile orcs is very sad. You need to investigate what happened here." 
+					}
+				],  
+				"TalkToSurvivors": [
+					{ 
+						"Reminder": "Talk to the survivors", 
+						"IntroText": "You came across some people who survived the orc raid. Investigate what happened there." 
+					}
+				],  
+				"FindTargetLocation": [
+					{ 
+						"Reminder": "Find the orc encampment", 
+						"IntroText": "Before confronting the orcs, we need to find out where {names:ANTAGONIST} is opereating from." 
+					}
+				],  
+				"FindWeaknessInTarget": [
+					{ 
+						"Reminder": "Find info about {names:ANTAGONIST}'s gang", 
+						"IntroText": "We need to put the gang to some disadvantage before confronting them." 
+					}
+				], 
+				"FindStrengthInSelf": [
+					{ 
+						"Reminder": "Prepare for confrontation", 
+						"IntroText": "We need to gain some advantage before confronting the gang." 
+					}
+				], 
+				"KillMonster": [
+					{ 
+						"Reminder": "Attack!", 
+						"IntroText": "Time has come, assault {names:ANTAGONIST}'s camp!" 
+					}
+				], 
+				"MonsterRetreats": [
+					{ 
+						"Reminder": "Attack!", 
+						"IntroText": "Time has come, assault {names:ANTAGONIST}'s camp!" 
+					}
+				], 
+				"ScoutOutTarget": [
+					{ 
+						"Reminder": "Scout out the encampment", 
+						"IntroText": "Get final look at the camp before assaulting." 
+					}
+				]
 			}
 		}
 	],
@@ -40,8 +97,8 @@
 			"TROLL": ["troll"]
 		},
 		"names": {
-			"HUMAN": ["TODO"],
-			"ELF": ["TODO"],
+			"HUMAN": ["Bill", "Bobby", "Bran", "Charlie", "Cliff", "Cris", "Dale", "Del", "Eddy", "Ernie", "Freddy", "Harry", "Herb", "Howie", "Kip", "Larry", "Leo", "Mat", "Morty", "Perry", "Rowlie"],
+			"ELF": ["Aegnor", "Aerandir ", "Amras", "Angrod ", "Aredhel", "Arminas", "Beleg", "Caranthir", "Celeborn", "Edrahil", "Elladan", "Elrohir", "Elrond ", "Elros", "Ereinion", "Erestor ", "Fingon ", "Finrod"],
 			"DWARF": [ "Anar", "Balin", "Beli", "Bifur", "Bláin", "Bofur", "Bombur", "Borin", "Burin", "Dáin", "Dori", "Durin", "Dwalin", "Farin", "Fíli", "Flói", "Frár", "Frerin", "Frór", "Fundin", "Gimli", "Ginar", "Glóin", "Gróin", "Grór", "Hanar", "Kíli", "Lófar", "Lóni", "Náin", "Náli", "Nár", "Nói", "Nori", "Óin", "Ónar", "Óri", "Póri", "Regin", "Thorin", "Thráin", "Thrór", "Vidar" ],
 			"HOBBIT": ["Adaldrida Cotton", "Adamanta Proudfoot", "Amaranth Bracegirdle", "Angelica Longholes", "Asphodel Brownlock", "Belba Cotton", "Bell Proudfoot", "Belladonna Bolger", "Berylla Bracegirdle", "Camellia Bolger", "Celandine Bracegirdle", "Chica Cotton", "Daisy Greenhand", "Diamond Burrows", "Donnamira Brownlock", "Dora Bolger", "Eglantine Took", "Elanor Gamgee", "Esmerelda Bolger", "Gilly Greenhand", "Goldilocks Bracegirdle", "Hanna Cotton", "Hilda Proudfoot", "Lily Burrows", "Linda Greenhand", "Lobelia Bolger", "Malva Burrows", "Marigold Whitfoot", "May Cotton", "Melilot Whitfoot", "Menegilda Maggot", "Mentha Whitfoot", "Mimosa Bracegirdle", "Mirabella Whitfoot", "Myrtle Smallburrow", "Pansy Maggot", "Pearl Longholes", "Largo Tunnelly", "Longo Longholes", "Lotho Smallburrow", "Madoc Boffin", "Marcho Smallburrow", "Marmadas Boffin", "Marmadoc Gamgee", "Marroc Sackville", "Meriadoc Proudfoot", "Merimac Bracegirdle", "Merimas Boffin", "Milo Maggot", "Minto Underhill", "Moro Gamgee", "Mosco Sackville", "Mungo Tunnelly", "Nob Maggot", "Odo Took", "Odovacar Tunnelly", "Olo Sackville", "Orgolas Underhill", "Otho Took", "Paladin Underhill", "Peregrin Boffin", "Polo Bolger", "Ponto Gamgee", "Porto Bolger", "Posco Brownlock", "Reginard Sackville", "Rendigar Sandyman", "Robin Brownlock", "Rorimac Sandyman", "Rudigar Boffin", "Rufus Proudfoot", "Sadoc Burrows", "Samwise Sandyman", "Sancho Brownlock", "Saradas Bolger", "Saradoc Gamgee", "Seredic Sackville", "Sigismond Boffin", "Tobold Longholes", "Togo Proudfoot", "Tolma Brownlock", "Tolman Burrows", "Wilcome Longholes", "Wilibald Maggot", "Will Greenhand"],
 			"ORC": ["Kofdukh", "Birbid", "Shergaurg", "Dricbaud", "Rigrot", "Orbash", "Auglodh", "Olge", "Auzo", "Urduth"],
