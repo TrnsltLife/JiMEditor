@@ -24,10 +24,9 @@ namespace JiME.Procedural.SimpleGenerator
         public StoryArchetype StoryArchetype { get; set; }
         public StoryTemplate StoryTemplate { get; set; }
 
-        /// <summary>
-        /// Token type used for bystanders found int the mission
-        /// </summary>
-        public PersonType SidestanderTokenType { get; set; }
+        public StoryTemplate.TemplateContext TemplateContext { get; set; }
+        public PersonType BystanderPersonTokenType { get; set; }
+        public bool MainAntagonistEncounterCreated { get; set; }
 
         public SimpleGeneratorContext(SimpleGeneratorParameters parameters)
         {

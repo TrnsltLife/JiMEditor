@@ -29,7 +29,7 @@ namespace JiME.Procedural.StoryElements
         #endregion
         #region Construction and fetching
         private static Dictionary<string, StoryFragment> s_fragments;
-
+           
         public static StoryFragment GetFragment(string name)
         {
             return s_fragments[name];

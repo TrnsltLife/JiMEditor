@@ -25,18 +25,19 @@ namespace JiME.Procedural.GenerationLogic
         /// </summary>
         public void FillInScenarioDetails()
         {
+            // Do some basic decisions
+            _ctx.TemplateContext = _ctx.StoryTemplate.PrepareTemplateContext(_ctx.Random);
+            _ctx.BystanderPersonTokenType = StoryTemplate.GetPersonType(_ctx.TemplateContext.SelectedBystanderRace);
+
             // Fill in basic scenario details
             _ctx.Scenario.scenarioName = _ctx.StoryTemplate.Name; // TODO: do better here
             _ctx.Scenario.specialInstructions = "";
             _ctx.Scenario.introBookData = new TextBookData("ScenarioIntroboook")
             {
-                pages = new List<string>() { "PLACEHOLDER INTROBOOK STUFF" }
+                pages = new List<string>() { _ctx.StoryTemplate.GenerateScenarioIntroduction(_ctx.Random, _ctx.StoryArchetype.Archetype, _ctx.TemplateContext) }
             };
             _ctx.Scenario.threatNotUsed = true; // TODO: ???
             _ctx.Scenario.shadowFear = 2;
-
-            // Do some basic decisions
-            _ctx.SidestanderTokenType = GeneratorUtils.GetRandomEnum<PersonType>(_ctx.Random, except: PersonType.None);
         }
         
         /// <summary>
@@ -133,7 +134,8 @@ namespace JiME.Procedural.GenerationLogic
                     mainFragmentForStoryPoint, 
                     secondaryFragmentsForStoryPoint, 
                     phaseLocation,
-                    randomPhaseTile);    
+                    randomPhaseTile,
+                    phase);    
             }
             
             // TODO: SIDE STORY points as well?

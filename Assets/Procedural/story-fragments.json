@@ -56,7 +56,7 @@
 			]
         },
 		{
-            "Name": "MonsterReThreats",
+            "Name": "MonsterRetreats",
 			"Comment": "",
             "Interactions": [ 
 				{ "Type": "Threat", "TokenHint": "Threat" }	

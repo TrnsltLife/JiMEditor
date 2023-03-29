@@ -28,7 +28,7 @@ namespace JiME.Procedural.GenerationLogic
             // TODO: rewards etc.
         }
 
-        public static void FillInStoryPoint(SimpleGenerator.SimpleGeneratorContext ctx, string startTrigger, List<string> endTriggers, string mainFragment, IEnumerable<string> secondaryFragments, string location, HexTile tile)
+        public static void FillInStoryPoint(SimpleGenerator.SimpleGeneratorContext ctx, string startTrigger, List<string> endTriggers, string mainFragment, IEnumerable<string> secondaryFragments, string location, HexTile tile, StoryGenerator.StoryPhase phase)
         {
             // TODO: handle multi-target stories better with more context, now we just do individual stories to each target (with different fragments)
             for (int i = 0; i < endTriggers.Count; i++)
@@ -42,15 +42,15 @@ namespace JiME.Procedural.GenerationLogic
                 switch (interactionInfo.Type)
                 {
                     case InteractionType.Dialog:
-                        CreateDialogInteraction(ctx, fragment, interactionInfo, startTrigger, endTriggers[i], location, tile);
+                        CreateDialogInteraction(ctx, fragment, interactionInfo, startTrigger, endTriggers[i], location, tile, phase);
                         break;
 
                     case InteractionType.StatTest:
-                        CreateStatTestInteraction(ctx, fragment, interactionInfo, startTrigger, endTriggers[i], location, tile);
+                        CreateStatTestInteraction(ctx, fragment, interactionInfo, startTrigger, endTriggers[i], location, tile, phase);
                         break;
 
                     case InteractionType.Threat:
-                        CreateThreatInteraction(ctx, fragment, interactionInfo, startTrigger, endTriggers[i], location, tile);
+                        CreateThreatInteraction(ctx, fragment, interactionInfo, startTrigger, endTriggers[i], location, tile, phase);
                         break;
 
                     default:
@@ -67,7 +67,8 @@ namespace JiME.Procedural.GenerationLogic
             string startTrigger,
             string endTrigger,
             string location,
-            HexTile tile)
+            HexTile tile,
+            StoryGenerator.StoryPhase phase)
         {
             // TODO: invent story elements from startTrigger to endTrigger based on fragment and other stuff
             AddTokenInteraction(ctx, tile, startTrigger, info, () =>
@@ -96,7 +97,8 @@ namespace JiME.Procedural.GenerationLogic
             string startTrigger,
             string endTrigger,
             string location,
-            HexTile tile)
+            HexTile tile,
+            StoryGenerator.StoryPhase phase)
         {
             // TODO: invent story elements from startTrigger to endTrigger based on fragment and other stuff
 
@@ -175,7 +177,8 @@ namespace JiME.Procedural.GenerationLogic
             string startTrigger,
             string endTrigger,
             string location,
-            HexTile tile)
+            HexTile tile,
+            StoryGenerator.StoryPhase phase)
         {
             // TODO: invent story elements from startTrigger to endTrigger based on fragment and other stuff
             // TODO: scale difficulty etc. properly
@@ -195,15 +198,32 @@ namespace JiME.Procedural.GenerationLogic
                     pages = new List<string>() { "The enemies are attacking!" }
                 };
 
-                // Setup specific enemies (bosses etc)
-                // TODO: setup based on story template and possibly randomize / scale
-                threatTest.AddMonster(PrepareBossMonster(MonsterType.OrcMarauder)); // TODO: other parameters?
+                // Setup the specific ANTAGONIST monster if it is relevant here
+                if (phase == StoryGenerator.StoryPhase.End && !ctx.MainAntagonistEncounterCreated)
+                {
+                    ctx.MainAntagonistEncounterCreated = true;
+
+                    // Main antagonist type
+                    var bossType = ctx.StoryTemplate.AntagonistMonsterIsOneOf.GetRandomFromEnumerable(ctx.Random);                    
+                    threatTest.AddMonster(new Monster((int)bossType) // TODO: limit boss type based on collections
+                    {
+                        dataName = ctx.TemplateContext.GetAntagonistName(),
+                        isLarge = true,
+                        isFearsome = true, // TODO: randomize these?
+                        isArmored = true,
+                        count = 1,
+                        defaultStats = true,
+                        isEasy = true,
+                        isNormal = true,
+                        isHard = true
+                    });
+                }
 
                 // Setup filler enemies
-                // TODO: setup based on story template and possibly randomize
-                //threatTest.difficultyBias = DifficultyBias.Medium;
-                //threatTest.basePoolPoints = 10;
-                //threatTest.includedEnemies = PrepareIncludedMonsters(MonsterType.GoblinScout, MonsterType.OrcHunter);
+                // TODO: limit antagonist helper types based on collections
+                threatTest.difficultyBias = DifficultyBias.Medium;
+                threatTest.basePoolPoints = 10;
+                threatTest.includedEnemies = PrepareIncludedMonsters(ctx.StoryTemplate.AntagonistHelperMonstersAreSomeOf.ToArray());
 
                 // Progress when threat has been defeated
                 threatTest.triggerDefeatedName = endTrigger;
@@ -225,28 +245,16 @@ namespace JiME.Procedural.GenerationLogic
             i.triggerName = "None"; // We must not set a starting trigger since this is triggered by a Token
             i.isTokenInteraction = true; // Needs to be token interaction so that it can be triggered by a token
             i.tokenType = info.TokenHint ?? TokenType.Search;
-            i.personType = ctx.SidestanderTokenType;
+            i.personType = ctx.BystanderPersonTokenType;
             ctx.Scenario.AddInteraction(i); // Add the trigger itself
 
             // Create token to trigger it
-            var token = new Token(info.TokenHint ?? TokenType.Search, ctx.SidestanderTokenType);
+            var token = new Token(info.TokenHint ?? TokenType.Search, ctx.BystanderPersonTokenType);
             // TODO:token position? 
             token.triggeredByName = startTrigger; // Only reveal the token when the correct objective has been activated    
             token.triggerName = i.dataName; // Token triggers the dialog
             // TODO: token flavor text?
             tile.tokenList.Add(token);
-        }
-
-        private static Monster PrepareBossMonster(MonsterType type)
-        {
-            return new Monster((int)type)
-            {
-                count = 1,
-                defaultStats = true,
-                isEasy = true,
-                isNormal = true,
-                isHard = true
-            };
         }
 
         private static bool[] PrepareIncludedMonsters(params MonsterType[] monsters)
