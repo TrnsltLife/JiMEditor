@@ -5,14 +5,14 @@
 			"Comment": "",
             "Interactions": [ 
 				{ "Type": "Dialog", "TokenHint": "Person" },
-				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Wit", "AltStatHint": "Wisdom", "StatTestType": "Cumulative" }
+				{ "Type": "StatTest", "TokenHint": "Search" }
 			]
         },
 		{
             "Name": "InvestigateDestruction",
 			"Comment": "",
             "Interactions": [ 
-				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Wit", "AltStatHint": "Wisdom", "StatTestType": "Cumulative" },
+				{ "Type": "StatTest", "TokenHint": "Search" },
 				{ "Type": "Threat", "TokenHint": "Search" }	
 			]
         },
@@ -21,7 +21,7 @@
 			"Comment": "",
             "Interactions": [ 
 				{ "Type": "Dialog", "TokenHint": "Person" },
-				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Wit", "AltStatHint": "Wisdom", "StatTestType": "OneTry" }
+				{ "Type": "StatTest", "TokenHint": "Search" }
 			]
         },
 		{
@@ -29,7 +29,7 @@
 			"Comment": "",
             "Interactions": [ 
 				{ "Type": "Dialog", "TokenHint": "Person" },
-				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Agility", "StatTestType": "OneTry" }	
+				{ "Type": "StatTest", "TokenHint": "Search" }	
 			]
         },
 		{
@@ -37,7 +37,7 @@
 			"Comment": "",
             "Interactions": [ 
 				{ "Type": "Dialog", "TokenHint": "Person" },
-				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Wit", "AltStatHint": "Might", "StatTestType": "Cumulative" }
+				{ "Type": "StatTest", "TokenHint": "Search" }
 			]
         },
 		{
@@ -45,7 +45,7 @@
 			"Comment": "",
             "Interactions": [ 
 				{ "Type": "Dialog", "TokenHint": "Person" },
-				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Spirit", "StatTestType": "Retryable" }	
+				{ "Type": "StatTest", "TokenHint": "Search" }	
 			]
         },
 		{
@@ -66,7 +66,7 @@
             "Name": "ScoutOutTarget",
 			"Comment": "",
             "Interactions": [ 
-				{ "Type": "StatTest", "TokenHint": "Search", "StatHint": "Agility", "AltStatHint": "Spirit", "StatTestType": "Retryable" }	
+				{ "Type": "StatTest", "TokenHint": "Search" }	
 			]
         }
     ]

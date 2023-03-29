@@ -11,8 +11,6 @@ namespace JiME.Procedural.SimpleGenerator
         public Scenario Scenario { get; private set; }
         public Random Random { get; private set; }
 
-
-
         private int _nextTriggerId = 1;
 
         /// <summary>
@@ -61,7 +59,7 @@ namespace JiME.Procedural.SimpleGenerator
         {
             Scenario = new Scenario("SimpleScenario");
             Scenario.scenarioGUID = Guid.NewGuid();
-            //Scenario.campaignGUID = Guid.NewGuid();
+            //Scenario.campaignGUID = Guid.NewGuid(); Not creating a campaign (yet).
             Scenario.scenarioTypeJourney = true;
             Scenario.projectType = ProjectType.Standalone;
             Scenario.fileVersion = Utils.formatVersion;

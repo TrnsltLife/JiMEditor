@@ -3,14 +3,17 @@
 		"They are meant to be re-usable in multiple different Story Archetypes and Story Fragments.",
 		"The file also contains names for different races and those can be randomized in to story texts.",
 		"The scenario will also have randomized Bystander type randomized, note that only 'goodguys' have valid tokens in game",
-		"Bystander names can be randomized with {names:BYSTANDER}",
 		"ScenarioIntroductions are mapped per story archetype",
-		"Following token keys can be used in the texts",
-		"{names:ORC}            Gets a random ORC name from the names below",
-		"{names:BYSTANDER}      Gets a random name for the race that has been selected as the BYSTANDER race",
-		"{names:ANTAGONIST}     Gets a specific name that has been selected as name for the antagonist",
-		"{adjectives:ORC}       Gets the specific adjective for the race",
-		"{adjectives:BYSTANDER} Gets a random name for the race that has been selected as the BYSTANDER race"
+		"Following token keys can be used in the texts, e.g.",
+		"  {names:ORC}            Gets a random ORC name from the names below",
+		"  {names:BYSTANDER}      Gets a random name for the race that has been selected as the BYSTANDER race",
+		"  {names:ANTAGONIST}     Gets a specific name that has been selected as name for the antagonist",
+		"  {adjectives:ORC}       Gets the specific adjective for the race",
+		"  {adjectives:BYSTANDER} Gets a random name for the race that has been selected as the BYSTANDER race",
+		"For StatTest interactions, StatTestType defines what texts are needed (beside standard token and action texts)",
+		"  OneTry		Requires SuccessText and FailureText",
+		"  Retryable    Requires SuccessText",
+		"  Cumulative   Requires SuccessText and ProgressText"
 		
 	],
 	"templates":[
@@ -25,84 +28,246 @@
 			
 			"ScenarioIntroductions": {
 				"OvercomingTheMonster": [
-					"{names:ANTAGONIST} the Orc Chieftain and his gang have been terrorizing {adjectives:BYSTANDER} settlement nearby. You need to investigate and drive the orcs out."
+					"{names:ANTAGONIST} the Orc Chieftain and his gang have been terrorizing {adjectivesWithPreposition:BYSTANDER} settlement nearby. You need to investigate and drive the orcs out."
 				]
 			},
 			
 			"ScenarioObjectives": {
-				"FindInfoAboutTarget": [
-					{ 
-						"Reminder": "Find information about attackers", 
-						"IntroText": "The orcs have ravaged the area and you need to ask people for more information." 
-					}
-				], 
-				"InvestigateDestruction": [
-					{ 
-						"Reminder": "Find out what happened", 
-						"IntroText": "The destruction caused by the vile orcs is very sad. You need to investigate what happened here." 
-					}
-				],  
-				"TalkToSurvivors": [
-					{ 
-						"Reminder": "Talk to the survivors", 
-						"IntroText": "You came across some people who survived the orc raid. Investigate what happened there." 
-					}
-				],  
-				"FindTargetLocation": [
-					{ 
-						"Reminder": "Find the orc encampment", 
-						"IntroText": "Before confronting the orcs, we need to find out where {names:ANTAGONIST} is opereating from." 
-					}
-				],  
-				"FindWeaknessInTarget": [
-					{ 
-						"Reminder": "Find info about {names:ANTAGONIST}'s gang", 
-						"IntroText": "We need to put the gang to some disadvantage before confronting them." 
-					}
-				], 
-				"FindStrengthInSelf": [
-					{ 
-						"Reminder": "Prepare for confrontation", 
-						"IntroText": "We need to gain some advantage before confronting the gang." 
-					}
-				], 
-				"KillMonster": [
-					{ 
-						"Reminder": "Attack!", 
-						"IntroText": "Time has come, assault {names:ANTAGONIST}'s camp!" 
-					}
-				], 
-				"MonsterRetreats": [
-					{ 
-						"Reminder": "Attack!", 
-						"IntroText": "Time has come, assault {names:ANTAGONIST}'s camp!" 
-					}
-				], 
-				"ScoutOutTarget": [
-					{ 
-						"Reminder": "Scout out the encampment", 
-						"IntroText": "Get final look at the camp before assaulting." 
-					}
+				"FindInfoAboutTarget": 		[ { "Reminder":  "Find information about attackers", 
+				                                "IntroText": "The orcs have ravaged the area and you need to ask people for more information." } ],
+				"InvestigateDestruction": 	[ { "Reminder":  "Find out what happened", 
+				                                "IntroText": "The destruction caused by the vile orcs is very sad. You need to investigate what happened here." } ],
+				"TalkToSurvivors": 			[ { "Reminder":  "Talk to the survivors", 
+				                                "IntroText": "You came across some people who survived the orc raid. Investigate what happened there." } ],
+				"FindTargetLocation": 		[ { "Reminder":  "Find the orc encampment",  
+				                                "IntroText": "Before confronting the orcs, we need to find out where {names:ANTAGONIST} is opereating from." } ],
+				"FindWeaknessInTarget": 	[ { "Reminder":  "Find info about {names:ANTAGONIST}'s gang",  
+				                                "IntroText": "We need to put the gang to some disadvantage before confronting them." } ],
+				"FindStrengthInSelf": 		[ { "Reminder":  "Prepare for confrontation",  
+				                                "IntroText": "We need to gain some advantage before confronting the gang." } ],
+				"KillMonster": 				[ { "Reminder":  "Attack!",  
+				                                "IntroText": "Time has come, assault {names:ANTAGONIST}'s camp!" } ],
+				"MonsterRetreats": 			[ { "Reminder":  "Attack!",  
+				                                "IntroText": "Time has come, assault {names:ANTAGONIST}'s camp!" } ],
+				"ScoutOutTarget": 			[ { "Reminder":  "Scout out the encampment",  
+				                                "IntroText": "Get final look at the camp before assaulting." } ]
+			},
+			
+			"DialogInteractions": {
+				"FindInfoAboutTarget": [ 
+					{
+						"ActionText": "Talk to {adjectivesWithPreposition:BYSTANDER} woman.",
+						"Choice1Text": "What happened?",
+						"Choice1Triggers": false,
+						"Result1Text": "The orcs attacked out village and killed many people.",
+						"Choice2Text": "When was it?",
+						"Choice2Triggers": false,
+						"Result2Text": "It happened only two days ago.",
+						"Choice3Text": "Where are they?",
+						"Choice3Triggers": true,
+						"Result3Text": "I don't know. Their trail can be easily seen there.",
+						"PersistentText": "Go and kill the bastards!"
+					} 
+				],
+				"InvestigateDestruction": [],
+				"TalkToSurvivors": [ 
+					{
+						"ActionText": "One of the survivors stops for a moment.",
+						"Choice1Text": "What happened?",
+						"Choice1Triggers": true,
+						"Result1Text": "{names:ANTAGONIST} and his band of orcs ransacked our home!",
+						"Choice2Text": "How are you?",
+						"Choice2Triggers": false,
+						"Result2Text": "We've lost everything. What do you think?",
+						"Choice3Text": "",
+						"Choice3Triggers": false,
+						"Result3Text": "",
+						"PersistentText": ""
+					} 
+				],
+				"FindTargetLocation": [ 
+					{
+						"ActionText": "You caught a glimbse of {adjectivesWithPreposition:BYSTANDER} child hiding nearby.",
+						"Choice1Text": "Are you OK?",
+						"Choice1Triggers": false,
+						"Result1Text": "I'm scared!",
+						"Choice2Text": "Where they came from?",
+						"Choice2Triggers": true,
+						"Result2Text": "Yeah, I saw them coming from there.",
+						"Choice3Text": "",
+						"Choice3Triggers": false,
+						"Result3Text": "",
+						"PersistentText": ""
+					} 
+				],
+				"FindWeaknessInTarget": [ 
+					{
+						"ActionText": "You see an old man standing nearby.",
+						"Choice1Text": "Who are you?",
+						"Choice1Triggers": false,
+						"Result1Text": "It does not matter who I am. Only what I can tell you.",
+						"Choice2Text": "Can you help me?",
+						"Choice2Triggers": true,
+						"Result2Text": "Yes, know that their leader is afraid of the name Elbereth.",
+						"Choice3Text": "",
+						"Choice3Triggers": false,
+						"Result3Text": "",
+						"PersistentText": ""
+					} 
+				],
+				"FindStrengthInSelf": [ 
+					{
+						"ActionText": "You see {adjectivesWithPreposition:BYSTANDER} maid standing in the shadows. She asks you what could help?",
+						"Choice1Text": "I'm afraid",
+						"Choice1Triggers": true,
+						"Result1Text": "The maid tells a story to sooth your nerves. You or nearaby hero may discard 2 fear.",
+						"Choice2Text": "I'm hurt",
+						"Choice2Triggers": true,
+						"Result2Text": "The maid heals your wounds. You or neadby hero may discard 2 damage.",
+						"Choice3Text": "I'm ugly",
+						"Choice3Triggers": true,
+						"Result3Text": "She gives you the trinket \"Brooch\". You or a nearby hero may equip it immediately.",
+						"PersistentText": ""
+					} 
+				],
+				"KillMonster": [],
+				"MonsterRetreats": [],
+				"ScoutOutTarget": []
+			},
+			
+			"StatTestInteractions": {
+				"FindInfoAboutTarget": [ 
+					{
+						"StatTestType": "Retryable",
+						"StatHint": "Wit",
+						"AltStatHint": "",
+						"SuccessValue": 4,
+						"TokenText": "Search clues",
+						"ActionText": "Your search for clues about {names:ANTAGONIST}'s recent visit. This can take a while.",
+						"SuccessText": "You manage to gather enough clues to continue the search.",
+						"ProgressText": "NOT NEEDED",
+						"FailureText": "NOT NEEDED"
+					} 
+				],
+				"InvestigateDestruction": [ 
+					{
+						"StatTestType": "OneTry",
+						"StatHint": "Might",
+						"AltStatHint": "",
+						"SuccessValue": 3,
+						"TokenText": "Barn has collapsed after a raid. Search trough the wreckage?",
+						"ActionText": "You search through the ruins and come across a corpse under part of the collapsed wall. You try to break the body free.",
+						"SuccessText": "You manage to free the body. It is a body of {adjectivesWithPreposition:BYSTANDER} maiden killed in the attack.",
+						"ProgressText": "NOT NEEDED",
+						"FailureText": "You don't manage to free the body."
+					} 
+				],
+				"TalkToSurvivors": [ 
+					{
+						"StatTestType": "Cumulative",
+						"StatHint": "Agility",
+						"AltStatHint": "",
+						"SuccessValue": 10,
+						"TokenText": "You saw some people hiding nearby. Search for them?",
+						"ActionText": "You try to search for the people.",
+						"SuccessText": "You found the {adjectives:BYSTANDER} survivors and they tell you about the horrors they faced.",
+						"ProgressText": "Not yet, keep looking...",
+						"FailureText": "NOT NEEDED"
+					} 
+				],
+				"FindTargetLocation": [ 
+					{
+						"StatTestType": "Cumulative",
+						"StatHint": "Wisdom",
+						"AltStatHint": "Spirit",
+						"SuccessValue": 14,
+						"TokenText": "You must find the orc camp before they get away.",
+						"ActionText": "You search for the orcs.",
+						"SuccessText": "You found the camp!",
+						"ProgressText": "Keep looking...",
+						"FailureText": "NOT NEEDED"
+					} 
+				],
+				"FindWeaknessInTarget": [ 
+					{
+						"StatTestType": "OneTry",
+						"StatHint": "Spirit",
+						"AltStatHint": "",
+						"SuccessValue": 4,
+						"TokenText": "Search for information?",
+						"ActionText": "You find some {adjectives:BYSTANDER} refugees and try to find out what they know from the shocked people.",
+						"SuccessText": "The refugees tell you that the {names:ANTAGONIST} is mortally afraid of Morgai flies.",
+						"ProgressText": "NOT NEEDED",
+						"FailureText": "The refugees cannot tell you anything new."
+					} 
+				],
+				"FindStrengthInSelf": [ 
+					{
+						"StatTestType": "OneTry",
+						"StatHint": "Wild",
+						"AltStatHint": "",
+						"SuccessValue": 4,
+						"TokenText": "Search for rations?",
+						"ActionText": "You try to scavenge for some extra rations from the wild.",
+						"SuccessText": "You found some rations. You gain the trinket \"Extra Rations\". You or a nearby hero may equip it immediately.",
+						"ProgressText": "NOT NEEDED",
+						"FailureText": "You did not find anything."
+					} 
+				],
+				"KillMonster": [],
+				"MonsterRetreats": [],
+				"ScoutOutTarget": [ 
+					{
+						"StatTestType": "OneTry",
+						"StatHint": "Agility",
+						"AltStatHint": "",
+						"SuccessValue": 3,
+						"TokenText": "Take a look inside the camp?",
+						"ActionText": "You sneak towards the orc camp and try to remain quiet.",
+						"SuccessText": "You managed to take a look at {names:ANTAGONIST}'s camp and can now plan your attack.",
+						"ProgressText": "NOT NEEDED",
+						"FailureText": "You didn't manage to sneak in undetected. You crawl back and prepare to attack anyway."
+					} 
 				]
+			},
+			
+			"ThreatInteractions": [{
+				"AntagonistTokenText": "Huge orc with nasty scars is sitting  by the fire. Other smaller orcs hang around nearby.",
+				"AntagonistActionText": "The huge orc shouts: 'Me {names:ANTAGONIST}! {names:ANTAGONIST} SMASH!' and charges towards you.",
+				"NormalTokenText": "You hear rustling nearby -- the enemies are near!",
+				"NormalActionText": "Small band of orcs and goblins ambush you!",
+			}],
+			
+			"Resolutions": {
+				"KillMonster": ["You cleave {names:ANTAGONIST}'s head off and the others scutter away. Peace is restored!"],
+				"MonsterRetreats": ["You smite {names:ANTAGONIST} to the ground but suddenly all the lights blow out. You hear rough cry 'Me {names:ANTAGONIST}! Smash you next time! Peace is restored for now.'"]
 			}
 		}
 	],
 	"tokens": {
 		"adjectives": {
-			"HUMAN": ["human"],
-			"ELF": ["elven"],
-			"DWARF": ["dwarven"],
+			"HUMAN":  ["human"],
+			"ELF":    ["elven"],
+			"DWARF":  ["dwarven"],
 			"HOBBIT": ["hobbit"],
-			"ORC": ["orcish"],
-			"TROLL": ["troll"]
+			"ORC":    ["orcish"],
+			"TROLL":  ["troll"]
+		},
+		"adjectivesWithPreposition": {
+			"HUMAN":  ["a human"],
+			"ELF":    ["an elven"],
+			"DWARF":  ["a dwarven"],
+			"HOBBIT": ["a hobbit"],
+			"ORC":    ["an orcish"],
+			"TROLL":  ["a troll"]
 		},
 		"names": {
-			"HUMAN": ["Bill", "Bobby", "Bran", "Charlie", "Cliff", "Cris", "Dale", "Del", "Eddy", "Ernie", "Freddy", "Harry", "Herb", "Howie", "Kip", "Larry", "Leo", "Mat", "Morty", "Perry", "Rowlie"],
-			"ELF": ["Aegnor", "Aerandir ", "Amras", "Angrod ", "Aredhel", "Arminas", "Beleg", "Caranthir", "Celeborn", "Edrahil", "Elladan", "Elrohir", "Elrond ", "Elros", "Ereinion", "Erestor ", "Fingon ", "Finrod"],
-			"DWARF": [ "Anar", "Balin", "Beli", "Bifur", "Bláin", "Bofur", "Bombur", "Borin", "Burin", "Dáin", "Dori", "Durin", "Dwalin", "Farin", "Fíli", "Flói", "Frár", "Frerin", "Frór", "Fundin", "Gimli", "Ginar", "Glóin", "Gróin", "Grór", "Hanar", "Kíli", "Lófar", "Lóni", "Náin", "Náli", "Nár", "Nói", "Nori", "Óin", "Ónar", "Óri", "Póri", "Regin", "Thorin", "Thráin", "Thrór", "Vidar" ],
+			"HUMAN":  ["Bill", "Bobby", "Bran", "Charlie", "Cliff", "Cris", "Dale", "Del", "Eddy", "Ernie", "Freddy", "Harry", "Herb", "Howie", "Kip", "Larry", "Leo", "Mat", "Morty", "Perry", "Rowlie"],
+			"ELF":    ["Aegnor", "Aerandir ", "Amras", "Angrod ", "Aredhel", "Arminas", "Beleg", "Caranthir", "Celeborn", "Edrahil", "Elladan", "Elrohir", "Elrond ", "Elros", "Ereinion", "Erestor ", "Fingon ", "Finrod"],
+			"DWARF":  [ "Anar", "Balin", "Beli", "Bifur", "Bláin", "Bofur", "Bombur", "Borin", "Burin", "Dáin", "Dori", "Durin", "Dwalin", "Farin", "Fíli", "Flói", "Frár", "Frerin", "Frór", "Fundin", "Gimli", "Ginar", "Glóin", "Gróin", "Grór", "Hanar", "Kíli", "Lófar", "Lóni", "Náin", "Náli", "Nár", "Nói", "Nori", "Óin", "Ónar", "Óri", "Póri", "Regin", "Thorin", "Thráin", "Thrór", "Vidar" ],
 			"HOBBIT": ["Adaldrida Cotton", "Adamanta Proudfoot", "Amaranth Bracegirdle", "Angelica Longholes", "Asphodel Brownlock", "Belba Cotton", "Bell Proudfoot", "Belladonna Bolger", "Berylla Bracegirdle", "Camellia Bolger", "Celandine Bracegirdle", "Chica Cotton", "Daisy Greenhand", "Diamond Burrows", "Donnamira Brownlock", "Dora Bolger", "Eglantine Took", "Elanor Gamgee", "Esmerelda Bolger", "Gilly Greenhand", "Goldilocks Bracegirdle", "Hanna Cotton", "Hilda Proudfoot", "Lily Burrows", "Linda Greenhand", "Lobelia Bolger", "Malva Burrows", "Marigold Whitfoot", "May Cotton", "Melilot Whitfoot", "Menegilda Maggot", "Mentha Whitfoot", "Mimosa Bracegirdle", "Mirabella Whitfoot", "Myrtle Smallburrow", "Pansy Maggot", "Pearl Longholes", "Largo Tunnelly", "Longo Longholes", "Lotho Smallburrow", "Madoc Boffin", "Marcho Smallburrow", "Marmadas Boffin", "Marmadoc Gamgee", "Marroc Sackville", "Meriadoc Proudfoot", "Merimac Bracegirdle", "Merimas Boffin", "Milo Maggot", "Minto Underhill", "Moro Gamgee", "Mosco Sackville", "Mungo Tunnelly", "Nob Maggot", "Odo Took", "Odovacar Tunnelly", "Olo Sackville", "Orgolas Underhill", "Otho Took", "Paladin Underhill", "Peregrin Boffin", "Polo Bolger", "Ponto Gamgee", "Porto Bolger", "Posco Brownlock", "Reginard Sackville", "Rendigar Sandyman", "Robin Brownlock", "Rorimac Sandyman", "Rudigar Boffin", "Rufus Proudfoot", "Sadoc Burrows", "Samwise Sandyman", "Sancho Brownlock", "Saradas Bolger", "Saradoc Gamgee", "Seredic Sackville", "Sigismond Boffin", "Tobold Longholes", "Togo Proudfoot", "Tolma Brownlock", "Tolman Burrows", "Wilcome Longholes", "Wilibald Maggot", "Will Greenhand"],
-			"ORC": ["Kofdukh", "Birbid", "Shergaurg", "Dricbaud", "Rigrot", "Orbash", "Auglodh", "Olge", "Auzo", "Urduth"],
-			"TROLL": ["Bert", "Tom", "William"]
+			"ORC":    ["Kofdukh", "Birbid", "Shergaurg", "Dricbaud", "Rigrot", "Orbash", "Auglodh", "Olge", "Auzo", "Urduth"],
+			"TROLL":  ["Bert", "Tom", "William"]
 		}
 	}
 	

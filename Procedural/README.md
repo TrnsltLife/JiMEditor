@@ -7,7 +7,7 @@
 - First playtesting
   - (DONE) Implement story generator basic skeleton that outputs a Scenario that can be clicked through in the Companion App
   - (DONE) Implement more interactions to StoryGenerator
-  - Implement first StoryTemplate to give flavor to the story (and fill in Objective details and StoryPoints with those)
+  - (DONE) Implement first StoryTemplate to give flavor to the story (and fill in Objective details and StoryPoints with those)
   - Implement Threat track generation
   - Implement monster activations and random terrain interactions
   - Lots of smaller TODO's that need to  be checked
@@ -20,6 +20,7 @@
  - Implement even more StoryTemplates (with help of others?)
  - Take Scenario difficulty level in to account
  - Make starting level adjustable
+ - Add rewards both in middle of scenario and in the end
  
 - Far in the future
  - Split generator logic to also be part of the Companion App

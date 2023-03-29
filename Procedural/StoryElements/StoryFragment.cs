@@ -116,43 +116,9 @@ namespace JiME.Procedural.StoryElements
 
             [JsonProperty]
             public TokenType? TokenHint { get; private set; }
-
-            /// <summary>
-            /// Used with StatTest
-            /// </summary>
-            [JsonProperty]
-            public Ability? StatHint { get; private set; }
-                       
-            /// <summary>
-            /// Used with StatTest
-            /// </summary>
-            [JsonProperty]
-            public Ability? AltStatHint { get; private set; }
-
-            /// <summary>
-            /// Used with StatTest
-            /// </summary>
-            [JsonProperty]
-            public StatTestType StatTestType { get; private set; }
         }
 
-        public enum StatTestType
-        {
-            /// <summary>
-            /// Test can only be tried once. If it fails a fail is triggered.
-            /// </summary>
-            OneTry,
 
-            /// <summary>
-            /// Test can be tried multiple times and cannot fail.
-            /// </summary>
-            Retryable,
-
-            /// <summary>
-            /// Test can be tried multiple times and successes are added until goal is reached.
-            /// </summary>
-            Cumulative
-        }
 
         #endregion
     }

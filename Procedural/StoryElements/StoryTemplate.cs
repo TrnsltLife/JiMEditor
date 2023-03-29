@@ -13,6 +13,9 @@ using System.Text.RegularExpressions;
 
 namespace JiME.Procedural.StoryElements
 {
+    // TODO: consider moving story templates each to their own file
+    // TODO: consider how templates could be more generic? could they actually serve more than one archetype?
+
     /// <summary>
     /// Gives context and surroundings to the story
     /// Holds information on one single coherent storyline with multiple solutions to each StoryPoint.
@@ -38,11 +41,23 @@ namespace JiME.Procedural.StoryElements
         [JsonProperty]
         public List<RaceEnum> BystandersAreOneOf { get; private set; }
 
-        [JsonProperty]
+        [JsonProperty]  // TODO: We might need to make each template match only single archetype to keep defining the template texts reasonable. Let's see
         public Dictionary<StoryArchetype.Type, List<string>> ScenarioIntroductions { get; private set; }
 
         [JsonProperty]
-        public Dictionary<string, List<ObjectiveFragmentInfo>> ScenarioObjectives { get; private set; }
+        public Dictionary<string, List<ObjectiveInfo>> ScenarioObjectives { get; private set; }
+
+        [JsonProperty]
+        public Dictionary<string, List<DialogInteractionInfo>> DialogInteractions { get; private set; }
+
+        [JsonProperty]
+        public Dictionary<string, List<StatTestInteractionInfo>> StatTestInteractions { get; private set; }
+
+        [JsonProperty]
+        public List<ThreatInteractionInfo> ThreatInteractions { get; private set; }
+
+        [JsonProperty]
+        public Dictionary<string, List<string>> Resolutions { get; private set; }
 
         // TODO: public bool IsValidForCollections(IEnumerable<Collection>()) { Check if can be used with current collections }
         // TODO: Or "AdjustForCollections()" which would filter out extras
@@ -69,13 +84,75 @@ namespace JiME.Procedural.StoryElements
         /// <summary>
         /// Generates reminder text and intro text for an objective
         /// </summary>
-        public Tuple<string, string> GenerateObjectiveInformation(Random r, string storyFragment, TemplateContext tokenCtx)
+        public ObjectiveInfo GenerateObjectiveInformation(Random r, string storyFragment, TemplateContext tokenCtx)
         {
             var objectInfo = ScenarioObjectives[storyFragment].GetRandomFromEnumerable(r);
-            return Tuple.Create(
-                ProcessTextTemplate(objectInfo.Reminder, r, tokenCtx),
-                ProcessTextTemplate(objectInfo.IntroText, r, tokenCtx)
-            );
+            return new ObjectiveInfo()
+            {
+                Reminder = ProcessTextTemplate(objectInfo.Reminder, r, tokenCtx),
+                IntroText = ProcessTextTemplate(objectInfo.IntroText, r, tokenCtx)
+            };
+        }
+
+        public DialogInteractionInfo GenerateDialogInteractionInfo(Random r, string storyFragment, TemplateContext tokenCtx)
+        {
+            var info = DialogInteractions[storyFragment].GetRandomFromEnumerable(r);
+            return new DialogInteractionInfo()
+            {
+                ActionText = ProcessTextTemplate(info.ActionText, r, tokenCtx),
+                Choice1Text = ProcessTextTemplate(info.Choice1Text, r, tokenCtx),
+                Choice1Triggers = info.Choice1Triggers,
+                Result1Text = ProcessTextTemplate(info.Result1Text, r, tokenCtx),
+                Choice2Text = ProcessTextTemplate(info.Choice2Text, r, tokenCtx),
+                Choice2Triggers = info.Choice2Triggers,
+                Result2Text = ProcessTextTemplate(info.Result2Text, r, tokenCtx),
+                Choice3Text = ProcessTextTemplate(info.Choice3Text, r, tokenCtx),
+                Choice3Triggers = info.Choice3Triggers,
+                Result3Text = ProcessTextTemplate(info.Result3Text, r, tokenCtx),
+                PersistentText = ProcessTextTemplate(info.PersistentText, r, tokenCtx),
+            };
+        }
+
+        public StatTestInteractionInfo GenerateStatTestInteractionInfo(Random r, string storyFragment, TemplateContext tokenCtx)
+        {
+            var info = StatTestInteractions[storyFragment].GetRandomFromEnumerable(r);
+            return new StatTestInteractionInfo()
+            {
+                StatTestType = info.StatTestType,
+                StatHint = info.StatHint,
+                AltStatHint = info.AltStatHint,
+                SuccessValue = info.SuccessValue,
+                TokenText = ProcessTextTemplate(info.TokenText, r, tokenCtx),
+                ActionText = ProcessTextTemplate(info.ActionText, r, tokenCtx),
+                SuccessText = ProcessTextTemplate(info.SuccessText, r, tokenCtx),
+                ProgressText = ProcessTextTemplate(info.ProgressText, r, tokenCtx),
+                FailureText = ProcessTextTemplate(info.FailureText, r, tokenCtx)
+            };
+        }
+
+        public ThreatInteractionInfo GenerateThreatInteractionInfo(Random r, string storyFragment, TemplateContext tokenCtx)
+        {
+            var info = ThreatInteractions.GetRandomFromEnumerable(r);
+            return new ThreatInteractionInfo()
+            {
+                AntagonistTokenText = ProcessTextTemplate(info.AntagonistTokenText, r, tokenCtx),
+                AntagonistActionText = ProcessTextTemplate(info.AntagonistActionText, r, tokenCtx),
+                NormalTokenText = ProcessTextTemplate(info.NormalTokenText, r, tokenCtx),
+                NormalActionText = ProcessTextTemplate(info.NormalActionText, r, tokenCtx)
+            };
+        }
+
+        public string GenerateResolutionText(Random r, string lastStoryFragment, TemplateContext tokenCtx)
+        {
+            if (Resolutions.ContainsKey(lastStoryFragment))
+            {
+                var text = Resolutions[lastStoryFragment].GetRandomFromEnumerable(r);
+                return ProcessTextTemplate(text, r, tokenCtx);
+            }
+            else
+            {
+                return "Template: '" + Name + "' Missing resolution text for " + lastStoryFragment;
+            }
         }
 
         /// <summary>
@@ -83,6 +160,11 @@ namespace JiME.Procedural.StoryElements
         /// </summary>
         private string ProcessTextTemplate(string text, Random r, TemplateContext tokenCtx)
         {
+            if (text == null)
+            {
+                return null;
+            }
+
             var d = new Dictionary<string, string>(); // <-- keep track of already translated entities and re-use them
             return Regex.Replace(text, "\\{.*?\\}", match =>
             {
@@ -235,16 +317,121 @@ namespace JiME.Procedural.StoryElements
             }
         }
 
-        /// <summary>
-        /// Info about 
-        /// </summary>
-        public class ObjectiveFragmentInfo
+        public class ObjectiveInfo
         {
             [JsonProperty]
-            public string Reminder { get; private set; }
+            public string Reminder { get; set; }
 
             [JsonProperty]
-            public string IntroText { get; private set; }
+            public string IntroText { get; set; }
+        }
+
+        public class DialogInteractionInfo
+        {
+            [JsonProperty]
+            public string ActionText { get; set; }
+
+            [JsonProperty]
+            public string Choice1Text { get; set; }
+
+            [JsonProperty]
+            public bool Choice1Triggers { get; set; }
+
+            [JsonProperty]
+            public string Result1Text { get; set; }
+
+            [JsonProperty]
+            public string Choice2Text { get; set; }
+
+            [JsonProperty]
+            public bool Choice2Triggers { get; set; }
+
+            [JsonProperty]
+            public string Result2Text { get; set; }
+
+            [JsonProperty]
+            public string Choice3Text { get; set; }
+
+            [JsonProperty]
+            public bool Choice3Triggers { get; set; }
+
+            [JsonProperty]
+            public string Result3Text { get; set; }
+
+            [JsonProperty]
+            public string PersistentText { get; set; }
+        }
+
+        public class StatTestInteractionInfo
+        {
+            [JsonProperty]
+            public string TokenText { get; set; }
+
+            [JsonProperty]
+            public string ActionText { get; set; }
+
+            [JsonProperty]
+            public int SuccessValue { get; set; }
+
+            [JsonProperty]
+            public string SuccessText { get; set; }
+
+            [JsonProperty]
+            public string ProgressText { get; set; }
+
+            [JsonProperty]
+            public string FailureText { get; set; }
+
+            /// <summary>
+            /// Used with StatTest
+            /// </summary>
+            [JsonProperty]
+            public Ability StatHint { get; set; }
+
+            /// <summary>
+            /// Used with StatTest (OPTIONAL)
+            /// </summary>
+            [JsonProperty]
+            public Ability? AltStatHint { get; set; }
+
+            /// <summary>
+            /// Used with StatTest
+            /// </summary>
+            [JsonProperty]
+            public TypeEnum StatTestType { get; set; }
+
+            public enum TypeEnum
+            {
+                /// <summary>
+                /// Test can only be tried once. If it fails a fail is triggered.
+                /// </summary>
+                OneTry,
+
+                /// <summary>
+                /// Test can be tried multiple times and cannot fail.
+                /// </summary>
+                Retryable,
+
+                /// <summary>
+                /// Test can be tried multiple times and successes are added until goal is reached.
+                /// </summary>
+                Cumulative
+            }
+        }
+
+        public class ThreatInteractionInfo
+        {
+            [JsonProperty]
+            public string AntagonistTokenText { get; set; }
+
+            [JsonProperty]
+            public string AntagonistActionText { get; set; }
+
+            [JsonProperty]
+            public string NormalTokenText { get; set; }
+
+            [JsonProperty]
+            public string NormalActionText { get; set; }
         }
 
         #endregion

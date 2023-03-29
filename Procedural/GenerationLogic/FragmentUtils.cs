@@ -8,6 +8,8 @@ namespace JiME.Procedural.GenerationLogic
 {
     static class FragmentUtils
     {
+        // TODO: some way to override token types from the StoryTemplate would be nice  
+
         public static void FillInObjective(SimpleGenerator.SimpleGeneratorContext ctx, Objective o, string mainStoryPoint, IEnumerable<string> secondaryStoryPoints, string phaseLocation)
         {
             // Switch the dataName to help debugging
@@ -21,9 +23,17 @@ namespace JiME.Procedural.GenerationLogic
 
             // Fill in the actual objective details
             var objectiveInfo = ctx.StoryTemplate.GenerateObjectiveInformation(ctx.Random, mainStoryPoint, ctx.TemplateContext);
-            o.objectiveReminder = objectiveInfo.Item1;
-            o.textBookData = CreateTextBook(objectiveInfo.Item2);
+            o.objectiveReminder = objectiveInfo.Reminder;
+            o.textBookData = CreateTextBook(objectiveInfo.IntroText);
             // TODO: rewards etc.
+
+            // Also check if this objective ends a scenario
+            foreach (var resolution in ctx.Scenario.resolutionObserver.Where(x => x.triggerName == o.nextTrigger))
+            {
+                resolution.pages = new List<string>() { ctx.StoryTemplate.GenerateResolutionText(ctx.Random, mainStoryPoint, ctx.TemplateContext) };
+                // TODO: take scenario success true/false in to account if we at some point have both resolutiosn
+                // TODO: handle resolution rewards
+            }
         }
 
         public static void FillInStoryPoint(SimpleGenerator.SimpleGeneratorContext ctx, string startTrigger, List<string> endTriggers, string mainFragment, IEnumerable<string> secondaryFragments, string location, HexTile tile, StoryGenerator.StoryPhase phase)
@@ -71,14 +81,40 @@ namespace JiME.Procedural.GenerationLogic
             // TODO: invent story elements from startTrigger to endTrigger based on fragment and other stuff
             AddTokenInteraction(ctx, tile, startTrigger, info, () =>
             {
-                var dialog = new DialogInteraction("Dialog" + GenerateRandomNameSuffix());
-                dialog.eventBookData = CreateTextBook("What do you want to do?");
+                var dialogInfo = ctx.StoryTemplate.GenerateDialogInteractionInfo(ctx.Random, fragmentName, ctx.TemplateContext);
 
-                dialog.choice1 = "Trigger: " + endTrigger;
-                dialog.c1Text = "You decided to go forward";
-                dialog.c1Trigger = endTrigger;
-                dialog.choice2 = ""; // This removes the option alltogether
-                dialog.choice3 = ""; // This removes the option alltogether
+                var dialog = new DialogInteraction("Dialog" + GenerateRandomNameSuffix());
+                dialog.eventBookData = CreateTextBook(dialogInfo.ActionText);
+
+                // TODO: how to have more meaningful dialog options with different rewards etc? perhaps add additional reward interactions?
+                // Note: "" removes the option altogether
+                dialog.choice1 = dialogInfo.Choice1Text?.Length > 0 ? dialogInfo.Choice1Text : "";
+                dialog.c1Text = dialogInfo.Result1Text;
+                dialog.c1Trigger = dialogInfo.Choice1Triggers ? endTrigger : "None";
+                dialog.choice2 = dialogInfo.Choice2Text?.Length > 0 ? dialogInfo.Choice2Text : "";
+                dialog.c2Text = dialogInfo.Result2Text;
+                dialog.c2Trigger = dialogInfo.Choice2Triggers ? endTrigger : "None";
+                dialog.choice3 = dialogInfo.Choice3Text?.Length > 0 ? dialogInfo.Choice3Text : "";
+                dialog.c3Text = dialogInfo.Result3Text;
+                dialog.c3Trigger = dialogInfo.Choice3Triggers ? endTrigger : "None";
+
+                if (!dialogInfo.Choice1Triggers && !dialogInfo.Choice2Triggers && !dialogInfo.Choice3Triggers)
+                {
+                    throw new Exception("None of the dialog choices triggered the end trigger"); // TODO: how to inform the user about this? bug in data!
+                }
+
+                // Handle what happens to the token
+                if (dialogInfo.PersistentText?.Length > 0)
+                {
+                    // Persistent dialogs remain on the board after all options are exchausted and give the exhausted text
+                    dialog.isPersistent = true;
+                    dialog.persistentText = dialogInfo.PersistentText;
+                }
+                else
+                {
+                    // Non-persistent dialog token vanish from the board after all options are exhausted
+                    dialog.isPersistent = false;
+                }
 
                 // Return for finalization
                 return dialog;
@@ -100,59 +136,51 @@ namespace JiME.Procedural.GenerationLogic
 
             AddTokenInteraction(ctx, tile, startTrigger, info, () =>
             {
-                var mainStat = info.StatHint ?? Ability.Random;
-                var statTest = new TestInteraction("Test " + mainStat.ToString() + GenerateRandomNameSuffix());
+                var testInfo = ctx.StoryTemplate.GenerateStatTestInteractionInfo(ctx.Random, fragmentName, ctx.TemplateContext);
+
+                var statTest = new TestInteraction("Test " + testInfo.StatHint.ToString() + GenerateRandomNameSuffix());
 
                 // Setup basic test
-                statTest.testAttribute = mainStat;
-                statTest.altTestAttribute = info.AltStatHint ?? Ability.Random;
-                statTest.noAlternate = info.AltStatHint == null;
+                statTest.testAttribute = testInfo.StatHint;
+                statTest.altTestAttribute = testInfo.AltStatHint ?? Ability.None;
+                statTest.noAlternate = testInfo.AltStatHint == null;
 
                 // Token interaction flavor text
-                statTest.textBookData = CreateTextBook("Are you sure you want to start testing?");
+                statTest.textBookData = CreateTextBook(testInfo.TokenText);
 
                 // Test main flavor text
-                statTest.eventBookData = CreateTextBook("This TEST will be very hard!!");
+                statTest.eventBookData = CreateTextBook(testInfo.ActionText);
 
                 // Setup test type
-                if (info.StatTestType == StoryFragment.StatTestType.OneTry)
+                if (testInfo.StatTestType == StoryTemplate.StatTestInteractionInfo.TypeEnum.OneTry)
                 {
                     statTest.isCumulative = false;
                     statTest.passFail = false;
                 }
-                else if (info.StatTestType == StoryFragment.StatTestType.Retryable)
+                else if (testInfo.StatTestType == StoryTemplate.StatTestInteractionInfo.TypeEnum.Retryable)
                 {
                     statTest.isCumulative = true;
                     statTest.passFail = true;
                 }
-                else // StoryFragment.StatTestType.Cumulative
+                else // StoryTemplate.StatTestInteractionInfo.TypeEnum.Cumulative
                 {
                     statTest.isCumulative = true;
                     statTest.passFail = false;
                 }
 
                 // Success
-                statTest.passBookData = new TextBookData()
-                {
-                    pages = new List<string>() { "Test SUCCESSFUL, threat decreases" }
-                };
-                statTest.successValue = 4; // TODO: where to get a good value here?
+                statTest.passBookData = CreateTextBook(testInfo.SuccessText);
+                statTest.successValue = testInfo.SuccessValue;
                 statTest.successTrigger = endTrigger;
                 statTest.rewardXP = 0;
                 statTest.rewardLore = 0;
                 statTest.rewardThreat = 5; // TODO: where to get a good value here?
 
                 // Progress
-                statTest.progressBookData = new TextBookData()
-                {
-                    pages = new List<string>() { "Keep trying!" }
-                }; ;
+                statTest.progressBookData = CreateTextBook(testInfo.ProgressText);
 
                 // Failure
-                statTest.failBookData = new TextBookData()
-                {
-                    pages = new List<string>() { "Test FAILED, threat increases" }
-                }; ;
+                statTest.failBookData = CreateTextBook(testInfo.FailureText);
                 statTest.failTrigger = endTrigger; // Failure also progresses things for now, TODO: Perhaps add some more interactions if failed? e.g. have to fight a monster
                 statTest.failThreat = 5; // TODO: where to get a good value here?
                 
@@ -178,7 +206,8 @@ namespace JiME.Procedural.GenerationLogic
             {
                 var threatTest = new ThreatInteraction("Threat!" + GenerateRandomNameSuffix());
 
-
+                // Generate story flavor
+                var storyInfo = ctx.StoryTemplate.GenerateThreatInteractionInfo(ctx.Random, fragmentName, ctx.TemplateContext);
 
                 // Setup the specific ANTAGONIST monster if it is relevant here
                 if (phase == StoryGenerator.StoryPhase.End && !ctx.MainAntagonistEncounterCreated)
@@ -200,18 +229,18 @@ namespace JiME.Procedural.GenerationLogic
                     });
 
                     // Token interaction flavor text
-                    threatTest.textBookData = CreateTextBook("Group of enemies are nearby");
+                    threatTest.textBookData = CreateTextBook(storyInfo.AntagonistTokenText);
 
                     // Test main flavor text
-                    threatTest.eventBookData = CreateTextBook("The enemies are attacking!");
+                    threatTest.eventBookData = CreateTextBook(storyInfo.AntagonistActionText);
                 }
                 else
                 {
                     // Token interaction flavor text
-                    threatTest.textBookData = CreateTextBook("Group of enemies are nearby");
+                    threatTest.textBookData = CreateTextBook(storyInfo.NormalTokenText);
 
                     // Test main flavor text
-                    threatTest.eventBookData = CreateTextBook("The enemies are attacking!"); 
+                    threatTest.eventBookData = CreateTextBook(storyInfo.NormalActionText); 
                 }
 
                 // Setup filler enemies
@@ -266,7 +295,7 @@ namespace JiME.Procedural.GenerationLogic
         {
             return new TextBookData()
             {
-                pages = new List<string>() { content }
+                pages = new List<string>() { content ?? "" }
             };
         }
 
