@@ -115,7 +115,7 @@ namespace JiME.Procedural
 
             // We simple add single MAIN story point to both start and end and rest to middle
             var mainStoryPoints = ctx.AllStoryPoints.Where(sp => sp.PartOfMainQuest).Reverse().ToList();
-            mainStoryPoints_StartPhase.Add(mainStoryPoints.First());
+            mainStoryPoints_StartPhase.Add(mainStoryPoints.First()); 
             mainStoryPoints_MiddlePhase.AddRange(mainStoryPoints.Skip(1).Take(mainStoryPoints.Count - 2));
             mainStoryPoints_EndPhase.Add(mainStoryPoints.Last());
 

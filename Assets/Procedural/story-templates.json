@@ -12,7 +12,7 @@
 		"  {adjectives:BYSTANDER} Gets a random name for the race that has been selected as the BYSTANDER race",
 		"For StatTest interactions, StatTestType defines what texts are needed (beside standard token and action texts)",
 		"  OneTry		Requires SuccessText and FailureText",
-		"  Retryable    Requires SuccessText",
+		"  Retryable    Requires SuccessText and FailureText",
 		"  Cumulative   Requires SuccessText and ProgressText"
 		
 	],
@@ -152,7 +152,7 @@
 						"ActionText": "Your search for clues about {names:ANTAGONIST}'s recent visit. This can take a while.",
 						"SuccessText": "You manage to gather enough clues to continue the search.",
 						"ProgressText": "NOT NEEDED",
-						"FailureText": "NOT NEEDED"
+						"FailureText": "You need to keep searching."
 					} 
 				],
 				"InvestigateDestruction": [ 

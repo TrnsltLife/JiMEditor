@@ -30,7 +30,7 @@ namespace JiME.Procedural.GenerationLogic
             _ctx.BystanderPersonTokenType = StoryTemplate.GetPersonType(_ctx.TemplateContext.SelectedBystanderRace);
 
             // Fill in basic scenario details
-            _ctx.Scenario.scenarioName = _ctx.StoryTemplate.Name; // TODO: do better here
+            _ctx.Scenario.scenarioName = _ctx.StoryTemplate.Name; // TODO: do better here?
             _ctx.Scenario.specialInstructions = "";
             _ctx.Scenario.introBookData = new TextBookData("ScenarioIntroboook")
             {
@@ -49,7 +49,7 @@ namespace JiME.Procedural.GenerationLogic
                     // TODO: limit antagonist helper types based on collections
                     threatAction.difficultyBias = DifficultyBias.Medium;
                     threatAction.basePoolPoints = _ctx.Parameters.ThreatDiffMonsterPoolMultiplier * threatDiff;
-                    threatAction.includedEnemies = GeneratorUtils.PrepareIncludedMonsters(_ctx.StoryTemplate.AntagonistHelperMonstersAreSomeOf.ToArray());
+                    threatAction.includedEnemies = GeneratorUtils.PrepareIncludedMonsters(_ctx.StoryTemplate.AntagonistHelperMonstersAreSomeOf_Filtered.ToArray());
                     threatAction.eventBookData = GeneratorUtils.CreateTextBook(_ctx.StoryTemplate.GenerateThreatLevelIncreaseText(_ctx.Random, _ctx.TemplateContext));
                     _ctx.Scenario.AddInteraction(threatAction);
 
@@ -69,13 +69,13 @@ namespace JiME.Procedural.GenerationLogic
         public void FillInPhaseStoryPoint(StoryPhase phase, IEnumerable<StoryPoint> phaseStoryPoints)
         {
             // TODO: If single phase has multiple of same fragment, we should combine those in to one! Perhaps needs to be done even earlier in branching phase
-            // TODO: utilize token/interaction groups somehow? may not be necessary since this is "random" anyway so no need to add second layer?
 
             // See which phase we operate in
             var phaseInfo = GetPhaseInfo(phase);
 
-            // Determine the location type the phase happens in            
-            // TODO: here we should also take note that certain places are not available in all collections 
+            // Determine the location type the phase happens in        
+            // TODO: here we could also take note that certain places are not available in all collections 
+            //       note that we already limit actual selected tiles based on which collections are available so this is just an optimization
             var phaseLocation = phaseInfo.TakesPlaceInOneOf.GetRandomFromEnumerable(_ctx.Random);
             var primaryLocation = StoryLocation.GetLocation(phaseLocation);
             var secondaryLocations = phaseInfo.TakesPlaceInOneOf
@@ -95,7 +95,7 @@ namespace JiME.Procedural.GenerationLogic
                 _startingTile = LocationUtils.CreateRandomTileAndAddtoTileset(_ctx, tileSet, primaryLocation, secondaryLocations, mustBeFromPrimary: true);
                 _startingTile.isStartTile = true;
 
-                // TODO: we should basically have random tiles except for the first one but isRandomTiles must not be set to the "Start" tileset
+                // TODO: if we ever take more than one tile to the first stage, we need to make sure that the fist non-random chapter only has single tile
             }
             else
             {

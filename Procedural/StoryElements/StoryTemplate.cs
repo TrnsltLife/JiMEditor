@@ -337,7 +337,7 @@ namespace JiME.Procedural.StoryElements
             public string GetAntagonistName()
             {
                 var key = "names:" + KEYWORD_ANTAGONIST;
-                return PersistentTranslations[key]; // TODO: how to make sure this has been generated?
+                return PersistentTranslations[key]; // TODO: how to make sure this has been generated? perhaps pack StoryTemplate within this Context and access it only through here
             }
         }
 

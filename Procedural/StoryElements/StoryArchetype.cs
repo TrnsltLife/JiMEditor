@@ -10,8 +10,6 @@ using Newtonsoft.Json.Linq;
 
 namespace JiME.Procedural.StoryElements
 {
-    // TODO: some locations are considered to be only accessible in certain core sets, we need to define those separately!
-
     /// <summary>
     /// Tells what kind of story we are writing.
     /// Maps out a story archetype that exposes entension points that can be fulfilled by Story Templates.

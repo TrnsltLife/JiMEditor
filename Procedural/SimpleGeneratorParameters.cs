@@ -13,7 +13,7 @@ namespace JiME.Procedural
         /// <summary>
         /// Give string value to use fixed seed, give NULL or empty string to use random seed.
         /// </summary>
-        public string Seed = "2554742";    // "testing";
+        public string Seed = "8900184"; //"2554742";    // "testing";
 
         /// <summary>
         /// The basic archetype of the Scenario we want to generate. Null if should use random
@@ -58,7 +58,7 @@ namespace JiME.Procedural
         /// <summary>
         /// Miminum number of objectives in the MAIN STORY
         /// </summary>
-        public int MinMainStoryObjectiveCount = 3;
+        public int MinMainStoryObjectiveCount = 4;
 
         /// <summary>
         /// Maximum number of objectives in the MAIN STORY
@@ -68,7 +68,9 @@ namespace JiME.Procedural
         /// <summary>
         /// Percentage change that branches occur on StoryPoint for each Objective. 0% means no branching at all.
         /// </summary>
-        public int BranchingProbability = 0;  //  TODO: too much branching? at least we should have an upper limit
+        public int BranchingProbability = 0;  // TODO: too much branching? at least we should have an upper limit
+                                               // TODO: if branching, we need to make sure that the last goal is not branched!
+                                               // we ended up simultaneously killing monster and scouring which might be done in the wront order
 
         /// <summary>
         /// If branching, minimum number of branches to have

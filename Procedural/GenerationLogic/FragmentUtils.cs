@@ -31,14 +31,13 @@ namespace JiME.Procedural.GenerationLogic
             foreach (var resolution in ctx.Scenario.resolutionObserver.Where(x => x.triggerName == o.nextTrigger))
             {
                 resolution.pages = new List<string>() { ctx.StoryTemplate.GenerateResolutionText(ctx.Random, mainStoryPoint, ctx.TemplateContext) };
-                // TODO: take scenario success true/false in to account if we at some point have both resolutiosn
+                // TODO: take scenario success true/false in to account if we at some point have both resolutions (only after we actually create more than 1 success resolution)
                 // TODO: handle resolution rewards
             }
         }
 
         public static void FillInStoryPoint(SimpleGeneratorContext ctx, string startTrigger, List<string> endTriggers, string mainFragment, IEnumerable<string> secondaryFragments, string location, HexTile tile, StoryGenerator.StoryPhase phase)
         {
-            // TODO: handle multi-target stories better with more context, now we just do individual stories to each target (with different fragments)
             for (int i = 0; i < endTriggers.Count; i++)
             {
                 // Select correct fragment

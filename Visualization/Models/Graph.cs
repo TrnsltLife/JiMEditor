@@ -144,7 +144,6 @@ namespace JiME.Visualization.Models
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "triggers" });
                     });
-                    // TODO: other properties?
                 }
 
                 // Rest depends on interaction type
@@ -163,7 +162,6 @@ namespace JiME.Visualization.Models
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"" + x2.choice3 + "\"" });
                     });
-                    // TODO: Other properties
                 }
                 else if (x is DialogInteraction)
                 {
@@ -180,7 +178,6 @@ namespace JiME.Visualization.Models
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"" + x2.choice3 + "\"" });
                     });
-                    // TODO: Other properties
                 }
                 else if (x is TestInteraction)
                 {
@@ -193,7 +190,6 @@ namespace JiME.Visualization.Models
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"FAIL\"" });
                     });
-                    // TODO: Other properties
                 }
                 else if (x is ConditionalInteraction)
                 {
@@ -212,7 +208,6 @@ namespace JiME.Visualization.Models
                             });
                         }
                     }
-                    // TODO: Other properties
                 }
                 else if (x is PersistentTokenInteraction)
                 {
@@ -225,7 +220,6 @@ namespace JiME.Visualization.Models
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"ALT. TEXT\"" });
                     });
-                    // TODO: Other properties
                 }
                 else if (x is ThreatInteraction)
                 {
@@ -234,12 +228,10 @@ namespace JiME.Visualization.Models
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"DEFEATED\"" });
                     });
-                    // TODO: Other properties
                 }
                 else if (x is TextInteraction)
                 {
-                    // No triggers
-                    // TODO: Other properties
+                    // No extra triggers
                 }
 
                 // Special case: StoryPointInteractionsa re only used during procedural generation for debug purposes
