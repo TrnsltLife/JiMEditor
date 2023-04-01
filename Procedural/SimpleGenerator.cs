@@ -9,7 +9,7 @@ namespace JiME.Procedural
     /// <summary>
     /// Simple generator that generates a linear main objective chain and some possible side objectives
     /// </summary>
-    class SimpleGenerator
+    public class SimpleGenerator
     {
         public SimpleGeneratorParameters GetDefaultParameters() => new SimpleGeneratorParameters();
 

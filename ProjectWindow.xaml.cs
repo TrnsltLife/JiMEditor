@@ -96,24 +96,16 @@ namespace JiME
 
         private void RandomScenarioButton_Click(object sender, RoutedEventArgs e)
         {
-            // Generate generator
-            var generatorInstance = new Procedural.SimpleGenerator();
-
-            // Set up parameters
-            var parameters = generatorInstance.GetDefaultParameters(); // TODO: open up parameter modification window, show last used params by default?
-
-            // Generate Scenario
-            var ctx = generatorInstance.GenerateScenario(parameters); 
-
-            if (ctx.GeneratorWarnings.Count > 0)
+            var procWindow = new ProceduralGeneratorWindow();
+            procWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            var result = procWindow.ShowDialog();
+            if (result == true)
             {
-                MessageBox.Show(string.Join(Environment.NewLine, ctx.GeneratorWarnings), "WARNINGS", MessageBoxButton.OK);
+                // True here means that we want to open the file in editor -->  Create main window with Scenario
+                MainWindow mainWindow = new MainWindow(procWindow.Scenario);
+                mainWindow.Show();
+                Close();
             }
-
-            // Create main window with Scenario
-            MainWindow mainWindow = new MainWindow(ctx.Scenario);
-            mainWindow.Show();
-            Close();
         }
 
         private void CampaignButton_Click( object sender, RoutedEventArgs e )

@@ -18,7 +18,7 @@
  - Implement more StoryArchetypes (that can use the same templates than the old ones)
  - Implement side quests 
  - Implement even more StoryTemplates (with help of others?)
- - Take Scenario difficulty level in to account
+ - Take Scenario difficulty level in to account somehow
  - Make starting level adjustable
  - Add rewards both in middle of scenario and in the end
  

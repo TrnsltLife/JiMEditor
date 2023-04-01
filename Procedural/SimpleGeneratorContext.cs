@@ -5,7 +5,7 @@ using JiME.Procedural.StoryElements;
 
 namespace JiME.Procedural
 {
-    class SimpleGeneratorContext
+    public class SimpleGeneratorContext
     {
         public SimpleGeneratorParameters Parameters { get; private set; }
         public Scenario Scenario { get; private set; }

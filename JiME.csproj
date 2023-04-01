@@ -201,6 +201,9 @@
     <Compile Include="Views\ObjectiveEditorWindow.xaml.cs">
       <DependentUpon>ObjectiveEditorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ProceduralGeneratorWindow.xaml.cs">
+      <DependentUpon>ProceduralGeneratorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ScenarioWindow.xaml.cs">
       <DependentUpon>ScenarioWindow.xaml</DependentUpon>
     </Compile>
@@ -349,6 +352,10 @@
     <Page Include="Views\ObjectiveEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProceduralGeneratorWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\ScenarioWindow.xaml">
       <SubType>Designer</SubType>
@@ -1038,6 +1045,8 @@
   <ItemGroup>
     <Resource Include="Assets\magnifier.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Assets\dice.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

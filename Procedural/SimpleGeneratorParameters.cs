@@ -7,7 +7,7 @@ using JiME.Procedural.StoryElements;
 
 namespace JiME.Procedural   
 {
-    class SimpleGeneratorParameters
+    public class SimpleGeneratorParameters
     {
         #region Basic parameters
         /// <summary>

@@ -23,7 +23,7 @@ namespace JiME.Procedural.StoryElements
     /// Also holds information on base difficulty level of the scenario.
     /// Used in conjunction with StoryArchetype to flesh out a single story
     /// </summary>
-    class StoryTemplate
+    public class StoryTemplate
     {
         #region Properties
 

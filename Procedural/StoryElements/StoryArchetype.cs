@@ -15,7 +15,7 @@ namespace JiME.Procedural.StoryElements
     /// Maps out a story archetype that exposes entension points that can be fulfilled by Story Templates.
     /// Story is divided in to Start, Middle and End phases that repserenst different parts of the voyage.
     /// </summary>
-    class StoryArchetype
+    public class StoryArchetype
     {
         #region Properties
 

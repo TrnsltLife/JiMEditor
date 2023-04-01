@@ -9,7 +9,7 @@ namespace JiME.Procedural.StoryElements
     /// <summary>
     /// Placeholder for story element to be added towards some Objective
     /// </summary>
-    class StoryPoint
+    public class StoryPoint
     {
         /// <summary>
         /// Starting point of the story. Can in theory be NULL if this is the first point in the whole Scenario
