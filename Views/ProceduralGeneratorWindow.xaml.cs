@@ -9,6 +9,7 @@ using JiME.Models;
 using JiME.Procedural.StoryElements;
 using JiME.Procedural;
 using System.Windows.Media;
+using System.IO;
 
 namespace JiME.Views
 {
@@ -17,8 +18,9 @@ namespace JiME.Views
 	/// Interaction logic for ScenarioWindow.xaml
 	/// </summary>
 	public partial class ProceduralGeneratorWindow : Window
-	{
-		bool closing = false;
+    {
+        private static readonly string RANDOM_TEXT = "RANDOM";
+        private static readonly string SettingsStorageFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Your Journey", "ProcParameters.json");
 
         public Scenario Scenario { get; set; }
         public SimpleGenerator Generator { get; set; }
@@ -26,53 +28,59 @@ namespace JiME.Views
 
 		public ProceduralGeneratorWindow()
 		{
-
-
             InitializeComponent();
             Generator = new SimpleGenerator();
             Scenario = null; // By default, we don't have a scenario ready
-			DataContext = this;
 
             // Disable buttons since we don't have a scenario yet
             visualizeButton.IsEnabled = false;
             saveButton.IsEnabled = false;
             okButton.IsEnabled = false;
 
-            LoadValues();
+            LoadParameterValues();
 		}
 
-        private  void LoadValues()
+        private  void LoadParameterValues()
         {
-            // TODO: load latest from file
-            GeneratorParameters = Generator.GetDefaultParameters();
-
-            // If file not found, use defaults
+            // Load parameters from file if exists, otherwise use defaults
+            if (File.Exists(SettingsStorageFile))
             {
-                // Setup archetype
-                var allArchetypes = Enum.GetValues(typeof(StoryArchetype.Type)).Cast<StoryArchetype.Type?>().ToList();
-                allArchetypes.Insert(0, null);
-                archetypeCB.ItemsSource = allArchetypes;
-
-                // Setup collections
-                coreSetCB.IsChecked = true;
-                villainsOfEriadorCB.IsChecked = GeneratorParameters.Has_VILLAINS_OF_ERIADOR;
-                shadowedPathsCB.IsChecked = GeneratorParameters.Has_SHADOWED_PATHS;
-                dwellersInDarknessCB.IsChecked = GeneratorParameters.Has_VILLAINS_OF_ERIADOR;
-                spreadingWarCB.IsChecked = GeneratorParameters.Has_VILLAINS_OF_ERIADOR;
-                scourgesOfTheWastesCB.IsChecked = GeneratorParameters.Has_VILLAINS_OF_ERIADOR;
+                // JSON File found, read from that
+                var json = File.ReadAllText(SettingsStorageFile);
+                GeneratorParameters = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType<SimpleGeneratorParameters>(json, Generator.GetDefaultParameters());
             }
+            else
+            {
+                // If file not found, use defaults
+                GeneratorParameters = Generator.GetDefaultParameters();
+            }
+
+            // Set as data context so most of the parameters are updated directly
+            this.DataContext = GeneratorParameters;
+
+            // Setup archetype
+            var allArchetypes = Enum.GetValues(typeof(StoryArchetype.Type)).Cast<StoryArchetype.Type?>()
+                .Select(x => x.ToString())
+                .OrderBy(x => x)
+                .ToList();
+            allArchetypes.Insert(0, RANDOM_TEXT);
+            archetypeCB.ItemsSource = allArchetypes;
+            archetypeCB.SelectedIndex = allArchetypes.IndexOf(GeneratorParameters.StoryArchetype == null ? RANDOM_TEXT : GeneratorParameters.StoryArchetype.Value.ToString());
+
+            // Setup templates
+            var allTemplates = StoryTemplate.GetAllKnownTemplates()
+                .OrderBy(x => x)
+                .ToList();
+            allTemplates.Insert(0, RANDOM_TEXT);
+            templateCB.ItemsSource = allTemplates;
+            templateCB.SelectedIndex = allTemplates.IndexOf(GeneratorParameters.StoryTemplate?.Length > 0 ? GeneratorParameters.StoryTemplate : RANDOM_TEXT);  
         }
 
-        private void SaveValues()
+        private void SaveParameterValues()
         {
-            // TODO: save current to file
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(GeneratorParameters);
+            File.WriteAllText(SettingsStorageFile, json);
         }
-
-        private void OkButton_Click( object sender, RoutedEventArgs e )
-		{
-			if ( !closing && TryClose() )
-				DialogResult = closing = true;
-		}
 
         private void VisualizeButton_Click(object sender, RoutedEventArgs e)
         {
@@ -85,12 +93,18 @@ namespace JiME.Views
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            // TODO:
+            var fileManager = new FileManager(Scenario);
+            fileManager.SaveAs();
         }
 
         private void GenerateButton_Click(object sender, RoutedEventArgs e)
         {
-            // TODO:  Make sure selected values are used / updated correctly
+            // Update the values that are not updated automatically to Parameters
+            GeneratorParameters.StoryArchetype = (string)archetypeCB.SelectedValue == RANDOM_TEXT ? null : (StoryArchetype.Type?)Enum.Parse(typeof(StoryArchetype.Type), (string)archetypeCB.SelectedValue);
+            GeneratorParameters.StoryTemplate = (string)templateCB.SelectedValue == RANDOM_TEXT ? null : (string)templateCB.SelectedValue;
+
+            // Save the used parameters on generation
+            SaveParameterValues();
 
             // Generate the scenario
             var generatorContext = Generator.GenerateScenario(GeneratorParameters);
@@ -108,36 +122,5 @@ namespace JiME.Views
             saveButton.IsEnabled = true;
             okButton.IsEnabled = true;
         }
-
-
-        bool TryClose()
-        { 
-			return true;
-		}
-
-		private void collection_Click( object sender, RoutedEventArgs e )
-        {
-            // TODO: update collections?
-
-			CheckBox checkbox = (CheckBox)sender;
-			string name = checkbox.Content as string;
-			bool? check = checkbox.IsChecked;
-
-			Collection collection = Collection.FromName(name);
-			
-			if(!check.GetValueOrDefault(false))
-			{
-				//TODO Do a warning that we're removing a Collection and for them to remove tiles and monsters that use it.
-				//TODO List Tile Maps and Events that use the Collection we're disabling.
-				//TODO Automatically remove Collection resources from Tile Maps and Events.
-				Scenario.collectionObserver.Remove(collection);
-			}
-            else
-			{
-				Scenario.collectionObserver.Add(collection);
-			}
-
-			Scenario.RefilterGlobalTilePool();
-		}
 	}
 }
