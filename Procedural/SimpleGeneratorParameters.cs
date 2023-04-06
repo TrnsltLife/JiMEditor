@@ -13,7 +13,7 @@ namespace JiME.Procedural
         /// <summary>
         /// Give string value to use fixed seed, give NULL or empty string to use random seed.
         /// </summary>
-        public string Seed { get; set; } = "8900184"; //"2554742";    // "testing";
+        public string Seed { get; set; } = null;
 
         /// <summary>
         /// The basic archetype of the Scenario we want to generate. Null if should use random

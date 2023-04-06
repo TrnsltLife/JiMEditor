@@ -36,7 +36,6 @@
 				<ColumnDefinition Width="auto"/>
 			</Grid.ColumnDefinitions>
 
-			<!--name and rewards-->
 			<Border Style="{StaticResource callout}" Margin="0,0,5,0">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
@@ -118,7 +117,6 @@
 
 
 		
-		<!--rewards-->
 		<Border  Grid.Row="2" Style="{StaticResource callout}" Margin="5">
             <TextBlock Foreground="White" ><Run Text="TODO: Advanced settin"/><Run Text="g"/></TextBlock>
         </Border>
@@ -144,8 +142,12 @@
                         <Image Source="/JiME;component/Assets/save.png" Stretch="Uniform" Width="32" Margin="5"/>
                     </Button>
 
-                    <Button x:Name="okButton" Margin="0, 10, 10, 10" Background="MediumSeaGreen" IsDefault="True" IsCancel="False" ToolTip="Take Scenario to Editor">
+                    <Button x:Name="okButton" Margin="0, 10, 10, 10" Background="MediumSeaGreen" Click="OKButton_Click" IsDefault="True" IsCancel="False" ToolTip="Take Scenario to Editor">
                         <Image Source="/JiME;component/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
+                    </Button>
+
+                    <Button x:Name="cancelButton" Margin="0, 10, 10, 10" Background="{StaticResource bgCancelDelete}" IsDefault="True" IsCancel="True" ToolTip="Cancel creation">
+                        <Image Source="/JiME;component/Assets/cancel.png" Stretch="Uniform" Width="32" Margin="5"/>
                     </Button>
                 </WrapPanel>
             </Grid>

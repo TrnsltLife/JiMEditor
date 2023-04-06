@@ -26,7 +26,11 @@ namespace JiME.Views
         public SimpleGenerator Generator { get; set; }
         public SimpleGeneratorParameters GeneratorParameters { get; set; }
 
-		public ProceduralGeneratorWindow()
+        public ProceduralGeneratorWindow() : this(allowDirectSaving: true)
+        {
+        }
+
+        public ProceduralGeneratorWindow(bool allowDirectSaving)
 		{
             InitializeComponent();
             Generator = new SimpleGenerator();
@@ -36,6 +40,9 @@ namespace JiME.Views
             visualizeButton.IsEnabled = false;
             saveButton.IsEnabled = false;
             okButton.IsEnabled = false;
+
+            // If direct saving is not allowed, the button is permanently hidden
+            saveButton.Visibility = allowDirectSaving ? Visibility.Visible : Visibility.Collapsed;
 
             LoadParameterValues();
 		}
@@ -95,6 +102,12 @@ namespace JiME.Views
         {
             var fileManager = new FileManager(Scenario);
             fileManager.SaveAs();
+        }
+
+        private void OKButton_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
+            Close();
         }
 
         private void GenerateButton_Click(object sender, RoutedEventArgs e)

@@ -98,8 +98,7 @@ namespace JiME
         {
             var procWindow = new ProceduralGeneratorWindow();
             procWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            var result = procWindow.ShowDialog();
-            if (result == true)
+            if (procWindow.ShowDialog() == true)
             {
                 // True here means that we want to open the file in editor -->  Create main window with Scenario
                 MainWindow mainWindow = new MainWindow(procWindow.Scenario);

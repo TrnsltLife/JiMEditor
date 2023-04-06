@@ -4,16 +4,14 @@
   - Generator parameters depend on the generator instance and can be used to control the scenario input.
 
 # Milestones and Tasks
-- First playtesting
-  - (DONE) Implement story generator basic skeleton that outputs a Scenario that can be clicked through in the Companion App
-  - (DONE) Implement more interactions to StoryGenerator
-  - (DONE) Implement first StoryTemplate to give flavor to the story (and fill in Objective details and StoryPoints with those)
-  - (DONE) Implement Threat track generation
-  - (DONE) Implement monster activations and random terrain interactions
-  - Lots of smaller TODO's that need to  be checked
-
 - Improvements 
  - Implement generator parameter modification screen
+   - Advanced parameters
+   - Generator log
+   - (DONE) Able to use the generator in the campaign editor to create a random scenario (direct save is disabled)
+ - Integrate visualizer to the actual editor window
+   - Show and update automatically
+   - Make items clickable / open editor windows / highlight on mouseover
  - Improve interaction with boardgame-elements (e.g. things not directly visible in the App)
  - Implement more StoryArchetypes (that can use the same templates than the old ones)
  - Implement side quests 
