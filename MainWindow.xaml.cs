@@ -14,7 +14,7 @@ namespace JiME
 	{
 		public Scenario scenario { get; set; }
 
-		public MainWindow(Guid campaignGUID) : this((Scenario)null)
+		public MainWindow(Guid campaignGUID) : this(null)
 		{
 			scenario.campaignGUID = campaignGUID;
 		}
@@ -68,20 +68,48 @@ namespace JiME
 			objectivesUC.dataListView.ItemsSource = scenario.objectiveObserver;
 			activationsUC.dataListView.ItemsSource = scenario.activationsObserver;
 
+            // Initiate visualization defer timer so it won't be done multiple times
+            WpfUtils.MainThreadDispatcher = this.Dispatcher;
+
             // Initialize visualization
             GraphX.Controls.ZoomControl.SetViewFinderVisibility(visualizationZoomCtrl, Visibility.Visible); //Set minimap (overview) window to be visible by default
             Loaded += (object sender, RoutedEventArgs e) =>
             {
-                VisualizeScenario(); // Show the scenario itself after the window has loaded
-                visualizationZoomCtrl.ZoomToFill(); // Set Fill zooming strategy so whole graph will be always visible (first time this is loading)
+                // Show the scenario itself after the window has loaded
+                // NOTE: Not deferred here since we want to zoom in after initial loading
+                VisualizeScenario();
+
+                // Set Fill zooming strategy so whole graph will be always visible (first time this is loading)
+                visualizationZoomCtrl.ZoomToFill(); 
             };
+            Activated += (object sender, EventArgs e) =>
+            {
+                // Re-visualize whenever this window regains focus since all changing of the Scenario contents happens in dialogs.
+                // NOTE: This is not enough since Activated does not get triggered when we e.g. return from MessageBox dialog
+                TriggerDeferredVisualizeScenario();
+            };
+            scenario.AddObserverChangedHandler((a, b) =>
+            {
+                // Any of the collections within the Scenario changed so we need to Re-visualize since this can happen through buttons
+                // in the main editor window and MessageBox closing does not trigger re-visualization
+                TriggerDeferredVisualizeScenario();
+            });
 
             //debug
             //debug();
         }
 
+        private void TriggerDeferredVisualizeScenario()
+        {
+            // This will wait at minimum 100ms for new triggers and only execute when no new triggers have been done during that time
+            // Useful to avoid re-visualizing multiple times in short succession (e.g. due to adding a trigger also sorts it which triggers this MANY times)
+            //Console.WriteLine("TRIGGER VISUALIZE SCENARIO");
+            WpfUtils.DeferExecution("VisualizeScenario", 100, VisualizeScenario);
+        }
+
         private void VisualizeScenario()
         {
+            //Console.WriteLine("VISUALIZE SCENARIO");
             if (scenario != null)
             {
                 var dataGraph = Visualization.Graph.Generate(scenario, VisializationItemClicked);
@@ -193,7 +221,7 @@ namespace JiME
 				if (idx != -1)
 					scenario.RemoveData(triggersUC.dataListView.SelectedItem);
 				triggersUC.dataListView.SelectedIndex = 0;
-			}
+            }
 		}
 
 		void OnDuplicateTrigger(object sender, EventArgs e)
@@ -225,7 +253,7 @@ namespace JiME
 					if (idx != -1)
 						scenario.RemoveData(objectivesUC.dataListView.Items[idx]);
 					objectivesUC.dataListView.SelectedIndex = 0;
-				}
+                }
 			}
 			else
 			{
@@ -242,7 +270,7 @@ namespace JiME
 			if (oew.ShowDialog() == true)
 			{
 				scenario.objectiveObserver.Add(obj);
-			}
+            }
 		}
 
         void OnSettingsInteraction(object sender, EventArgs e)
@@ -513,15 +541,6 @@ namespace JiME
 			}
 		}
 
-        private void ScenarioVisualizationButton_Click(object sender, RoutedEventArgs e)
-        {
-            var sw = new GraphWindow(scenario);
-            //sw.Owner = this; 
-            sw.WindowState = WindowState.Maximized;
-            sw.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            sw.Show();
-        }
-
         private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e )
 		{
 			if ( scenario.isDirty )
@@ -538,7 +557,7 @@ namespace JiME
 			if ( ow.ShowDialog() == true )
 			{
 				scenario.AddObjective( ow.objective );
-			}
+            }
 		}
 
 		void AddActivations()

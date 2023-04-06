@@ -245,6 +245,7 @@
     <Compile Include="Models\Visualization\Graph.cs" />
     <Compile Include="Views\Visualization\GraphArea.cs" />
     <Compile Include="Models\Visualization\GraphLogic.cs" />
+    <Compile Include="Views\WpfUtils.cs" />
     <Page Include="Assets\Shapes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

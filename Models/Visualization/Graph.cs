@@ -405,8 +405,8 @@ namespace JiME.Visualization
                     return;
                 }
 
-                // Not found
-                throw new Exception("Could not find trigger or interaction with dataName: " + dataName);
+                // Not found, just log this since this might happen if triggers are removed before all connections are done
+                Console.WriteLine("Graph: Could not find trigger or interaction with dataName: " + dataName);
             }
         }
 

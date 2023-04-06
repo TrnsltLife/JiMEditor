@@ -65,7 +65,14 @@ namespace JiME.Views
             if (d.ClickAction != null)
             {
                 // Implememnt clicking
-                ctrl.Click += (a, b) => d.ClickAction(d);
+                // NOTE: We need to defer execution here for a small while since otherwise the re-visualization happens too close to
+                // when this function is updating the graph and and we get NULL reference somewhere inside GraphX VertexControl MouseUp-event
+                ctrl.Click += async (a, b) =>
+                {
+                    await Task.Delay(100);
+                    d.ClickAction(d); // TODO: utilize VertexClicked instead?
+                };
+                ctrl.ToolTip = "Click to edit";
             }
             else // No click action
             {
@@ -98,10 +105,14 @@ namespace JiME.Views
                 }
 
                 // Setup tooltip
-                ctrl.ToolTip = d.VertexType.ToString() + "\n" + string.Join("\n", jsonLines);
-                System.Windows.Controls.ToolTipService.SetInitialShowDelay(ctrl, 0);
-                System.Windows.Controls.ToolTipService.SetShowDuration(ctrl, 1000000);
+                var preNote = "CANNOT EDIT ITEMS IN THIS VIEW - GO TO THE MAIN EDITOR AND TRY CLICKING ITEMS THERE\nType: ";
+                ctrl.ToolTip = preNote + d.VertexType.ToString() + "\n" + string.Join("\n", jsonLines);
+
             }
+
+            // Setup tooltip properties
+            System.Windows.Controls.ToolTipService.SetInitialShowDelay(ctrl, 100);
+            System.Windows.Controls.ToolTipService.SetShowDuration(ctrl, 1000000);
 
             return ctrl;
         }
