@@ -8,10 +8,10 @@ using System.Windows.Media;
 using GraphX;
 using GraphX.Controls;
 using GraphX.Controls.Models;
-using JiME.Visualization.Models;
+using JiME.Visualization;
 using Newtonsoft.Json;
 
-namespace JiME.Visualization.Views
+namespace JiME.Views
 {
     public class GraphControlFactory : GraphX.Controls.Models.GraphControlFactory
     {
@@ -30,6 +30,9 @@ namespace JiME.Visualization.Views
 
             // For DataVertexes, we do some modifications for the default controls
             var ctrl = base.CreateVertexControl(vertexData);
+
+            // Always use black text
+            ctrl.Foreground = Brushes.Black;
 
             // Update coloring
             switch (d.VertexType)

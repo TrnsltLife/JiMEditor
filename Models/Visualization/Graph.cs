@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using QuickGraph;
 
-namespace JiME.Visualization.Models
+namespace JiME.Visualization
 {
     /// <summary>
     /// This is our custom data graph derived from BidirectionalGraph class using custom data types.

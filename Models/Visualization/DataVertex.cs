@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GraphX.Common.Models;
 
-namespace JiME.Visualization.Models
+namespace JiME.Visualization
 {
     /* DataVertex is the data class for the vertices. It contains all custom vertex data specified by the user.
          * This class also must be derived from VertexBase that provides properties and methods mandatory for

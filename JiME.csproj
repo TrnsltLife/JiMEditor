@@ -234,17 +234,17 @@
     <Compile Include="Views\TriggerEditorWindow.xaml.cs">
       <DependentUpon>TriggerEditorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Visualization\Views\GraphControlFactory.cs" />
-    <Compile Include="Visualization\Views\GraphEdgeLabelFactory.cs" />
-    <Compile Include="Visualization\Views\GraphVertexLabelFactory.cs" />
-    <Compile Include="Visualization\Views\GraphWindow.xaml.cs">
+    <Compile Include="Views\Visualization\GraphControlFactory.cs" />
+    <Compile Include="Views\Visualization\GraphEdgeLabelFactory.cs" />
+    <Compile Include="Views\Visualization\GraphVertexLabelFactory.cs" />
+    <Compile Include="Views\Visualization\GraphWindow.xaml.cs">
       <DependentUpon>GraphWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Visualization\Models\DataEdge.cs" />
-    <Compile Include="Visualization\Models\DataVertex.cs" />
-    <Compile Include="Visualization\Models\Graph.cs" />
-    <Compile Include="Visualization\Views\GraphArea.cs" />
-    <Compile Include="Visualization\Models\GraphLogic.cs" />
+    <Compile Include="Models\Visualization\DataEdge.cs" />
+    <Compile Include="Models\Visualization\DataVertex.cs" />
+    <Compile Include="Models\Visualization\Graph.cs" />
+    <Compile Include="Views\Visualization\GraphArea.cs" />
+    <Compile Include="Models\Visualization\GraphLogic.cs" />
     <Page Include="Assets\Shapes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -397,7 +397,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Visualization\Views\GraphWindow.xaml">
+    <Page Include="Views\Visualization\GraphWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

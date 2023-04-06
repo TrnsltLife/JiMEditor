@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GraphX.Logic.Models;
 
-namespace JiME.Visualization.Models
+namespace JiME.Visualization
 {
     /// <summary>
     /// Logics core object which contains all algorithms and logic settings

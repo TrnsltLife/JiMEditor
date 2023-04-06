@@ -91,7 +91,7 @@ namespace JiME.Views
 
         private void VisualizeButton_Click(object sender, RoutedEventArgs e)
         {
-            var sw = new Visualization.Views.GraphWindow(Scenario);
+            var sw = new Views.GraphWindow(Scenario);
             //sw.Owner = this; 
             sw.WindowState = WindowState.Maximized;
             sw.WindowStartupLocation = WindowStartupLocation.CenterScreen;

@@ -4,6 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JiME"
+        xmlns:localviews="clr-namespace:JiME.Views"
+        xmlns:controls="http://schemas.panthernet.ru/graphx/"
         mc:Ignorable="d"
 				xmlns:uc="clr-namespace:JiME.UserControls"
         Title="{Binding titleChangedToken, Converter={StaticResource titleConverter}}" Height="500" Width="770" MinHeight="500" MinWidth="700" WindowStartupLocation="CenterScreen" Background="#FF2D2D30" Closing="Window_Closing" ResizeMode="CanResizeWithGrip" SizeToContent="Width">
@@ -265,11 +267,24 @@
 		</Border>
 
 		<Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            
 			<Grid.Background>
 				<ImageBrush ImageSource="Assets/ring.png" Stretch="Uniform" Opacity="0.1"/>
 			</Grid.Background>
 
-			<ScrollViewer VerticalScrollBarVisibility="Auto">
+            <controls:ZoomControl x:Name="visualizationZoomCtrl" Grid.Row="1" Background="Transparent">
+                <localviews:GraphArea x:Name="visualizationGraphArea" >
+                    <localviews:GraphArea.Resources>
+                        <Style TargetType="TextBlock"/> <!-- Ignore Force text to white here -->
+                    </localviews:GraphArea.Resources>
+                </localviews:GraphArea>
+            </controls:ZoomControl>
+
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="0">
 				<!--ItemsSource="{Binding chapterObserver}"-->
 				<ItemsControl Padding="5" ItemsSource="{Binding chapterObserver}">
 					<ItemsControl.ItemsPanel>

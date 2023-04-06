@@ -68,12 +68,29 @@ namespace JiME
 			objectivesUC.dataListView.ItemsSource = scenario.objectiveObserver;
 			activationsUC.dataListView.ItemsSource = scenario.activationsObserver;
 
+            // Initialize visualization
+            GraphX.Controls.ZoomControl.SetViewFinderVisibility(visualizationZoomCtrl, Visibility.Visible); //Set minimap (overview) window to be visible by default
 
-			//debug
-			//debug();
-		}
+            Loaded += (object sender, RoutedEventArgs e) =>
+            {
+                VisualizeScenario(); // Show the scenario itself after the window has loaded
+                visualizationZoomCtrl.ZoomToFill(); // Set Fill zooming strategy so whole graph will be always visible (first time this is loading)
+            };
 
-		void debug()
+            //debug
+            //debug();
+        }
+
+        private void VisualizeScenario()
+        {
+            if (scenario != null)
+            {
+                var dataGraph = Visualization.Graph.Generate(scenario);
+                visualizationGraphArea.ShowGraph(dataGraph);
+            }
+        }
+
+        void debug()
 		{
 			//scenario.threatObserver.Add( new Threat( "Threat 1", 10 ) { threshold = 10, triggerName = "Threat Trigger" } );
 			//scenario.AddInteraction( new Interaction( "Dummy Event", false ) { interactionType = InteractionType.Text, triggerName = "Threat Trigger" } );
@@ -437,7 +454,7 @@ namespace JiME
 
         private void ScenarioVisualizationButton_Click(object sender, RoutedEventArgs e)
         {
-            var sw = new Visualization.Views.GraphWindow(scenario);
+            var sw = new GraphWindow(scenario);
             //sw.Owner = this; 
             sw.WindowState = WindowState.Maximized;
             sw.WindowStartupLocation = WindowStartupLocation.CenterScreen;

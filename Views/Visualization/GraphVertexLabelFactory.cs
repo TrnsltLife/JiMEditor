@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using GraphX.Controls.Models;
 
-namespace JiME.Visualization.Views
+namespace JiME.Views
 {
     /// <summary>
     /// UIElement creation factory for DataVertex class

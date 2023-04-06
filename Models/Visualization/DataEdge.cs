@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GraphX.Common.Models;
 
-namespace JiME.Visualization.Models
+namespace JiME.Visualization
 {
     /* DataEdge is the data class for the edges. It contains all custom edge data specified by the user.
          * This class also must be derived from EdgeBase class that provides properties and methods mandatory for
