@@ -10,10 +10,8 @@
    - Generator log
    - (DONE) Able to use the generator in the campaign editor to create a random scenario (direct save is disabled)
  - Integrate visualizer to the actual editor window
-   - Show and update automatically in main
-     - Layout fixes
-	 - Automatic update on change
-   - Make items clickable / open editor windows / highlight on mouseover
+   - Automatic update on change
+   - Highlight on mouseover
  - Improve interaction with boardgame-elements (e.g. things not directly visible in the App)
  - Implement more StoryArchetypes (that can use the same templates than the old ones)
  - Implement side quests 

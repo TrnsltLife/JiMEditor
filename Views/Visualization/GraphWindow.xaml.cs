@@ -50,7 +50,7 @@ namespace JiME.Views
         {
             if (scenario != null)
             {
-                var dataGraph = Graph.Generate(scenario);
+                var dataGraph = Graph.Generate(scenario, null);
                 graphArea.ShowGraph(dataGraph);
             }
         }

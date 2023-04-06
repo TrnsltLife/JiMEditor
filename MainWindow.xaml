@@ -267,29 +267,31 @@
 		</Border>
 
 		<Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
             
 			<Grid.Background>
 				<ImageBrush ImageSource="Assets/ring.png" Stretch="Uniform" Opacity="0.1"/>
 			</Grid.Background>
 
-            <controls:ZoomControl x:Name="visualizationZoomCtrl" Grid.Row="1" Background="Transparent">
+            <!-- Draw this behind the TileMap controls -->
+            <controls:ZoomControl x:Name="visualizationZoomCtrl" Grid.Column="0" Grid.ColumnSpan="2" Background="Transparent">
                 <localviews:GraphArea x:Name="visualizationGraphArea" >
                     <localviews:GraphArea.Resources>
-                        <Style TargetType="TextBlock"/> <!-- Ignore Force text to white here -->
+                        <Style TargetType="TextBlock"/>
+                        <!-- Ignore Force text to white here -->
                     </localviews:GraphArea.Resources>
                 </localviews:GraphArea>
             </controls:ZoomControl>
 
-            <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="0">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Column="0" VerticalAlignment="Top">
 				<!--ItemsSource="{Binding chapterObserver}"-->
 				<ItemsControl Padding="5" ItemsSource="{Binding chapterObserver}">
 					<ItemsControl.ItemsPanel>
 						<ItemsPanelTemplate>
-							<WrapPanel IsItemsHost="True" />
+							<WrapPanel IsItemsHost="True" Orientation="Vertical" />
 						</ItemsPanelTemplate>
 					</ItemsControl.ItemsPanel>
 
@@ -323,7 +325,10 @@
 
 				</ItemsControl>
 			</ScrollViewer>
-		</Grid>
+
+
+
+        </Grid>
 
 	</DockPanel>
 </Window>

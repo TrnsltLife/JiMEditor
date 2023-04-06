@@ -61,37 +61,47 @@ namespace JiME.Views
                     break;
             }
 
-            // Prepare JSON content display
-            var jsonLines = JsonConvert.SerializeObject(d.Source, Formatting.Indented).Replace("\r", "").Split('\n').ToList();
-            int similarCount = 1;
-            for (int i = 1; i < jsonLines.Count; i++) // Combine identical lines
+            // Interaction depends on whether we have a click action
+            if (d.ClickAction != null)
             {
-                if (jsonLines[i - 1] == jsonLines[i])
+                // Implememnt clicking
+                ctrl.Click += (a, b) => d.ClickAction(d);
+            }
+            else // No click action
+            {
+                // Prepare JSON content display
+                var jsonLines = JsonConvert.SerializeObject(d.Source, Formatting.Indented).Replace("\r", "").Split('\n').ToList();
+                int similarCount = 1;
+                for (int i = 1; i < jsonLines.Count; i++) // Combine identical lines
                 {
-                    // Lines are identical
-                    similarCount++;
-                    jsonLines.RemoveAt(i);
-                    i--;
-                } else
-                {
-                    // Lines differ, add count if more than one
-                    if (similarCount > 1)
+                    if (jsonLines[i - 1] == jsonLines[i])
                     {
-                        jsonLines[i - 1] = jsonLines[i - 1] + string.Format(" [x{0}]", similarCount);
-                        similarCount = 1;
+                        // Lines are identical
+                        similarCount++;
+                        jsonLines.RemoveAt(i);
+                        i--;
+                    }
+                    else
+                    {
+                        // Lines differ, add count if more than one
+                        if (similarCount > 1)
+                        {
+                            jsonLines[i - 1] = jsonLines[i - 1] + string.Format(" [x{0}]", similarCount);
+                            similarCount = 1;
+                        }
                     }
                 }
-            }
-            if (jsonLines.Count > 30) // Truncate if necessary
-            {
-                jsonLines = jsonLines.Take(30).ToList();
-                jsonLines.Add("--- CONTENT TRUNCATED ---");
-            }
+                if (jsonLines.Count > 30) // Truncate if necessary
+                {
+                    jsonLines = jsonLines.Take(30).ToList();
+                    jsonLines.Add("--- CONTENT TRUNCATED ---");
+                }
 
-            // Setup tooltip
-            ctrl.ToolTip = d.VertexType.ToString() + "\n" + string.Join("\n", jsonLines);
-            System.Windows.Controls.ToolTipService.SetInitialShowDelay(ctrl, 0);
-            System.Windows.Controls.ToolTipService.SetShowDuration(ctrl, 1000000);
+                // Setup tooltip
+                ctrl.ToolTip = d.VertexType.ToString() + "\n" + string.Join("\n", jsonLines);
+                System.Windows.Controls.ToolTipService.SetInitialShowDelay(ctrl, 0);
+                System.Windows.Controls.ToolTipService.SetShowDuration(ctrl, 1000000);
+            }
 
             return ctrl;
         }
@@ -108,6 +118,7 @@ namespace JiME.Views
             // For DataEdges, we do some modifications for the default controls
             var ctrl = base.CreateEdgeControl(source, target, edge, showArrows, visibility); // Visibility affects arrow visibility, not the balloon
             ctrl.Opacity = 0.5;
+            ctrl.Foreground = Brushes.LightGray;
             return ctrl;
         }
     }

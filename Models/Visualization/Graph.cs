@@ -15,7 +15,7 @@ namespace JiME.Visualization
     /// </summary>
     public class Graph : BidirectionalGraph<DataVertex, DataEdge>
     {
-        public static Graph Generate(Scenario scenario)
+        public static Graph Generate(Scenario scenario, Action<DataVertex> clickAction)
         {
             //Lets make new data graph instance
             var dataGraph = new Graph();
@@ -25,7 +25,7 @@ namespace JiME.Visualization
 
             // Add specific START vertex to work as root node
             var startVertexId = "START";
-            var startVertex = new DataVertex("START", DataVertex.Type.Start, null);
+            var startVertex = new DataVertex("START", DataVertex.Type.Start, null, null, clickAction);
             vertexDict.Add(startVertexId, startVertex);
             dataGraph.AddVertex(startVertex);
 
@@ -40,7 +40,7 @@ namespace JiME.Visualization
 
                 // Vertex for the trigger
                 var multiSuffix = x.isMultiTrigger ? "*" : "";
-                var vertex = new DataVertex(x.dataName + multiSuffix, DataVertex.Type.Trigger, x);
+                var vertex = new DataVertex(x.dataName + multiSuffix, DataVertex.Type.Trigger, x, null, clickAction);
                 vertexDict.Add(getTriggerName(x.dataName), vertex);
                 dataGraph.AddVertex(vertex);
                 return vertex;
@@ -56,7 +56,7 @@ namespace JiME.Visualization
                 }
 
                 // Vertex for the objective
-                var vertex = new DataVertex(x.dataName, DataVertex.Type.Objective, x);
+                var vertex = new DataVertex(x.dataName, DataVertex.Type.Objective, x, null, clickAction);
                 vertexDict.Add(getObjectiveName(x.dataName), vertex);
                 dataGraph.AddVertex(vertex);
                 return vertex;
@@ -92,7 +92,7 @@ namespace JiME.Visualization
             HandleCollection(scenario.resolutionObserver, x =>
             {
                 // Vertex for the resolution
-                var vertex = new DataVertex(x.dataName, DataVertex.Type.Resolution, x);
+                var vertex = new DataVertex(x.dataName, DataVertex.Type.Resolution, x, null, clickAction);
                 vertexDict.Add(getResolutionName(x.dataName), vertex);
                 dataGraph.AddVertex(vertex);
                 return vertex;
@@ -116,12 +116,12 @@ namespace JiME.Visualization
                 }
 
                 // Vertex for the interaction
-                var vertex = new DataVertex(x.dataName, DataVertex.Type.Interaction, x);
+                var vertex = new DataVertex(x.dataName, DataVertex.Type.Interaction, x, null, clickAction);
                 vertexDict.Add(getInteractionName(x.dataName), vertex);
                 dataGraph.AddVertex(vertex);
 
                 // Create interaction group if needed
-                var groupVertex = IntegrationGroupCheck(vertexDict, dataGraph, x.dataName);
+                var groupVertex = IntegrationGroupCheck(vertexDict, dataGraph, x.dataName, clickAction);
                 if (groupVertex != null)
                 {
                     dataGraph.AddEdge(new DataEdge(groupVertex, vertex) { Text = "includes" });
@@ -258,7 +258,7 @@ namespace JiME.Visualization
             HandleCollection(scenario.chapterObserver, x =>
             {
                 // Vertex for the scenario/tileset
-                var vertex = new DataVertex(x.dataName, DataVertex.Type.Chapter, x);
+                var vertex = new DataVertex(x.dataName, DataVertex.Type.Chapter, x, null, clickAction);
                 vertexDict.Add(getChapterName(x.dataName), vertex);
                 dataGraph.AddVertex(vertex);
                 return vertex;
@@ -268,7 +268,7 @@ namespace JiME.Visualization
                 HandleCollection(x.tileObserver.OfType<BaseTile>(), tileX =>
                 {
                     // Vertex for the scenario/tileset
-                    var tileVertex = new DataVertex(tileX.idNumber.ToString() + tileX.tileSide, DataVertex.Type.Tile, tileX);
+                    var tileVertex = new DataVertex(tileX.idNumber.ToString() + tileX.tileSide, DataVertex.Type.Tile, tileX, null, clickAction);
                     vertexDict.Add(getTileName(tileX.GUID.ToString()), tileVertex);
                     dataGraph.AddVertex(tileVertex);
                     return tileVertex;
@@ -287,7 +287,7 @@ namespace JiME.Visualization
                     HandleCollection(tileX.tokenList, tokenX =>
                     {
                         // Vertex for the scenario/tileset
-                        var tokenVertex = new DataVertex(tokenX.dataName, DataVertex.Type.Token, tokenX);
+                        var tokenVertex = new DataVertex(tokenX.dataName, DataVertex.Type.Token, tokenX, tileX, clickAction);
                         vertexDict.Add(getTokenName(tokenX.GUID.ToString()), tokenVertex);
                         dataGraph.AddVertex(tokenVertex);
                         return tokenVertex;
@@ -347,7 +347,7 @@ namespace JiME.Visualization
                 HandleCollection(scenario.threatObserver.OrderBy(x => x.threshold), x =>
                 {
                     // Vertex for the threat
-                    var vertex = new DataVertex("Threat Level: " + x.threshold, DataVertex.Type.ThreatLevel, x);
+                    var vertex = new DataVertex("Threat Level: " + x.threshold, DataVertex.Type.ThreatLevel, x, null, clickAction);
                     vertexDict.Add(getThreatName(x.dataName + "_" + x.threshold), vertex);
                     dataGraph.AddVertex(vertex);
                     return vertex;
@@ -364,7 +364,7 @@ namespace JiME.Visualization
                     dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "initiates" });
                 });
                 });
-                var maxThreatVertex = new DataVertex("Max Threat: " + scenario.threatMax, DataVertex.Type.ThreatLevel, null);
+                var maxThreatVertex = new DataVertex("Max Threat: " + scenario.threatMax, DataVertex.Type.ThreatLevel, null, null, clickAction);
                 vertexDict.Add(getThreatName("MAX THREAT"), maxThreatVertex);
                 dataGraph.AddVertex(maxThreatVertex);
                 dataGraph.AddEdge(new DataEdge(prevThreat, maxThreatVertex, weight: 2) { Text = null });
@@ -433,7 +433,7 @@ namespace JiME.Visualization
             }
         }
 
-        private static DataVertex IntegrationGroupCheck(Dictionary<string, DataVertex> dict, Graph dataGraph, string dataName)
+        private static DataVertex IntegrationGroupCheck(Dictionary<string, DataVertex> dict, Graph dataGraph, string dataName, Action<DataVertex> clickAction)
         {
             if (dataName.Contains("GRP"))
             {
@@ -443,7 +443,7 @@ namespace JiME.Visualization
                 if (!dict.ContainsKey(groupName))
                 {
                     // Create the group vertex
-                    var vertex = new DataVertex(groupNameAndNumber, DataVertex.Type.InteractionGroup, null);
+                    var vertex = new DataVertex(groupNameAndNumber, DataVertex.Type.InteractionGroup, null, null, clickAction);
                     dict.Add(groupName, vertex);
                     dataGraph.AddVertex(vertex);
                     return vertex;

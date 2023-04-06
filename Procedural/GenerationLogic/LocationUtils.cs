@@ -77,6 +77,10 @@ namespace JiME.Procedural.GenerationLogic
             {
                 tile.flavorBookData.pages.Add(tileInfo.ExplorationTexts.GetRandomFromEnumerable(ctx.Random));
             }
+            else
+            {
+                tile.flavorBookData.pages.Add("");             
+            }
 
             // Add the chapter and return created tile
             tileset.AddTile(tile);

@@ -22,6 +22,9 @@ namespace JiME.Visualization
         public Type VertexType { get; private set; }
 
         public object Source { get; private set; }
+        public object Source2 { get; private set; }
+
+        public Action<DataVertex> ClickAction { get; private set; }
 
         #region Calculated or static props
 
@@ -36,15 +39,17 @@ namespace JiME.Visualization
         /// Default parameterless constructor for this class
         /// (required for YAXLib serialization)
         /// </summary>
-        public DataVertex() : this(string.Empty, Type.Start, null)
+        public DataVertex() : this(string.Empty, Type.Start, null, null, null)
         {
         }
 
-        public DataVertex(string text, Type type, object source)
+        public DataVertex(string text, Type type, object source, object source2, Action<DataVertex> clickAction)
         {
             Text = text;
             VertexType = type;
             Source = source;
+            Source2 = source2;
+            ClickAction = clickAction;
         }
 
         public enum Type
