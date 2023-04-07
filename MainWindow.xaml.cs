@@ -539,7 +539,7 @@ namespace JiME
 			{
 				scenario.scenarioName = sw.scenarioName;
 			}
-		}
+		}   
 
         private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e )
 		{

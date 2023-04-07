@@ -18,21 +18,29 @@ namespace JiME.Procedural
             // Set up the context for generating a Scenario
             var ctx = new SimpleGeneratorContext(parameters);
 
-            // Step 1. Generate linear MAIN STORY objective structure and (possibly branching) StoryPoints to fill in later
-            GenerateMainStoryObjectivesAndStoryPoints(ctx, visualizeStoryPointsInScenario: ctx.Parameters.DebugSkipStoryPointsFillIn);
-
-            // TODO: Step 2. Generate side-quest objective structure and StoryPoints to fill in later
-
-            // Step 3. Fill in the StoryPoints with interactions
-            if (!ctx.Parameters.DebugSkipStoryPointsFillIn)
+            try
             {
-                GenerateStoryTemplateAndFillInStoryPoints(ctx);
-            }
+                // Step 1. Generate linear MAIN STORY objective structure and (possibly branching) StoryPoints to fill in later
+                GenerateMainStoryObjectivesAndStoryPoints(ctx, visualizeStoryPointsInScenario: ctx.Parameters.DebugSkipStoryPointsFillIn);
 
-            // Check errors and return finished scenario
-            var checker = new ErrorChecker();
-            checker.CheckErrors(ctx.Scenario);
-            Console.WriteLine("SimpleGenerator ERROR: " + checker.Errors);
+                // TODO: Step 2. Generate side-quest objective structure and StoryPoints to fill in later
+
+                // Step 3. Fill in the StoryPoints with interactions
+                if (!ctx.Parameters.DebugSkipStoryPointsFillIn)
+                {
+                    GenerateStoryTemplateAndFillInStoryPoints(ctx);
+                }
+
+                // Check errors and return finished scenario
+                var checker = new ErrorChecker();
+                checker.CheckErrors(ctx.Scenario);
+                Console.WriteLine("SimpleGenerator ERROR: " + checker.Errors);
+            }
+            catch (Exception e)
+            {
+                // Something went catastrophically wront
+                ctx.GeneratorWarnings.Add(e.ToString());
+            }
 
             // Return finished scenario
             return ctx;

@@ -6,7 +6,7 @@
 # Milestones and Tasks
 - Improvements 
  - Implement generator parameter modification screen
-   - Advanced parameters
+   - (DONE) Advanced parameters
    - Generator log
    - (DONE) Able to use the generator in the campaign editor to create a random scenario (direct save is disabled)
  - (DONE) Integrate visualizer to the actual editor window

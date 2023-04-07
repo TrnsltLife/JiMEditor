@@ -129,6 +129,11 @@
 
                         <TextBlock Grid.Column="1" Grid.Row="1" Text="Create a new Random Scenario that is not a part of a Campaign." TextWrapping="Wrap" Style="{StaticResource SubText}"/>
 
+                        <TextBlock Grid.Column="1" Grid.Row="0" Text="EXPERIMENTAL" Style="{StaticResource SubText}" Foreground="OrangeRed" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,-10,0,0">
+                            <TextBlock.RenderTransform>
+                                <RotateTransform Angle="7" />
+                            </TextBlock.RenderTransform>
+                        </TextBlock>
                     </Grid>
                 </Button>
             </StackPanel>

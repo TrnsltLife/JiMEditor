@@ -53,8 +53,16 @@ namespace JiME.Views
             if (File.Exists(SettingsStorageFile))
             {
                 // JSON File found, read from that
-                var json = File.ReadAllText(SettingsStorageFile);
-                GeneratorParameters = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType<SimpleGeneratorParameters>(json, Generator.GetDefaultParameters());
+                try
+                {
+                    var json = File.ReadAllText(SettingsStorageFile);
+                    GeneratorParameters = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType<SimpleGeneratorParameters>(json, Generator.GetDefaultParameters());
+                }
+                catch
+                {
+                    // Something failed in reading, use default value
+                    GeneratorParameters = Generator.GetDefaultParameters();
+                }
             }
             else
             {
@@ -120,7 +128,7 @@ namespace JiME.Views
             SaveParameterValues();
 
             // Generate the scenario
-            var generatorContext = Generator.GenerateScenario(GeneratorParameters);
+            SimpleGeneratorContext generatorContext = Generator.GenerateScenario(GeneratorParameters);
             Scenario = generatorContext.Scenario;
 
             // Display possible errors
@@ -131,9 +139,24 @@ namespace JiME.Views
             }
 
             // Enable buttons that need the scenario
-            visualizeButton.IsEnabled = true;
-            saveButton.IsEnabled = true;
-            okButton.IsEnabled = true;
+            visualizeButton.IsEnabled = Scenario != null;
+            saveButton.IsEnabled = Scenario != null;
+            okButton.IsEnabled = Scenario != null;
         }
-	}
+
+        private void TextBlock_AcceptOnlyNonNegativeInteger(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        {
+            int integer;
+            if (!int.TryParse(e.Text, out integer))
+            {
+                // Not an integer, not allowed
+                e.Handled = true;
+                return;
+            }
+            if (integer < 0)
+            {
+                e.Handled = true;
+            }
+        }
+    }
 }

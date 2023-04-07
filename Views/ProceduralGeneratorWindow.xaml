@@ -31,98 +31,137 @@
 		<Grid Margin="5">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="auto"/>
-				<ColumnDefinition Width="auto"/>
 				<ColumnDefinition Width="*"/>
-				<ColumnDefinition Width="auto"/>
 			</Grid.ColumnDefinitions>
 
+            <!-- Basic parameters -->
 			<Border Style="{StaticResource callout}" Margin="0,0,5,0">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Style="{StaticResource Heading}" Text="Random Seed:" MinWidth="100" />
-                        <TextBox x:Name="seedTB" Text="{Binding Seed}" Margin="10,0" MinWidth="150" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBox x:Name="seedTB" Text="{Binding Seed}" Margin="10,0,0,0" MinWidth="175" VerticalAlignment="Center"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <TextBlock Style="{StaticResource Heading}" Text="Archetype"  MinWidth="100"/>
-                        <ComboBox x:Name="archetypeCB" Margin="10,0" MinWidth="150" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock Style="{StaticResource Heading}" Text="Archetype:"  MinWidth="100"/>
+                        <ComboBox x:Name="archetypeCB" Margin="10,0,0,0" MinWidth="175" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                         <TextBlock Style="{StaticResource Heading}" Text="Template:" MinWidth="100" />
-                        <ComboBox x:Name="templateCB" Margin="10,0" MinWidth="150" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <ComboBox x:Name="templateCB" Margin="10,0,0,0" MinWidth="175" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     </StackPanel>
-                </StackPanel>
-
-			</Border>
-
-            <!--collections-->
-            <Border  Grid.Column="2" Style="{StaticResource callout}" Margin="0" >
-                <StackPanel Orientation="Horizontal">
-                    <StackPanel>
-                        <TextBlock Text="Enable these Collections:" Style="{StaticResource Heading}"/>
-                        <Grid Margin="0,5,0,10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal" >                 
+                        <TextBlock Text="Collections:" Margin="0,5,0,0" MinWidth="110" Style="{StaticResource Heading}" VerticalAlignment="Top" />
+                        <Grid Margin="0,5,0,0">
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
                             <!--Core Set-->
-                            <Rectangle Grid.Row="0" Grid.Column="0" Fill="DarkGreen" />
-                            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
-                                <TextBlock Text="r" Foreground="White" FontSize="20" FontStyle="Italic" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-                                <CheckBox x:Name="coreSetCB" Content="Core Set" FontWeight="Bold" FontStyle="Italic" Foreground="White" Padding="0,0,5,0" IsEnabled="False" IsChecked="True"/>
+                            <Rectangle Grid.Row="0" Fill="DarkGreen" />
+                            <StackPanel Orientation="Horizontal" Grid.Row="0">
+                                <TextBlock Text="r" Foreground="White" FontSize="20" FontStyle="Italic" Margin="0,0,4,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
+                                <CheckBox x:Name="coreSetCB" Content="Core Set" FontWeight="Bold" FontStyle="Italic" Foreground="White" Padding="0,0,5,0" IsEnabled="False" IsChecked="True" VerticalAlignment="Center"/>
                             </StackPanel>
 
-                            <Rectangle Grid.Row="0" Grid.Column="1" Fill="SaddleBrown" />
-                            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                            <Rectangle Grid.Row="1" Fill="SaddleBrown" />
+                            <StackPanel Orientation="Horizontal" Grid.Row="1">
                                 <TextBlock Text="v" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-                                <CheckBox x:Name="villainsOfEriadorCB" Content="Villains of Eriador" IsChecked="{Binding Has_VILLAINS_OF_ERIADOR}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+                                <CheckBox x:Name="villainsOfEriadorCB" Content="Villains of Eriador" IsChecked="{Binding Has_VILLAINS_OF_ERIADOR}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"   VerticalAlignment="Center"/>
                             </StackPanel>
 
-                            <Rectangle Grid.Row="1" Grid.Column="0" Fill="Black" />
-                            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
+                            <Rectangle Grid.Row="2" Fill="Black" />
+                            <StackPanel Orientation="Horizontal" Grid.Row="2">
                                 <TextBlock Text="p" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-                                <CheckBox x:Name="shadowedPathsCB" Content="Shadowed Paths" IsChecked="{Binding Has_SHADOWED_PATHS}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+                                <CheckBox x:Name="shadowedPathsCB" Content="Shadowed Paths" IsChecked="{Binding Has_SHADOWED_PATHS}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"  VerticalAlignment="Center"/>
                             </StackPanel>
 
-                            <Rectangle Grid.Row="1" Grid.Column="1" Fill="Purple" />
-                            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                            <Rectangle Grid.Row="3" Fill="Purple" />
+                            <StackPanel Orientation="Horizontal" Grid.Row="3" >
                                 <TextBlock Text="d" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-                                <CheckBox x:Name="dwellersInDarknessCB" Content="Dwellers in Darkness" IsChecked="{Binding Has_DWELLERS_IN_DARKNESS}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+                                <CheckBox x:Name="dwellersInDarknessCB" Content="Dwellers in Darkness" IsChecked="{Binding Has_DWELLERS_IN_DARKNESS}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"  VerticalAlignment="Center"/>
                             </StackPanel>
 
-                            <Rectangle Grid.Row="2" Grid.Column="0" Fill="DarkRed" />
-                            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
-                                <TextBlock Text="w" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-                                <CheckBox x:Name="spreadingWarCB" Content="Spreading War" IsChecked="{Binding Has_SPREADING_WAR}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+                            <Rectangle Grid.Row="4" Fill="DarkRed" />
+                            <StackPanel Orientation="Horizontal" Grid.Row="4" >
+                                <TextBlock Text="w" Foreground="White" FontSize="20" Margin="4,0,0,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
+                                <CheckBox x:Name="spreadingWarCB" Content="Spreading War" IsChecked="{Binding Has_SPREADING_WAR}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"  VerticalAlignment="Center"/>
                             </StackPanel>
-
-
-
-                            <Rectangle Grid.Row="2" Grid.Column="1" Fill="YellowGreen" />
-                            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
+                            
+                            <Rectangle Grid.Row="5" Fill="YellowGreen" />
+                            <StackPanel Orientation="Horizontal" Grid.Row="5" >
                                 <TextBlock Text="c" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-                                <CheckBox x:Name="scourgesOfTheWastesCB" Content="Scourges of the Wastes" IsChecked="{Binding Has_SCOURGES_OF_THE_WASTES}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0">
+                                <CheckBox x:Name="scourgesOfTheWastesCB" Content="Scourges of the Wastes" IsChecked="{Binding Has_SCOURGES_OF_THE_WASTES}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"  VerticalAlignment="Center">
                                 </CheckBox>
                             </StackPanel>
                         </Grid>
                     </StackPanel>
                 </StackPanel>
+
+			</Border>
+
+            <!-- Adbanced parameters -->
+            <Border Style="{StaticResource callout}" Margin="0,0,5,0" Grid.Column="1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="15" />
+                        <ColumnDefinition Width="180" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Objectives and story branching -->
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Min Objectives:" Style="{StaticResource Heading}"  />
+                    <TextBox Grid.Row="0" Grid.Column="1"  Text="{Binding MinMainStoryObjectiveCount}" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Max Objectives:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="1" Grid.Column="1"  Text="{Binding MaxMainStoryObjectiveCount}" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Branching %:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="2" Grid.Column="1"  Text="{Binding BranchingProbability}" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Min Branches:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="3" Grid.Column="1"  Text="{Binding BranchingMinBranches}" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Max Branches:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="4" Grid.Column="1"  Text="{Binding BranchingMaxBranches}" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+
+                    <!-- Threat -->
+                    
+                    <TextBlock Grid.Row="0" Grid.Column="3" Text="Max Threat:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="0" Grid.Column="4"  Text="{Binding MaxThreat}" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="3" Text="Min Threat Interval:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="1" Grid.Column="4"  Text="{Binding ThreatIntervalMin}" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+
+                    <TextBlock Grid.Row="2" Grid.Column="3" Text="Max Threat Interval:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="2" Grid.Column="4"  Text="{Binding ThreatIntervalMax}" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+
+                    <TextBlock Grid.Row="3" Grid.Column="3" Text="Monster Pool Multiplier:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="3" Grid.Column="4"  Text="{Binding ThreatDiffMonsterPoolMultiplier}" MinWidth="40" VerticalAlignment="Center"  PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+
+
+                </Grid>
             </Border>
+
         </Grid>
 
-
-		
-		<Border  Grid.Row="2" Style="{StaticResource callout}" Margin="5">
-            <TextBlock Foreground="White" ><Run Text="TODO: Advanced settin"/><Run Text="g"/></TextBlock>
-        </Border>
-
 		<!--Footer-->
-		<Border Grid.ColumnSpan="2" Grid.Row="5" BorderThickness="0,1,0,0" BorderBrush="Silver" Margin="5" HorizontalAlignment="Stretch" Background="#FF46464A">
+		<Border Grid.ColumnSpan="2" Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Silver" Margin="5" HorizontalAlignment="Stretch" Background="#FF46464A">
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
