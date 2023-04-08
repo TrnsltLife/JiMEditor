@@ -122,9 +122,9 @@
     <Compile Include="Procedural\GenerationLogic\FragmentUtils.cs" />
     <Compile Include="Procedural\GenerationLogic\GeneratorUtils.cs" />
     <Compile Include="Procedural\GenerationLogic\LocationUtils.cs" />
-    <Compile Include="Procedural\SimpleGeneratorContext.cs" />
-    <Compile Include="Procedural\SimpleGenerator.cs" />
-    <Compile Include="Procedural\SimpleGeneratorParameters.cs" />
+    <Compile Include="Procedural\ProceduralGeneratorContext.cs" />
+    <Compile Include="Procedural\ProceduralGenerator.cs" />
+    <Compile Include="Procedural\ProceduralGeneratorParameters.cs" />
     <Compile Include="Procedural\GenerationLogic\StoryGenerator.cs" />
     <Compile Include="Procedural\StoryElements\StoryFragment.cs" />
     <Compile Include="Procedural\StoryElements\StoryLocation.cs" />
@@ -485,10 +485,10 @@
     <EmbeddedResource Include="Assets\enemy-activation-defaults.json" />
     <EmbeddedResource Include="Assets\enemy-activation-defaults-original.json" />
     <EmbeddedResource Include="Assets\terrain-interactions.json" />
-    <EmbeddedResource Include="Assets\Procedural\story-archetypes.json" />
-    <EmbeddedResource Include="Assets\Procedural\story-templates.json" />
-    <EmbeddedResource Include="Assets\Procedural\story-locations.json" />
-    <EmbeddedResource Include="Assets\Procedural\story-fragments.json" />
+    <EmbeddedResource Include="Procedural\Assets\story-archetypes.json" />
+    <EmbeddedResource Include="Procedural\Assets\story-templates.json" />
+    <EmbeddedResource Include="Procedural\Assets\story-locations.json" />
+    <EmbeddedResource Include="Procedural\Assets\story-fragments.json" />
     <None Include="Procedural\README.md" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

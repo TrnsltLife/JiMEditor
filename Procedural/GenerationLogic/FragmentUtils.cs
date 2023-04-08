@@ -10,7 +10,7 @@ namespace JiME.Procedural.GenerationLogic
     {
         // TODO: some way to override token types from the StoryTemplate would be nice  
 
-        public static void FillInObjective(SimpleGeneratorContext ctx, Objective o, string mainStoryPoint, IEnumerable<string> secondaryStoryPoints, string phaseLocation)
+        public static void FillInObjective(ProceduralGeneratorContext ctx, Objective o, string mainStoryPoint, IEnumerable<string> secondaryStoryPoints, string phaseLocation)
         {
             // Switch the dataName to help debugging
             var newDataName = mainStoryPoint.ToString() + " in " + phaseLocation.ToString() + " (" + o.triggeredByName + ")";
@@ -36,7 +36,7 @@ namespace JiME.Procedural.GenerationLogic
             }
         }
 
-        public static void FillInStoryPoint(SimpleGeneratorContext ctx, string startTrigger, List<string> endTriggers, string mainFragment, IEnumerable<string> secondaryFragments, string location, HexTile tile, StoryGenerator.StoryPhase phase)
+        public static void FillInStoryPoint(ProceduralGeneratorContext ctx, string startTrigger, List<string> endTriggers, string mainFragment, IEnumerable<string> secondaryFragments, string location, HexTile tile, StoryGenerator.StoryPhase phase)
         {
             for (int i = 0; i < endTriggers.Count; i++)
             {
@@ -68,7 +68,7 @@ namespace JiME.Procedural.GenerationLogic
 
         #region Interaction - Dialog
         private static void CreateDialogInteraction(
-            SimpleGeneratorContext ctx, 
+            ProceduralGeneratorContext ctx, 
             string fragmentName,
             StoryFragment.InteractionInfo info,
             string startTrigger,
@@ -121,7 +121,7 @@ namespace JiME.Procedural.GenerationLogic
         #endregion
         #region Interaction - StatTest
         private static void CreateStatTestInteraction(
-            SimpleGeneratorContext ctx, 
+            ProceduralGeneratorContext ctx, 
             string fragmentName,
             StoryFragment.InteractionInfo info,
             string startTrigger,
@@ -186,7 +186,7 @@ namespace JiME.Procedural.GenerationLogic
         #endregion
         #region Interaction - Threat
         private static void CreateThreatInteraction(
-            SimpleGeneratorContext ctx, 
+            ProceduralGeneratorContext ctx, 
             string fragmentName,
             StoryFragment.InteractionInfo info,
             string startTrigger,
@@ -254,7 +254,7 @@ namespace JiME.Procedural.GenerationLogic
 
         private static string GenerateRandomNameSuffix() => string.Format(" ({0})", Guid.NewGuid().GetHashCode());
 
-        private static void AddTokenInteraction<TInteraction>(SimpleGeneratorContext ctx, HexTile tile, string startTrigger, StoryFragment.InteractionInfo info, Func<TInteraction> setupAction) where TInteraction : InteractionBase
+        private static void AddTokenInteraction<TInteraction>(ProceduralGeneratorContext ctx, HexTile tile, string startTrigger, StoryFragment.InteractionInfo info, Func<TInteraction> setupAction) where TInteraction : InteractionBase
         {
             // Create the interaction with specific setup
             var i = setupAction();

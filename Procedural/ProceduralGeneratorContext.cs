@@ -5,9 +5,9 @@ using JiME.Procedural.StoryElements;
 
 namespace JiME.Procedural
 {
-    public class SimpleGeneratorContext
+    public class ProceduralGeneratorContext
     {
-        public SimpleGeneratorParameters Parameters { get; private set; }
+        public ProceduralGeneratorParameters Parameters { get; private set; }
         public Scenario Scenario { get; private set; }
         public Random Random { get; private set; }
 
@@ -29,7 +29,7 @@ namespace JiME.Procedural
         public PersonType BystanderPersonTokenType { get; set; }
         public bool MainAntagonistEncounterCreated { get; set; }
 
-        public SimpleGeneratorContext(SimpleGeneratorParameters parameters)
+        public ProceduralGeneratorContext(ProceduralGeneratorParameters parameters)
         {
             Parameters = parameters;
             SetupScenario();

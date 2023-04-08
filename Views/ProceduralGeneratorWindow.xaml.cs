@@ -25,8 +25,8 @@ namespace JiME.Views
         public bool AllowDirectSaving { get; private set; }
 
         public Scenario Scenario { get; set; }
-        public SimpleGenerator Generator { get; set; }
-        public SimpleGeneratorParameters GeneratorParameters { get; set; }
+        public ProceduralGenerator Generator { get; set; }
+        public ProceduralGeneratorParameters GeneratorParameters { get; set; }
 
         public ProceduralGeneratorWindow() : this(allowDirectSaving: true)
         {
@@ -37,7 +37,7 @@ namespace JiME.Views
             AllowDirectSaving = allowDirectSaving;
 
             InitializeComponent();
-            Generator = new SimpleGenerator();
+            Generator = new ProceduralGenerator();
             Scenario = null; // By default, we don't have a scenario ready
 
             // Disable buttons since we don't have a scenario yet
@@ -49,9 +49,9 @@ namespace JiME.Views
             saveButton.Visibility = allowDirectSaving ? Visibility.Visible : Visibility.Collapsed;
 
             // Add instructions
-            logListBox.ItemsSource = new List<SimpleGeneratorContext.LogItem>()
+            logListBox.ItemsSource = new List<ProceduralGeneratorContext.LogItem>()
             {
-                new SimpleGeneratorContext.LogItem() { Type = SimpleGeneratorContext.LogType.Info, Message = "Click the Die to generate..." }
+                new ProceduralGeneratorContext.LogItem() { Type = ProceduralGeneratorContext.LogType.Info, Message = "Click the Die to generate..." }
             };
 
             LoadParameterValues();
@@ -66,7 +66,7 @@ namespace JiME.Views
                 try
                 {
                     var json = File.ReadAllText(SettingsStorageFile);
-                    GeneratorParameters = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType<SimpleGeneratorParameters>(json, Generator.GetDefaultParameters());
+                    GeneratorParameters = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType<ProceduralGeneratorParameters>(json, Generator.GetDefaultParameters());
                 }
                 catch
                 {
@@ -142,7 +142,7 @@ namespace JiME.Views
             SaveParameterValues();
 
             // Generate the scenario
-            SimpleGeneratorContext generatorContext = Generator.GenerateScenario(GeneratorParameters);
+            ProceduralGeneratorContext generatorContext = Generator.GenerateScenario(GeneratorParameters);
             Scenario = generatorContext.Scenario;
 
             // Display logs

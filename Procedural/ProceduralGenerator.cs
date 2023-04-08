@@ -9,14 +9,14 @@ namespace JiME.Procedural
     /// <summary>
     /// Simple generator that generates a linear main objective chain and some possible side objectives
     /// </summary>
-    public class SimpleGenerator
+    public class ProceduralGenerator
     {
-        public SimpleGeneratorParameters GetDefaultParameters() => new SimpleGeneratorParameters();
+        public ProceduralGeneratorParameters GetDefaultParameters() => new ProceduralGeneratorParameters();
 
-        public SimpleGeneratorContext GenerateScenario(SimpleGeneratorParameters parameters)
+        public ProceduralGeneratorContext GenerateScenario(ProceduralGeneratorParameters parameters)
         {
             // Set up the context for generating a Scenario
-            var ctx = new SimpleGeneratorContext(parameters);
+            var ctx = new ProceduralGeneratorContext(parameters);
 
             try
             {
@@ -52,7 +52,7 @@ namespace JiME.Procedural
             return ctx;
         }
 
-        private static void GenerateMainStoryObjectivesAndStoryPoints(SimpleGeneratorContext ctx, bool visualizeStoryPointsInScenario = false)
+        private static void GenerateMainStoryObjectivesAndStoryPoints(ProceduralGeneratorContext ctx, bool visualizeStoryPointsInScenario = false)
         {
             // Everything we generate here is for the main quest
             var mainQuest = true;
@@ -106,7 +106,7 @@ namespace JiME.Procedural
             }
         }
         
-        private static void GenerateStoryTemplateAndFillInStoryPoints(SimpleGeneratorContext ctx)
+        private static void GenerateStoryTemplateAndFillInStoryPoints(ProceduralGeneratorContext ctx)
         {
             // Prepare StoryGenerator with StoryArchetype and StoryTemplate
             ctx.StoryArchetype = ctx.Parameters.StoryArchetype.HasValue
@@ -142,7 +142,7 @@ namespace JiME.Procedural
         }
 
 
-        private static TextBookData AddResolution(SimpleGeneratorContext ctx, bool success, string text)
+        private static TextBookData AddResolution(ProceduralGeneratorContext ctx, bool success, string text)
         {
             // Create the trigger that triggers this resolution
             var triggerName = ctx.CreateNextTriggerId();
@@ -170,7 +170,7 @@ namespace JiME.Procedural
         /// <param name="text">Dummy text for the objective</param>
         /// <param name="createStartingObjective">Whether to create the trigger that will trigger this objective, false if creating very first Objective for the scenario</param>
         /// <returns>The created Objective</returns>
-        private static Objective AddObjective(SimpleGeneratorContext ctx, bool mainQuest, string onCompletionTrigger, string text, bool createStartingObjective = false)
+        private static Objective AddObjective(ProceduralGeneratorContext ctx, bool mainQuest, string onCompletionTrigger, string text, bool createStartingObjective = false)
         {
             // Handle opened trigger if requested
             var objectiveOpenedTrigger = "None";
