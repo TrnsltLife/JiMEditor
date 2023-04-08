@@ -8,7 +8,7 @@
         xmlns:controls="http://schemas.panthernet.ru/graphx/"
         mc:Ignorable="d"
 				xmlns:uc="clr-namespace:JiME.UserControls"
-        Title="{Binding titleChangedToken, Converter={StaticResource titleConverter}}" Height="500" Width="770" MinHeight="500" MinWidth="700" WindowStartupLocation="CenterScreen" Background="#FF2D2D30" Closing="Window_Closing" ResizeMode="CanResizeWithGrip" SizeToContent="Width">
+        Title="{Binding titleChangedToken, Converter={StaticResource titleConverter}}" Height="500" Width="770" MinHeight="500" MinWidth="700" WindowStartupLocation="CenterScreen" Background="#FF2D2D30" Closing="Window_Closing" ResizeMode="CanResizeWithGrip" SizeToContent="WidthAndHeight">
 
 	<Window.CommandBindings>
 		<CommandBinding Command="local:MyCommands.Exit" Executed="CommandExit_Executed" CanExecute="CommandExit_CanExecute"/>

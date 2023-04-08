@@ -124,38 +124,41 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
+                    <!-- Info note -->
+                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5" Text="Hover over input boxes to get information about individual parameters." Style="{StaticResource SubText}"  />
+
                     <!-- Objectives and story branching -->
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Min Objectives:" Style="{StaticResource Heading}"  />
-                    <TextBox Grid.Row="0" Grid.Column="1"  Text="{Binding MinMainStoryObjectiveCount}" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Min Objectives:" Style="{StaticResource Heading}"  />
+                    <TextBox Grid.Row="1" Grid.Column="1"  Text="{Binding MinMainStoryObjectiveCount}" ToolTip="Miminum number of objectives in the MAIN STORY" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
 
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Max Objectives:" Style="{StaticResource Heading}" />
-                    <TextBox Grid.Row="1" Grid.Column="1"  Text="{Binding MaxMainStoryObjectiveCount}" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Max Objectives:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="2" Grid.Column="1"  Text="{Binding MaxMainStoryObjectiveCount}" ToolTip="Maximum number of objectives in the MAIN STORY" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
 
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Branching %:" Style="{StaticResource Heading}" />
-                    <TextBox Grid.Row="2" Grid.Column="1"  Text="{Binding BranchingProbability}" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Branching %:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="3" Grid.Column="1"  Text="{Binding BranchingProbability}" ToolTip=" Percentage change that branches occur on StoryPoint for each Objective. 0% means no branching at all." MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
 
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Min Branches:" Style="{StaticResource Heading}" />
-                    <TextBox Grid.Row="3" Grid.Column="1"  Text="{Binding BranchingMinBranches}" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Min Branches:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="4" Grid.Column="1"  Text="{Binding BranchingMinBranches}" ToolTip="If branching, minimum number of branches to have" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
 
-                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Max Branches:" Style="{StaticResource Heading}" />
-                    <TextBox Grid.Row="4" Grid.Column="1"  Text="{Binding BranchingMaxBranches}" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Max Branches:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="5" Grid.Column="1"  Text="{Binding BranchingMaxBranches}" ToolTip="If branching, maximum number of branches to have"  MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
 
                     <!-- Threat -->
                     
-                    <TextBlock Grid.Row="0" Grid.Column="3" Text="Max Threat:" Style="{StaticResource Heading}" />
-                    <TextBox Grid.Row="0" Grid.Column="4"  Text="{Binding MaxThreat}" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+                    <TextBlock Grid.Row="1" Grid.Column="3" Text="Max Threat:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="1" Grid.Column="4"  Text="{Binding MaxThreat}" ToolTip="Maximum threat level where the scenario ends" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
 
-                    <TextBlock Grid.Row="1" Grid.Column="3" Text="Min Threat Interval:" Style="{StaticResource Heading}" />
-                    <TextBox Grid.Row="1" Grid.Column="4"  Text="{Binding ThreatIntervalMin}" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+                    <TextBlock Grid.Row="2" Grid.Column="3" Text="Min Threat Interval:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="2" Grid.Column="4"  Text="{Binding ThreatIntervalMin}" ToolTip="Minimum threat interval to next event" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
 
-                    <TextBlock Grid.Row="2" Grid.Column="3" Text="Max Threat Interval:" Style="{StaticResource Heading}" />
-                    <TextBox Grid.Row="2" Grid.Column="4"  Text="{Binding ThreatIntervalMax}" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+                    <TextBlock Grid.Row="3" Grid.Column="3" Text="Max Threat Interval:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="3" Grid.Column="4"  Text="{Binding ThreatIntervalMax}" ToolTip="Maximum threat interval to next event" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
 
-                    <TextBlock Grid.Row="3" Grid.Column="3" Text="Monster Pool Multiplier:" Style="{StaticResource Heading}" />
-                    <TextBox Grid.Row="3" Grid.Column="4"  Text="{Binding ThreatDiffMonsterPoolMultiplier}" MinWidth="40" VerticalAlignment="Center"  PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+                    <TextBlock Grid.Row="4" Grid.Column="3" Text="Monster Pool Multiplier:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="4" Grid.Column="4"  Text="{Binding ThreatDiffMonsterPoolMultiplier}" ToolTip="Multiplier to the monster pool size based on threat interval from last event. (e.g. Multiplier 2x and interval being from 24->31 means monster pool 14)" MinWidth="40" VerticalAlignment="Center"  PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
 
-                    <TextBlock Grid.Row="4" Grid.Column="3" Text="(DEBUG) Don't fill Stories:" Style="{StaticResource Heading}" />
-                    <CheckBox Grid.Row="4" Grid.Column="4"  Name="debugDontFillStoriesCB" IsChecked="false" MinWidth="40" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="5" Grid.Column="3" Text="(DEBUG) Don't fill Stories:" Style="{StaticResource Heading}" />
+                    <CheckBox Grid.Row="5" Grid.Column="4"  Name="debugDontFillStoriesCB" IsChecked="false" ToolTip="Tells whether the generator should stop after generating StoryPoints and before filling them with content to show StoryPoint structure." MinWidth="40" VerticalAlignment="Center"/>
 
 
                 </Grid>

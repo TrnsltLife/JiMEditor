@@ -82,19 +82,31 @@ namespace JiME.Procedural
         /// </summary>
         public int BranchingMaxBranches { get; set; } = 3;
 
+        /// <summary>
+        /// Maximum threat level where the scenario ends
+        /// </summary>
         public int MaxThreat { get; set; } = 60;
 
+        /// <summary>
+        /// Minimum threat interval to next event
+        /// </summary>
         public int ThreatIntervalMin { get; set; } = 8;
 
+        /// <summary>
+        /// Maximum threat interval to next event
+        /// </summary>
         public int ThreatIntervalMax { get; set; } = 12;
 
+        /// <summary>
+        /// Multiplier to the monster pool size based on threat interval from last event. (e.g. Multiplier 2x and interval being from 24->31 means monster pool 14)
+        /// </summary>
         public int ThreatDiffMonsterPoolMultiplier { get; set; } = 2;
 
         #endregion
         #region Debug parameters
 
         /// <summary>
-        /// Tells whether the generator should stop after generating StoryPoints and before filling them with content
+        /// Tells whether the generator should stop after generating StoryPoints and before filling them with content to show StoryPoint structure.
         /// </summary>
         public bool DebugSkipStoryPointsFillIn = false;
 
