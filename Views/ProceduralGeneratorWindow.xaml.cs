@@ -22,6 +22,8 @@ namespace JiME.Views
         private static readonly string RANDOM_TEXT = "RANDOM";
         private static readonly string SettingsStorageFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Your Journey", "ProcParameters.json");
 
+        public bool AllowDirectSaving { get; private set; }
+
         public Scenario Scenario { get; set; }
         public SimpleGenerator Generator { get; set; }
         public SimpleGeneratorParameters GeneratorParameters { get; set; }
@@ -31,7 +33,9 @@ namespace JiME.Views
         }
 
         public ProceduralGeneratorWindow(bool allowDirectSaving)
-		{
+        {
+            AllowDirectSaving = allowDirectSaving;
+
             InitializeComponent();
             Generator = new SimpleGenerator();
             Scenario = null; // By default, we don't have a scenario ready
@@ -43,6 +47,12 @@ namespace JiME.Views
 
             // If direct saving is not allowed, the button is permanently hidden
             saveButton.Visibility = allowDirectSaving ? Visibility.Visible : Visibility.Collapsed;
+
+            // Add instructions
+            logListBox.ItemsSource = new List<SimpleGeneratorContext.LogItem>()
+            {
+                new SimpleGeneratorContext.LogItem() { Type = SimpleGeneratorContext.LogType.Info, Message = "Click the Die to generate..." }
+            };
 
             LoadParameterValues();
 		}
@@ -88,7 +98,10 @@ namespace JiME.Views
                 .ToList();
             allTemplates.Insert(0, RANDOM_TEXT);
             templateCB.ItemsSource = allTemplates;
-            templateCB.SelectedIndex = allTemplates.IndexOf(GeneratorParameters.StoryTemplate?.Length > 0 ? GeneratorParameters.StoryTemplate : RANDOM_TEXT);  
+            templateCB.SelectedIndex = allTemplates.IndexOf(GeneratorParameters.StoryTemplate?.Length > 0 ? GeneratorParameters.StoryTemplate : RANDOM_TEXT);
+
+            // Setup debug values
+            debugDontFillStoriesCB.IsChecked = GeneratorParameters.DebugSkipStoryPointsFillIn;
         }
 
         private void SaveParameterValues()
@@ -123,6 +136,7 @@ namespace JiME.Views
             // Update the values that are not updated automatically to Parameters
             GeneratorParameters.StoryArchetype = (string)archetypeCB.SelectedValue == RANDOM_TEXT ? null : (StoryArchetype.Type?)Enum.Parse(typeof(StoryArchetype.Type), (string)archetypeCB.SelectedValue);
             GeneratorParameters.StoryTemplate = (string)templateCB.SelectedValue == RANDOM_TEXT ? null : (string)templateCB.SelectedValue;
+            GeneratorParameters.DebugSkipStoryPointsFillIn = debugDontFillStoriesCB.IsChecked ?? false;
 
             // Save the used parameters on generation
             SaveParameterValues();
@@ -131,12 +145,20 @@ namespace JiME.Views
             SimpleGeneratorContext generatorContext = Generator.GenerateScenario(GeneratorParameters);
             Scenario = generatorContext.Scenario;
 
-            // Display possible errors
-            if (generatorContext.GeneratorWarnings.Count > 0)
+            // Display logs
+            if (generatorContext.Scenario != null)
             {
-                // TODO: Show these nicely
-                MessageBox.Show(string.Join(Environment.NewLine, generatorContext.GeneratorWarnings), "WARNINGS", MessageBoxButton.OK);
+                if (AllowDirectSaving)
+                {
+                    generatorContext.LogInfo("Use buttons below to Visualize, Save or Accept the Scenario...");
+                }
+                else
+                {
+                    generatorContext.LogInfo("Use buttons below to Visualize or Accept the Scenario...");
+                }
             }
+            logListBox.ItemsSource = generatorContext.GeneratorLogs;
+            logScrollViewer.ScrollToBottom();
 
             // Enable buttons that need the scenario
             visualizeButton.IsEnabled = Scenario != null;

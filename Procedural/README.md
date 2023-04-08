@@ -5,15 +5,14 @@
 
 # Milestones and Tasks
 - Improvements 
- - Implement generator parameter modification screen
-   - (DONE) Advanced parameters
-   - Generator log
-   - (DONE) Able to use the generator in the campaign editor to create a random scenario (direct save is disabled)
+ - (DONE) Implement generator parameter modification screen
  - (DONE) Integrate visualizer to the actual editor window
- - Improve interaction with boardgame-elements (e.g. things not directly visible in the App)
+ - Balance out the generator (e.g. Threat track generation, also have more options than just monsters, e.g. nazgul cry -> fear damage)
+ - Implement StoryLocation specific random encounters (monters and other interactions) to fill in the world
  - Implement more StoryArchetypes (that can use the same templates than the old ones)
- - Implement side quests 
- - Implement even more StoryTemplates (with help of others?)
+ - Improve interaction with boardgame-elements (e.g. things not directly visible in the App) 
+ - Implement side quests
+ - Implement more StoryTemplates (with help of others?)
  - Take Scenario difficulty level in to account somehow
  - Make starting level adjustable
  - Add rewards both in middle of scenario and in the end

@@ -20,6 +20,8 @@ namespace JiME.Procedural
 
             try
             {
+                ctx.LogInfo("Generating Scenario...");
+
                 // Step 1. Generate linear MAIN STORY objective structure and (possibly branching) StoryPoints to fill in later
                 GenerateMainStoryObjectivesAndStoryPoints(ctx, visualizeStoryPointsInScenario: ctx.Parameters.DebugSkipStoryPointsFillIn);
 
@@ -31,15 +33,19 @@ namespace JiME.Procedural
                     GenerateStoryTemplateAndFillInStoryPoints(ctx);
                 }
 
-                // Check errors and return finished scenario
-                var checker = new ErrorChecker();
-                checker.CheckErrors(ctx.Scenario);
-                Console.WriteLine("SimpleGenerator ERROR: " + checker.Errors);
+                // TODO: use the ErrorChecker after it actually does something
+                ctx.LogInfo("FINISHED!");
             }
             catch (Exception e)
             {
                 // Something went catastrophically wront
-                ctx.GeneratorWarnings.Add(e.ToString());
+                ctx.LogError("FATAL ERROR: " + e.Message);
+            }
+
+            // Don't return a scenario if we have errors
+            if (ctx.HasErrors)
+            {
+                ctx.ClearScenario();
             }
 
             // Return finished scenario
@@ -57,7 +63,8 @@ namespace JiME.Procedural
 
             // Create objectives back from the resolution up to desired objective count
             int objectiveCount = ctx.Random.Next(ctx.Parameters.MinMainStoryObjectiveCount, ctx.Parameters.MaxMainStoryObjectiveCount + 1);
-            while(--objectiveCount >= 0)
+            ctx.LogInfo("MAIN OBJECTIVES: " + objectiveCount);
+            while (--objectiveCount >= 0)
             {
                 if (objectiveCount == 0)
                 {
@@ -78,19 +85,17 @@ namespace JiME.Procedural
                 }
             }
 
-            // Debugging
-            Console.WriteLine("MAIN OBJECTIVES: " + ctx.Scenario.objectiveObserver.Count);
-
             // Story point debugging
-            foreach (var sp in ctx.AllStoryPoints)
+            if (visualizeStoryPointsInScenario)
             {
-                // Print storypoint details
-                Console.WriteLine(sp.ToString());
+                ctx.LogWarning("SKIPPING STORY FILLING AND VISUALIZING STORY POINTS INSTEAD");
+                foreach (var sp in ctx.AllStoryPoints)
+                {
+                    // Print storypoint details                   
+                    //ctx.LogInfo(sp.ToString());
 
-                // Visualization is done by adding dummy interaction that links the items
-                // which alters the Scenario so should not be done if filling StoryPoints for real later
-                if (visualizeStoryPointsInScenario)
-                {   
+                    // Visualization is done by adding dummy interaction that links the items
+                    // which alters the Scenario so should not be done if filling StoryPoints for real later
                     var spInteraction = new StoryPointInteraction("STORYPOINT: " + sp.Objective.dataName)
                     {
                         triggerName = sp.StartTriggerName,
@@ -127,6 +132,7 @@ namespace JiME.Procedural
             mainStoryPoints_MiddlePhase.AddRange(mainStoryPoints.Skip(1).Take(mainStoryPoints.Count - 2));
             mainStoryPoints_EndPhase.Add(mainStoryPoints.Last());
 
+            ctx.LogInfo("MAIN STORY POINTS: Start({0}), Middle({1}), End({2})", mainStoryPoints_StartPhase.Count, mainStoryPoints_MiddlePhase.Count, mainStoryPoints_EndPhase.Count);
             // TODO: Disect side quest storypoints somehow to the different phases
 
             // Fill in storypoints for each phase

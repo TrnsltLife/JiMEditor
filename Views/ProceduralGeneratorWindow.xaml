@@ -105,7 +105,7 @@
 			</Border>
 
             <!-- Adbanced parameters -->
-            <Border Style="{StaticResource callout}" Margin="0,0,5,0" Grid.Column="1">
+            <Border Style="{StaticResource callout}" Margin="0,0,0,0" Grid.Column="1">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="120" />
@@ -154,13 +154,45 @@
                     <TextBlock Grid.Row="3" Grid.Column="3" Text="Monster Pool Multiplier:" Style="{StaticResource Heading}" />
                     <TextBox Grid.Row="3" Grid.Column="4"  Text="{Binding ThreatDiffMonsterPoolMultiplier}" MinWidth="40" VerticalAlignment="Center"  PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
 
+                    <TextBlock Grid.Row="4" Grid.Column="3" Text="(DEBUG) Don't fill Stories:" Style="{StaticResource Heading}" />
+                    <CheckBox Grid.Row="4" Grid.Column="4"  Name="debugDontFillStoriesCB" IsChecked="false" MinWidth="40" VerticalAlignment="Center"/>
+
 
                 </Grid>
             </Border>
 
         </Grid>
 
-		<!--Footer-->
+        <!-- Logs -->
+        <Border Style="{StaticResource callout}" Margin="5,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="300" />                    
+                </Grid.RowDefinitions>
+
+                <TextBlock Style="{StaticResource Heading}" Grid.Row="0" Text="Generator Logs" MinWidth="100" />
+                <ScrollViewer Name="logScrollViewer" Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl Name="logListBox" Background="Transparent" BorderBrush="Transparent" >
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Name="logMessage" Text="{Binding Message}" Foreground="White" FontSize="12" Margin="4,0,0,0" />
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Type}" Value="Warning">
+                                        <Setter TargetName="logMessage" Property="Foreground" Value="Yellow"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="Error">
+                                        <Setter TargetName="logMessage" Property="Foreground" Value="Red"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>                            
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+        <!--Footer-->
 		<Border Grid.ColumnSpan="2" Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Silver" Margin="5" HorizontalAlignment="Stretch" Background="#FF46464A">
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
@@ -181,11 +213,11 @@
                         <Image Source="/JiME;component/Assets/save.png" Stretch="Uniform" Width="32" Margin="5"/>
                     </Button>
 
-                    <Button x:Name="okButton" Margin="0, 10, 10, 10" Background="MediumSeaGreen" Click="OKButton_Click" IsDefault="True" IsCancel="False" ToolTip="Take Scenario to Editor">
+                    <Button x:Name="okButton" Margin="0, 10, 10, 10" Background="MediumSeaGreen" Click="OKButton_Click" IsDefault="True" IsCancel="False" ToolTip="Accept Scenario">
                         <Image Source="/JiME;component/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
                     </Button>
 
-                    <Button x:Name="cancelButton" Margin="0, 10, 10, 10" Background="{StaticResource bgCancelDelete}" IsDefault="True" IsCancel="True" ToolTip="Cancel creation">
+                    <Button x:Name="cancelButton" Margin="0, 10, 10, 10" Background="{StaticResource bgCancelDelete}" IsDefault="True" IsCancel="True" ToolTip="Cancel generation">
                         <Image Source="/JiME;component/Assets/cancel.png" Stretch="Uniform" Width="32" Margin="5"/>
                     </Button>
                 </WrapPanel>

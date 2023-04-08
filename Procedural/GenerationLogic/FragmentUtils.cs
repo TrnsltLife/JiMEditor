@@ -98,7 +98,7 @@ namespace JiME.Procedural.GenerationLogic
 
                 if (!dialogInfo.Choice1Triggers && !dialogInfo.Choice2Triggers && !dialogInfo.Choice3Triggers)
                 {
-                    ctx.GeneratorWarnings.Add(dialog.dataName + ": None of the dialog choices advance the story! See used StoryTemplate!");
+                    ctx.LogError(dialog.dataName + ": None of the dialog choices advance the story! See used StoryTemplate!");
                 }
 
                 // Handle what happens to the token

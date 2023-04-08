@@ -20,7 +20,7 @@ namespace JiME.Procedural.GenerationLogic
                 .ToList();
             if (validTiles.Count == 0)
             {
-                ctx.GeneratorWarnings.Add("GetRandomTileInfo(): Couldn not find available '" + location.Name + "' tile anymore!");
+                ctx.LogWarning("GetRandomTileInfo(): Couldn not find available '" + location.Name + "' tile anymore!");
                 return null;
             }
 

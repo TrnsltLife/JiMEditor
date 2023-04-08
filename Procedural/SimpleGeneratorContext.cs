@@ -11,7 +11,8 @@ namespace JiME.Procedural
         public Scenario Scenario { get; private set; }
         public Random Random { get; private set; }
 
-        public List<string> GeneratorWarnings { get; private set; } = new List<string>();
+        public List<LogItem> GeneratorLogs { get; private set; } = new List<LogItem>();
+        public bool HasErrors { get; private set; }
 
         private int _nextTriggerId = 1;
 
@@ -36,8 +37,8 @@ namespace JiME.Procedural
             // If we don't have the seed, create it randomly
             var seedString = parameters.Seed?.Length > 0
                 ? parameters.Seed
-                : (new Random().Next(10000000)).ToString();
-            Console.WriteLine("RANDOM SEED STRING: " + seedString);
+                : (new Random().Next(10000000, 99999999)).ToString();
+            LogInfo("RANDOM SEED STRING: " + seedString);
 
             // Setup Randomization based on Seed
             Random = new Random(seedString.GetHashCode());
@@ -102,6 +103,52 @@ namespace JiME.Procedural
             Scenario.wallTypes = new int[22];
             for (int i = 0; i < 22; i++)
                 Scenario.wallTypes[i] = 0;//0=none, 1=wall, 2=river
+        }
+        
+        public void LogInfo(string msg, params object[] args)
+        {
+            GeneratorLogs.Add(new LogItem()
+            {
+                Type = LogType.Info,
+                Message = string.Format(msg, args)
+            });
+        }
+
+        public void LogWarning(string msg, params object[] args)
+        {
+            GeneratorLogs.Add(new LogItem()
+            {
+                Type = LogType.Warning,
+                Message = string.Format(msg, args)
+            });
+        }
+
+        public void LogError(string msg, params object[] args)
+        {
+            GeneratorLogs.Add(new LogItem()
+            {
+                Type = LogType.Error,
+                Message = string.Format(msg, args)
+            });
+            HasErrors = true;
+        }
+
+        public void ClearScenario()
+        {
+            Scenario = null;
+        }
+
+        public enum LogType
+        {
+            Info,
+            Warning,
+            Error
+        }
+
+        public class LogItem
+        {
+            public LogType Type { get; set; }
+            public string Message { get; set; }
         }
     }
 }

@@ -78,6 +78,7 @@ namespace JiME.Procedural.GenerationLogic
             //       note that we already limit actual selected tiles based on which collections are available so this is just an optimization
             var phaseLocation = phaseInfo.TakesPlaceInOneOf.GetRandomFromEnumerable(_ctx.Random);
             var primaryLocation = StoryLocation.GetLocation(phaseLocation);
+            _ctx.LogInfo("PHASE {0} LOCATION {1}", phase, primaryLocation.Name);
             var secondaryLocations = phaseInfo.TakesPlaceInOneOf
                 .Where(l => l != primaryLocation.Name)
                 .Select(l => StoryLocation.GetLocation(l))
@@ -146,6 +147,10 @@ namespace JiME.Procedural.GenerationLogic
                     phaseLocation);
 
                 // Determine which tile in the set is linked to this storypoint
+                if (allPhaseTiles.Count == 0)
+                {
+                    throw new Exception("Ran out of tiles for the phase! Limit number of objectives or add more collections.");
+                }
                 var randomPhaseTile = allPhaseTiles.GetRandomFromEnumerable(_ctx.Random);
                 allPhaseTiles.Remove(randomPhaseTile);
 
