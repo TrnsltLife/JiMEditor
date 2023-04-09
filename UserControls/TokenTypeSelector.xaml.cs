@@ -107,9 +107,9 @@ namespace JiME.UserControls
 
 		private void InitializeSelections()
         {
-			Debug.Log("InitializeSelections");
+			//Debug.Log("InitializeSelections");
 			if (interaction == null || scenario == null) return;
-			Debug.Log("InitializeSelections interaction and scenario not null");
+			//Debug.Log("InitializeSelections interaction and scenario not null");
 
 			Dictionary<List<RadioButton>, Collection> checkboxCollectionMap = 
 				new Dictionary<List<RadioButton>, Collection>() {

@@ -119,6 +119,9 @@
     <Compile Include="Models\Threat.cs" />
     <Compile Include="Models\Token.cs" />
     <Compile Include="Models\Trigger.cs" />
+    <Compile Include="UserControls\AddEventPopup.xaml.cs">
+      <DependentUpon>AddEventPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\TokenTypeSelector.xaml.cs">
       <DependentUpon>TokenTypeSelector.xaml</DependentUpon>
     </Compile>
@@ -234,6 +237,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UserControls\AddEventPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UserControls\TokenTypeSelector.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

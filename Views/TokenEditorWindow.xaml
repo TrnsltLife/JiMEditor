@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:uc="clr-namespace:JiME.UserControls"
         xmlns:local="clr-namespace:JiME"
 				xmlns:core="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
@@ -89,7 +90,15 @@
 									</Grid>
 
 									<TextBlock Text="Activate This Event:" Foreground="White" HorizontalAlignment="Center" Margin="0,10,0,0"/>
-									<ComboBox Name="interactionCB" ItemsSource="{Binding tokenInteractions}" DisplayMemberPath="dataName" SelectedValue="{Binding selected.triggerName}" SelectedValuePath="dataName" VerticalAlignment="Center" SelectionChanged="interactionCB_SelectionChanged" Margin="0,5,0,0"/>
+									<Grid>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="*"/>
+											<ColumnDefinition Width="auto"/>
+										</Grid.ColumnDefinitions>
+
+										<ComboBox Name="interactionCB" ItemsSource="{Binding tokenInteractions}" DisplayMemberPath="dataName" SelectedValue="{Binding selected.triggerName}" SelectedValuePath="dataName" VerticalAlignment="Center" SelectionChanged="interactionCB_SelectionChanged" Margin="0,5,0,0"/>
+										<uc:AddEventPopup Grid.Column="1" Scenario="{Binding scenario}" />
+									</Grid>
 									<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Text="This is the Event this Token activates when Players click on it. Only Events marked as Token Interactions will appear in this dropdown." Margin="0,5,0,0"/>
 
 									<TextBlock Text="Triggered By:" Foreground="White" HorizontalAlignment="Center" Margin="0,10,0,0"/>
