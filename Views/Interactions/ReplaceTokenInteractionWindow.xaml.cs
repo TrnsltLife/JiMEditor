@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace JiME.Views
 {
@@ -63,6 +64,46 @@ namespace JiME.Views
 			( x.isTokenInteraction || x.dataName == "None" )
 			&& x.dataName != interaction.dataName
 			&& !x.dataName.Contains( "GRP" ) ) );
+
+			scenario.interactionObserver.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(InteractionsCollectionChangedMethod); //used to update after Add Interaction dialogs
+		}
+
+		private void InteractionsCollectionChangedMethod(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			//different kind of changes that may have occurred in collection when returning from the various Add Interaction dialogs
+			if (e.Action == NotifyCollectionChangedAction.Add)
+			{
+				RefreshTokenInteractions();
+			}
+			if (e.Action == NotifyCollectionChangedAction.Replace)
+			{
+				RefreshTokenInteractions();
+			}
+			if (e.Action == NotifyCollectionChangedAction.Remove)
+			{
+				RefreshTokenInteractions();
+			}
+			if (e.Action == NotifyCollectionChangedAction.Move)
+			{
+				RefreshTokenInteractions();
+			}
+		}
+
+		private void RefreshTokenInteractions()
+		{
+			ObservableCollection<IInteraction> newEvents = new ObservableCollection<IInteraction>(scenario.interactionObserver.Where(x => (x.isTokenInteraction && !Regex.IsMatch(x.dataName, @"\sGRP\d+$")) || x.dataName == "None"));
+			foreach (var interaction in newEvents)
+			{
+				if (!eventToReplace.Contains(interaction))
+				{
+					eventToReplace.Add(interaction);
+				}
+
+				if (!replaceWith.Contains(interaction))
+				{
+					replaceWith.Add(interaction);
+				}
+			}
 		}
 
 		private void EditFlavorButton_Click( object sender, RoutedEventArgs e )
@@ -134,6 +175,8 @@ namespace JiME.Views
 			interaction.replaceWithEvent = ( (IInteraction)replaceWithList.SelectedItem ).dataName;
 
 			interaction.replaceWithGUID = scenario.interactionObserver.Where( x => x.dataName == interaction.replaceWithEvent ).Select( x => x.GUID ).First();
+
+			scenario.interactionObserver.CollectionChanged -= InteractionsCollectionChangedMethod;
 
 			closing = true;
 			DialogResult = true;
