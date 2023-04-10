@@ -230,6 +230,7 @@
 									<StackPanel Orientation="Horizontal" Grid.Column="2">
 										<ComboBox x:Name="eventCB" HorizontalAlignment="Left" VerticalAlignment="Center" ItemsSource="{Binding scenario.interactionObserver}" SelectedValuePath="dataName" DisplayMemberPath="dataName" MinWidth="200" SelectionChanged="eventCB_SelectionChanged"/>
 										<Button x:Name="addSelectedEventButton" Click="addSelectedEventButton_Click" Content="Add Selected Event" Background="DodgerBlue" Foreground="White" Margin="10,0,0,0" IsEnabled="False"/>
+										<uc:AddEventPopup Scenario="{Binding scenario}" HorizontalAlignment="Right" />
 									</StackPanel>
 								</Grid>
 

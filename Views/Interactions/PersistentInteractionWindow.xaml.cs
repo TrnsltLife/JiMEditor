@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
 using JiME.UserControls;
+using System.Collections.Specialized;
 
 namespace JiME.Views
 {
@@ -45,6 +46,7 @@ namespace JiME.Views
 
 			//interactions that are NOT Token Interactions
 			interactionObserver = new ObservableCollection<string>( scenario.interactionObserver.Where( x => x.isTokenInteraction ).Select( x => x.dataName ) );
+			scenario.interactionObserver.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(InteractionsCollectionChangedMethod); //used to update after Add Interaction dialogs
 
 			isThreatTriggered = scenario.threatObserver.Any( x => x.triggerName == interaction.dataName );
 			if ( isThreatTriggered )
@@ -58,6 +60,39 @@ namespace JiME.Views
 			oldName = interaction.dataName;
 
 			altTB.Document = RichTextBoxIconEditor.CreateFlowDocumentFromSimpleHtml(interaction.alternativeBookData.pages[0], "", "FontFamily=\"Segoe UI\" FontSize=\"12\"");
+		}
+
+		private void InteractionsCollectionChangedMethod(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			//different kind of changes that may have occurred in collection when returning from the various Add Interaction dialogs
+			if (e.Action == NotifyCollectionChangedAction.Add)
+			{
+				RefreshTokenInteractions();
+			}
+			if (e.Action == NotifyCollectionChangedAction.Replace)
+			{
+				RefreshTokenInteractions();
+			}
+			if (e.Action == NotifyCollectionChangedAction.Remove)
+			{
+				RefreshTokenInteractions();
+			}
+			if (e.Action == NotifyCollectionChangedAction.Move)
+			{
+				RefreshTokenInteractions();
+			}
+		}
+
+		private void RefreshTokenInteractions()
+		{
+			ObservableCollection<IInteraction> newEvents = new ObservableCollection<IInteraction>(scenario.interactionObserver.Where(x => (x.isTokenInteraction && !Regex.IsMatch(x.dataName, @"\sGRP\d+$")) || x.dataName == "None"));
+			foreach (var interaction in newEvents)
+			{
+				if (!interactionObserver.Contains(interaction.dataName))
+				{
+					interactionObserver.Add(interaction.dataName);
+				}
+			}
 		}
 
 		private void ComboBox_SelectionChanged( object sender, SelectionChangedEventArgs e )
@@ -110,6 +145,8 @@ namespace JiME.Views
 			tokenTypeSelector.AssignValuesFromSelections();
 
 			scenario.UpdateEventReferences( oldName, interaction );
+
+			scenario.interactionObserver.CollectionChanged -= InteractionsCollectionChangedMethod;
 
 			closing = true;
 			DialogResult = true;

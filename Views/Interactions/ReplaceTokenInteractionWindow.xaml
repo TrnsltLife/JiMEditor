@@ -175,18 +175,24 @@
 					<Border Style="{StaticResource callout}" Margin="0,10,0,0">
 						<StackPanel>
 							<UniformGrid Columns="2" Margin="0,0,0,5">
-								<TextBlock Style="{StaticResource Heading}" Text="Target (required)" VerticalAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Center"/>
-								<TextBlock Style="{StaticResource Heading}" Text="Source (required)" VerticalAlignment="Center" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+								<StackPanel Orientation="Vertical" Margin="10,0,0,0">
+									<TextBlock Style="{StaticResource Heading}" Text="Target (required)" VerticalAlignment="Center" TextWrapping="Wrap"/>
+									<TextBlock Text="Replace this Event:" Style="{StaticResource Heading}"/>
+								</StackPanel>
+								<StackPanel Orientation="Vertical" Margin="10,0,0,0">
+									<TextBlock Style="{StaticResource Heading}" Text="Source (required)" VerticalAlignment="Center" TextWrapping="Wrap"/>
+									<TextBlock Text="...with this Event:" Style="{StaticResource Heading}"/>
+								</StackPanel>
 							</UniformGrid>
 							<UniformGrid Columns="2">
 								<StackPanel Orientation="Horizontal">
-									<TextBlock Text="Replace this Event:" Style="{StaticResource Heading}"/>
-									<ComboBox Name="eventToReplaceList" Margin="10,0,0,0" MinWidth="200" SelectedValue="{Binding interaction.eventToReplace}" SelectedValuePath="dataName" DisplayMemberPath="dataName" ItemsSource="{Binding eventToReplace}"/>
+									<ComboBox Name="eventToReplaceList" Margin="10,0,0,0" MinWidth="300" SelectedValue="{Binding interaction.eventToReplace}" SelectedValuePath="dataName" DisplayMemberPath="dataName" ItemsSource="{Binding eventToReplace}"/>
+									<uc:AddEventPopup Scenario="{Binding scenario}" HorizontalAlignment="Right" />
 								</StackPanel>
 
 								<StackPanel Orientation="Horizontal">
-									<TextBlock Text="...with this Event:" Style="{StaticResource Heading}"/>
-									<ComboBox Name="replaceWithList" Margin="10,0,0,0" MinWidth="200" SelectedValue="{Binding interaction.replaceWithEvent}" SelectedValuePath="dataName" DisplayMemberPath="dataName" ItemsSource="{Binding replaceWith}"/>
+									<ComboBox Name="replaceWithList" Margin="10,0,0,0" MinWidth="300" SelectedValue="{Binding interaction.replaceWithEvent}" SelectedValuePath="dataName" DisplayMemberPath="dataName" ItemsSource="{Binding replaceWith}"/>
+									<uc:AddEventPopup Scenario="{Binding scenario}" HorizontalAlignment="Right" />
 								</StackPanel>
 							</UniformGrid>
 

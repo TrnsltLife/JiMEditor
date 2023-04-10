@@ -174,10 +174,16 @@
 								<TextBlock Style="{StaticResource Heading}" Text="...Activate One Of These Events:"/>
 								<UniformGrid Columns="2">
 									<GroupBox Style="{StaticResource DefaultGroupBox}" Header="If It's Set (True)..." FontWeight="Normal">
-										<ComboBox x:Name="eventTrue" HorizontalAlignment="Stretch" VerticalAlignment="Center" DisplayMemberPath="dataName" ItemsSource="{Binding scenario.interactionObserver}" SelectedValue="{Binding interaction.triggerIsSet}" SelectedValuePath="dataName" FontSize="12"/>
+										<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+											<ComboBox x:Name="eventTrue" HorizontalAlignment="Stretch" VerticalAlignment="Center" DisplayMemberPath="dataName" ItemsSource="{Binding scenario.interactionObserver}" SelectedValue="{Binding interaction.triggerIsSet}" SelectedValuePath="dataName" FontSize="12" MinWidth="260"/>
+											<uc:AddEventPopup Scenario="{Binding scenario}" HorizontalAlignment="Right" />
+										</StackPanel>
 									</GroupBox>
 									<GroupBox Style="{StaticResource DefaultGroupBox}" Header="If It's Not Set (False)..." FontWeight="Normal">
-										<ComboBox x:Name="eventNotTrue" HorizontalAlignment="Stretch" VerticalAlignment="Center" DisplayMemberPath="dataName" ItemsSource="{Binding scenario.interactionObserver}" SelectedValue="{Binding interaction.triggerNotSet}" SelectedValuePath="dataName" FontSize="12"/>
+										<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+											<ComboBox x:Name="eventNotTrue" HorizontalAlignment="Stretch" VerticalAlignment="Center" DisplayMemberPath="dataName" ItemsSource="{Binding scenario.interactionObserver}" SelectedValue="{Binding interaction.triggerNotSet}" SelectedValuePath="dataName" FontSize="12" MinWidth="260"/>
+											<uc:AddEventPopup Scenario="{Binding scenario}" HorizontalAlignment="Right" />
+										</StackPanel>
 									</GroupBox>
 								</UniformGrid>
 							</StackPanel>
@@ -194,7 +200,7 @@
 								<UniformGrid Columns="2">
 									<GroupBox Style="{StaticResource DefaultGroupBox}" Header="If It's Set (True)..." FontWeight="Normal">
 										<StackPanel Orientation="Horizontal">
-											<ComboBox x:Name="eventTrueTrigger" HorizontalAlignment="Stretch" VerticalAlignment="Center" DisplayMemberPath="dataName" ItemsSource="{Binding scenario.triggersObserver}" SelectedValue="{Binding interaction.triggerIsSetTrigger}" SelectedValuePath="dataName" FontSize="12" MinWidth="234"/>
+											<ComboBox x:Name="eventTrueTrigger" HorizontalAlignment="Stretch" VerticalAlignment="Center" DisplayMemberPath="dataName" ItemsSource="{Binding scenario.triggersObserver}" SelectedValue="{Binding interaction.triggerIsSetTrigger}" SelectedValuePath="dataName" FontSize="12" MinWidth="260"/>
 
 											<Button x:Name="addTriggerButton2" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="AddTriggerButton2_Click">
 												<Image Source="/JiME;component/Assets/add2.png"/>
@@ -204,7 +210,7 @@
 									</GroupBox>
 									<GroupBox Style="{StaticResource DefaultGroupBox}" Header="If It's Not Set (False)..." FontWeight="Normal">
 										<StackPanel Orientation="Horizontal">
-											<ComboBox x:Name="eventNotTrueTrigger" VerticalAlignment="Center" DisplayMemberPath="dataName" ItemsSource="{Binding scenario.triggersObserver}" SelectedValue="{Binding interaction.triggerNotSetTrigger}" SelectedValuePath="dataName" FontSize="12" MinWidth="234"/>
+											<ComboBox x:Name="eventNotTrueTrigger" VerticalAlignment="Center" DisplayMemberPath="dataName" ItemsSource="{Binding scenario.triggersObserver}" SelectedValue="{Binding interaction.triggerNotSetTrigger}" SelectedValuePath="dataName" FontSize="12" MinWidth="260"/>
 
 											<Button x:Name="addTriggerButton3" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="AddTriggerButton3_Click">
 												<Image Source="/JiME;component/Assets/add2.png"/>
