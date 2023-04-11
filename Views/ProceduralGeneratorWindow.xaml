@@ -43,7 +43,7 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                         <TextBlock Style="{StaticResource Heading}" Text="Archetype:"  MinWidth="100"/>
-                        <ComboBox x:Name="archetypeCB" Margin="10,0,0,0" MinWidth="175" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <ComboBox x:Name="archetypeCB" Margin="10,0,0,0" MinWidth="175" HorizontalAlignment="Left" VerticalAlignment="Center" SelectionChanged="ArchetypeCB_SelectionChanged" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                         <TextBlock Style="{StaticResource Heading}" Text="Template:" MinWidth="100" />
@@ -159,6 +159,9 @@
 
                     <TextBlock Grid.Row="5" Grid.Column="3" Text="(DEBUG) Don't fill Stories:" Style="{StaticResource Heading}" />
                     <CheckBox Grid.Row="5" Grid.Column="4"  Name="debugDontFillStoriesCB" IsChecked="false" ToolTip="Tells whether the generator should stop after generating StoryPoints and before filling them with content to show StoryPoint structure." MinWidth="40" VerticalAlignment="Center"/>
+
+                    <TextBlock Grid.Row="6" Grid.Column="3" Text="(DEBUG) Verbose Checks:" Style="{StaticResource Heading}" />
+                    <CheckBox Grid.Row="6" Grid.Column="4"  Name="debugVerboseStoryElementCheck" IsChecked="false" ToolTip="If true, story element check prints out much more detailed log." MinWidth="40" VerticalAlignment="Center"/>
 
 
                 </Grid>

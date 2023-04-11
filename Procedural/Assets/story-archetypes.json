@@ -1,23 +1,67 @@
-{"archetypes":[
-    {
-        "Archetype": "OvercomingTheMonster",
-        "Start": {
-            "Comment": "Start of the adventure where we find more information about what is happening",
-            "MustHaveOneOf": [ "FindInfoAboutTarget" ],
-            "CanHaveSomeOf": [ "InvestigateDestruction", "TalkToSurvivors" ],
-            "TakesPlaceInOneOf": [ "Settlement" ]
+{
+    "archetypes": [
+        {
+            "Archetype": "OvercomingTheMonster",
+            "Start": {
+                "Comment": "Start of the adventure where we find more information about what is happening",
+                "MustHaveOneOf": [ "FindInfoAboutTarget" ],
+                "CanHaveSomeOf": [ "InvestigateDestruction", "TalkToSurvivors" ],
+                "TakesPlaceInOneOf": [ "Settlement" ]
+            },
+            "Middle": {
+                "Comment": "Buildup towards the big encounter and some way to gain an advantage",
+                "MustHaveOneOf": [ "FindTargetLocation" ],
+                "CanHaveSomeOf": [ "InvestigateDestruction", "TalkToSurvivors", "FindWeaknessInTarget", "FindStrengthInSelf", "AcquireTreasure" ],
+                "TakesPlaceInOneOf": [ "Woodlands", "DarkForest", "Ruins" ]
+            },
+            "End": {
+                "Comment": "Usually kill the monster, might also have some other means of dispatching than killing? Possibly target escapes anyway",
+                "MustHaveOneOf": [ "KillMonster", "MonsterRetreats" ],
+                "CanHaveSomeOf": [ "ScoutOutTarget", "InvestigateDestruction" ],
+                "TakesPlaceInOneOf": [ "Cave", "Dungeon", "DarkForest" ]
+            }
         },
-        "Middle": {
-            "Comment": "Buildup towards the big encounter and some way to gain an advantage",
-            "MustHaveOneOf": [ "FindTargetLocation" ],
-            "CanHaveSomeOf": [ "InvestigateDestruction", "TalkToSurvivors", "FindWeaknessInTarget", "FindStrengthInSelf" ],
-            "TakesPlaceInOneOf": [ "Woodlands", "DarkForest", "Ruins" ]
+		{
+            "Archetype": "TheQuest",
+            "Start": {
+                "Comment": "Start of the adventure where the adventures are told about the artifact they need to find",
+                "MustHaveOneOf": [ "FindInfoAboutTarget" ],
+                "CanHaveSomeOf": [ "TalkToSurvivors", "FindStrengthInSelf" ],
+                "TakesPlaceInOneOf": [ "Settlement" ]
+            },
+            "Middle": {
+                "Comment": "The getting there part where the adventurers search for clues and the location of the artifact",
+                "MustHaveOneOf": [ "FindTargetLocation" ],
+                "CanHaveSomeOf": [ "KillMonster", "FindStrengthInSelf", "EscapeFromMonster" ],
+                "TakesPlaceInOneOf": [ "Woodlands", "DarkForest" ]
+            },
+            "End": {
+                "Comment": "The final challenge of finding/recovering the artifact",
+                "MustHaveOneOf": [ "KillMonster", "AcquireTreasure", "ReachFinalDestination" ],
+                "CanHaveSomeOf": [],
+                "TakesPlaceInOneOf": [ "Cave", "Ruins", "Dungeon", "DarkForest" ]
+            }
         },
-        "End": {
-            "Comment": "Usually kill the monster, might also have some other means of dispatching than killing? Possibly target escapes anyway",
-            "MustHaveOneOf": [ "KillMonster", "MonsterRetreats" ],
-            "CanHaveSomeOf": [ "ScoutOutTarget", "InvestigateDestruction" ],
-            "TakesPlaceInOneOf": [ "Cave", "Dungeon", "DarkForest" ]
+        {
+            "Archetype": "VoyageAndReturn",
+            "Start": {
+                "Comment": "Start of the adventure where the adventurers find out what happened and where they should go",
+                "MustHaveOneOf": [ "FindInfoAboutTarget" ],
+                "CanHaveSomeOf": [ "InvestigateDestruction", "TalkToSurvivors" ],
+                "TakesPlaceInOneOf": [ "Ruins", "Woodlands" ]
+            },
+            "Middle": {
+                "Comment": "The voyage part where the adventurers travel to their destination",
+                "MustHaveOneOf": [ "FindTargetLocation" ],
+                "CanHaveSomeOf": [ "KillMonster", "FindStrengthInSelf", "AcquireTreasure" ],
+                "TakesPlaceInOneOf": [ "Woodlands", "DarkForest", "Cave" ]
+            },
+            "End": {
+                "Comment": "The end of the voyage where the adventurers reach their target and possibly encounter the final challenge",
+                "MustHaveOneOf": [ "KillMonster", "EscapeFromMonster", "ReachFinalDestination" ],
+                "CanHaveSomeOf": [],
+                "TakesPlaceInOneOf": [ "Settlement" ]
+            }
         }
-    }
-]}
+    ]
+}

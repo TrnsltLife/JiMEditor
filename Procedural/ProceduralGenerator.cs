@@ -20,21 +20,29 @@ namespace JiME.Procedural
 
             try
             {
-                ctx.LogInfo("Generating Scenario...");
+                // Check configuration
+                StoryElementChecker.PerformCheck(ctx, ctx.Parameters.DebugVerboseStoryElementCheck);
 
-                // Step 1. Generate linear MAIN STORY objective structure and (possibly branching) StoryPoints to fill in later
-                GenerateMainStoryObjectivesAndStoryPoints(ctx, visualizeStoryPointsInScenario: ctx.Parameters.DebugSkipStoryPointsFillIn);
-
-                // TODO: Step 2. Generate side-quest objective structure and StoryPoints to fill in later
-
-                // Step 3. Fill in the StoryPoints with interactions
-                if (!ctx.Parameters.DebugSkipStoryPointsFillIn)
+                // Only continue if did not encounter any fatal errors yet
+                if (!ctx.HasErrors)
                 {
-                    GenerateStoryTemplateAndFillInStoryPoints(ctx);
-                }
+                    // Start generating
+                    ctx.LogInfo("Generating Scenario...");
 
-                // TODO: use the ErrorChecker after it actually does something
-                ctx.LogInfo("FINISHED!");
+                    // Step 1. Generate linear MAIN STORY objective structure and (possibly branching) StoryPoints to fill in later
+                    GenerateMainStoryObjectivesAndStoryPoints(ctx, visualizeStoryPointsInScenario: ctx.Parameters.DebugSkipStoryPointsFillIn);
+
+                    // TODO: Step 2. Generate side-quest objective structure and StoryPoints to fill in later
+
+                    // Step 3. Fill in the StoryPoints with interactions
+                    if (!ctx.Parameters.DebugSkipStoryPointsFillIn)
+                    {
+                        GenerateStoryTemplateAndFillInStoryPoints(ctx);
+                    }
+
+                    // TODO: use the ErrorChecker after it actually does something
+                    ctx.LogInfo("FINISHED!");
+                }
             }
             catch (Exception e)
             {
@@ -108,14 +116,24 @@ namespace JiME.Procedural
         
         private static void GenerateStoryTemplateAndFillInStoryPoints(ProceduralGeneratorContext ctx)
         {
-            // Prepare StoryGenerator with StoryArchetype and StoryTemplate
+            // Prepare StoryArchetype either randomly or based on user selection (random selecetion possibly limited by selected template)
             ctx.StoryArchetype = ctx.Parameters.StoryArchetype.HasValue
                 ? StoryArchetype.GetArchetype(ctx.Parameters.StoryArchetype.Value)
-                : StoryArchetype.GetRandomArchetype(ctx.Random);
+                : StoryArchetype.GetRandomArchetype(ctx.Random, ctx.Parameters.StoryTemplate);
+            ctx.LogInfo("Selected Story Archetype: " + ctx.StoryArchetype.Archetype);
+
+            // Prepare StoryTemplate either randomly or based on user selection (and verify that it can handle the selected Archetype)
             ctx.StoryTemplate = ctx.Parameters.StoryTemplate?.Length > 0
                 ? StoryTemplate.GetTemplate(ctx.Parameters.StoryTemplate)
-                : StoryTemplate.GetRandomTemplate(ctx.Random);
+                : StoryTemplate.GetRandomTemplate(ctx.Random, ctx.StoryArchetype.Archetype);
             ctx.StoryTemplate.AdjustForCollections(ctx.Scenario.collectionObserver); // <-- Remove unavailable monsters etc
+            ctx.LogInfo("Selected Story Template: " + ctx.StoryTemplate.Name);
+            if (!ctx.StoryTemplate.SupportedArchetypes.ContainsKey(ctx.StoryArchetype.Archetype))
+            {
+                throw new Exception(string.Format("Invalid configuration or parameters: Template {0} cannot handle Archetype {1}", ctx.StoryTemplate.Name, ctx.StoryArchetype.Archetype));
+            }
+
+            // Prepare the generator
             var generator = new StoryGenerator(ctx);
 
             // Fill in the Scenario level details

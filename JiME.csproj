@@ -126,6 +126,7 @@
     <Compile Include="Procedural\ProceduralGenerator.cs" />
     <Compile Include="Procedural\ProceduralGeneratorParameters.cs" />
     <Compile Include="Procedural\GenerationLogic\StoryGenerator.cs" />
+    <Compile Include="Procedural\StoryElements\StoryElementChecker.cs" />
     <Compile Include="Procedural\StoryElements\StoryFragment.cs" />
     <Compile Include="Procedural\StoryElements\StoryLocation.cs" />
     <Compile Include="Procedural\StoryElements\StoryTemplate.cs" />

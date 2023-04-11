@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using JiME.Procedural.GenerationLogic;
 
 namespace JiME.Procedural.StoryElements
 {
@@ -62,11 +63,22 @@ namespace JiME.Procedural.StoryElements
             return s_archetypes[archetype];
         }
 
-        public static StoryArchetype GetRandomArchetype(Random r)
+        public static StoryArchetype GetRandomArchetype(Random r, string fixedTemplate)
         {
             // Randomize archetype
-            Array values = Enum.GetValues(typeof(Type));
-            var archetype = (Type)values.GetValue(r.Next(values.Length));
+            Type archetype;
+            if (fixedTemplate?.Length > 0)
+            {
+                // We have a fixed template, select one of the archetypes from there
+                var t = StoryTemplate.GetTemplate(fixedTemplate);
+                archetype = t.SupportedArchetypes.Keys.GetRandomFromEnumerable(r);
+            }
+            else
+            {
+                // Template not fixed -> select from all archetypes
+                Array values = Enum.GetValues(typeof(Type));
+                archetype = (Type)values.GetValue(r.Next(values.Length));
+            }
 
             // Get actual archetype
             return GetArchetype(archetype);
@@ -144,12 +156,12 @@ namespace JiME.Procedural.StoryElements
             /// <summary>
             /// The hero, often accompanied by sidekicks, travels in search of a priceless treasure and must defeat evil and overcome powerful odds, and ends when he gets both the treasure and the girl. 
             /// </summary>
-            //TheQuest,
+            TheQuest,
 
             /// <summary>
             /// Stories of normal protagonists who are suddenly thrust into strange and alien worlds and must make their way back to normal life once more.
             /// </summary>
-            //VoyageAndReturn,
+            VoyageAndReturn,
 
             /// <summary>
             /// Not in the “Haha” that’s funny kind of way, but more in the Shakespeare kind of way. The plot of a comedy involves some kind of confusion that must be resolved before the hero and heroine can be united in love.

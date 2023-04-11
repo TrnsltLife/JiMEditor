@@ -5,9 +5,12 @@
 
 # Milestones and Tasks
 - Improvements 
- - Balance out the generator (e.g. Threat track generation, also have more options than just monsters, e.g. nazgul cry -> fear damage)
- - Implement StoryLocation specific random encounters (monters and other interactions) to fill in the world
  - Implement more StoryArchetypes (that can use the same templates than the old ones)
+   - Check that StatTest all different options are hooked properly to events
+ - Balance out the generator (e.g. Threat track generation, also have more options than just monsters, e.g. nazgul cry -> fear damage)
+   - ThreatLevelIncreasesTexts should perhaps be inside SupportedArchetypes and contain also more options
+ - Implement StoryLocation specific random encounters (monters and other interactions) to fill in the world
+
  - Improve interaction with boardgame-elements (e.g. things not directly visible in the App) 
  - Implement side quests
  - Implement more StoryTemplates (with help of others?)
@@ -16,6 +19,6 @@
  - Add rewards both in middle of scenario and in the end
  
 - Far in the future
- - Split generator logic to also be part of the Companion App
+ - Split generator logic to also be part of the Companion App (Requires porting Common, Models and Procedural to .Net Standard)
  - Campaign generation with meaningful connection and progress between Scenarios
  - BattleMap Scenarios

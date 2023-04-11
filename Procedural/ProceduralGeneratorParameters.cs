@@ -110,6 +110,11 @@ namespace JiME.Procedural
         /// </summary>
         public bool DebugSkipStoryPointsFillIn = false;
 
+        /// <summary>
+        /// If true, story element check prints out much more detailed log.
+        /// </summary>
+        public bool DebugVerboseStoryElementCheck = false;
+
         #endregion
     }
 }

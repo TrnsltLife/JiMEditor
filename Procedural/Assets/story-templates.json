@@ -1,4 +1,4 @@
-{   "info": [
+	{   "info": [
 		"Story Templates are what fills the otherwise technically correct Scenario with flavor and text.",
 		"They are meant to be re-usable in multiple different Story Archetypes and Story Fragments.",
 		"The file also contains names for different races and those can be randomized in to story texts.",
@@ -32,34 +32,54 @@
 			
 			"BystandersAreOneOf": [ "HUMAN", "ELF", "DWARF", "HOBBIT" ],
 			
-			"ScenarioIntroductions": {
-				"OvercomingTheMonster": [
-					"{names:ANTAGONIST} the Orc Chieftain and his gang have been terrorizing {adjectivesWithPreposition:BYSTANDER} settlement nearby. You need to investigate and drive the orcs out."
-				]
-			},
-			
-			"ScenarioObjectives": {
-				"FindInfoAboutTarget": 		[ { "Reminder":  "Find information about attackers", 
-				                                "IntroText": "The orcs have ravaged the area and you need to ask people for more information." } ],
-				"InvestigateDestruction": 	[ { "Reminder":  "Find out what happened", 
-				                                "IntroText": "The destruction caused by the vile orcs is very sad. You need to investigate what happened here." } ],
-				"TalkToSurvivors": 			[ { "Reminder":  "Talk to the survivors", 
-				                                "IntroText": "You came across some people who survived the orc raid. Investigate what happened there." } ],
-				"FindTargetLocation": 		[ { "Reminder":  "Find the orc encampment",  
-				                                "IntroText": "Before confronting the orcs, we need to find out where {names:ANTAGONIST} is opereating from." } ],
-				"FindWeaknessInTarget": 	[ { "Reminder":  "Find info about {names:ANTAGONIST}'s gang",  
-				                                "IntroText": "We need to put the gang to some disadvantage before confronting them." } ],
-				"FindStrengthInSelf": 		[ { "Reminder":  "Prepare for confrontation",  
-				                                "IntroText": "We need to gain some advantage before confronting the gang." } ],
-				"KillMonster": 				[ { "Reminder":  "Attack!",  
-				                                "IntroText": "Time has come, assault {names:ANTAGONIST}'s camp!" } ],
-				"MonsterRetreats": 			[ { "Reminder":  "Attack!",  
-				                                "IntroText": "Time has come, assault {names:ANTAGONIST}'s camp!" } ],
-				"ScoutOutTarget": 			[ { "Reminder":  "Scout out the encampment",  
-				                                "IntroText": "Get final look at the camp before assaulting." } ]
+			"SupportedArchetypes": {
+				"OvercomingTheMonster": {
+					"ScenarioIntroductions": [ "{names:ANTAGONIST} the Orc Chieftain and his gang have been terrorizing {adjectivesWithPreposition:BYSTANDER} settlement nearby. You need to investigate and drive the orcs out." ],
+					"ScenarioObjectives": {
+						"AcquireTreasure": 	     	[ { "Reminder":  "Find loot stolen by the attackers", 
+														"IntroText": "The {names:ANTAGONIST}'s villains have robbed valuable items from the town. Find and recover the items." } ],
+						"FindInfoAboutTarget": 		[ { "Reminder":  "Find information about attackers", 
+														"IntroText": "The orcs have ravaged the area and you need to ask people for more information." } ],
+						"InvestigateDestruction": 	[ { "Reminder":  "Find out what happened", 
+														"IntroText": "The destruction caused by the vile orcs is very sad. You need to investigate what happened here." } ],
+						"TalkToSurvivors": 			[ { "Reminder":  "Talk to the survivors", 
+														"IntroText": "You came across some people who survived the orc raid. Investigate what happened there." } ],
+						"FindTargetLocation": 		[ { "Reminder":  "Find the orc encampment",  
+														"IntroText": "Before confronting the orcs, we need to find out where {names:ANTAGONIST} is opereating from." } ],
+						"FindWeaknessInTarget": 	[ { "Reminder":  "Find info about {names:ANTAGONIST}'s gang",  
+														"IntroText": "We need to put the gang to some disadvantage before confronting them." } ],
+						"FindStrengthInSelf": 		[ { "Reminder":  "Prepare for confrontation",  
+														"IntroText": "We need to gain some advantage before confronting the gang." } ],
+						"KillMonster": 				[ { "Reminder":  "Attack!",  
+														"IntroText": "Time has come, assault {names:ANTAGONIST}'s camp!" } ],
+						"MonsterRetreats": 			[ { "Reminder":  "Attack!",  
+														"IntroText": "Time has come, assault {names:ANTAGONIST}'s camp!" } ],
+						"ScoutOutTarget": 			[ { "Reminder":  "Scout out the encampment",  
+														"IntroText": "Get final look at the camp before assaulting." } ]
+					},			
+					"Resolutions": {
+						"KillMonster": ["You cleave {names:ANTAGONIST}'s head off and the others scutter away. Peace is restored!"],
+						"MonsterRetreats": ["You smite {names:ANTAGONIST} to the ground but suddenly all the lights blow out. You hear rough cry 'Me {names:ANTAGONIST}! Smash you next time! Peace is restored for now.'"]
+					}
+				}
 			},
 			
 			"DialogInteractions": {
+				"AcquireTreasure": [ 
+					{
+						"ActionText": "Talk to {adjectivesWithPreposition:BYSTANDER} child.",
+						"Choice1Text": "What happened?",
+						"Choice1Triggers": false,
+						"Result1Text": "The orcs stole our things!",
+						"Choice2Text": "Where?",
+						"Choice2Triggers": true,
+						"Result2Text": "They hid them over there. You can keep it if you just chase them away! You look and find 1 random Trinket. You or a nearby hero may equip it immediately.",
+						"Choice3Text": "Where are they?",
+						"Choice3Triggers": false,
+						"Result3Text": "",
+						"PersistentText": ""
+					} 
+				],
 				"FindInfoAboutTarget": [ 
 					{
 						"ActionText": "Talk to {adjectivesWithPreposition:BYSTANDER} woman.",
@@ -142,6 +162,19 @@
 			},
 			
 			"StatTestInteractions": {
+				"AcquireTreasure": [ 
+					{
+						"StatTestType": "Retryable",
+						"StatHint": "Wit",
+						"AltStatHint": "Agility",
+						"SuccessValue": 3,
+						"TokenText": "Search for loot",
+						"ActionText": "Your search for loot hidden by the orcs. This can take a while.",
+						"SuccessText": "You look and find 1 random Trinket. You or a nearby hero may equip it immediately.",
+						"ProgressText": "NOT NEEDED",
+						"FailureText": "You need to keep searching."
+					} 
+				],
 				"FindInfoAboutTarget": [ 
 					{
 						"StatTestType": "Retryable",
@@ -242,12 +275,7 @@
 				"AntagonistActionText": "The huge orc shouts: 'Me {names:ANTAGONIST}! {names:ANTAGONIST} SMASH!' and charges towards you.",
 				"NormalTokenText": "You hear rustling nearby -- the enemies are near!",
 				"NormalActionText": "Small band of orcs and goblins ambush you!",
-			}],
-			
-			"Resolutions": {
-				"KillMonster": ["You cleave {names:ANTAGONIST}'s head off and the others scutter away. Peace is restored!"],
-				"MonsterRetreats": ["You smite {names:ANTAGONIST} to the ground but suddenly all the lights blow out. You hear rough cry 'Me {names:ANTAGONIST}! Smash you next time! Peace is restored for now.'"]
-			}
+			}]
 		}
 	],
 	"tokens": {

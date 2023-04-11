@@ -22,7 +22,7 @@ namespace JiME.Procedural.GenerationLogic
             o.dataName = newDataName;
 
             // Fill in the actual objective details
-            var objectiveInfo = ctx.StoryTemplate.GenerateObjectiveInformation(ctx.Random, mainStoryPoint, ctx.TemplateContext);
+            var objectiveInfo = ctx.StoryTemplate.GenerateObjectiveInformation(ctx.Random, ctx.StoryArchetype.Archetype, mainStoryPoint, ctx.TemplateContext);
             o.objectiveReminder = objectiveInfo.Reminder;
             o.textBookData = GeneratorUtils.CreateTextBook(objectiveInfo.IntroText);
             // TODO: rewards etc.
@@ -30,7 +30,7 @@ namespace JiME.Procedural.GenerationLogic
             // Also check if this objective ends a scenario
             foreach (var resolution in ctx.Scenario.resolutionObserver.Where(x => x.triggerName == o.nextTrigger))
             {
-                resolution.pages = new List<string>() { ctx.StoryTemplate.GenerateResolutionText(ctx.Random, mainStoryPoint, ctx.TemplateContext) };
+                resolution.pages = new List<string>() { ctx.StoryTemplate.GenerateResolutionText(ctx.Random, ctx.StoryArchetype.Archetype, mainStoryPoint, ctx.TemplateContext) };
                 // TODO: take scenario success true/false in to account if we at some point have both resolutions (only after we actually create more than 1 success resolution)
                 // TODO: handle resolution rewards
             }

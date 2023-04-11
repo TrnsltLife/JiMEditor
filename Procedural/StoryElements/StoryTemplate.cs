@@ -35,20 +35,15 @@ namespace JiME.Procedural.StoryElements
 
         [JsonProperty]
         public List<MonsterType> AntagonistMonsterIsOneOf { get; private set; }
-
-
-
+               
         [JsonProperty]
         public List<MonsterType> AntagonistHelperMonstersAreSomeOf { get; private set; }
 
         [JsonProperty]
         public List<RaceEnum> BystandersAreOneOf { get; private set; }
 
-        [JsonProperty]  // TODO: We might need to make each template match only single archetype to keep defining the template texts reasonable. Let's see
-        public Dictionary<StoryArchetype.Type, List<string>> ScenarioIntroductions { get; private set; }
-
         [JsonProperty]
-        public Dictionary<string, List<ObjectiveInfo>> ScenarioObjectives { get; private set; }
+        public Dictionary<StoryArchetype.Type, SupportedArchetype> SupportedArchetypes { get; private set; }
 
         [JsonProperty]
         public Dictionary<string, List<DialogInteractionInfo>> DialogInteractions { get; private set; }
@@ -58,9 +53,6 @@ namespace JiME.Procedural.StoryElements
 
         [JsonProperty]
         public List<ThreatInteractionInfo> ThreatInteractions { get; private set; }
-
-        [JsonProperty]
-        public Dictionary<string, List<string>> Resolutions { get; private set; }
 
         [JsonProperty]
         public List<string> ThreatLevelIncreasesTexts { get; private set; }
@@ -95,7 +87,7 @@ namespace JiME.Procedural.StoryElements
 
         public string GenerateScenarioIntroduction(Random r, StoryArchetype.Type archetype, TemplateContext tokenCtx)
         {
-            var text = ScenarioIntroductions[archetype].GetRandomFromEnumerable(r);
+            var text = SupportedArchetypes[archetype].ScenarioIntroductions.GetRandomFromEnumerable(r);
             return ProcessTextTemplate(text, r, tokenCtx);
         }
 
@@ -108,9 +100,9 @@ namespace JiME.Procedural.StoryElements
         /// <summary>
         /// Generates reminder text and intro text for an objective
         /// </summary>
-        public ObjectiveInfo GenerateObjectiveInformation(Random r, string storyFragment, TemplateContext tokenCtx)
+        public ObjectiveInfo GenerateObjectiveInformation(Random r, StoryArchetype.Type archetype, string storyFragment, TemplateContext tokenCtx)
         {
-            var objectInfo = ScenarioObjectives[storyFragment].GetRandomFromEnumerable(r);
+            var objectInfo = SupportedArchetypes[archetype].ScenarioObjectives[storyFragment].GetRandomFromEnumerable(r);
             return new ObjectiveInfo()
             {
                 Reminder = ProcessTextTemplate(objectInfo.Reminder, r, tokenCtx),
@@ -166,11 +158,11 @@ namespace JiME.Procedural.StoryElements
             };
         }
 
-        public string GenerateResolutionText(Random r, string lastStoryFragment, TemplateContext tokenCtx)
+        public string GenerateResolutionText(Random r, StoryArchetype.Type archetype, string lastStoryFragment, TemplateContext tokenCtx)
         {
-            if (Resolutions.ContainsKey(lastStoryFragment))
+            if (SupportedArchetypes[archetype].Resolutions.ContainsKey(lastStoryFragment))
             {
-                var text = Resolutions[lastStoryFragment].GetRandomFromEnumerable(r);
+                var text = SupportedArchetypes[archetype].Resolutions[lastStoryFragment].GetRandomFromEnumerable(r);
                 return ProcessTextTemplate(text, r, tokenCtx);
             }
             else
@@ -250,10 +242,14 @@ namespace JiME.Procedural.StoryElements
             return s_templates[template];
         }
 
-        public static StoryTemplate GetRandomTemplate(Random r)
+        public static StoryTemplate GetRandomTemplate(Random r, StoryArchetype.Type archetype)
         {
             // Randomize archetype
-            var possibleKeys = s_templates.Keys.ToList();
+            var possibleKeys = s_templates.Where(kv => kv.Value.SupportedArchetypes.ContainsKey(archetype)).Select(kv => kv.Key).ToList();
+            if (possibleKeys.Count == 0)
+            {
+                throw new Exception("No StoryTemplates available for Archetype: " + archetype.ToString());
+            }
             var templateKey = possibleKeys[r.Next(possibleKeys.Count)];
 
             // Get actual archetype
@@ -339,6 +335,27 @@ namespace JiME.Procedural.StoryElements
                 var key = "names:" + KEYWORD_ANTAGONIST;
                 return PersistentTranslations[key]; // TODO: how to make sure this has been generated? perhaps pack StoryTemplate within this Context and access it only through here
             }
+        }
+
+        public class SupportedArchetype
+        {
+            /// <summary>
+            /// List of random introductionary texts for the Scenario.
+            /// </summary>
+            [JsonProperty]
+            public List<string> ScenarioIntroductions { get; private set; }
+
+            /// <summary>
+            /// Map from StoryFragment fulfilling the Objective to Objective information
+            /// </summary>
+            [JsonProperty]
+            public Dictionary<string, List<ObjectiveInfo>> ScenarioObjectives { get; private set; }
+
+            /// <summary>
+            /// Map from StoryFragment that ended the scenario to matching list of random Resolution texts for that ending
+            /// </summary>
+            [JsonProperty]
+            public Dictionary<string, List<string>> Resolutions { get; private set; }
         }
 
         public class ObjectiveInfo

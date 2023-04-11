@@ -93,15 +93,45 @@ namespace JiME.Views
             archetypeCB.SelectedIndex = allArchetypes.IndexOf(GeneratorParameters.StoryArchetype == null ? RANDOM_TEXT : GeneratorParameters.StoryArchetype.Value.ToString());
 
             // Setup templates
-            var allTemplates = StoryTemplate.GetAllKnownTemplates()
-                .OrderBy(x => x)
-                .ToList();
-            allTemplates.Insert(0, RANDOM_TEXT);
-            templateCB.ItemsSource = allTemplates;
-            templateCB.SelectedIndex = allTemplates.IndexOf(GeneratorParameters.StoryTemplate?.Length > 0 ? GeneratorParameters.StoryTemplate : RANDOM_TEXT);
+            UpdateTemplateSelections(GeneratorParameters.StoryTemplate);
 
             // Setup debug values
             debugDontFillStoriesCB.IsChecked = GeneratorParameters.DebugSkipStoryPointsFillIn;
+            debugVerboseStoryElementCheck.IsChecked = GeneratorParameters.DebugVerboseStoryElementCheck;
+        }
+
+        private void UpdateTemplateSelections(string overrideTemplateSelection)
+        {
+            // Find out which templates are valid based on archetype selection
+            StoryArchetype.Type? fixedArchetype = ((string)archetypeCB.SelectedItem == RANDOM_TEXT) ? null
+                : (StoryArchetype.Type?)Enum.Parse(typeof(StoryArchetype.Type), (string)archetypeCB.SelectedItem);
+            var validTemplates = StoryTemplate.GetAllKnownTemplates()
+                .OrderBy(x => x)
+                .Where(x => fixedArchetype == null || StoryTemplate.GetTemplate(x).SupportedArchetypes.ContainsKey(fixedArchetype.Value))
+                .ToList();
+            validTemplates.Insert(0, RANDOM_TEXT);
+
+            // Set the selections
+            var oldSelection = (string)templateCB.SelectedItem;
+            templateCB.ItemsSource = validTemplates;
+            if (overrideTemplateSelection?.Length > 0)
+            {
+                templateCB.SelectedIndex = validTemplates.IndexOf(GeneratorParameters.StoryTemplate?.Length > 0 ? GeneratorParameters.StoryTemplate : RANDOM_TEXT);
+            }
+            else if (validTemplates.Contains(oldSelection))
+            {
+                templateCB.SelectedIndex = validTemplates.IndexOf(oldSelection);
+            }
+            else
+            {
+                templateCB.SelectedIndex = 0;
+            }            
+        }
+
+        private void ArchetypeCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Archetype changed, update possible values for Templates
+            UpdateTemplateSelections(null);
         }
 
         private void SaveParameterValues()
@@ -137,6 +167,7 @@ namespace JiME.Views
             GeneratorParameters.StoryArchetype = (string)archetypeCB.SelectedValue == RANDOM_TEXT ? null : (StoryArchetype.Type?)Enum.Parse(typeof(StoryArchetype.Type), (string)archetypeCB.SelectedValue);
             GeneratorParameters.StoryTemplate = (string)templateCB.SelectedValue == RANDOM_TEXT ? null : (string)templateCB.SelectedValue;
             GeneratorParameters.DebugSkipStoryPointsFillIn = debugDontFillStoriesCB.IsChecked ?? false;
+            GeneratorParameters.DebugVerboseStoryElementCheck = debugVerboseStoryElementCheck.IsChecked ?? false;
 
             // Save the used parameters on generation
             SaveParameterValues();
