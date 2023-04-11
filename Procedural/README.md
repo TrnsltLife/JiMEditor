@@ -7,6 +7,9 @@
 - Improvements 
  - Implement more StoryArchetypes (that can use the same templates than the old ones)
    - Check that StatTest all different options are hooked properly to events
+   - KillAntagonist can only happen once, AntagonistRetreat cannot happen after KillAntagonist, similar rules to fragments?
+   - Also need to mark certain interactions somehow to be part of the "main goal" of the scenario and have different texts, upate Threat-style as well
+   - Show Template and Archetype descriptions in parameter screen
  - Balance out the generator (e.g. Threat track generation, also have more options than just monsters, e.g. nazgul cry -> fear damage)
    - ThreatLevelIncreasesTexts should perhaps be inside SupportedArchetypes and contain also more options
  - Implement StoryLocation specific random encounters (monters and other interactions) to fill in the world

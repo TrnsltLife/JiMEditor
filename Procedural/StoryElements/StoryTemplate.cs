@@ -29,7 +29,10 @@ namespace JiME.Procedural.StoryElements
 
         [JsonProperty]
         public string Name { get; private set; }
-        
+
+        [JsonProperty]
+        public string Description { get; private set; }
+
         [JsonProperty]
         public List<RaceEnum> AntagonistIsOneOf { get; private set; }
 

@@ -19,6 +19,7 @@
 	"templates":[
 		{
 			"Name": "Orc Chieftain",
+			"Description": "The village has just been pillaged by a band of orcs. There is some damage and some people died during the attack.  The orcs have ran away to their hideout.",
 			
 			"AntagonistIsOneOf": [ "ORC" ],
 			"AntagonistMonsterIsOneOf": [ "OrcMarauder", "OrcHunter", "OrcTaskmaster" ],
@@ -50,16 +51,59 @@
 														"IntroText": "We need to put the gang to some disadvantage before confronting them." } ],
 						"FindStrengthInSelf": 		[ { "Reminder":  "Prepare for confrontation",  
 														"IntroText": "We need to gain some advantage before confronting the gang." } ],
-						"KillMonster": 				[ { "Reminder":  "Attack!",  
+						"KillMonsters": 			[ { "Reminder":  "Reduce enemy numbers",  
+														"IntroText": "You see some of the orcs patrolling the area. Make sure they don't get back to report your presense." } ],
+						"KillAntagonist": 			[ { "Reminder":  "Attack!",  
 														"IntroText": "Time has come, assault {names:ANTAGONIST}'s camp!" } ],
-						"MonsterRetreats": 			[ { "Reminder":  "Attack!",  
+						"AntagonistRetreats": 		[ { "Reminder":  "Attack!",  
 														"IntroText": "Time has come, assault {names:ANTAGONIST}'s camp!" } ],
 						"ScoutOutTarget": 			[ { "Reminder":  "Scout out the encampment",  
 														"IntroText": "Get final look at the camp before assaulting." } ]
 					},			
 					"Resolutions": {
-						"KillMonster": ["You cleave {names:ANTAGONIST}'s head off and the others scutter away. Peace is restored!"],
-						"MonsterRetreats": ["You smite {names:ANTAGONIST} to the ground but suddenly all the lights blow out. You hear rough cry 'Me {names:ANTAGONIST}! Smash you next time! Peace is restored for now.'"]
+						"KillAntagonist": ["You cleave {names:ANTAGONIST}'s head off and the others scutter away. Peace is restored!"],
+						"AntagonistRetreats": ["You smite {names:ANTAGONIST} to the ground but suddenly all the lights blow out. You hear rough cry 'Me {names:ANTAGONIST}! Smash you next time! Peace is restored for now.'"]
+					}
+				},
+				"TheQuest": {
+					"ScenarioIntroductions": [ "{names:ANTAGONIST} the Orc Chieftain and his gang looted a small {adjectives:BYSTANDER} settlement and stole the Statue of Yavanna - an important token for the villagers. Help them to get it back." ],
+					"ScenarioObjectives": {
+						"FindInfoAboutTarget": 	  	[ { "Reminder":  "Find out what happened", 
+													    "IntroText": "The Orc raid happened just last night. Find out was so important that it lead {names:ANTAGONIST} to attack the village." } ],
+						"TalkToSurvivors": 			[ { "Reminder":  "Talk to the survivors", 
+														"IntroText": "You came across some people who survived the orc raid. Investigate what happened there." } ],	
+						"FindStrengthInSelf": 		[ { "Reminder":  "Prepare for the hunt",  
+														"IntroText": "We need to prepare before going after {names:ANTAGONIST}'s orcs." } ],	
+						"FindTargetLocation": 		[ { "Reminder":  "Find the orc encampment",  
+														"IntroText": "Before confronting the orcs, we need to find out where {names:ANTAGONIST} is opereating from." } ],
+						"KillMonsters": 			[ { "Reminder":  "Reduce enemy numbers",  
+														"IntroText": "You see some of the orcs patrolling the area. Make sure they don't get back to report your presense." } ],	
+						"FindStrengthInSelf": 		[ { "Reminder":  "Prepare for confrontation",  
+														"IntroText": "We need to gain some advantage before confronting the gang." } ],														
+						"KillAntagonist": 			[ { "Reminder":  "Attack!",  
+														"IntroText": "Time has come to get the statue back, assault {names:ANTAGONIST}'s camp!" } ],
+						"AcquireTreasure": 	     	[ { "Reminder":  "Find the stolen statue", 
+														"IntroText": "The stolen status has been hidden by {names:ANTAGONIST}. Find it before it is too late." } ],	
+						"ReachFinalDestination":   	[ { "Reminder":  "Reach the strongbox", 
+														"IntroText": "The statue has been placed in a strongbox within the orc encampment. Get to it and take back the statue." } ],														
+					},			
+					"Resolutions": {
+						"KillAntagonist": ["You cleave {names:ANTAGONIST}'s head off and the others scutter away. You find the Statue of Yavanna in {names:ANTAGONIST}'s corpse and return it back to the {adjectives:BYSTANDER} village."],
+						"AcquireTreasure": ["You infiltrate {names:ANTAGONIST}'s camp and manage to find the Statue of Yavanna. You return it back to the {adjectives:BYSTANDER} village and the people."],
+						"ReachFinalDestination": ["The strongbox breaks open revealing the Statue of Yavanna. You return it back to the {adjectives:BYSTANDER} village and the people."]
+					}
+				},
+				"VoyageAndReturn": {
+					"ScenarioIntroductions": [ "TODO" ],
+					"ScenarioObjectives": {
+						"TODO": 	     	[ { "Reminder":  "TODO", 
+												"IntroText": "TODO" } ],
+						
+					},			
+					"Resolutions": {
+						"KillAntagonist": ["TODO"],
+						"EscapeFromMonster": ["TODO"],
+						"ReachFinalDestination": ["TODO"]
 					}
 				}
 			},
@@ -156,8 +200,8 @@
 						"PersistentText": ""
 					} 
 				],
-				"KillMonster": [],
-				"MonsterRetreats": [],
+				"KillAntagonist": [],
+				"AntagonistRetreats": [],
 				"ScoutOutTarget": []
 			},
 			
@@ -253,8 +297,8 @@
 						"FailureText": "You did not find anything."
 					} 
 				],
-				"KillMonster": [],
-				"MonsterRetreats": [],
+				"KillAntagonist": [],
+				"AntagonistRetreats": [],
 				"ScoutOutTarget": [ 
 					{
 						"StatTestType": "OneTry",

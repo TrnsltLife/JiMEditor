@@ -11,12 +11,12 @@
             "Middle": {
                 "Comment": "Buildup towards the big encounter and some way to gain an advantage",
                 "MustHaveOneOf": [ "FindTargetLocation" ],
-                "CanHaveSomeOf": [ "InvestigateDestruction", "TalkToSurvivors", "FindWeaknessInTarget", "FindStrengthInSelf", "AcquireTreasure" ],
+                "CanHaveSomeOf": [ "InvestigateDestruction", "TalkToSurvivors", "FindWeaknessInTarget", "FindStrengthInSelf", "AcquireTreasure", "KillMonsters" ],
                 "TakesPlaceInOneOf": [ "Woodlands", "DarkForest", "Ruins" ]
             },
             "End": {
                 "Comment": "Usually kill the monster, might also have some other means of dispatching than killing? Possibly target escapes anyway",
-                "MustHaveOneOf": [ "KillMonster", "MonsterRetreats" ],
+                "MustHaveOneOf": [ "KillAntagonist", "AntagonistRetreats" ],
                 "CanHaveSomeOf": [ "ScoutOutTarget", "InvestigateDestruction" ],
                 "TakesPlaceInOneOf": [ "Cave", "Dungeon", "DarkForest" ]
             }
@@ -32,12 +32,12 @@
             "Middle": {
                 "Comment": "The getting there part where the adventurers search for clues and the location of the artifact",
                 "MustHaveOneOf": [ "FindTargetLocation" ],
-                "CanHaveSomeOf": [ "KillMonster", "FindStrengthInSelf", "EscapeFromMonster" ],
+                "CanHaveSomeOf": [ "KillMonsters", "FindStrengthInSelf" ],
                 "TakesPlaceInOneOf": [ "Woodlands", "DarkForest" ]
             },
             "End": {
                 "Comment": "The final challenge of finding/recovering the artifact",
-                "MustHaveOneOf": [ "KillMonster", "AcquireTreasure", "ReachFinalDestination" ],
+                "MustHaveOneOf": [ "KillAntagonist", "AcquireTreasure", "ReachFinalDestination" ],
                 "CanHaveSomeOf": [],
                 "TakesPlaceInOneOf": [ "Cave", "Ruins", "Dungeon", "DarkForest" ]
             }
@@ -53,12 +53,12 @@
             "Middle": {
                 "Comment": "The voyage part where the adventurers travel to their destination",
                 "MustHaveOneOf": [ "FindTargetLocation" ],
-                "CanHaveSomeOf": [ "KillMonster", "FindStrengthInSelf", "AcquireTreasure" ],
+                "CanHaveSomeOf": [ "KillAntagonist", "FindStrengthInSelf", "AcquireTreasure" ],
                 "TakesPlaceInOneOf": [ "Woodlands", "DarkForest", "Cave" ]
             },
             "End": {
                 "Comment": "The end of the voyage where the adventurers reach their target and possibly encounter the final challenge",
-                "MustHaveOneOf": [ "KillMonster", "EscapeFromMonster", "ReachFinalDestination" ],
+                "MustHaveOneOf": [ "KillAntagonist", "ReachFinalDestination" ],
                 "CanHaveSomeOf": [],
                 "TakesPlaceInOneOf": [ "Settlement" ]
             }

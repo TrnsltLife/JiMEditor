@@ -49,14 +49,21 @@
 			]
         },
 		{
-            "Name": "KillMonster",
+            "Name": "KillAntagonist",
 			"Comment": "",
             "Interactions": [ 
 				{ "Type": "Threat", "TokenHint": "Threat" }	
 			]
         },
 		{
-            "Name": "MonsterRetreats",
+            "Name": "KillMonsters",
+			"Comment": "",
+            "Interactions": [ 
+				{ "Type": "Threat", "TokenHint": "Threat" }	
+			]
+        },
+		{
+            "Name": "AntagonistRetreats",
 			"Comment": "",
             "Interactions": [ 
 				{ "Type": "Threat", "TokenHint": "Threat" }	
@@ -66,24 +73,16 @@
             "Name": "AcquireTreasure",
 			"Comment": "",
             "Interactions": [ 
-				{ "Type": "Dialog", "TokenHint": "Person" },
-				{ "Type": "StatTest", "TokenHint": "Search" }
+				{ "Type": "StatTest", "TokenHint": "Search" },
+				{ "Type": "Threat", "TokenHint": "Threat" }	
 			]
         },
 		{
             "Name": "ReachFinalDestination",
 			"Comment": "",
             "Interactions": [ 
-				{ "Type": "Dialog", "TokenHint": "Person" },
-				{ "Type": "StatTest", "TokenHint": "Search" }
-			]
-        },
-		{
-            "Name": "EscapeFromMonster",
-			"Comment": "",
-            "Interactions": [ 
-				{ "Type": "Threat", "TokenHint": "Threat" },
-				{ "Type": "StatTest", "TokenHint": "Search" }
+				{ "Type": "StatTest", "TokenHint": "Search" },
+				{ "Type": "Threat", "TokenHint": "Threat" }	
 			]
         },
 		{
