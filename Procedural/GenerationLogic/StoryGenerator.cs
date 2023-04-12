@@ -30,7 +30,7 @@ namespace JiME.Procedural.GenerationLogic
             _ctx.BystanderPersonTokenType = StoryTemplate.GetPersonType(_ctx.TemplateContext.SelectedBystanderRace);
 
             // Fill in basic scenario details
-            _ctx.Scenario.scenarioName = _ctx.StoryTemplate.Name; // TODO: do better here?
+            _ctx.Scenario.scenarioName = string.Format("{0} ({1})", _ctx.StoryTemplate.Name, _ctx.StoryArchetype.Archetype);  // TODO: do better here?
             _ctx.Scenario.specialInstructions = "";
             _ctx.Scenario.introBookData = new TextBookData("ScenarioIntroboook")
             {

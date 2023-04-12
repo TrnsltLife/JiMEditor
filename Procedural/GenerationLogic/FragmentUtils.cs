@@ -148,20 +148,24 @@ namespace JiME.Procedural.GenerationLogic
                 statTest.eventBookData = GeneratorUtils.CreateTextBook(testInfo.ActionText);
 
                 // Setup test type
+                bool failProgressesStory;
                 if (testInfo.StatTestType == StoryTemplate.StatTestInteractionInfo.TypeEnum.OneTry)
                 {
                     statTest.isCumulative = false;
                     statTest.passFail = false;
+                    failProgressesStory = true;
                 }
                 else if (testInfo.StatTestType == StoryTemplate.StatTestInteractionInfo.TypeEnum.Retryable)
                 {
                     statTest.isCumulative = true;
                     statTest.passFail = true;
+                    failProgressesStory = false;
                 }
                 else // StoryTemplate.StatTestInteractionInfo.TypeEnum.Cumulative
                 {
                     statTest.isCumulative = true;
                     statTest.passFail = false;
+                    failProgressesStory = false;
                 }
 
                 // Success
@@ -177,7 +181,10 @@ namespace JiME.Procedural.GenerationLogic
 
                 // Failure
                 statTest.failBookData = GeneratorUtils.CreateTextBook(testInfo.FailureText);
-                statTest.failTrigger = endTrigger; // Failure also progresses things for now, TODO: Perhaps add some more interactions if failed? e.g. have to fight a monster
+                if (failProgressesStory)
+                {
+                    statTest.failTrigger = endTrigger; // Failure also progresses things for now, TODO: Perhaps add some more interactions if failed? e.g. have to fight a monster
+                }                
                 statTest.failThreat = 5; // TODO: where to get a good value here?
                 
                 return statTest;

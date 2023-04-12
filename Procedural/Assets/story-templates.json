@@ -12,7 +12,7 @@
 		"  {adjectives:BYSTANDER} Gets a random name for the race that has been selected as the BYSTANDER race",
 		"For StatTest interactions, StatTestType defines what texts are needed (beside standard token and action texts)",
 		"  OneTry		Requires SuccessText and FailureText",
-		"  Retryable    Requires SuccessText and FailureText",
+		"  Retryable    Requires SuccessText and ProgressText",
 		"  Cumulative   Requires SuccessText and ProgressText"
 		
 	],
@@ -202,8 +202,8 @@
 						"TokenText": "Search for loot",
 						"ActionText": "Your search for loot hidden by the orcs. This can take a while.",
 						"SuccessText": "You look and find 1 random Trinket. You or a nearby hero may equip it immediately.",
-						"ProgressText": "NOT NEEDED",
-						"FailureText": "You need to keep searching."
+						"ProgressText": "You need to keep searching.",
+						"FailureText": "NOT NEEDED"
 					} 
 				],
 				"FindInfoAboutTarget": [ 
@@ -215,8 +215,8 @@
 						"TokenText": "Search clues",
 						"ActionText": "Your search for clues about {names:ANTAGONIST}'s recent visit. This can take a while.",
 						"SuccessText": "You manage to gather enough clues to continue the search.",
-						"ProgressText": "NOT NEEDED",
-						"FailureText": "You need to keep searching."
+						"ProgressText": "You need to keep searching.",
+						"FailureText": "NOT NEEDED"
 					} 
 				],
 				"InvestigateDestruction": [ 

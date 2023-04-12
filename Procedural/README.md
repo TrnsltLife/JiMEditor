@@ -1,12 +1,6 @@
-﻿# Basics
-- Procedural generation is based on IProceduralGenerator interface 
-  - Currently produces a single standalone Scenario but could later be changed to generate campaigns
-  - Generator parameters depend on the generator instance and can be used to control the scenario input.
-
-# Milestones and Tasks
+﻿# Milestones and Tasks
 - Improvements 
- - Implement more StoryArchetypes (that can use the same templates than the old ones)
-   - Check that StatTest all different options are hooked properly to events
+ - Implement more StoryArchetypes (that can use the same templates than the old ones, perhaps with some archetype specific details)
    - KillAntagonist can only happen once, AntagonistRetreat cannot happen after KillAntagonist, similar rules to fragments?
    - Also need to mark certain interactions somehow to be part of the "main goal" of the scenario and have different texts, upate Threat-style as well
  - Balance out the generator (e.g. Threat track generation, also have more options than just monsters, e.g. nazgul cry -> fear damage)
