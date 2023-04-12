@@ -47,7 +47,7 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                         <TextBlock Style="{StaticResource Heading}" Text="Template:" MinWidth="100" />
-                        <ComboBox x:Name="templateCB" Margin="10,0,0,0" MinWidth="175" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <ComboBox x:Name="templateCB" Margin="10,0,0,0" MinWidth="175" HorizontalAlignment="Left" VerticalAlignment="Center" SelectionChanged="TemplateCB_SelectionChanged"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" >                 
                         <TextBlock Text="Collections:" Margin="0,5,0,0" MinWidth="110" Style="{StaticResource Heading}" VerticalAlignment="Top" />

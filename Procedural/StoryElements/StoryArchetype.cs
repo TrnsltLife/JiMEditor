@@ -27,6 +27,12 @@ namespace JiME.Procedural.StoryElements
         public Type Archetype { get; private set; }
 
         /// <summary>
+        /// Description of the archetype
+        /// </summary>
+        [JsonProperty]
+        public string Description { get; private set; }
+
+        /// <summary>
         /// Premise for the story where all begings
         /// </summary>
         [JsonProperty]
@@ -143,10 +149,8 @@ namespace JiME.Procedural.StoryElements
         /// </summary>
         public enum Type
         {
-            /// <summary>
-            /// In the stories, this is where the hero must destroy the monster to restore balance to the world. 
-            /// </summary>
             OvercomingTheMonster,
+            TheQuest,
 
             /// <summary>
             /// In the stories, this is where a modest and moral but downtrodden character achieves a happy ending when their natural talents are displayed to the world at large.
@@ -154,14 +158,9 @@ namespace JiME.Procedural.StoryElements
             //RagsToRiches,
 
             /// <summary>
-            /// The hero, often accompanied by sidekicks, travels in search of a priceless treasure and must defeat evil and overcome powerful odds, and ends when he gets both the treasure and the girl. 
-            /// </summary>
-            TheQuest,
-
-            /// <summary>
             /// Stories of normal protagonists who are suddenly thrust into strange and alien worlds and must make their way back to normal life once more.
             /// </summary>
-            VoyageAndReturn,
+            //VoyageAndReturn,
 
             /// <summary>
             /// Not in the “Haha” that’s funny kind of way, but more in the Shakespeare kind of way. The plot of a comedy involves some kind of confusion that must be resolved before the hero and heroine can be united in love.

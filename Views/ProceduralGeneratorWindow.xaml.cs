@@ -91,6 +91,7 @@ namespace JiME.Views
             allArchetypes.Insert(0, RANDOM_TEXT);
             archetypeCB.ItemsSource = allArchetypes;
             archetypeCB.SelectedIndex = allArchetypes.IndexOf(GeneratorParameters.StoryArchetype == null ? RANDOM_TEXT : GeneratorParameters.StoryArchetype.Value.ToString());
+            UpdateArchetypeTooltip();
 
             // Setup templates
             UpdateTemplateSelections(GeneratorParameters.StoryTemplate);
@@ -125,13 +126,60 @@ namespace JiME.Views
             else
             {
                 templateCB.SelectedIndex = 0;
-            }            
+            }
+
+            // Update tooltip
+            UpdateTemplateTooltip();
         }
 
         private void ArchetypeCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Archetype changed, update possible values for Templates
             UpdateTemplateSelections(null);
+
+            UpdateArchetypeTooltip();
+        }
+
+        private void TemplateCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateTemplateTooltip();
+        }
+
+        private void UpdateArchetypeTooltip()
+        {
+            var selected = (string)archetypeCB.SelectedItem;
+            if (selected == RANDOM_TEXT)
+            {
+                archetypeCB.ToolTip = "Story Archetype will be randomly selected";
+            }
+            else
+            {
+                var a = StoryArchetype.GetArchetype((StoryArchetype.Type)Enum.Parse(typeof(StoryArchetype.Type), selected));
+                var sb = new System.Text.StringBuilder();
+                sb.AppendLine(selected);
+                sb.AppendLine(a.Description);
+                sb.AppendLine("START: " + a.Start.Comment);
+                sb.AppendLine("MIDDLE: " + a.Middle.Comment);
+                sb.Append("END: " + a.End.Comment);
+                archetypeCB.ToolTip = sb.ToString();
+            }
+        }
+
+        private void UpdateTemplateTooltip()
+        {
+            var selected = (string)templateCB.SelectedItem;
+            if (selected == RANDOM_TEXT)
+            {
+                templateCB.ToolTip = "Story Template will be randomly selected";
+            }
+            else
+            {
+                var t = StoryTemplate.GetTemplate(selected);
+                var sb = new System.Text.StringBuilder();
+                sb.AppendLine(t.Name);
+                sb.Append(t.Description);
+                templateCB.ToolTip = sb.ToString();
+            }
         }
 
         private void SaveParameterValues()

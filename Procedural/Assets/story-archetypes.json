@@ -2,6 +2,7 @@
     "archetypes": [
         {
             "Archetype": "OvercomingTheMonster",
+			"Description": "In the stories, this is where the hero must destroy the monster to restore balance to the world.",
             "Start": {
                 "Comment": "Start of the adventure where we find more information about what is happening",
                 "MustHaveOneOf": [ "FindInfoAboutTarget" ],
@@ -23,6 +24,7 @@
         },
 		{
             "Archetype": "TheQuest",
+			"Description": "The hero, often accompanied by sidekicks, travels in search of a priceless treasure and must defeat evil and overcome powerful odds, and ends when he gets both the treasure and the girl.",
             "Start": {
                 "Comment": "Start of the adventure where the adventures are told about the artifact they need to find",
                 "MustHaveOneOf": [ "FindInfoAboutTarget" ],
@@ -40,27 +42,6 @@
                 "MustHaveOneOf": [ "KillAntagonist", "AcquireTreasure", "ReachFinalDestination" ],
                 "CanHaveSomeOf": [],
                 "TakesPlaceInOneOf": [ "Cave", "Ruins", "Dungeon", "DarkForest" ]
-            }
-        },
-        {
-            "Archetype": "VoyageAndReturn",
-            "Start": {
-                "Comment": "Start of the adventure where the adventurers find out what happened and where they should go",
-                "MustHaveOneOf": [ "FindInfoAboutTarget" ],
-                "CanHaveSomeOf": [ "InvestigateDestruction", "TalkToSurvivors" ],
-                "TakesPlaceInOneOf": [ "Ruins", "Woodlands" ]
-            },
-            "Middle": {
-                "Comment": "The voyage part where the adventurers travel to their destination",
-                "MustHaveOneOf": [ "FindTargetLocation" ],
-                "CanHaveSomeOf": [ "KillAntagonist", "FindStrengthInSelf", "AcquireTreasure" ],
-                "TakesPlaceInOneOf": [ "Woodlands", "DarkForest", "Cave" ]
-            },
-            "End": {
-                "Comment": "The end of the voyage where the adventurers reach their target and possibly encounter the final challenge",
-                "MustHaveOneOf": [ "KillAntagonist", "ReachFinalDestination" ],
-                "CanHaveSomeOf": [],
-                "TakesPlaceInOneOf": [ "Settlement" ]
             }
         }
     ]

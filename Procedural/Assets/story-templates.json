@@ -92,19 +92,6 @@
 						"AcquireTreasure": ["You infiltrate {names:ANTAGONIST}'s camp and manage to find the Statue of Yavanna. You return it back to the {adjectives:BYSTANDER} village and the people."],
 						"ReachFinalDestination": ["The strongbox breaks open revealing the Statue of Yavanna. You return it back to the {adjectives:BYSTANDER} village and the people."]
 					}
-				},
-				"VoyageAndReturn": {
-					"ScenarioIntroductions": [ "TODO" ],
-					"ScenarioObjectives": {
-						"TODO": 	     	[ { "Reminder":  "TODO", 
-												"IntroText": "TODO" } ],
-						
-					},			
-					"Resolutions": {
-						"KillAntagonist": ["TODO"],
-						"EscapeFromMonster": ["TODO"],
-						"ReachFinalDestination": ["TODO"]
-					}
 				}
 			},
 			
@@ -295,6 +282,19 @@
 						"SuccessText": "You found some rations. You gain the trinket \"Extra Rations\". You or a nearby hero may equip it immediately.",
 						"ProgressText": "NOT NEEDED",
 						"FailureText": "You did not find anything."
+					} 
+				],
+				"ReachFinalDestination": [ 
+					{
+						"StatTestType": "Cumulative",
+						"StatHint": "Agility",
+						"AltStatHint": "Might",
+						"SuccessValue": 4,
+						"TokenText": "Search for rations?",
+						"ActionText": "You try to reach the final goal...",
+						"SuccessText": "You manage to make progress but more is needed",
+						"ProgressText": "Still some way to go...",
+						"FailureText": "NOT NEEDED"
 					} 
 				],
 				"KillAntagonist": [],
