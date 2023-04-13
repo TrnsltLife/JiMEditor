@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Text.RegularExpressions;
+using System.Collections.Specialized;
 
 namespace JiME.Views
 {
@@ -44,6 +45,7 @@ namespace JiME.Views
 			selected = null;
 
 			tokenInteractions = new ObservableCollection<IInteraction>( scenario.interactionObserver.Where( x => ( x.isTokenInteraction && !Regex.IsMatch( x.dataName, @"\sGRP\d+$" ) ) || x.dataName == "None" ) );
+			scenario.interactionObserver.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(InteractionsCollectionChangedMethod); //used to update after Add Interaction dialogs
 
 			if ( tile.tokenList.Count > 0 )
 				tokenCombo.SelectedIndex = 0;
@@ -78,8 +80,43 @@ namespace JiME.Views
 				explorationBox.Visibility = Visibility.Collapsed;
 		}
 
+		private void InteractionsCollectionChangedMethod(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			//different kind of changes that may have occurred in collection when returning from the various Add Interaction dialogs
+			if (e.Action == NotifyCollectionChangedAction.Add)
+			{
+				RefreshTokenInteractions();
+			}
+			if (e.Action == NotifyCollectionChangedAction.Replace)
+			{
+				RefreshTokenInteractions();
+			}
+			if (e.Action == NotifyCollectionChangedAction.Remove)
+			{
+				RefreshTokenInteractions();
+			}
+			if (e.Action == NotifyCollectionChangedAction.Move)
+			{
+				RefreshTokenInteractions();
+			}
+		}
+
+		private void RefreshTokenInteractions()
+		{
+			ObservableCollection<IInteraction> newEvents = new ObservableCollection<IInteraction>(scenario.interactionObserver.Where(x => (x.isTokenInteraction && !Regex.IsMatch(x.dataName, @"\sGRP\d+$")) || x.dataName == "None"));
+			foreach(var interaction in newEvents)
+            {
+				if(!tokenInteractions.Contains(interaction))
+                {
+					tokenInteractions.Add(interaction);
+                }
+            }
+		}
+
+
 		private void OkButton_Click( object sender, RoutedEventArgs e )
 		{
+			scenario.interactionObserver.CollectionChanged -= InteractionsCollectionChangedMethod;
 			DialogResult = true;
 		}
 
