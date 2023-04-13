@@ -63,8 +63,7 @@ namespace JiME.Procedural.GenerationLogic
                 }
             }
 
-            // Create the tile itself and add the exploration token
-            // TODO: what does skipBuild mean? if false then we get some coordinate exception, might be just for the "Start" chapter since others use random tiles
+            // Create the tile itself and add the exploration token (skip build to avoid exception inside the constructor)
             var tile = new HexTile(tileInfo.IdNumber, skipBuild: true)
             {
                 tileSide = tileInfo.TileSide,

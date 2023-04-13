@@ -15,7 +15,6 @@ using JiME.Models;
 namespace JiME.Procedural.StoryElements
 {
     // TODO: consider moving story templates each to their own file
-    // TODO: consider how templates could be more generic? could they actually serve more than one archetype?
 
     /// <summary>
     /// Gives context and surroundings to the story

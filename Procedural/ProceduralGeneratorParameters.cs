@@ -50,7 +50,7 @@ namespace JiME.Procedural
         /// </summary>
         public bool Has_SCOURGES_OF_THE_WASTES { get; set; } = false;
 
-        // TODO: Story length or e.g. StoryPoint coun as parameter?
+        // TODO: Story length or e.g. StoryPoint count as enumerated parameter, SHORT/MEDIUM/LONG?
 
         #endregion
         #region Advanced parameters

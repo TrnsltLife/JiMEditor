@@ -99,7 +99,7 @@ namespace JiME.Procedural
                 }
             }*/
 
-            // TODO: ???
+            // TODO: What do these do?
             Scenario.wallTypes = new int[22];
             for (int i = 0; i < 22; i++)
                 Scenario.wallTypes[i] = 0;//0=none, 1=wall, 2=river

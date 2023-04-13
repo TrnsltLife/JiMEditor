@@ -248,7 +248,7 @@ namespace JiME.Visualization
                         });
                     }
                 }
-                else // TODO: other types
+                else
                 {
                     throw new NotImplementedException("Graph preparation not implemented for interaction type: " + x.GetType().Name);
                 }

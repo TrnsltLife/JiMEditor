@@ -70,7 +70,7 @@ namespace JiME.Views
                 ctrl.Click += async (a, b) =>
                 {
                     await Task.Delay(100);
-                    d.ClickAction(d); // TODO: utilize VertexClicked instead?
+                    d.ClickAction(d);
                 };
                 ctrl.ToolTip = "Click to edit";
             }

@@ -901,7 +901,7 @@ namespace JiME
             var c = scenario.chapterObserver.FirstOrDefault(ch => ch.tileObserver.OfType<HexTile>().Any(tile => tile.idNumber == t.idNumber && tile.tileSide == t.tileSide));
             if (c != null)
             {
-                TokenEditorWindow tp = new TokenEditorWindow(t, scenario, fromRandom: false); // TODO: fromRandom?
+                TokenEditorWindow tp = new TokenEditorWindow(t, scenario, fromRandom: true);
                 tp.ShowDialog();
             }
         }

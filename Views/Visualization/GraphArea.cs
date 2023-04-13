@@ -23,7 +23,7 @@ namespace JiME.Views
 
             SetupLogic();
 
-            // TODO: Not sure if these extra labels could be used? need to be tested
+            // Not sure if these extra labels could be used? need to be tested
             //VertexLabelFactory = new GraphVertexLabelFactory();
             //EdgeLabelFactory = new GraphEdgeLabelFactory();
         }

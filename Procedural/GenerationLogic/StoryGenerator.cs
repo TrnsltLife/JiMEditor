@@ -46,7 +46,6 @@ namespace JiME.Procedural.GenerationLogic
                 _ctx.Random, (newThreat, threatDiff) =>
                 {
                     var threatAction = new ThreatInteraction( "Threat Action: " + newThreat);
-                    // TODO: limit antagonist helper types based on collections
                     threatAction.difficultyBias = DifficultyBias.Medium;
                     threatAction.basePoolPoints = _ctx.Parameters.ThreatDiffMonsterPoolMultiplier * threatDiff;
                     threatAction.includedEnemies = GeneratorUtils.PrepareIncludedMonsters(_ctx.StoryTemplate.AntagonistHelperMonstersAreSomeOf_Filtered.ToArray());
@@ -96,7 +95,8 @@ namespace JiME.Procedural.GenerationLogic
                 _startingTile = LocationUtils.CreateRandomTileAndAddtoTileset(_ctx, tileSet, primaryLocation, secondaryLocations, mustBeFromPrimary: true);
                 _startingTile.isStartTile = true;
 
-                // TODO: if we ever take more than one tile to the first stage, we need to make sure that the fist non-random chapter only has single tile
+                // TODO: if we ever take more than one tile to the first stage, we need to make sure that the fist non-random chapter only has single tile to avoid
+                // need to place them, perhaps have single start tile  and separate chapter for rest of the Start phase tiles?
             }
             else
             {
