@@ -1,5 +1,9 @@
 ﻿# Milestones and Tasks
 - Improvements 
+ - PR Fixes
+   - Graph new TODO's
+   - MainWindow open Square tile as well somehow, also check all other HexTile assumptions
+   - MainWindow opens up too big, maybe just maximize instead of with content to widht and height
  - Implement more StoryArchetypes (that can use the same templates than the old ones, perhaps with some archetype specific details)
    - KillAntagonist can only happen once, AntagonistRetreat cannot happen after KillAntagonist, similar rules to fragments?
    - Also need to mark certain interactions somehow to be part of the "main goal" of the scenario and have different texts, upate Threat-style as well

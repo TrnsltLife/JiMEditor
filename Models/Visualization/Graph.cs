@@ -229,11 +229,6 @@ namespace JiME.Visualization
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"DEFEATED\"" });
                     });
                 }
-                else if (x is TextInteraction)
-                {
-                    // No extra triggers
-                }
-
                 // Special case: StoryPointInteractionsa re only used during procedural generation for debug purposes
                 else if (x is Procedural.StoryElements.StoryPointInteraction)
                 {
@@ -248,9 +243,12 @@ namespace JiME.Visualization
                         });
                     }
                 }
-                else
+                // TODO: ReplaceTokenInteraction
+                // TODO: MultiEventInteraction (either triggers or events but we need to map both)
+                // TODO: BranchInteraction
+                else // TextInteraction, NoneInteraction, RewardInteraction, DarknessInteraction
                 {
-                    throw new NotImplementedException("Graph preparation not implemented for interaction type: " + x.GetType().Name);
+                    // These types do not have any special connections to highlight
                 }
             });
 
