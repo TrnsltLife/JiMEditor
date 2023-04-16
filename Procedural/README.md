@@ -1,15 +1,12 @@
 ﻿# Milestones and Tasks
 - Improvements 
- - PR Fixes
-   - Graph new TODO's
-   - MainWindow open Square tile as well somehow, also check all other HexTile assumptions
-   - MainWindow opens up too big, maybe just maximize instead of with content to widht and height
  - Implement more StoryArchetypes (that can use the same templates than the old ones, perhaps with some archetype specific details)
    - KillAntagonist can only happen once, AntagonistRetreat cannot happen after KillAntagonist, similar rules to fragments?
    - Also need to mark certain interactions somehow to be part of the "main goal" of the scenario and have different texts, upate Threat-style as well
  - Balance out the generator (e.g. Threat track generation, also have more options than just monsters, e.g. nazgul cry -> fear damage)
    - ThreatLevelIncreasesTexts should perhaps be inside SupportedArchetypes and contain also more options
  - Implement StoryLocation specific random encounters (monters and other interactions) to fill in the world
+ - Multi-part StoryPoints especially in the decisive StoryPoints (e.g. antagonist is not defeated at one go, "cheat death" etc. )
  - Improve interaction with boardgame-elements (e.g. things not directly visible in the App) 
  - Implement side quests
  - Implement more StoryTemplates (with help of others?)

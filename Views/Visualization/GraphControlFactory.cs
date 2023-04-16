@@ -72,7 +72,7 @@ namespace JiME.Views
                     await Task.Delay(100);
                     d.ClickAction(d);
                 };
-                ctrl.ToolTip = "Click to edit";
+                ctrl.ToolTip = "Click to edit " + d.Source?.GetType().Name ?? "";
             }
             else // No click action
             {

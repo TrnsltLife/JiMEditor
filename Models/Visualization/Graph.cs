@@ -196,7 +196,7 @@ namespace JiME.Visualization
                     var x2 = (ConditionalInteraction)x;
                     getTriggerOrEventVertex(vertexDict, x2.finishedTrigger, v =>
                     {
-                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"FINISHED\"" });
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "finished" });
                     });
                     if (x2.triggerList != null)
                     {
@@ -204,7 +204,7 @@ namespace JiME.Visualization
                         {
                             getTriggerOrEventVertex(vertexDict, t, v =>
                             {
-                                dataGraph.AddEdge(new DataEdge(v, vertex) { Text = "\"CONDITION\"" });
+                                dataGraph.AddEdge(new DataEdge(v, vertex) { Text = "condition" });
                             });
                         }
                     }
@@ -214,11 +214,11 @@ namespace JiME.Visualization
                     var x2 = (PersistentTokenInteraction)x;
                     getTriggerOrEventVertex(vertexDict, x2.eventToActivate, v =>
                     {
-                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"ACTIVATE\"" });
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"activate\"" });
                     });
                     getTriggerOrEventVertex(vertexDict, x2.alternativeTextTrigger, v =>
                     {
-                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"ALT. TEXT\"" });
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"alt.text\"" });
                     });
                 }
                 else if (x is ThreatInteraction)
@@ -226,7 +226,80 @@ namespace JiME.Visualization
                     var x2 = (ThreatInteraction)x;
                     getTriggerOrEventVertex(vertexDict, x2.triggerDefeatedName, v =>
                     {
-                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"DEFEATED\"" });
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"defeated\"" });
+                    });
+                }
+                else if (x is MultiEventInteraction)
+                {
+                    var x2 = (MultiEventInteraction)x;
+                    // Triggers and Events are mutually exclusive and that is reflected here even if the lists themselves could both have items
+                    if (x2.triggerList != null && x2.usingTriggers)
+                    {
+                        foreach (var t in x2.triggerList)
+                        {
+                            getTriggerOrEventVertex(vertexDict, t, v =>
+                            {
+                                dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "triggers" });
+                            });
+                        }                        
+                    }
+                    if (x2.eventList != null && !x2.usingTriggers)
+                    {
+                        foreach (var t in x2.eventList)
+                        {
+                            getTriggerOrEventVertex(vertexDict, t, v =>
+                            {
+                                dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "triggers" });
+                            });
+                        }
+                    }
+                }
+                else if (x is BranchInteraction)
+                {
+                    var x2 = (BranchInteraction)x;
+
+                    // First draw out the source trigger
+                    getTriggerOrEventVertex(vertexDict, x2.triggerTest, v =>
+                    {
+                        dataGraph.AddEdge(new DataEdge(v, vertex) { Text = "input" });
+                    });
+
+                    // Then check the outputs
+                    if (x2.branchTestEvent)
+                    {
+                        // Triggering events
+                        getTriggerOrEventVertex(vertexDict, x2.triggerIsSet, v =>
+                        {
+                            dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "set" });
+                        });
+                        getTriggerOrEventVertex(vertexDict, x2.triggerNotSet, v =>
+                        {
+                            dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "not set" });
+                        });
+                    }
+                    else
+                    {
+                        // Triggering triggers
+                        getTriggerOrEventVertex(vertexDict, x2.triggerIsSetTrigger, v =>
+                        {
+                            dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "set" });
+                        });
+                        getTriggerOrEventVertex(vertexDict, x2.triggerNotSetTrigger, v =>
+                        {
+                            dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "not set" });
+                        });
+                    }
+                }
+                else if (x is ReplaceTokenInteraction)
+                {
+                    var x2 = (ReplaceTokenInteraction)x;
+                    getTriggerOrEventVertex(vertexDict, x2.eventToReplace, v =>
+                    {
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "replace this" });
+                    });
+                    getTriggerOrEventVertex(vertexDict, x2.replaceWithEvent, v =>
+                    {
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "with this" });
                     });
                 }
                 // Special case: StoryPointInteractionsa re only used during procedural generation for debug purposes
@@ -243,12 +316,9 @@ namespace JiME.Visualization
                         });
                     }
                 }
-                // TODO: ReplaceTokenInteraction
-                // TODO: MultiEventInteraction (either triggers or events but we need to map both)
-                // TODO: BranchInteraction
                 else // TextInteraction, NoneInteraction, RewardInteraction, DarknessInteraction
                 {
-                    // These types do not have any special connections to highlight
+                    // These types do not have any special connections to add
                 }
             });
 

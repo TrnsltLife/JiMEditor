@@ -7,6 +7,9 @@ using JiME.Procedural.StoryElements;
 
 namespace JiME.Procedural.GenerationLogic
 {
+    /// <summary>
+    /// Helper class for (now) Journey mode HexTile creation
+    /// </summary>
     static class LocationUtils
     {
         /// <summary>
@@ -31,7 +34,7 @@ namespace JiME.Procedural.GenerationLogic
         }
 
         /// <summary>
-        /// Creates a new tile and adds it to the given Chapter 
+        /// Creates a new HexTile and adds it to the given Chapter
         /// </summary>
         public static BaseTile CreateRandomTileAndAddtoTileset(ProceduralGeneratorContext ctx, Chapter tileset, StoryLocation primaryLocation, IEnumerable<StoryLocation> secondaryLocations, bool mustBeFromPrimary = false)
         {

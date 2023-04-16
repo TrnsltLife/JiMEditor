@@ -36,7 +36,7 @@ namespace JiME.Procedural.GenerationLogic
             }
         }
 
-        public static void FillInStoryPoint(ProceduralGeneratorContext ctx, string startTrigger, List<string> endTriggers, string mainFragment, IEnumerable<string> secondaryFragments, string location, HexTile tile, StoryGenerator.StoryPhase phase)
+        public static void FillInStoryPoint(ProceduralGeneratorContext ctx, string startTrigger, List<string> endTriggers, string mainFragment, IEnumerable<string> secondaryFragments, string location, BaseTile tile, StoryGenerator.StoryPhase phase)
         {
             for (int i = 0; i < endTriggers.Count; i++)
             {
@@ -74,7 +74,7 @@ namespace JiME.Procedural.GenerationLogic
             string startTrigger,
             string endTrigger,
             string location,
-            HexTile tile,
+            BaseTile tile,
             StoryGenerator.StoryPhase phase)
         {
             AddTokenInteraction(ctx, tile, startTrigger, info, () =>
@@ -127,7 +127,7 @@ namespace JiME.Procedural.GenerationLogic
             string startTrigger,
             string endTrigger,
             string location,
-            HexTile tile,
+            BaseTile tile,
             StoryGenerator.StoryPhase phase)
         {
             AddTokenInteraction(ctx, tile, startTrigger, info, () =>
@@ -199,7 +199,7 @@ namespace JiME.Procedural.GenerationLogic
             string startTrigger,
             string endTrigger,
             string location,
-            HexTile tile,
+            BaseTile tile,
             StoryGenerator.StoryPhase phase)
         {
             // TODO: scale difficulty etc. properly, or is that managed already by the system?
@@ -261,7 +261,7 @@ namespace JiME.Procedural.GenerationLogic
 
         private static string GenerateRandomNameSuffix() => string.Format(" ({0})", Guid.NewGuid().GetHashCode());
 
-        private static void AddTokenInteraction<TInteraction>(ProceduralGeneratorContext ctx, HexTile tile, string startTrigger, StoryFragment.InteractionInfo info, Func<TInteraction> setupAction) where TInteraction : InteractionBase
+        private static void AddTokenInteraction<TInteraction>(ProceduralGeneratorContext ctx, BaseTile tile, string startTrigger, StoryFragment.InteractionInfo info, Func<TInteraction> setupAction) where TInteraction : InteractionBase
         {
             // Create the interaction with specific setup
             var i = setupAction();

@@ -148,11 +148,11 @@ namespace JiME
                     break;
 
                 case Visualization.DataVertex.Type.Tile:
-                    OpenTileEditor(item.Source as HexTile);
+                    OpenTileEditor(item.Source as BaseTile);
                     break;
 
                 case Visualization.DataVertex.Type.Token:
-                    OpenTileEditor(item.Source2 as HexTile);
+                    OpenTileEditor(item.Source2 as BaseTile);
                     break;
 
                 default:
@@ -889,16 +889,16 @@ namespace JiME
         private void OpenTokenEditor(Token t)
         {
             // TODO: cannot rely on parent tile
-            var tile = scenario.chapterObserver.SelectMany(ch => ch.tileObserver.OfType<HexTile>()).FirstOrDefault(t2 => t2.idNumber == t.parentTile.idNumber && t2.tileSide == t.parentTile.tileSide);
+            var tile = scenario.chapterObserver.SelectMany(ch => ch.tileObserver.OfType<BaseTile>()).FirstOrDefault(t2 => t2.idNumber == t.parentTile.idNumber && t2.tileSide == t.parentTile.tileSide);
             if (tile != null)
             {
                 OpenTileEditor(tile);
             }
         }
 
-        private void OpenTileEditor(HexTile t)
+        private void OpenTileEditor(BaseTile t)
         {
-            var c = scenario.chapterObserver.FirstOrDefault(ch => ch.tileObserver.OfType<HexTile>().Any(tile => tile.idNumber == t.idNumber && tile.tileSide == t.tileSide));
+            var c = scenario.chapterObserver.FirstOrDefault(ch => ch.tileObserver.OfType<BaseTile>().Any(tile => tile.idNumber == t.idNumber && tile.tileSide == t.tileSide));
             if (c != null)
             {
                 TokenEditorWindow tp = new TokenEditorWindow(t, scenario, fromRandom: true);

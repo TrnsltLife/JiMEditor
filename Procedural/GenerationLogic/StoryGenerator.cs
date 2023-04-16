@@ -114,7 +114,7 @@ namespace JiME.Procedural.GenerationLogic
             {
                 LocationUtils.CreateRandomTileAndAddtoTileset(_ctx, tileSet, primaryLocation, secondaryLocations, mustBeFromPrimary: false);
             }
-            var allPhaseTiles = tileSet.tileObserver.OfType<HexTile>().ToList(); // TODO: non-hex tile in some far future?
+            var allPhaseTiles = tileSet.tileObserver.OfType<BaseTile>().ToList(); // TODO: non-hex tile in some far future?
             
             // Work through all the MAIN STORY storypoints in the phase
             var phaseMainStoryPoints = phaseStoryPoints.Where(sp => sp.PartOfMainQuest).ToList();
