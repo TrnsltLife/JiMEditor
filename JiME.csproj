@@ -496,6 +496,7 @@
     <EmbeddedResource Include="Procedural\Assets\story-templates.json" />
     <EmbeddedResource Include="Procedural\Assets\story-locations.json" />
     <EmbeddedResource Include="Procedural\Assets\story-fragments.json" />
+    <None Include="CHANGELOG.md" />
     <None Include="Procedural\README.md" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
