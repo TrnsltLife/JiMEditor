@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using GraphX.Controls;
 using GraphX.Controls.Models;
 
 namespace JiME.Views
@@ -11,11 +12,11 @@ namespace JiME.Views
     /// <summary>
     /// UIElement creation factory for DataVertex class
     /// </summary>
-    public class GraphVertexLabelFactory : ILabelFactory<UIElement>
+    public class GraphVertexLabelFactory : DefaultVertexlabelFactory
     {
-        public IEnumerable<UIElement> CreateLabel<TCtrl>(TCtrl control)
+        public override IEnumerable<AttachableVertexLabelControl> CreateLabel<TCtrl>(TCtrl control)
         {
-            throw new NotImplementedException();
+            return base.CreateLabel(control);
         }
     }
 }

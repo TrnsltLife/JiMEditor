@@ -130,6 +130,7 @@ namespace JiME.Views
             var ctrl = base.CreateEdgeControl(source, target, edge, showArrows, visibility); // Visibility affects arrow visibility, not the balloon
             ctrl.Opacity = 0.5;
             ctrl.Foreground = Brushes.LightGray;
+            ctrl.ToolTip = e.Text;
             return ctrl;
         }
     }
