@@ -144,7 +144,7 @@ namespace JiME
                     break;
 
                 case Visualization.DataVertex.Type.Chapter:
-                    OpenChapterEditor(item.Source as Chapter);
+                    OpenChapterPropertiesEditor(item.Source as Chapter);
                     break;
 
                 case Visualization.DataVertex.Type.Tile:
@@ -152,7 +152,7 @@ namespace JiME
                     break;
 
                 case Visualization.DataVertex.Type.Token:
-                    OpenTileEditor(item.Source2 as BaseTile);
+                    OpenTileEditor(item.Source2 as BaseTile, highlightToken: item.Source as Token);
                     break;
 
                 default:
@@ -876,14 +876,12 @@ namespace JiME
 		private void ChapterPropsButton_Click( object sender, RoutedEventArgs e )
 		{
 			Chapter c = ( (Button)e.Source ).DataContext as Chapter;
-
-			ChapterPropertiesWindow cw = new ChapterPropertiesWindow( scenario, c );
-			cw.ShowDialog();
+            OpenChapterPropertiesEditor(c);
 		}
 
         private void TileEditButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenChapterEditor(((Button)e.Source).DataContext as Chapter);
+            OpenChapterTileEditor(((Button)e.Source).DataContext as Chapter);
         }
 
         private void OpenTokenEditor(Token t)
@@ -896,17 +894,23 @@ namespace JiME
             }
         }
 
-        private void OpenTileEditor(BaseTile t)
+        private void OpenTileEditor(BaseTile t, Token highlightToken = null)
         {
             var c = scenario.chapterObserver.FirstOrDefault(ch => ch.tileObserver.OfType<BaseTile>().Any(tile => tile.idNumber == t.idNumber && tile.tileSide == t.tileSide));
             if (c != null)
             {
-                TokenEditorWindow tp = new TokenEditorWindow(t, scenario, fromRandom: true);
+                TokenEditorWindow tp = new TokenEditorWindow(t, scenario, fromRandom: true, highlightToken: highlightToken);
                 tp.ShowDialog();
             }
         }
 
-        private void OpenChapterEditor(Chapter c)
+        private void OpenChapterPropertiesEditor(Chapter c)
+        {
+            ChapterPropertiesWindow cw = new ChapterPropertiesWindow(scenario, c);
+            cw.ShowDialog();
+        }
+
+        private void OpenChapterTileEditor(Chapter c)
         {
 			if (scenario.scenarioTypeJourney)
 			{
