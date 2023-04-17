@@ -357,8 +357,8 @@ namespace JiME.Visualization
                             dataGraph.AddEdge(new DataEdge(v, tokenVertex) { Text = "activates" });
                         });
 
-                        // Object is triggered by...
-                        getTriggerOrEventVertex(vertexDict, tokenX.triggerName, v =>
+                        // Object is triggered by... (note: this can only link to Events!)
+                        getEventVertex(vertexDict, tokenX.triggerName, v =>
                         {
                             dataGraph.AddEdge(new DataEdge(tokenVertex, v) { Text = "triggers" });
                         });
@@ -438,6 +438,19 @@ namespace JiME.Visualization
         private static string getActivationName(string dataName) => "ACT_" + dataName;
         private static string getInteractionName(string dataName) => "INT_" + dataName;
         private static string getInteractionGroupName(string groupNameAndNumber) => "INTGRP_" + groupNameAndNumber;
+
+        private static void getEventVertex(Dictionary<string, DataVertex> dict, string dataName, Action<DataVertex> action)
+        {
+            // Then try event
+            var eventName = getInteractionName(dataName);
+            if (dict.ContainsKey(eventName))
+            {
+                action(dict[eventName]);
+                return;
+            }
+            // Not found, just log this since this might happen if triggers are removed before all connections are done
+            Console.WriteLine("Graph: Could not find interaction with dataName: " + dataName);
+        }
 
         private static void getTriggerOrEventVertex(Dictionary<string, DataVertex> dict, string dataName, Action<DataVertex> action)
         {

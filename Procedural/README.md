@@ -1,5 +1,6 @@
 ﻿# Milestones and Tasks
 - Improvements 
+ - Go through Graph.cs and decide whether to check for trigger or event vertex in each case (getTriggerOrEventVertex)!
  - Implement more StoryArchetypes (that can use the same templates than the old ones, perhaps with some archetype specific details)
    - KillAntagonist can only happen once, AntagonistRetreat cannot happen after KillAntagonist, similar rules to fragments?
    - Also need to mark certain interactions somehow to be part of the "main goal" of the scenario and have different texts, upate Threat-style as well
