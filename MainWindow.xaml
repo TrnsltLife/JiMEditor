@@ -4,9 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JiME"
+        xmlns:localviews="clr-namespace:JiME.Views"
+        xmlns:controls="http://schemas.panthernet.ru/graphx/"
         mc:Ignorable="d"
 				xmlns:uc="clr-namespace:JiME.UserControls"
-        Title="{Binding titleChangedToken, Converter={StaticResource titleConverter}}" Height="500" Width="770" MinHeight="500" MinWidth="700" WindowStartupLocation="CenterScreen" Background="#FF2D2D30" Closing="Window_Closing" ResizeMode="CanResizeWithGrip" SizeToContent="Width">
+        Title="{Binding titleChangedToken, Converter={StaticResource titleConverter}}" Height="500" Width="770" MinHeight="500" MinWidth="700" WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="#FF2D2D30" Closing="Window_Closing" ResizeMode="CanResizeWithGrip">
 
 	<Window.CommandBindings>
 		<CommandBinding Command="local:MyCommands.Exit" Executed="CommandExit_Executed" CanExecute="CommandExit_CanExecute"/>
@@ -173,7 +175,7 @@
 				<Image Source="Assets/settings.png" Height="24" Stretch="UniformToFill"/>
 			</Button>
 
-			<Separator Margin="10,0,5,0" Opacity=".25"/>
+            <Separator Margin="10,0,5,0" Opacity=".25"/>
 
 			<Button x:Name="newOChapterButton" Padding="5" Margin="5,0" Command="local:MyCommands.NewChapter" Background="{StaticResource bgButtonColor}" Style="{StaticResource btn}">
 				<StackPanel Orientation="Horizontal">
@@ -261,16 +263,31 @@
 		</Border>
 
 		<Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
 			<Grid.Background>
 				<ImageBrush ImageSource="Assets/ring.png" Stretch="Uniform" Opacity="0.1"/>
 			</Grid.Background>
 
-			<ScrollViewer VerticalScrollBarVisibility="Auto">
+            <!-- Draw this behind the TileMap controls -->
+            <controls:ZoomControl x:Name="visualizationZoomCtrl" Grid.Column="0" Grid.ColumnSpan="2" Background="Transparent">
+                <localviews:GraphArea x:Name="visualizationGraphArea" >
+                    <localviews:GraphArea.Resources>
+                        <Style TargetType="TextBlock"/>
+                        <!-- Ignore Force text to white here -->
+                    </localviews:GraphArea.Resources>
+                </localviews:GraphArea>
+            </controls:ZoomControl>
+
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Column="0" VerticalAlignment="Top">
 				<!--ItemsSource="{Binding chapterObserver}"-->
 				<ItemsControl Padding="5" ItemsSource="{Binding chapterObserver}">
 					<ItemsControl.ItemsPanel>
 						<ItemsPanelTemplate>
-							<WrapPanel IsItemsHost="True" />
+							<WrapPanel IsItemsHost="True" Orientation="Vertical" />
 						</ItemsPanelTemplate>
 					</ItemsControl.ItemsPanel>
 
@@ -304,7 +321,10 @@
 
 				</ItemsControl>
 			</ScrollViewer>
-		</Grid>
+
+
+
+        </Grid>
 
 	</DockPanel>
 </Window>

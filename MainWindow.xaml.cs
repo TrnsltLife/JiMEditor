@@ -68,12 +68,99 @@ namespace JiME
 			objectivesUC.dataListView.ItemsSource = scenario.objectiveObserver;
 			activationsUC.dataListView.ItemsSource = scenario.activationsObserver;
 
+            // Initiate visualization defer timer so it won't be done multiple times
+            WpfUtils.MainThreadDispatcher = this.Dispatcher;
 
-			//debug
-			//debug();
-		}
+            // Initialize visualization
+            GraphX.Controls.ZoomControl.SetViewFinderVisibility(visualizationZoomCtrl, Visibility.Visible); //Set minimap (overview) window to be visible by default
+            Loaded += (object sender, RoutedEventArgs e) =>
+            {
+                // Show the scenario itself after the window has loaded
+                // NOTE: Not deferred here since we want to zoom in after initial loading
+                VisualizeScenario();
 
-		void debug()
+                // Set Fill zooming strategy so whole graph will be always visible (first time this is loading)
+                visualizationZoomCtrl.ZoomToFill(); 
+            };
+            Activated += (object sender, EventArgs e) =>
+            {
+                // Re-visualize whenever this window regains focus since all changing of the Scenario contents happens in dialogs.
+                // NOTE: This is not enough since Activated does not get triggered when we e.g. return from MessageBox dialog
+                TriggerDeferredVisualizeScenario();
+            };
+            scenario.AddObserverChangedHandler((a, b) =>
+            {
+                // Any of the collections within the Scenario changed so we need to Re-visualize since this can happen through buttons
+                // in the main editor window and MessageBox closing does not trigger re-visualization
+                TriggerDeferredVisualizeScenario();
+            });
+
+            //debug
+            //debug();
+        }
+
+        private void TriggerDeferredVisualizeScenario()
+        {
+            // This will wait at minimum 100ms for new triggers and only execute when no new triggers have been done during that time
+            // Useful to avoid re-visualizing multiple times in short succession (e.g. due to adding a trigger also sorts it which triggers this MANY times)
+            //Console.WriteLine("TRIGGER VISUALIZE SCENARIO");
+            WpfUtils.DeferExecution("VisualizeScenario", 100, VisualizeScenario);
+        }
+
+        private void VisualizeScenario()
+        {
+            //Console.WriteLine("VISUALIZE SCENARIO");
+            if (scenario != null)
+            {
+                var dataGraph = Visualization.Graph.Generate(scenario, VisializationItemClicked);
+                visualizationGraphArea.ShowGraph(dataGraph);
+            }
+        }
+
+        private void VisializationItemClicked(Visualization.DataVertex item)
+        {
+            switch (item.VertexType)
+            {
+                case Visualization.DataVertex.Type.Start:
+                case Visualization.DataVertex.Type.Resolution:
+                case Visualization.DataVertex.Type.ThreatLevel:
+                    OpenScenarioEditor();
+                    break;
+
+                case Visualization.DataVertex.Type.Trigger:
+                    OpenTriggerEditor(item.Source as Trigger);
+                    break;
+
+                case Visualization.DataVertex.Type.Objective:
+                    OpenObjectiveEditor(item.Source as Objective);
+                    break;
+
+                case Visualization.DataVertex.Type.Interaction:
+                    OpenInteractionEditor(item.Source);
+                    break;
+
+                case Visualization.DataVertex.Type.InteractionGroup:
+                    MessageBox.Show("Not editable directly", "InteractionGroup", MessageBoxButton.OK);
+                    break;
+
+                case Visualization.DataVertex.Type.Chapter:
+                    OpenChapterPropertiesEditor(item.Source as Chapter);
+                    break;
+
+                case Visualization.DataVertex.Type.Tile:
+                    OpenTileEditor(item.Source as BaseTile);
+                    break;
+
+                case Visualization.DataVertex.Type.Token:
+                    OpenTileEditor(item.Source2 as BaseTile, highlightToken: item.Source as Token);
+                    break;
+
+                default:
+                    break; // No nothing
+            }
+        }
+
+        void debug()
 		{
 			//scenario.threatObserver.Add( new Threat( "Threat 1", 10 ) { threshold = 10, triggerName = "Threat Trigger" } );
 			//scenario.AddInteraction( new Interaction( "Dummy Event", false ) { interactionType = InteractionType.Text, triggerName = "Threat Trigger" } );
@@ -134,7 +221,7 @@ namespace JiME
 				if (idx != -1)
 					scenario.RemoveData(triggersUC.dataListView.SelectedItem);
 				triggersUC.dataListView.SelectedIndex = 0;
-			}
+            }
 		}
 
 		void OnDuplicateTrigger(object sender, EventArgs e)
@@ -166,7 +253,7 @@ namespace JiME
 					if (idx != -1)
 						scenario.RemoveData(objectivesUC.dataListView.Items[idx]);
 					objectivesUC.dataListView.SelectedIndex = 0;
-				}
+                }
 			}
 			else
 			{
@@ -183,78 +270,92 @@ namespace JiME
 			if (oew.ShowDialog() == true)
 			{
 				scenario.objectiveObserver.Add(obj);
-			}
+            }
 		}
 
-		void OnSettingsInteraction( object sender, EventArgs e )
-		{
-			if ( interactionsUC.dataListView.SelectedItem is TextInteraction )
+        void OnSettingsInteraction(object sender, EventArgs e)
+        {
+            OpenInteractionEditor(interactionsUC.dataListView.SelectedItem);
+        }
+
+        private void OpenInteractionEditor(object interactionItem)
+        { 
+			if (interactionItem is TextInteraction )
 			{
-				TextInteractionWindow tw = new TextInteractionWindow( scenario, (TextInteraction)interactionsUC.dataListView.SelectedItem );
+				TextInteractionWindow tw = new TextInteractionWindow( scenario, (TextInteraction)interactionItem);
 				tw.ShowDialog();
 			}
-			else if ( interactionsUC.dataListView.SelectedItem is BranchInteraction )
+			else if (interactionItem is BranchInteraction )
 			{
-				BranchInteractionWindow bw = new BranchInteractionWindow( scenario, (BranchInteraction)interactionsUC.dataListView.SelectedItem );
+				BranchInteractionWindow bw = new BranchInteractionWindow( scenario, (BranchInteraction)interactionItem);
 				bw.ShowDialog();
 			}
-			else if ( interactionsUC.dataListView.SelectedItem is TestInteraction )
+			else if (interactionItem is TestInteraction )
 			{
-				TestInteractionWindow bw = new TestInteractionWindow( scenario, (TestInteraction)interactionsUC.dataListView.SelectedItem );
+				TestInteractionWindow bw = new TestInteractionWindow( scenario, (TestInteraction)interactionItem);
 				bw.ShowDialog();
 			}
-			else if ( interactionsUC.dataListView.SelectedItem is DecisionInteraction )
+			else if (interactionItem is DecisionInteraction )
 			{
-				DecisionInteractionWindow bw = new DecisionInteractionWindow( scenario, (DecisionInteraction)interactionsUC.dataListView.SelectedItem );
+				DecisionInteractionWindow bw = new DecisionInteractionWindow( scenario, (DecisionInteraction)interactionItem);
 				bw.ShowDialog();
 			}
-			else if ( interactionsUC.dataListView.SelectedItem is ThreatInteraction )
+			else if ( interactionItem is ThreatInteraction )
 			{
-				ThreatInteractionWindow bw = new ThreatInteractionWindow( scenario, (ThreatInteraction)interactionsUC.dataListView.SelectedItem );
+				ThreatInteractionWindow bw = new ThreatInteractionWindow( scenario, (ThreatInteraction)interactionItem );
 				bw.ShowDialog();
 			}
-			else if ( interactionsUC.dataListView.SelectedItem is MultiEventInteraction )
+			else if ( interactionItem is MultiEventInteraction )
 			{
-				MultiEventWindow bw = new MultiEventWindow( scenario, (MultiEventInteraction)interactionsUC.dataListView.SelectedItem );
+				MultiEventWindow bw = new MultiEventWindow( scenario, (MultiEventInteraction)interactionItem );
 				bw.ShowDialog();
 			}
-			else if ( interactionsUC.dataListView.SelectedItem is PersistentTokenInteraction )
+			else if ( interactionItem is PersistentTokenInteraction )
 			{
-				PersistentInteractionWindow bw = new PersistentInteractionWindow( scenario, (PersistentTokenInteraction)interactionsUC.dataListView.SelectedItem );
+				PersistentInteractionWindow bw = new PersistentInteractionWindow( scenario, (PersistentTokenInteraction)interactionItem );
 				bw.ShowDialog();
 			}
-			else if ( interactionsUC.dataListView.SelectedItem is ConditionalInteraction )
+			else if ( interactionItem is ConditionalInteraction )
 			{
-				ConditionalInteractionWindow bw = new ConditionalInteractionWindow( scenario, (ConditionalInteraction)interactionsUC.dataListView.SelectedItem );
+				ConditionalInteractionWindow bw = new ConditionalInteractionWindow( scenario, (ConditionalInteraction)interactionItem );
 				bw.ShowDialog();
 			}
-			else if ( interactionsUC.dataListView.SelectedItem is DialogInteraction )
+			else if ( interactionItem is DialogInteraction )
 			{
-				DialogInteractionWindow bw = new DialogInteractionWindow( scenario, (DialogInteraction)interactionsUC.dataListView.SelectedItem );
+				DialogInteractionWindow bw = new DialogInteractionWindow( scenario, (DialogInteraction)interactionItem );
 				bw.ShowDialog();
 			}
-			else if ( interactionsUC.dataListView.SelectedItem is ReplaceTokenInteraction )
+			else if ( interactionItem is ReplaceTokenInteraction )
 			{
-				ReplaceTokenInteractionWindow bw = new ReplaceTokenInteractionWindow( scenario, (ReplaceTokenInteraction)interactionsUC.dataListView.SelectedItem );
+				ReplaceTokenInteractionWindow bw = new ReplaceTokenInteractionWindow( scenario, (ReplaceTokenInteraction)interactionItem );
 				bw.ShowDialog();
 			}
-			else if ( interactionsUC.dataListView.SelectedItem is RewardInteraction )
+			else if ( interactionItem is RewardInteraction )
 			{
-				RewardInteractionWindow bw = new RewardInteractionWindow( scenario, (RewardInteraction)interactionsUC.dataListView.SelectedItem );
+				RewardInteractionWindow bw = new RewardInteractionWindow( scenario, (RewardInteraction)interactionItem );
 				bw.ShowDialog();
 			}
 		}
 
-		void OnSettingsTrigger( object sender, EventArgs e )
+        void OnSettingsTrigger(object sender, EventArgs e)
+        {
+            OpenTriggerEditor((Trigger)triggersUC.dataListView.SelectedItem);
+        }
+    
+        private void OpenTriggerEditor(Trigger trigger)
 		{
-			string selected = ( (Trigger)triggersUC.dataListView.SelectedItem ).dataName;
-			TriggerEditorWindow tw = new TriggerEditorWindow( scenario, selected );
+			TriggerEditorWindow tw = new TriggerEditorWindow( scenario, trigger.dataName);
 			tw.ShowDialog();
 		}
 
 		void OnSettingsObjective( object sender, EventArgs e )
+        {
+            OpenObjectiveEditor((Objective)objectivesUC.dataListView.SelectedItem);
+        }
+
+        private void OpenObjectiveEditor(Objective o)
 		{
-			ObjectiveEditorWindow ow = new ObjectiveEditorWindow( scenario, ( (Objective)objectivesUC.dataListView.SelectedItem ), false );
+			ObjectiveEditorWindow ow = new ObjectiveEditorWindow( scenario, o, false );
 			ow.ShowDialog();
 		}
 
@@ -426,6 +527,11 @@ namespace JiME
 		}
 
 		private void ScenarioSettingsButton_Click( object sender, RoutedEventArgs e )
+        {
+            OpenScenarioEditor();
+        }
+
+        private void OpenScenarioEditor()
 		{
 			ScenarioWindow sw = new ScenarioWindow( scenario );
 			sw.Owner = this;
@@ -433,9 +539,9 @@ namespace JiME
 			{
 				scenario.scenarioName = sw.scenarioName;
 			}
-		}
+		}   
 
-		private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e )
+        private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e )
 		{
 			if ( scenario.isDirty )
 			{
@@ -451,7 +557,7 @@ namespace JiME
 			if ( ow.ShowDialog() == true )
 			{
 				scenario.AddObjective( ow.objective );
-			}
+            }
 		}
 
 		void AddActivations()
@@ -770,14 +876,42 @@ namespace JiME
 		private void ChapterPropsButton_Click( object sender, RoutedEventArgs e )
 		{
 			Chapter c = ( (Button)e.Source ).DataContext as Chapter;
-
-			ChapterPropertiesWindow cw = new ChapterPropertiesWindow( scenario, c );
-			cw.ShowDialog();
+            OpenChapterPropertiesEditor(c);
 		}
 
-		private void TileEditButton_Click( object sender, RoutedEventArgs e )
-		{
-			Chapter c = ((Button)e.Source).DataContext as Chapter;
+        private void TileEditButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenChapterTileEditor(((Button)e.Source).DataContext as Chapter);
+        }
+
+        private void OpenTokenEditor(Token t)
+        {
+            // TODO: cannot rely on parent tile
+            var tile = scenario.chapterObserver.SelectMany(ch => ch.tileObserver.OfType<BaseTile>()).FirstOrDefault(t2 => t2.idNumber == t.parentTile.idNumber && t2.tileSide == t.parentTile.tileSide);
+            if (tile != null)
+            {
+                OpenTileEditor(tile);
+            }
+        }
+
+        private void OpenTileEditor(BaseTile t, Token highlightToken = null)
+        {
+            var c = scenario.chapterObserver.FirstOrDefault(ch => ch.tileObserver.OfType<BaseTile>().Any(tile => tile.idNumber == t.idNumber && tile.tileSide == t.tileSide));
+            if (c != null)
+            {
+                TokenEditorWindow tp = new TokenEditorWindow(t, scenario, fromRandom: true, highlightToken: highlightToken);
+                tp.ShowDialog();
+            }
+        }
+
+        private void OpenChapterPropertiesEditor(Chapter c)
+        {
+            ChapterPropertiesWindow cw = new ChapterPropertiesWindow(scenario, c);
+            cw.ShowDialog();
+        }
+
+        private void OpenChapterTileEditor(Chapter c)
+        {
 			if (scenario.scenarioTypeJourney)
 			{
 				if (c.isRandomTiles)

@@ -219,6 +219,21 @@ namespace JiME
 
 		public ObservableCollection<int> filteredGlobalTilePool { get; set; }
 
+        public void AddObserverChangedHandler(NotifyCollectionChangedEventHandler handler)
+        {
+            // Fires up the handler whenever any of the Observable Collections change
+            interactionObserver.CollectionChanged += handler;
+            triggersObserver.CollectionChanged += handler;
+            objectiveObserver.CollectionChanged += handler;
+            activationsObserver.CollectionChanged += handler;
+            resolutionObserver.CollectionChanged += handler;
+            threatObserver.CollectionChanged += handler;
+            chapterObserver.CollectionChanged += handler;
+            collectionObserver.CollectionChanged += handler;
+            globalTilePool.CollectionChanged += handler;
+            filteredGlobalTilePool.CollectionChanged += handler;
+        }
+
 		public static bool IsBattleTile(int t)
         {
 			return (t == 998 || t == 999);

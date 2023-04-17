@@ -235,7 +235,36 @@ namespace JiME.Views
 			}
 		}
 
-		private void moveDown_Click( object sender, RoutedEventArgs e )
+        private void addGenerated_Click(object sender, RoutedEventArgs e)
+        {
+            // Open the generator dialog (without explicit save option)
+            var procWindow = new ProceduralGeneratorWindow(allowDirectSaving: false);
+            procWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            if (procWindow.ShowDialog() == true)
+            {
+                // Tie the scenario to the campaign
+                var scenario = procWindow.Scenario;
+                scenario.campaignGUID = campaign.campaignGUID;
+                scenario.projectType = ProjectType.Campaign;
+
+                //ask for scenario filename and save it
+                FileManager fm = new FileManager(scenario);
+                if (fm.SaveAs(campaignFolder))
+                {
+                    //add it to campaign
+                    CampaignItem ci = new CampaignItem();
+                    ci.scenarioName = scenario.scenarioName;
+                    ci.fileName = fm.fileName;
+                    campaign.scenarioCollection.Add(ci);
+
+                    scenario.fileName = fm.fileName;
+                    //save the campaign
+                    SaveCampaign();
+                }
+            } 
+        }
+
+        private void moveDown_Click( object sender, RoutedEventArgs e )
 		{
 			CampaignItem ci = ( (Button)sender ).DataContext as CampaignItem;
 			int idx = campaign.scenarioCollection.IndexOf( ci );

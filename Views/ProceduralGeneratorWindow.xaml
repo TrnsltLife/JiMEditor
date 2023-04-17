@@ -1,0 +1,235 @@
+﻿<Window x:Class="JiME.Views.ProceduralGeneratorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JiME"
+        mc:Ignorable="d"
+        Title="Random Scenario Generator" Style="{StaticResource DefaultWindow}" Width="800" SizeToContent="Height" WindowStartupLocation="CenterOwner" MaxHeight="850">
+
+	<Window.Resources>
+		<Style TargetType="ScrollBar">
+			<Setter Property="Background" Value="#333337"/>
+			<Setter Property="BorderBrush" Value="Transparent"/>
+		</Style>
+		<Style TargetType="TextBox">
+			<Setter Property="FontSize" Value="16"/>
+		</Style>
+		<local:BoolInvertVisibility x:Key="b2vis"/>
+		<local:BoolInvertConverter x:Key="binv"/>
+	</Window.Resources>
+
+	<StackPanel>
+		<!--campaign notice-->
+		<Border x:Name="campaignNotice" Style="{StaticResource callout}" Margin="5,5,5,0" Visibility="Collapsed">
+			<StackPanel>
+				<TextBlock Style="{StaticResource Heading}" Text="Campaign GUID" HorizontalAlignment="Center"/>
+				<TextBlock x:Name="campaignGUID" Style="{StaticResource Heading}" Text="" HorizontalAlignment="Center"/>
+			</StackPanel>
+		</Border>
+
+		<Grid Margin="5">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+
+            <!-- Basic parameters -->
+			<Border Style="{StaticResource callout}" Margin="0,0,5,0">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource Heading}" Text="Random Seed:" MinWidth="100" />
+                        <TextBox x:Name="seedTB" Text="{Binding Seed}" Margin="10,0,0,0" MinWidth="175" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                        <TextBlock Style="{StaticResource Heading}" Text="Archetype:"  MinWidth="100"/>
+                        <ComboBox x:Name="archetypeCB" Margin="10,0,0,0" MinWidth="175" HorizontalAlignment="Left" VerticalAlignment="Center" SelectionChanged="ArchetypeCB_SelectionChanged" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                        <TextBlock Style="{StaticResource Heading}" Text="Template:" MinWidth="100" />
+                        <ComboBox x:Name="templateCB" Margin="10,0,0,0" MinWidth="175" HorizontalAlignment="Left" VerticalAlignment="Center" SelectionChanged="TemplateCB_SelectionChanged"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" >                 
+                        <TextBlock Text="Collections:" Margin="0,5,0,0" MinWidth="110" Style="{StaticResource Heading}" VerticalAlignment="Top" />
+                        <Grid Margin="0,5,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <!--Core Set-->
+                            <Rectangle Grid.Row="0" Fill="DarkGreen" />
+                            <StackPanel Orientation="Horizontal" Grid.Row="0">
+                                <TextBlock Text="r" Foreground="White" FontSize="20" FontStyle="Italic" Margin="0,0,4,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
+                                <CheckBox x:Name="coreSetCB" Content="Core Set" FontWeight="Bold" FontStyle="Italic" Foreground="White" Padding="0,0,5,0" IsEnabled="False" IsChecked="True" VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <Rectangle Grid.Row="1" Fill="SaddleBrown" />
+                            <StackPanel Orientation="Horizontal" Grid.Row="1">
+                                <TextBlock Text="v" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
+                                <CheckBox x:Name="villainsOfEriadorCB" Content="Villains of Eriador" IsChecked="{Binding Has_VILLAINS_OF_ERIADOR}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"   VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <Rectangle Grid.Row="2" Fill="Black" />
+                            <StackPanel Orientation="Horizontal" Grid.Row="2">
+                                <TextBlock Text="p" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
+                                <CheckBox x:Name="shadowedPathsCB" Content="Shadowed Paths" IsChecked="{Binding Has_SHADOWED_PATHS}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"  VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <Rectangle Grid.Row="3" Fill="Purple" />
+                            <StackPanel Orientation="Horizontal" Grid.Row="3" >
+                                <TextBlock Text="d" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
+                                <CheckBox x:Name="dwellersInDarknessCB" Content="Dwellers in Darkness" IsChecked="{Binding Has_DWELLERS_IN_DARKNESS}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"  VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <Rectangle Grid.Row="4" Fill="DarkRed" />
+                            <StackPanel Orientation="Horizontal" Grid.Row="4" >
+                                <TextBlock Text="w" Foreground="White" FontSize="20" Margin="4,0,0,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
+                                <CheckBox x:Name="spreadingWarCB" Content="Spreading War" IsChecked="{Binding Has_SPREADING_WAR}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"  VerticalAlignment="Center"/>
+                            </StackPanel>
+                            
+                            <Rectangle Grid.Row="5" Fill="YellowGreen" />
+                            <StackPanel Orientation="Horizontal" Grid.Row="5" >
+                                <TextBlock Text="c" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
+                                <CheckBox x:Name="scourgesOfTheWastesCB" Content="Scourges of the Wastes" IsChecked="{Binding Has_SCOURGES_OF_THE_WASTES}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"  VerticalAlignment="Center">
+                                </CheckBox>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+
+			</Border>
+
+            <!-- Adbanced parameters -->
+            <Border Style="{StaticResource callout}" Margin="0,0,0,0" Grid.Column="1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="15" />
+                        <ColumnDefinition Width="180" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Info note -->
+                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5" Text="Hover over input boxes to get information about individual parameters." Style="{StaticResource SubText}"  />
+
+                    <!-- Objectives and story branching -->
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Min Objectives:" Style="{StaticResource Heading}"  />
+                    <TextBox Grid.Row="1" Grid.Column="1"  Text="{Binding MinMainStoryObjectiveCount}" ToolTip="Miminum number of objectives in the MAIN STORY" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Max Objectives:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="2" Grid.Column="1"  Text="{Binding MaxMainStoryObjectiveCount}" ToolTip="Maximum number of objectives in the MAIN STORY" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Branching %:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="3" Grid.Column="1"  Text="{Binding BranchingProbability}" ToolTip=" Percentage change that branches occur on StoryPoint for each Objective. 0% means no branching at all." MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Min Branches:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="4" Grid.Column="1"  Text="{Binding BranchingMinBranches}" ToolTip="If branching, minimum number of branches to have" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+
+                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Max Branches:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="5" Grid.Column="1"  Text="{Binding BranchingMaxBranches}" ToolTip="If branching, maximum number of branches to have"  MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+
+                    <!-- Threat -->
+                    
+                    <TextBlock Grid.Row="1" Grid.Column="3" Text="Max Threat:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="1" Grid.Column="4"  Text="{Binding MaxThreat}" ToolTip="Maximum threat level where the scenario ends" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+
+                    <TextBlock Grid.Row="2" Grid.Column="3" Text="Min Threat Interval:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="2" Grid.Column="4"  Text="{Binding ThreatIntervalMin}" ToolTip="Minimum threat interval to next event" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+
+                    <TextBlock Grid.Row="3" Grid.Column="3" Text="Max Threat Interval:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="3" Grid.Column="4"  Text="{Binding ThreatIntervalMax}" ToolTip="Maximum threat interval to next event" MinWidth="40" VerticalAlignment="Center" PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+
+                    <TextBlock Grid.Row="4" Grid.Column="3" Text="Monster Pool Multiplier:" Style="{StaticResource Heading}" />
+                    <TextBox Grid.Row="4" Grid.Column="4"  Text="{Binding ThreatDiffMonsterPoolMultiplier}" ToolTip="Multiplier to the monster pool size based on threat interval from last event. (e.g. Multiplier 2x and interval being from 24->31 means monster pool 14)" MinWidth="40" VerticalAlignment="Center"  PreviewTextInput="TextBlock_AcceptOnlyNonNegativeInteger"/>
+
+                    <TextBlock Grid.Row="5" Grid.Column="3" Text="(DEBUG) Don't fill Stories:" Style="{StaticResource Heading}" />
+                    <CheckBox Grid.Row="5" Grid.Column="4"  Name="debugDontFillStoriesCB" IsChecked="false" ToolTip="Tells whether the generator should stop after generating StoryPoints and before filling them with content to show StoryPoint structure." MinWidth="40" VerticalAlignment="Center"/>
+
+                    <TextBlock Grid.Row="6" Grid.Column="3" Text="(DEBUG) Verbose Checks:" Style="{StaticResource Heading}" />
+                    <CheckBox Grid.Row="6" Grid.Column="4"  Name="debugVerboseStoryElementCheck" IsChecked="false" ToolTip="If true, story element check prints out much more detailed log." MinWidth="40" VerticalAlignment="Center"/>
+
+
+                </Grid>
+            </Border>
+
+        </Grid>
+
+        <!-- Logs -->
+        <Border Style="{StaticResource callout}" Margin="5,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="300" />                    
+                </Grid.RowDefinitions>
+
+                <TextBlock Style="{StaticResource Heading}" Grid.Row="0" Text="Generator Logs" MinWidth="100" />
+                <ScrollViewer Name="logScrollViewer" Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl Name="logListBox" Background="Transparent" BorderBrush="Transparent" >
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Name="logMessage" Text="{Binding Message}" Foreground="White" FontSize="12" Margin="4,0,0,0" />
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Type}" Value="Warning">
+                                        <Setter TargetName="logMessage" Property="Foreground" Value="Yellow"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Type}" Value="Error">
+                                        <Setter TargetName="logMessage" Property="Foreground" Value="Red"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>                            
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+        <!--Footer-->
+		<Border Grid.ColumnSpan="2" Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Silver" Margin="5" HorizontalAlignment="Stretch" Background="#FF46464A">
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <WrapPanel HorizontalAlignment="Left" Grid.Column="0">
+                    <Button x:Name="generateButton" Margin="10" Background="MediumSeaGreen" Click="GenerateButton_Click" ToolTip="Generate Scenario">
+                        <Image Source="/JiME;component/Assets/dice.png" Stretch="Uniform" Width="32" Margin="5"/>
+                    </Button>
+                </WrapPanel>
+                <WrapPanel HorizontalAlignment="Right" Grid.Column="1" >
+                    <Button x:Name="visualizeButton" Margin="10" Background="MediumSeaGreen" Click="VisualizeButton_Click" ToolTip="Visualize Scenario">
+                        <Image Source="/JiME;component/Assets/magnifier.png" Stretch="Uniform" Width="32" Margin="5"/>
+                    </Button>
+
+                    <Button x:Name="saveButton" Margin="0, 10, 10, 10" Background="MediumSeaGreen" Click="SaveButton_Click" ToolTip="Save Scenario to File">
+                        <Image Source="/JiME;component/Assets/save.png" Stretch="Uniform" Width="32" Margin="5"/>
+                    </Button>
+
+                    <Button x:Name="okButton" Margin="0, 10, 10, 10" Background="MediumSeaGreen" Click="OKButton_Click" IsDefault="True" IsCancel="False" ToolTip="Accept Scenario">
+                        <Image Source="/JiME;component/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
+                    </Button>
+
+                    <Button x:Name="cancelButton" Margin="0, 10, 10, 10" Background="{StaticResource bgCancelDelete}" IsDefault="True" IsCancel="True" ToolTip="Cancel generation">
+                        <Image Source="/JiME;component/Assets/cancel.png" Stretch="Uniform" Width="32" Margin="5"/>
+                    </Button>
+                </WrapPanel>
+            </Grid>
+
+		</Border>
+
+	</StackPanel>
+</Window>

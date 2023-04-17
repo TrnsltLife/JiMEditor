@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using JiME.Views;
@@ -33,8 +35,8 @@ namespace JiME
 			projectCollection = new ObservableCollection<ProjectItem>();
 			projectLV.ItemsSource = projectCollection;
 
-			//poll Project folder for files and populate Recent list
-			var projects = FileManager.GetProjects();
+            //poll Project folder for files and populate Recent list
+            var projects = FileManager.GetProjects();
 			if ( projects != null )
 			{
 				foreach ( ProjectItem pi in projects )
@@ -92,7 +94,20 @@ namespace JiME
 			Close();
 		}
 
-		private void CampaignButton_Click( object sender, RoutedEventArgs e )
+        private void RandomScenarioButton_Click(object sender, RoutedEventArgs e)
+        {
+            var procWindow = new ProceduralGeneratorWindow();
+            procWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            if (procWindow.ShowDialog() == true)
+            {
+                // True here means that we want to open the file in editor -->  Create main window with Scenario
+                MainWindow mainWindow = new MainWindow(procWindow.Scenario);
+                mainWindow.Show();
+                Close();
+            }
+        }
+
+        private void CampaignButton_Click( object sender, RoutedEventArgs e )
 		{
 			CampaignWindow campaignWindow = new CampaignWindow();
 			campaignWindow.Show();
@@ -129,5 +144,5 @@ namespace JiME
 		{
 			this.DragMove();
 		}
-	}
+    }
 }

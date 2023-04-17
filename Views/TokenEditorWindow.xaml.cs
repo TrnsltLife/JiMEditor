@@ -35,7 +35,7 @@ namespace JiME.Views
 		//token drawing
 		bool dragging;
 
-		public TokenEditorWindow( BaseTile bt, Scenario s, bool fromRandom = false )
+		public TokenEditorWindow( BaseTile bt, Scenario s, bool fromRandom = false, Token highlightToken = null )
 		{
 			InitializeComponent();
 			DataContext = this;
@@ -47,8 +47,19 @@ namespace JiME.Views
 			tokenInteractions = new ObservableCollection<IInteraction>( scenario.interactionObserver.Where( x => ( x.isTokenInteraction && !Regex.IsMatch( x.dataName, @"\sGRP\d+$" ) ) || x.dataName == "None" ) );
 			scenario.interactionObserver.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(InteractionsCollectionChangedMethod); //used to update after Add Interaction dialogs
 
-			if ( tile.tokenList.Count > 0 )
-				tokenCombo.SelectedIndex = 0;
+            // Adjust token selection
+            if (tile.tokenList.Count > 0)
+            {
+                int selectionIndex = 0;
+                if (highlightToken != null)
+                {
+                    var highlightIndex = tile.tokenList.ToList().FindIndex(t => t.dataName == highlightToken.dataName);
+                    selectionIndex = highlightIndex != -1 ? highlightIndex : 0;
+                }
+                // Set the selected token and update it's graphics (with small delay so things have had change to render)
+                selected = tile.tokenList[selectionIndex];
+                WpfUtils.DeferExecution("MarkPreselectedToken", 100, () => selected?.Select());
+            }
 
 			//rehydrate existing tokens in this tile
 			for (int i = 0; i < tile.tokenList.Count; i++)
@@ -80,7 +91,7 @@ namespace JiME.Views
 				explorationBox.Visibility = Visibility.Collapsed;
 		}
 
-		private void InteractionsCollectionChangedMethod(object sender, NotifyCollectionChangedEventArgs e)
+        private void InteractionsCollectionChangedMethod(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			//different kind of changes that may have occurred in collection when returning from the various Add Interaction dialogs
 			if (e.Action == NotifyCollectionChangedAction.Add)

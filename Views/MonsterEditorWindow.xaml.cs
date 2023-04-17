@@ -202,7 +202,7 @@ namespace JiME.Views
 			int id = -1;
 			try
             {
-				id = Utils.defaultStats.Where(x => x.enumName == enemy).First().id;
+				id = Utils.defaultStats.Where(x => x.enumName == enemy).First().  id;
 			}
 			catch(InvalidOperationException)
             {

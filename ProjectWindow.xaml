@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JiME"
         mc:Ignorable="d"
-        Title="Your Journey" Height="450" Width="800" Background="{StaticResource bgColor}" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" MouseDown="Window_MouseDown">
+        Title="Your Journey" Height="460" Width="800" Background="{StaticResource bgColor}" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" MouseDown="Window_MouseDown">
 
 	<Window.Resources>
 		<Style TargetType="ScrollBar">
@@ -110,7 +110,34 @@
 					<TextBlock Grid.Column="1" Grid.Row="1" Text="Create a new Standalone Scenario that is not a part of a Campaign." TextWrapping="Wrap" Style="{StaticResource SubText}"/>
 				</Grid>
 			</Button>
-		</StackPanel>
+
+            <StackPanel Orientation="Vertical"  Margin="00" >
+                <Button x:Name="randomScenarioButton" Click="RandomScenarioButton_Click">
+                    <Grid Margin="0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Image Grid.RowSpan="2" Source="Assets/standalone.png" Width="40" Margin="0,0,10,0"/>
+
+                        <TextBlock Grid.Column="1" Text="New Random Scenario" Style="{StaticResource ButtonHeading}" />
+
+                        <TextBlock Grid.Column="1" Grid.Row="1" Text="Create a new Random Scenario that is not a part of a Campaign." TextWrapping="Wrap" Style="{StaticResource SubText}"/>
+
+                        <TextBlock Grid.Column="1" Grid.Row="0" Text="EXPERIMENTAL" Style="{StaticResource SubText}" Foreground="OrangeRed" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,-10,0,0">
+                            <TextBlock.RenderTransform>
+                                <RotateTransform Angle="7" />
+                            </TextBlock.RenderTransform>
+                        </TextBlock>
+                    </Grid>
+                </Button>
+            </StackPanel>
+        </StackPanel>
 
 		<Grid Grid.Column="1" Grid.Row="3">
 			<Grid.ColumnDefinitions>
