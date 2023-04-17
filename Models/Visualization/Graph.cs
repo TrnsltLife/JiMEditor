@@ -70,19 +70,19 @@ namespace JiME.Visualization
                     }
 
                     // Object is triggered by... (made available)
-                    getTriggerOrEventVertex(vertexDict, x.triggeredByName, v =>
+                    getTriggerVertex(vertexDict, x.triggeredByName, v =>
                         {
                             dataGraph.AddEdge(new DataEdge(v, vertex) { Text = "initiates" });
                         });
 
                     // Object is completed by...
-                    getTriggerOrEventVertex(vertexDict, x.triggerName, v =>
+                    getTriggerVertex(vertexDict, x.triggerName, v =>
                         {
                             dataGraph.AddEdge(new DataEdge(v, vertex) { Text = "completes" });
                         });
 
                     // Object causes further trigger if completed...
-                    getTriggerOrEventVertex(vertexDict, x.nextTrigger, v =>
+                    getTriggerVertex(vertexDict, x.nextTrigger, v =>
                         {
                             dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "on completion" });
                         });
@@ -100,7 +100,7 @@ namespace JiME.Visualization
             (x, vertex) =>
             {
                 // Object is completed by...
-                getTriggerOrEventVertex(vertexDict, x.triggerName, v =>
+                getTriggerVertex(vertexDict, x.triggerName, v =>
                     {
                         dataGraph.AddEdge(new DataEdge(v, vertex) { Text = "triggers" });
                     });
@@ -136,11 +136,11 @@ namespace JiME.Visualization
                 if (x is InteractionBase)
                 {
                     var x2 = x as InteractionBase;
-                    getTriggerOrEventVertex(vertexDict, x2.triggerName, v =>
+                    getTriggerVertex(vertexDict, x2.triggerName, v =>
                     {
                         dataGraph.AddEdge(new DataEdge(v, vertex) { Text = "initiates" });
                     });
-                    getTriggerOrEventVertex(vertexDict, x2.triggerAfterName, v =>
+                    getTriggerVertex(vertexDict, x2.triggerAfterName, v =>
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "triggers" });
                     });
@@ -150,15 +150,15 @@ namespace JiME.Visualization
                 if (x is DecisionInteraction)
                 {
                     var x2 = (DecisionInteraction)x;
-                    getTriggerOrEventVertex(vertexDict, x2.choice1Trigger, v =>
+                    getTriggerVertex(vertexDict, x2.choice1Trigger, v =>
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"" + x2.choice1 + "\"" });
                     });
-                    getTriggerOrEventVertex(vertexDict, x2.choice2Trigger, v =>
+                    getTriggerVertex(vertexDict, x2.choice2Trigger, v =>
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"" + x2.choice2 + "\"" });
                     });
-                    getTriggerOrEventVertex(vertexDict, x2.choice3Trigger, v =>
+                    getTriggerVertex(vertexDict, x2.choice3Trigger, v =>
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"" + x2.choice3 + "\"" });
                     });
@@ -166,15 +166,15 @@ namespace JiME.Visualization
                 else if (x is DialogInteraction)
                 {
                     var x2 = (DialogInteraction)x;
-                    getTriggerOrEventVertex(vertexDict, x2.c1Trigger, v =>
+                    getTriggerVertex(vertexDict, x2.c1Trigger, v =>
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"" + x2.choice1 + "\"" });
                     });
-                    getTriggerOrEventVertex(vertexDict, x2.c2Trigger, v =>
+                    getTriggerVertex(vertexDict, x2.c2Trigger, v =>
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"" + x2.choice2 + "\"" });
                     });
-                    getTriggerOrEventVertex(vertexDict, x2.c3Trigger, v =>
+                    getTriggerVertex(vertexDict, x2.c3Trigger, v =>
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"" + x2.choice3 + "\"" });
                     });
@@ -182,11 +182,11 @@ namespace JiME.Visualization
                 else if (x is TestInteraction)
                 {
                     var x2 = (TestInteraction)x;
-                    getTriggerOrEventVertex(vertexDict, x2.successTrigger, v =>
+                    getTriggerVertex(vertexDict, x2.successTrigger, v =>
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"PASS\"" });
                     });
-                    getTriggerOrEventVertex(vertexDict, x2.failTrigger, v =>
+                    getTriggerVertex(vertexDict, x2.failTrigger, v =>
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"FAIL\"" });
                     });
@@ -194,7 +194,7 @@ namespace JiME.Visualization
                 else if (x is ConditionalInteraction)
                 {
                     var x2 = (ConditionalInteraction)x;
-                    getTriggerOrEventVertex(vertexDict, x2.finishedTrigger, v =>
+                    getTriggerVertex(vertexDict, x2.finishedTrigger, v =>
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "finished" });
                     });
@@ -202,7 +202,7 @@ namespace JiME.Visualization
                     {
                         foreach (var t in x2.triggerList)
                         {
-                            getTriggerOrEventVertex(vertexDict, t, v =>
+                            getTriggerVertex(vertexDict, t, v =>
                             {
                                 dataGraph.AddEdge(new DataEdge(v, vertex) { Text = "condition" });
                             });
@@ -212,11 +212,11 @@ namespace JiME.Visualization
                 else if (x is PersistentTokenInteraction)
                 {
                     var x2 = (PersistentTokenInteraction)x;
-                    getTriggerOrEventVertex(vertexDict, x2.eventToActivate, v =>
+                    getEventVertex(vertexDict, x2.eventToActivate, v =>
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"activate\"" });
                     });
-                    getTriggerOrEventVertex(vertexDict, x2.alternativeTextTrigger, v =>
+                    getTriggerVertex(vertexDict, x2.alternativeTextTrigger, v =>
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"alt.text\"" });
                     });
@@ -224,7 +224,7 @@ namespace JiME.Visualization
                 else if (x is ThreatInteraction)
                 {
                     var x2 = (ThreatInteraction)x;
-                    getTriggerOrEventVertex(vertexDict, x2.triggerDefeatedName, v =>
+                    getTriggerVertex(vertexDict, x2.triggerDefeatedName, v =>
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"defeated\"" });
                     });
@@ -237,7 +237,7 @@ namespace JiME.Visualization
                     {
                         foreach (var t in x2.triggerList)
                         {
-                            getTriggerOrEventVertex(vertexDict, t, v =>
+                            getTriggerVertex(vertexDict, t, v =>
                             {
                                 dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "triggers" });
                             });
@@ -247,7 +247,7 @@ namespace JiME.Visualization
                     {
                         foreach (var t in x2.eventList)
                         {
-                            getTriggerOrEventVertex(vertexDict, t, v =>
+                            getEventVertex(vertexDict, t, v =>
                             {
                                 dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "triggers" });
                             });
@@ -259,7 +259,7 @@ namespace JiME.Visualization
                     var x2 = (BranchInteraction)x;
 
                     // First draw out the source trigger
-                    getTriggerOrEventVertex(vertexDict, x2.triggerTest, v =>
+                    getTriggerVertex(vertexDict, x2.triggerTest, v =>
                     {
                         dataGraph.AddEdge(new DataEdge(v, vertex) { Text = "input" });
                     });
@@ -268,11 +268,11 @@ namespace JiME.Visualization
                     if (x2.branchTestEvent)
                     {
                         // Triggering events
-                        getTriggerOrEventVertex(vertexDict, x2.triggerIsSet, v =>
+                        getEventVertex(vertexDict, x2.triggerIsSet, v =>
                         {
                             dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "set" });
                         });
-                        getTriggerOrEventVertex(vertexDict, x2.triggerNotSet, v =>
+                        getEventVertex(vertexDict, x2.triggerNotSet, v =>
                         {
                             dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "not set" });
                         });
@@ -280,11 +280,11 @@ namespace JiME.Visualization
                     else
                     {
                         // Triggering triggers
-                        getTriggerOrEventVertex(vertexDict, x2.triggerIsSetTrigger, v =>
+                        getTriggerVertex(vertexDict, x2.triggerIsSetTrigger, v =>
                         {
                             dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "set" });
                         });
-                        getTriggerOrEventVertex(vertexDict, x2.triggerNotSetTrigger, v =>
+                        getTriggerVertex(vertexDict, x2.triggerNotSetTrigger, v =>
                         {
                             dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "not set" });
                         });
@@ -293,11 +293,11 @@ namespace JiME.Visualization
                 else if (x is ReplaceTokenInteraction)
                 {
                     var x2 = (ReplaceTokenInteraction)x;
-                    getTriggerOrEventVertex(vertexDict, x2.eventToReplace, v =>
+                    getEventVertex(vertexDict, x2.eventToReplace, v =>
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "replace this" });
                     });
-                    getTriggerOrEventVertex(vertexDict, x2.replaceWithEvent, v =>
+                    getEventVertex(vertexDict, x2.replaceWithEvent, v =>
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "with this" });
                     });
@@ -333,7 +333,7 @@ namespace JiME.Visualization
                     dataGraph.AddEdge(new DataEdge(vertex, tileVertex) { Text = "contains" });
 
                     // Object is triggered by...
-                    getTriggerOrEventVertex(vertexDict, tileX.triggerName, v =>
+                    getTriggerVertex(vertexDict, tileX.triggerName, v =>
                     {
                         dataGraph.AddEdge(new DataEdge(tileVertex, v) { Text = "explore triggers" });
                     });
@@ -352,7 +352,7 @@ namespace JiME.Visualization
                         dataGraph.AddEdge(new DataEdge(tileVertex, tokenVertex) { Text = "contains" });
 
                         // Object is triggered by...
-                        getTriggerOrEventVertex(vertexDict, tokenX.triggeredByName, v =>
+                        getTriggerVertex(vertexDict, tokenX.triggeredByName, v =>
                         {
                             dataGraph.AddEdge(new DataEdge(v, tokenVertex) { Text = "activates" });
                         });
@@ -378,17 +378,17 @@ namespace JiME.Visualization
                 }
 
                 // Object is explored by...
-                getTriggerOrEventVertex(vertexDict, x.triggeredBy, v =>
+                getTriggerVertex(vertexDict, x.triggeredBy, v =>
                 {
                     dataGraph.AddEdge(new DataEdge(v, vertex) { Text = "reveals" });
                 });
-                getTriggerOrEventVertex(vertexDict, x.triggerName, v =>
+                getTriggerVertex(vertexDict, x.triggerName, v =>
                 {
                     dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "triggers" });
                 });
 
                 // Object is explored by...
-                getTriggerOrEventVertex(vertexDict, x.exploreTrigger, v =>
+                getTriggerVertex(vertexDict, x.exploreTrigger, v =>
                 {
                     dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "explore triggers" });
                 });
@@ -413,10 +413,10 @@ namespace JiME.Visualization
                     prevThreat = vertex;
 
                     // Object is completed by...
-                    getTriggerOrEventVertex(vertexDict, x.triggerName, v =>
-                {
-                    dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "initiates" });
-                });
+                    getEventVertex(vertexDict, x.triggerName, v =>
+                    {
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "initiates" });
+                    });
                 });
                 var maxThreatVertex = new DataVertex("Max Threat: " + scenario.threatMax, DataVertex.Type.ThreatLevel, null, null, clickAction);
                 vertexDict.Add(getThreatName("MAX THREAT"), maxThreatVertex);
@@ -441,7 +441,10 @@ namespace JiME.Visualization
 
         private static void getEventVertex(Dictionary<string, DataVertex> dict, string dataName, Action<DataVertex> action)
         {
-            // Then try event
+            if (dataName == null || dataName == "None")
+            {
+                return;
+            }
             var eventName = getInteractionName(dataName);
             if (dict.ContainsKey(eventName))
             {
@@ -452,29 +455,20 @@ namespace JiME.Visualization
             Console.WriteLine("Graph: Could not find interaction with dataName: " + dataName);
         }
 
-        private static void getTriggerOrEventVertex(Dictionary<string, DataVertex> dict, string dataName, Action<DataVertex> action)
+        private static void getTriggerVertex(Dictionary<string, DataVertex> dict, string dataName, Action<DataVertex> action)
         {
-            if (dataName?.Length > 0 && dataName != "None")
+            if (dataName == null || dataName == "None")
             {
-                // First try trigger
-                var trigName = getTriggerName(dataName);
-                if (dict.ContainsKey(trigName))
-                {
-                    action(dict[trigName]);
-                    return;
-                }
-
-                // Then try event
-                var eventName = getInteractionName(dataName);
-                if (dict.ContainsKey(eventName))
-                {
-                    action(dict[eventName]);
-                    return;
-                }
-
-                // Not found, just log this since this might happen if triggers are removed before all connections are done
-                Console.WriteLine("Graph: Could not find trigger or interaction with dataName: " + dataName);
+                return;
             }
+            var trigName = getTriggerName(dataName);
+            if (dict.ContainsKey(trigName))
+            {
+                action(dict[trigName]);
+                return;
+            }
+            // Not found, just log this since this might happen if triggers are removed before all connections are done
+            Console.WriteLine("Graph: Could not find trigger with dataName: " + dataName);
         }
 
         private static void HandleCollection<T>(IEnumerable<T> collection, Func<T, DataVertex> vertexHandler, Action<T, DataVertex> edgeHandler = null)
