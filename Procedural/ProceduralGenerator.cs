@@ -104,11 +104,15 @@ namespace JiME.Procedural
 
                     // Visualization is done by adding dummy interaction that links the items
                     // which alters the Scenario so should not be done if filling StoryPoints for real later
-                    var spInteraction = new StoryPointInteraction("STORYPOINT: " + sp.Objective.dataName)
+                    var spInteraction = new MultiEventInteraction("STORYPOINT: " + sp.Objective.dataName)
                     {
                         triggerName = sp.StartTriggerName,
-                        OtherAfterTriggers = sp.EndTriggerNames
+                        usingTriggers = true
                     };
+                    foreach (var endTrigger in sp.EndTriggerNames)
+                    {
+                        spInteraction.triggerList.Add(endTrigger);
+                    }
                     ctx.Scenario.AddInteraction(spInteraction);
                 }
             }

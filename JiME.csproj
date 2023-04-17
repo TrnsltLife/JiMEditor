@@ -132,7 +132,6 @@
     <Compile Include="Procedural\StoryElements\StoryTemplate.cs" />
     <Compile Include="Procedural\StoryElements\StoryArchetype.cs" />
     <Compile Include="Procedural\StoryElements\StoryPoint.cs" />
-    <Compile Include="Procedural\StoryElements\StoryPointInteraction.cs" />
     <Compile Include="UserControls\AddEventPopup.xaml.cs">
       <DependentUpon>AddEventPopup.xaml</DependentUpon>
     </Compile>

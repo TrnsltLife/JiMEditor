@@ -301,21 +301,7 @@ namespace JiME.Visualization
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "with this" });
                     });
-                }
-                // Special case: StoryPointInteractionsa re only used during procedural generation for debug purposes
-                else if (x is Procedural.StoryElements.StoryPointInteraction)
-                {
-                    var x2 = (Procedural.StoryElements.StoryPointInteraction)x;
-
-                    // Endpoints are simple
-                    foreach (var otherAfter in x2.OtherAfterTriggers)
-                    {
-                        getTriggerOrEventVertex(vertexDict, otherAfter, v =>
-                        {
-                            dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"ENDING\"" });
-                        });
-                    }
-                }
+                }                
                 else // TextInteraction, NoneInteraction, RewardInteraction, DarknessInteraction
                 {
                     // These types do not have any special connections to add
