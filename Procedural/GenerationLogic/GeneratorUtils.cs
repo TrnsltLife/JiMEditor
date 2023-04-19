@@ -45,6 +45,30 @@ namespace JiME.Procedural.GenerationLogic
             }
         }
 
+        public static bool IsStillValidStoryFragment(string fragment, ProceduralGeneratorContext ctx)
+        {
+            var f = StoryElements.StoryFragment.GetFragment(fragment);
+
+            // Check number of occurrences
+            int numberOfPreviousOccurrences = ctx.AlreadyHappenedFragments.Count(x => x == fragment);
+            if (numberOfPreviousOccurrences >= f.MaxOccurrencesPerScenario)
+            {
+                // Has already happened max number of times
+                return false;
+            }
+
+            // Check dependencies
+            var dependencyProblems = f.MustNotHaveHappenedBefore.Intersect(ctx.AlreadyHappenedFragments).ToList();
+            if (dependencyProblems.Any())
+            {
+                // Some of the ones preventing this have happened before
+                return false;
+            }
+
+            // All checks passed
+            return true;
+        }
+
         public static bool[] PrepareIncludedMonsters(params MonsterType[] monsters)
         {
             var includedEnemies = new bool[Collection.MONSTERS().Length].Fill(false);

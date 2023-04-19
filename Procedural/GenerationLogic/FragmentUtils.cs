@@ -43,6 +43,7 @@ namespace JiME.Procedural.GenerationLogic
                 // Select correct fragment
                 var fragment = (i == 0) ? mainFragment : secondaryFragments.ToList()[i - 1];
                 var fragmentInfo = StoryFragment.GetFragment(fragment);
+                ctx.AlreadyHappenedFragments.Add(fragment);
 
                 // Randomly select interaction type for the fragment
                 var interactionInfo = fragmentInfo.Interactions.GetRandomFromEnumerable(ctx.Random);

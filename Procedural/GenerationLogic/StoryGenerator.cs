@@ -129,16 +129,22 @@ namespace JiME.Procedural.GenerationLogic
                 string mainFragmentForStoryPoint;
                 if (isLastStoryPointInPhase && mainFragmentForPhaseNotUsed)
                 {
-                    mainFragmentForStoryPoint = phaseInfo.MustHaveOneOf.GetRandomFromEnumerable(_ctx.Random);
+                    mainFragmentForStoryPoint = phaseInfo.MustHaveOneOf
+                        .Where(x => GeneratorUtils.IsStillValidStoryFragment(x, _ctx))
+                        .GetRandomFromEnumerable(_ctx.Random);
                     mainFragmentForPhaseNotUsed = false;
                 }
                 else
                 {
-                    mainFragmentForStoryPoint = phaseInfo.CanHaveSomeOf.GetRandomFromEnumerable(_ctx.Random);
+                    mainFragmentForStoryPoint = phaseInfo.CanHaveSomeOf
+                        .Where(x => GeneratorUtils.IsStillValidStoryFragment(x, _ctx))
+                        .GetRandomFromEnumerable(_ctx.Random);
                 }
 
                 // Fetch out secondary fragments for the SP if it has more than one endTrigger
-                var secondaryFragmentsForStoryPoint = phaseInfo.CanHaveSomeOf.GetRandomFromEnumerable(_ctx.Random, sp.EndTriggerNames.Count - 1);
+                var secondaryFragmentsForStoryPoint = phaseInfo.CanHaveSomeOf
+                    .Where(x => GeneratorUtils.IsStillValidStoryFragment(x, _ctx))
+                    .GetRandomFromEnumerable(_ctx.Random, sp.EndTriggerNames.Count - 1);
 
                 // Update the MAIN STORY objective information based on fragments
                 FragmentUtils.FillInObjective(_ctx, sp.Objective, 

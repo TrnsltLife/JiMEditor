@@ -3,54 +3,39 @@
         {
             "Name": "FindInfoAboutTarget",
 			"Comment": "",
+			"MustNotHaveHappenedBefore": [],
+			"MaxOccurrencesPerScenario": 2,
             "Interactions": [ 
 				{ "Type": "Dialog", "TokenHint": "Person" },
-				{ "Type": "StatTest", "TokenHint": "Search" }
-			]
-        },
-		{
-            "Name": "InvestigateDestruction",
-			"Comment": "",
-            "Interactions": [ 
 				{ "Type": "StatTest", "TokenHint": "Search" },
-				{ "Type": "Threat", "TokenHint": "Search" }	
-			]
-        },
-		{
-            "Name": "TalkToSurvivors",
-			"Comment": "",
-            "Interactions": [ 
-				{ "Type": "Dialog", "TokenHint": "Person" },
-				{ "Type": "StatTest", "TokenHint": "Search" }
+				{ "Type": "Threat", "TokenHint": "Search" }
 			]
         },
 		{
             "Name": "FindTargetLocation",
 			"Comment": "",
+			"MustNotHaveHappenedBefore": [],
+			"MaxOccurrencesPerScenario": 1,
             "Interactions": [ 
 				{ "Type": "Dialog", "TokenHint": "Person" },
 				{ "Type": "StatTest", "TokenHint": "Search" }	
 			]
         },
 		{
-            "Name": "FindWeaknessInTarget",
+            "Name": "FindWeaknessInAntagonist",
 			"Comment": "",
+			"MustNotHaveHappenedBefore": [ "KillAntagonist" ],
+			"MaxOccurrencesPerScenario": 1,
             "Interactions": [ 
 				{ "Type": "Dialog", "TokenHint": "Person" },
 				{ "Type": "StatTest", "TokenHint": "Search" }
 			]
         },
 		{
-            "Name": "FindStrengthInSelf",
-			"Comment": "",
-            "Interactions": [ 
-				{ "Type": "Dialog", "TokenHint": "Person" },
-				{ "Type": "StatTest", "TokenHint": "Search" }	
-			]
-        },
-		{
             "Name": "KillAntagonist",
 			"Comment": "",
+			"MustNotHaveHappenedBefore": [],
+			"MaxOccurrencesPerScenario": 1,
             "Interactions": [ 
 				{ "Type": "Threat", "TokenHint": "Threat" }	
 			]
@@ -58,6 +43,8 @@
 		{
             "Name": "KillMonsters",
 			"Comment": "",
+			"MustNotHaveHappenedBefore": [],
+			"MaxOccurrencesPerScenario": 2,
             "Interactions": [ 
 				{ "Type": "Threat", "TokenHint": "Threat" }	
 			]
@@ -65,6 +52,8 @@
 		{
             "Name": "AntagonistRetreats",
 			"Comment": "",
+			"MustNotHaveHappenedBefore": [ "KillAntagonist" ],
+			"MaxOccurrencesPerScenario": 2,
             "Interactions": [ 
 				{ "Type": "Threat", "TokenHint": "Threat" }	
 			]
@@ -72,6 +61,8 @@
 		{
             "Name": "AcquireTreasure",
 			"Comment": "",
+			"MustNotHaveHappenedBefore": [],
+			"MaxOccurrencesPerScenario": 2,
             "Interactions": [ 
 				{ "Type": "StatTest", "TokenHint": "Search" },
 				{ "Type": "Threat", "TokenHint": "Threat" }	
@@ -80,6 +71,8 @@
 		{
             "Name": "ReachFinalDestination",
 			"Comment": "",
+			"MustNotHaveHappenedBefore": [],
+			"MaxOccurrencesPerScenario": 1,
             "Interactions": [ 
 				{ "Type": "StatTest", "TokenHint": "Search" },
 				{ "Type": "Threat", "TokenHint": "Threat" }	
@@ -88,6 +81,8 @@
 		{
             "Name": "ScoutOutTarget",
 			"Comment": "",
+			"MustNotHaveHappenedBefore": [],
+			"MaxOccurrencesPerScenario": 1,
             "Interactions": [ 
 				{ "Type": "StatTest", "TokenHint": "Search" }	
 			]

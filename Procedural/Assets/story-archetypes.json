@@ -6,19 +6,19 @@
             "Start": {
                 "Comment": "Start of the adventure where we find more information about what is happening",
                 "MustHaveOneOf": [ "FindInfoAboutTarget" ],
-                "CanHaveSomeOf": [ "InvestigateDestruction", "TalkToSurvivors" ],
+                "CanHaveSomeOf": [ "FindInfoAboutTarget" ],
                 "TakesPlaceInOneOf": [ "Settlement" ]
             },
             "Middle": {
                 "Comment": "Buildup towards the big encounter and some way to gain an advantage",
                 "MustHaveOneOf": [ "FindTargetLocation" ],
-                "CanHaveSomeOf": [ "InvestigateDestruction", "TalkToSurvivors", "FindWeaknessInTarget", "FindStrengthInSelf", "AcquireTreasure", "KillMonsters" ],
+                "CanHaveSomeOf": [ "FindInfoAboutTarget", "FindWeaknessInAntagonist", "AcquireTreasure", "KillMonsters" ],
                 "TakesPlaceInOneOf": [ "Woodlands", "DarkForest", "Ruins" ]
             },
             "End": {
                 "Comment": "Usually kill the monster, might also have some other means of dispatching than killing? Possibly target escapes anyway",
                 "MustHaveOneOf": [ "KillAntagonist", "AntagonistRetreats" ],
-                "CanHaveSomeOf": [ "ScoutOutTarget", "InvestigateDestruction" ],
+                "CanHaveSomeOf": [ "ScoutOutTarget", "FindInfoAboutTarget" ],
                 "TakesPlaceInOneOf": [ "Cave", "Dungeon", "DarkForest" ]
             }
         },
@@ -28,13 +28,13 @@
             "Start": {
                 "Comment": "Start of the adventure where the adventures are told about the artifact they need to find",
                 "MustHaveOneOf": [ "FindInfoAboutTarget" ],
-                "CanHaveSomeOf": [ "TalkToSurvivors", "FindStrengthInSelf" ],
+                "CanHaveSomeOf": [ "FindInfoAboutTarget", "AcquireTreasure" ],
                 "TakesPlaceInOneOf": [ "Settlement" ]
             },
             "Middle": {
                 "Comment": "The getting there part where the adventurers search for clues and the location of the artifact",
                 "MustHaveOneOf": [ "FindTargetLocation" ],
-                "CanHaveSomeOf": [ "KillMonsters", "FindStrengthInSelf" ],
+                "CanHaveSomeOf": [ "KillMonsters", "AcquireTreasure" ],
                 "TakesPlaceInOneOf": [ "Woodlands", "DarkForest" ]
             },
             "End": {

@@ -24,6 +24,12 @@ namespace JiME.Procedural.StoryElements
         public string Comment { get; private set; }
 
         [JsonProperty]
+        public List<string> MustNotHaveHappenedBefore { get; private set; }
+
+        [JsonProperty]
+        public int MaxOccurrencesPerScenario { get; private set; }
+
+        [JsonProperty]
         public List<InteractionInfo> Interactions { get; private set; }
 
         #endregion

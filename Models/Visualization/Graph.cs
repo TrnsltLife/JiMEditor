@@ -184,11 +184,11 @@ namespace JiME.Visualization
                     var x2 = (TestInteraction)x;
                     getTriggerVertex(vertexDict, x2.successTrigger, v =>
                     {
-                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"PASS\"" });
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "PASS" });
                     });
                     getTriggerVertex(vertexDict, x2.failTrigger, v =>
                     {
-                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"FAIL\"" });
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "FAIL" });
                     });
                 }
                 else if (x is ConditionalInteraction)
@@ -214,11 +214,11 @@ namespace JiME.Visualization
                     var x2 = (PersistentTokenInteraction)x;
                     getEventVertex(vertexDict, x2.eventToActivate, v =>
                     {
-                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"activate\"" });
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "activate" });
                     });
                     getTriggerVertex(vertexDict, x2.alternativeTextTrigger, v =>
                     {
-                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"alt.text\"" });
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "alt.text" });
                     });
                 }
                 else if (x is ThreatInteraction)
@@ -226,7 +226,7 @@ namespace JiME.Visualization
                     var x2 = (ThreatInteraction)x;
                     getTriggerVertex(vertexDict, x2.triggerDefeatedName, v =>
                     {
-                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"defeated\"" });
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "defeated" });
                     });
                 }
                 else if (x is MultiEventInteraction)

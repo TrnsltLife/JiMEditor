@@ -29,6 +29,8 @@ namespace JiME.Procedural
         public PersonType BystanderPersonTokenType { get; set; }
         public bool MainAntagonistEncounterCreated { get; set; }
 
+        public List<string> AlreadyHappenedFragments { get; private set; } = new List<string>();
+
         public ProceduralGeneratorContext(ProceduralGeneratorParameters parameters)
         {
             Parameters = parameters;

@@ -58,12 +58,12 @@ namespace JiME.Procedural
         /// <summary>
         /// Miminum number of objectives in the MAIN STORY
         /// </summary>
-        public int MinMainStoryObjectiveCount { get; set; } = 4;
+        public int MinMainStoryObjectiveCount { get; set; } = 3;
 
         /// <summary>
         /// Maximum number of objectives in the MAIN STORY
         /// </summary>
-        public int MaxMainStoryObjectiveCount { get; set; } = 6;
+        public int MaxMainStoryObjectiveCount { get; set; } = 5;
 
         /// <summary>
         /// Percentage change that branches occur on StoryPoint for each Objective. 0% means no branching at all.
