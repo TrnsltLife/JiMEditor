@@ -37,8 +37,8 @@ namespace JiME.UserControls
 		Scenario scenario;
 
 		List<RadioButton> coreSetList;
-		List<RadioButton> shadowedPathsList;
-		List<RadioButton> spreadingWarList;
+		List<RadioButton> shadedPathsList;
+		List<RadioButton> unfurlingWarList;
 		List<RadioButton> allTerrainList;
 
 		public TokenTypeSelector()
@@ -50,12 +50,12 @@ namespace JiME.UserControls
 			//The order of the terrrain in these lists is important to maintain unchanged because the order tells the companion app which terrain to use.
 			//The order also corresponds to the order in the TerrainType enum.
 			coreSetList = new List<RadioButton>() { barrelsRadio, boulderRadio, bushRadio, firePitRadio, mistRadio, pitRadio, statueRadio, streamRadio, tableRadio, wallRadio };
-			shadowedPathsList = new List<RadioButton>() { elevationRadio, logRadio, rubbleRadio, webRadio };
-			spreadingWarList = new List<RadioButton>() { barricadeRadio, chestRadio, fenceRadio, fountainRadio, pondRadio, trenchRadio };
+			shadedPathsList = new List<RadioButton>() { elevationRadio, logRadio, rubbleRadio, webRadio };
+			unfurlingWarList = new List<RadioButton>() { barricadeRadio, chestRadio, fenceRadio, fountainRadio, pondRadio, trenchRadio };
 			allTerrainList = new List<RadioButton>();
 			allTerrainList.AddRange(coreSetList);
-			allTerrainList.AddRange(shadowedPathsList);
-			allTerrainList.AddRange(spreadingWarList);
+			allTerrainList.AddRange(shadedPathsList);
+			allTerrainList.AddRange(unfurlingWarList);
 		}
 
 
@@ -114,8 +114,8 @@ namespace JiME.UserControls
 			Dictionary<List<RadioButton>, Collection> checkboxCollectionMap = 
 				new Dictionary<List<RadioButton>, Collection>() {
 					{coreSetList, Collection.CORE_SET},
-					{shadowedPathsList, Collection.SHADOWED_PATHS},
-					{spreadingWarList, Collection.SPREADING_WAR},
+					{shadedPathsList, Collection.SHADED_PATHS},
+					{unfurlingWarList, Collection.UNFURLING_WAR},
 				};
 
 			//special tokens

@@ -79,28 +79,28 @@
 						<Rectangle Grid.Row="0" Grid.Column="1" Fill="Black" />
 						<StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
 							<TextBlock Text="p" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-							<CheckBox Click="collection_Click" x:Name="shadowedPathsCB" Content="Shadowed Paths" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+							<CheckBox Click="collection_Click" x:Name="shadedPathsCB" Content="Shaded Paths" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
 						</StackPanel>
 						<Rectangle Grid.Row="0" Grid.Column="2" Fill="DarkRed" />
 						<StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2">
 							<TextBlock Text="w" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-							<CheckBox Click="collection_Click" x:Name="spreadingWarCB" Content="Spreading War" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+							<CheckBox Click="collection_Click" x:Name="unfurlingWarCB" Content="Unfurling War" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
 						</StackPanel>
 
 						<Rectangle Grid.Row="1" Grid.Column="0" Fill="SaddleBrown" />
 						<StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
 							<TextBlock Text="v" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-							<CheckBox Click="collection_Click" x:Name="villainsOfEriadorCB" Content="Villains of Eriador" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+							<CheckBox Click="collection_Click" x:Name="villainsOfEriajarCB" Content="Villains of Eriajar" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
 						</StackPanel>
 						<Rectangle Grid.Row="1" Grid.Column="1" Fill="Purple" />
 						<StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
 							<TextBlock Text="d" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-							<CheckBox Click="collection_Click" x:Name="dwellersInDarknessCB" Content="Dwellers in Darkness" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
+							<CheckBox Click="collection_Click" x:Name="denizensInDarknessCB" Content="Denizens in Darkness" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
 						</StackPanel>
 						<Rectangle Grid.Row="1" Grid.Column="2" Fill="YellowGreen" />
 						<StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="2">
 							<TextBlock Text="c" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-							<CheckBox Click="collection_Click" x:Name="scourgesOfTheWastesCB" Content="Scourges of the Wastes" FontWeight="Bold" Foreground="White" Padding="0,0,5,0">
+							<CheckBox Click="collection_Click" x:Name="scorchersOfTheWildsCB" Content="Scorchers of the Wilds" FontWeight="Bold" Foreground="White" Padding="0,0,5,0">
 							</CheckBox>
 						</StackPanel>
 					</Grid>

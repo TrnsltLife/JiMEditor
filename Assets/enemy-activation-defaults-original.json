@@ -88,23 +88,23 @@
 		]
 	},
 	{
-		"name":"Hungry Warg",
+		"name":"Hungry Varg",
 		"id":4,
 		"collection":1,
 		"activations":
 		[
 			{"id":1, "negate":"Might", "valid":[true, true, true], "damage":[2, 3, 4], "fear":[1, 1, 1], "text":"A beast's yellowed fangs glisten with fresh blood.", "effect":"" },
 			{"id":2, "negate":"Agility", "valid":[true, true, true], "damage":[3, 4, 5], "fear":[0, 0, 0], "text":"A beast swipes at your face with paws as big as wagon wheels and tipped with dark claws.", "effect":"" },
-			{"id":3, "negate":"Spirit", "valid":[true, true, true], "damage":[1, 1, 1], "fear":[2, 3, 4], "text":"A Warg gives a low, silky growl that sends a chill down your back.", "effect":"" },
+			{"id":3, "negate":"Spirit", "valid":[true, true, true], "damage":[1, 1, 1], "fear":[2, 3, 4], "text":"A Varg gives a low, silky growl that sends a chill down your back.", "effect":"" },
 			{"id":4, "negate":"Might", "valid":[true, true, true], "damage":[3, 4, 5], "fear":[0, 0, 0], "text":"A beast slashes at you with its thick claws.", "effect":"" },
 			{"id":5, "negate":"Wit", "valid":[true, true, true], "damage":[1, 2, 3], "fear":[1, 1, 2], "text":"A giant beast charges you, slavering for your blood.", "effect":"After this attack, discard 1 inspiration." },
-			{"id":6, "negate":"Might", "valid":[true, true, false], "damage":[3, 3, 0], "fear":[0, 1, 0], "text":"A Warg lashes out, biting at your hands and face.", "effect":"" },
+			{"id":6, "negate":"Might", "valid":[true, true, false], "damage":[3, 3, 0], "fear":[0, 1, 0], "text":"A Varg lashes out, biting at your hands and face.", "effect":"" },
 			{"id":7, "negate":"Might", "valid":[true, true, true], "damage":[1, 2, 3], "fear":[1, 1, 2], "text":"A beast lunges at you, its claws slicing through the air.", "effect":"" },
-			{"id":8, "negate":"Wit", "valid":[false, true, true], "damage":[0, 1, 2], "fear":[0, 2, 3], "text":"The Wargs circle you and attempts to attack you from behind.", "effect":"After this attack, discard 1 prepared card." },
-			{"id":9, "negate":"Spirit", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"You stand your ground as the horrifying Warg growls through bared fangs.", "effect":"If you suffer no {Fear} from this attack, become emboldened." },
+			{"id":8, "negate":"Wit", "valid":[false, true, true], "damage":[0, 1, 2], "fear":[0, 2, 3], "text":"The Vargs circle you and attempts to attack you from behind.", "effect":"After this attack, discard 1 prepared card." },
+			{"id":9, "negate":"Spirit", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"You stand your ground as the horrifying Varg growls through bared fangs.", "effect":"If you suffer no {Fear} from this attack, become emboldened." },
 			{"id":10, "negate":"Agility", "valid":[true, true, true], "damage":[1, 2, 3], "fear":[1, 1, 2], "text":"A monstrous wolf lunges at you with a flurry of teeth and claws.", "effect":"" },
-			{"id":11, "negate":"Spirit", "valid":[true, true, true], "damage":[1, 2, 2], "fear":[1, 2, 3], "text":"A stench rises from the Warg's pelt, and as it closes in on you, you can feel its growl deep in your bones.", "effect":"" },
-			{"id":12, "negate":"Might", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[1, 0, 0], "text":"The Warg's jaws snap close with the force of a felling axe.", "effect":"After this attack, gain 1 weakness and place it on the bottom of your deck." }
+			{"id":11, "negate":"Spirit", "valid":[true, true, true], "damage":[1, 2, 2], "fear":[1, 2, 3], "text":"A stench rises from the Varg's pelt, and as it closes in on you, you can feel its growl deep in your bones.", "effect":"" },
+			{"id":12, "negate":"Might", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[1, 0, 0], "text":"The Varg's jaws snap close with the force of a felling axe.", "effect":"After this attack, gain 1 weakness and place it on the bottom of your deck." }
 		]
 	},
 	{
@@ -149,38 +149,38 @@
 	},
 	
 	{
-		"name":"Atarin",
+		"name":"Atari",
 		"id":7,
 		"collection":2,
 		"activations":
 		[
-			{"id":1, "negate":"Wisdom", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"Atarin's blade flashes as he swings it at you in a broad, aggressive arc. You catch a glimpse of your own reflection in it, but your visage there looks decayed and empty.", "effect":"After this attack, suffer 1 facedown {Fear}." },
-			{"id":2, "negate":"Spirit", "valid":[true, false, false], "damage":[0, 0, 0], "fear":[3, 0, 0], "text":"Atarin speaks a singular, ancient word, each syllable enunciated meticulously. Your spirit answers his call.", "effect":"If you suffer {Fear} from this attack, place 1 weakness on top of your deck." },
-			{"id":3, "negate":"Might", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[1, 0, 0], "text":"Atarin, face in shadow, whispers to the earth, and his blade seems to take on a deathly sheen.", "effect":"If you suffer {Damage} from this attack, suffer 1 additional facedown {Fear}." },
+			{"id":1, "negate":"Wisdom", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"Atari's blade flashes as he swings it at you in a broad, aggressive arc. You catch a glimpse of your own reflection in it, but your visage there looks decayed and empty.", "effect":"After this attack, suffer 1 facedown {Fear}." },
+			{"id":2, "negate":"Spirit", "valid":[true, false, false], "damage":[0, 0, 0], "fear":[3, 0, 0], "text":"Atari speaks a singular, ancient word, each syllable enunciated meticulously. Your spirit answers his call.", "effect":"If you suffer {Fear} from this attack, place 1 weakness on top of your deck." },
+			{"id":3, "negate":"Might", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[1, 0, 0], "text":"Atari, face in shadow, whispers to the earth, and his blade seems to take on a deathly sheen.", "effect":"If you suffer {Damage} from this attack, suffer 1 additional facedown {Fear}." },
 			{"id":4, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[0, 0, 0], "text":"The Númenórean's sword is ancient but as sharp as if it were new-forged from Elf craft.", "effect":"After this attack, discard 2 inspiration. If you cannot, suffer 1 facedown {Damage}." }
 		]
 	},
 	{
-		"name":"Guglotar",
+		"name":"Gargletarg",
 		"id":8,
 		"collection":2,
 		"activations":
 		[
-			{"id":1, "negate":"Might", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[1, 0, 0], "text":"Gulgotar uses his superior bulk to force you back, eventually knocking you flat onto the ground. {Might} negates.", "effect":"After this attack, discard all boons." },
+			{"id":1, "negate":"Might", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[1, 0, 0], "text":"Gargletarg uses his superior bulk to force you back, eventually knocking you flat onto the ground. {Might} negates.", "effect":"After this attack, discard all boons." },
 			{"id":2, "negate":"Wisdom", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"The Orc lieutenant knows much of battle tactics and combat, to your dismay.", "effect":"" },
-			{"id":3, "negate":"Wit", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[1, 0, 0], "text":"Gulgotar taunts you in between brutal blows from his blade.", "effect":"If you suffer any {Damage} from this attack, discard 1 inspiration." },
+			{"id":3, "negate":"Wit", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[1, 0, 0], "text":"Gargletarg taunts you in between brutal blows from his blade.", "effect":"If you suffer any {Damage} from this attack, discard 1 inspiration." },
 			{"id":4, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[0, 0, 0], "text":"Locked in combat with the huge Orc lieutenant, you fail to see when he draws a curved black blade dripping with poison!", "effect":"" }
 		]
 	},
 	{
-		"name":"Coalfang",
+		"name":"Chartooth",
 		"id":9,
 		"collection":2,
 		"activations":
 		[
-			{"id":1, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[1, 0, 0], "text":"Coalfang snaps her jaws, digging blackened teeth deep into your flesh.", "effect":"If you suffer {Damage} or {Fear} from this attack, suffer 1 additional facedown {Fear}. Then, Coalfang moves into a nearby space with no heroes." },
-			{"id":2, "negate":"Might", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"Coalfang charges at you, then abruptly twists to slam against you with the bulk of her body.", "effect":"If you suffer {Damage} from this attack, discard 1 prepared card. If you suffer {Fear} from this attack, discard 1 inspiration." },
-			{"id":3, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[3, 0, 0], "text":"Coalfang throws back her head and howls with sorrow and fury.", "effect":"After this attack, flip 1 {Fear} faceup. Then, Coalfang moves 2 spaces to a space with no heroes." }
+			{"id":1, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[1, 0, 0], "text":"Chartooth snaps her jaws, digging blackened teeth deep into your flesh.", "effect":"If you suffer {Damage} or {Fear} from this attack, suffer 1 additional facedown {Fear}. Then, Chartooth moves into a nearby space with no heroes." },
+			{"id":2, "negate":"Might", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"Chartooth charges at you, then abruptly twists to slam against you with the bulk of her body.", "effect":"If you suffer {Damage} from this attack, discard 1 prepared card. If you suffer {Fear} from this attack, discard 1 inspiration." },
+			{"id":3, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[3, 0, 0], "text":"Chartooth throws back her head and howls with sorrow and fury.", "effect":"After this attack, flip 1 {Fear} faceup. Then, Chartooth moves 2 spaces to a space with no heroes." }
 		]
 	},
 	
@@ -245,7 +245,7 @@
 		]
 	},
 	{
-		"name":"Nameless Thing",
+		"name":"Anonymous Thing",
 		"id":14,
 		"collection":3,
 		"activations":
@@ -275,22 +275,22 @@
 		]
 	},
 	{
-		"name":"Balrog",
+		"name":"Balerock",
 		"id":16,
 		"collection":3,
 		"activations":
 		[
 			{"id":1, "negate":"Agility", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[0, 0, 0], "text":"The horned beast lashes out with whip and sword.", "effect":"" },
-			{"id":2, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[4, 0, 0], "text":"The great hooves of the Balrog shake the ground, and its roar pounds in your ears.", "effect":"" },
-			{"id":3, "negate":"Might", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[0, 0, 0], "text":"With one enormous swing, the Balrog sweeps its flaming sword in a circle.", "effect":"Before testing to negate, discard 1 inspiration." },
-			{"id":4, "negate":"Wisdom", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[3, 0, 0], "text":"Only in the ancient tongues of the Elves can the Balrog be bidden.", "effect":"If you are an Elf, add 1 {Success}." },
-			{"id":5, "negate":"Wisdom", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[4, 0, 0], "text":"Flame and shadow meet in the presence of the Balrog.", "effect":"" },
-			{"id":6, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[4, 0, 0], "text":"Deep pits of flame and hatred are the eyes of the Balrog, and they are fixed on you.", "effect":"" },
-			{"id":7, "negate":"Might", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[0, 0, 0], "text":"Each mighty blow from the Balrog's whip and sword threaten to drive you to the ground.", "effect":"After this attack, suffer 1 additional {Damage}." }
+			{"id":2, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[4, 0, 0], "text":"The great hooves of the Balerock shake the ground, and its roar pounds in your ears.", "effect":"" },
+			{"id":3, "negate":"Might", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[0, 0, 0], "text":"With one enormous swing, the Balerock sweeps its flaming sword in a circle.", "effect":"Before testing to negate, discard 1 inspiration." },
+			{"id":4, "negate":"Wisdom", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[3, 0, 0], "text":"Only in the ancient tongues of the Elves can the Balerock be bidden.", "effect":"If you are an Elf, add 1 {Success}." },
+			{"id":5, "negate":"Wisdom", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[4, 0, 0], "text":"Flame and shadow meet in the presence of the Balerock.", "effect":"" },
+			{"id":6, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[4, 0, 0], "text":"Deep pits of flame and hatred are the eyes of the Balerock, and they are fixed on you.", "effect":"" },
+			{"id":7, "negate":"Might", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[0, 0, 0], "text":"Each mighty blow from the Balerock's whip and sword threaten to drive you to the ground.", "effect":"After this attack, suffer 1 additional {Damage}." }
 		]
 	},
 	{
-		"name":"Spawn of Ungoliant",
+		"name":"Spawn of Ugly-Giant",
 		"id":17,
 		"collection":3,
 		"activations":
@@ -300,7 +300,7 @@
 			{"id":3, "negate":"Spirit", "valid":[true, false, false], "damage":[0, 0, 0], "fear":[3, 0, 0], "text":"The spider stares at you with its myriad of glittering eyes, and you feel transfixed.", "effect":"After this attack, suffer 1 additional facedown {Fear}." },
 			{"id":4, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"It seems that the spider is used to relying on trapped prey, and if you keep moving you may still survive.", "effect":"After this attack, discard 1 inspiration." },
 			{"id":5, "negate":"Agility", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[1, 0, 0], "text":"Stringy bits of web trail behind the beast, threatening to slow you down.", "effect":"" },
-			{"id":6, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[3, 0, 0], "text":"The enormous spawn of Ungoliant is ancient, and wily, and moves with unsettling grace.", "effect":"" },
+			{"id":6, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[3, 0, 0], "text":"The enormous spawn of Ugly-Giant is ancient, and wily, and moves with unsettling grace.", "effect":"" },
 			{"id":7, "negate":"Might", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[0, 0, 0], "text":"Two clawed legs seek to pin you down for the sting to strike true.", "effect":"If you suffer any {Damage} from this attack, suffer 1 additional {Fear}." }
 		]
 	},
@@ -336,32 +336,32 @@
 	},
 	
 	{
-		"name":"Fell Beast",
+		"name":"Foul Beast",
 		"id":21,
 		"collection":5,
 		"activations":
 		[
-			{"id":1, "negate":"Agility", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"Its snake-like neck gives the fell beast both reach and flexibility to find the openings in your defenses.", "effect":"This attack affects each hero in the enemy's space." },
-			{"id":2, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[0, 0, 0], "text":"Hissing a warning, the fell beast lashes its tail behind you.", "effect":"If you suffer any {Damage} from this attack, become terrified." },
+			{"id":1, "negate":"Agility", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"Its snake-like neck gives the foul beast both reach and flexibility to find the openings in your defenses.", "effect":"This attack affects each hero in the enemy's space." },
+			{"id":2, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[0, 0, 0], "text":"Hissing a warning, the foul beast lashes its tail behind you.", "effect":"If you suffer any {Damage} from this attack, become terrified." },
 			{"id":3, "negate":"Agility", "valid":[true, false, false], "damage":[0, 0, 0], "fear":[3, 0, 0], "text":"Tracking both the toothy maw and whipping tail of the beast, you almost miss the strike from one taloned foot!", "effect":"If you suffer any {Fear} from this attack, become terrified." },
 			{"id":4, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[2, 0, 0], "text":"The screech of the beast is as terrible as its fearsome bite.", "effect":"After this attack, discard 2 inspiration or become terrified." },
-			{"id":5, "negate":"Spirit", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"A dread presence surrounds the fell beast, weighing heavy on you like dark chains.", "effect":"Before this attack, gain 2 inspiration if you have a [i]valour[/i] skill prepared." },
+			{"id":5, "negate":"Spirit", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"A dread presence surrounds the foul beast, weighing heavy on you like dark chains.", "effect":"Before this attack, gain 2 inspiration if you have a [i]valour[/i] skill prepared." },
 			{"id":6, "negate":"Might", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[0, 0, 0], "text":"Teeth like daggers snap close around you.", "effect":"" },
 			{"id":7, "negate":"Wit", "valid":[true, false, false], "damage":[0, 0, 0], "fear":[4, 0, 0], "text":"The beast can attack from any angle, using teeth and tail and claw.", "effect":"" }
 		]
 	},
 	{
-		"name":"Warg Rider",
+		"name":"Varg Rider",
 		"id":22,
 		"collection":5,
 		"activations":
 		[
 			{"idd":1, "negate":"Might", "valid":[true, true, true], "damage":[2, 3, 3], "fear":[1, 1, 2], "text":"Each stone from the Goblin's sling seems to strike where you are weakest.", "effect":"If this enemy is in your space, discard 1 prepared skill after this attack." },
-			{"id":2, "negate":"Agility", "valid":[false, true, true], "damage":[0, 3, 4], "fear":[0, 0, 0], "text":"Dodging both the Goblin's hurled stones and the snapping jaws of the Warg strains your muscles to their limit.", "effect":"If this enemy is in your space and you suffer any {Damage} from this attack, become captured." },
+			{"id":2, "negate":"Agility", "valid":[false, true, true], "damage":[0, 3, 4], "fear":[0, 0, 0], "text":"Dodging both the Goblin's hurled stones and the snapping jaws of the Varg strains your muscles to their limit.", "effect":"If this enemy is in your space and you suffer any {Damage} from this attack, become captured." },
 			{"id":3, "negate":"Wit", "valid":[false, true, true], "damage":[0, 3, 4], "fear":[0, 1, 1], "text":"You aren't sure whether the ravenous beast or the cackling Goblin that rides it is the more dangerous.", "effect":"If this enemy is in your space and you suffer any {Damage} from this attack, become captured." },
-			{"id":4, "negate":"Spirit", "valid":[true, true, true], "damage":[2, 3, 3], "fear":[1, 1, 2], "text":"The Warg tilts its head back and howls, long and eerie in a sudden lull of battle.", "effect":"After this attack, if this enemy is in your space, discard 1 prepared skill." },
+			{"id":4, "negate":"Spirit", "valid":[true, true, true], "damage":[2, 3, 3], "fear":[1, 1, 2], "text":"The Varg tilts its head back and howls, long and eerie in a sudden lull of battle.", "effect":"After this attack, if this enemy is in your space, discard 1 prepared skill." },
 			{"id":5, "negate":"Wit", "valid":[true, true, true], "damage":[1, 2, 3], "fear":[1, 1, 2], "text":"Rider and mount circle you, looking for an opening in your defense.", "effect":"After this attack, move this enemy group 1 space away from you." },
-			{"id":6, "negate":"Agility", "valid":[true, true, true], "damage":[1, 1, 2], "fear":[1, 2, 3], "text":"Each attack is swift and brutal, leaving you reeling while the Warg retreats to a safe distance again.", "effect":"After this attack, move this enemy group 1 space away from you." },
+			{"id":6, "negate":"Agility", "valid":[true, true, true], "damage":[1, 1, 2], "fear":[1, 2, 3], "text":"Each attack is swift and brutal, leaving you reeling while the Varg retreats to a safe distance again.", "effect":"After this attack, move this enemy group 1 space away from you." },
 			{"id":7, "negate":"Might", "valid":[true, true, true], "damage":[3, 3, 3], "fear":[0, 1, 2], "text":"Howling with one voice, the beast and its rider strike and circle away.", "effect":"After this attack, move this enemy group 1 space away from you." }
 		]
 	},
@@ -427,30 +427,30 @@
 	},
 	
 	{
-		"name":"Lord Angon",
+		"name":"Lord Javelin",
 		"id":27,
 		"collection":6,
 		"activations":
 		[
-			{"id":1, "negate":"Random", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[1, 0, 0], "text":"Lord Angon attacks!" }
+			{"id":1, "negate":"Random", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[1, 0, 0], "text":"Lord Javelin attacks!" }
 		]
 	},
 	{
-		"name":"Witch-king of Angmar",
+		"name":"Lich-king of Anger",
 		"id":28,
 		"collection":6,
 		"activations":
 		[
-			{"id":1, "negate":"Random", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"Cold fear squeezes your heart as the Witch-king strikes at you with mighty blows!"}
+			{"id":1, "negate":"Random", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"Cold fear squeezes your heart as the Lich-king strikes at you with mighty blows!"}
 		]
 	},
 	{
-		"name":"Eadris",
+		"name":"Endris",
 		"id":29,
 		"collection":6,
 		"activations":
 		[
-			{"id":1, "negate":"Random", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[0, 0, 0], "text":"Eadris attacks you!"}
+			{"id":1, "negate":"Random", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[0, 0, 0], "text":"Endris attacks you!"}
 		]
 	},
 	
@@ -481,27 +481,27 @@
 	},
 
 	{
-		"name":"Coalfang Decoy",
+		"name":"Chartooth Decoy",
 		"id":1002,
 		"collection":3,
 		"activations":
 		[
-			{"id":1, "negate":"Might", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"The Warg tears at you, jaws snapping and foaming.", "effect":"If you suffer {Damage} or {Fear} from this attack, suffer 1 additional facedown {Fear}." },
-			{"id":2, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[1, 0, 0], "text":"The Warg latches onto your leg, thrashing wildly in an attempt to bring you to the ground!", "effect":"If you suffer {Damage} from this attack, discard 1 prepared card. If you suffer {Fear} from this attack, discard 1 inspiration." },
-			{"id":3, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[3, 0, 0], "text":"The Warg snarls at you before leaping, saliva and blood mingling and oozing over the tips of her fangs.", "effect":"Before this attack, discard 1 boon." }
+			{"id":1, "negate":"Might", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"The Varg tears at you, jaws snapping and foaming.", "effect":"If you suffer {Damage} or {Fear} from this attack, suffer 1 additional facedown {Fear}." },
+			{"id":2, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[1, 0, 0], "text":"The Varg latches onto your leg, thrashing wildly in an attempt to bring you to the ground!", "effect":"If you suffer {Damage} from this attack, discard 1 prepared card. If you suffer {Fear} from this attack, discard 1 inspiration." },
+			{"id":3, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[3, 0, 0], "text":"The Varg snarls at you before leaping, saliva and blood mingling and oozing over the tips of her fangs.", "effect":"Before this attack, discard 1 boon." }
 		]
 	},
 	{
-		"name":"Weak Warg",
+		"name":"Weak Varg",
 		"id":1003,
 		"collection":3,
 		"activations":
 		[
 			{"id":5, "negate":"Wit", "valid":[true, true, true], "damage":[1, 2, 3], "fear":[1, 1, 2], "text":"A giant beast charges you, slavering for your blood.", "effect":"After this attack, discard 1 inspiration." },
 			{"id":7, "negate":"Might", "valid":[true, true, true], "damage":[1, 2, 3], "fear":[1, 1, 2], "text":"A beast lunges at you, its claws slicing through the air.", "effect":"" },
-			{"id":8, "negate":"Wit", "valid":[false, true, true], "damage":[0, 1, 2], "fear":[0, 2, 3], "text":"The Wargs circle you and attempts to attack you from behind.", "effect":"After this attack, discard 1 prepared card." },
+			{"id":8, "negate":"Wit", "valid":[false, true, true], "damage":[0, 1, 2], "fear":[0, 2, 3], "text":"The Vargs circle you and attempts to attack you from behind.", "effect":"After this attack, discard 1 prepared card." },
 			{"id":10, "negate":"Agility", "valid":[true, true, true], "damage":[1, 2, 3], "fear":[1, 1, 2], "text":"A monstrous wolf lunges at you with a flurry of teeth and claws.", "effect":"" },
-			{"id":11, "negate":"Spirit", "valid":[true, true, true], "damage":[1, 2, 2], "fear":[1, 2, 3], "text":"A stench rises from the Warg's pelt, and as it closes in on you, you can feel its growl deep in your bones.", "effect":"" }
+			{"id":11, "negate":"Spirit", "valid":[true, true, true], "damage":[1, 2, 2], "fear":[1, 2, 3], "text":"A stench rises from the Varg's pelt, and as it closes in on you, you can feel its growl deep in your bones.", "effect":"" }
 		]
 	},
 	{
@@ -575,12 +575,12 @@
 		]
 	},
 	{
-		"name":"Master of the Pit (Balrog)",
+		"name":"Master of the Pit (Balerock)",
 		"id":1010,
 		"collection":3,
 		"activations":
 		[
-			{"id":1, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[2, 0, 0], "text":"The Supplicant of Morgoth delivers a litany of foul curses.", "effect":"After this attack, the Balrog moves 1 space toward the hero with the Crown of Shadows." }
+			{"id":1, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[2, 0, 0], "text":"The Supplicant of More-Goth delivers a litany of foul curses.", "effect":"After this attack, the Balerock moves 1 space toward the hero with the Crown of Shadows." }
 		]
 	},
 	{
@@ -668,20 +668,20 @@
 		]
 	},
 	{
-		"name":"Witch-king",
+		"name":"Lich-king",
 		"id":1017,
 		"collection":5,
 		"activations":
 		[
-			{"id":1, "negate":"Might", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[0, 0, 0], "text":"The Witch-king swoops low overhead, lashing out with tooth and claw and mace.", "effect":"If you have a {2H} item equipped, prevent 2 {Damage}." },
+			{"id":1, "negate":"Might", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[0, 0, 0], "text":"The Lich-king swoops low overhead, lashing out with tooth and claw and mace.", "effect":"If you have a {2H} item equipped, prevent 2 {Damage}." },
 			{"id":2, "negate":"Wisdom", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[3, 0, 0], "text":"Another horrible scream sets your teeth on edge, and you briefly consider retreat.", "effect":"If you suffer any {Fear} from this attack, become terrified." },
 			{"id":3, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"The relentless assault leaves you breathless and unprepared for the next blow.", "effect":"After this attack, each hero that is not in an enemy's space either discards 1 inspiration or flips 1 {Fear} faceup." },
 			{"id":4, "negate":"Wisdom", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"Another horrible scream sets your teeth on edge, and you briefly consider retreat.", "effect":"After this attack, each hero that is not in an enemy's space either discards 1 inspiration or flips 1 {Fear} faceup." },
 			{"id":5, "negate":"Wisdom", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"Another horrible scream sets your teeth on edge, and you briefly consider retreat.", "effect":"If you have a {2H} item equipped, prevent 2 {Damage}." },
-			{"id":6, "negate":"Might", "valid":[true, false, false], "damage":[0, 0, 0], "fear":[4, 0, 0], "text":"The Witch-king swoops low overhead, lashing out with tooth and claw and mace.", "effect":"After this attack, each hero that is not in an enemy's space either discards 1 inspiration or flips 1 {Fear} faceup." },
+			{"id":6, "negate":"Might", "valid":[true, false, false], "damage":[0, 0, 0], "fear":[4, 0, 0], "text":"The Lich-king swoops low overhead, lashing out with tooth and claw and mace.", "effect":"After this attack, each hero that is not in an enemy's space either discards 1 inspiration or flips 1 {Fear} faceup." },
 			{"id":7, "negate":"Wisdom", "valid":[true, false, false], "damage":[0, 0, 0], "fear":[4, 0, 0], "text":"Another horrible scream sets your teeth on edge, and you briefly consider retreat.", "effect":"If you suffer any {Fear} from this attack, become terrified." },
 			{"id":8, "negate":"Agility", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[0, 0, 0], "text":"The relentless assault leaves you breathless and unprepared for the next blow.", "effect":"After this attack, each hero that is not in an enemy's space either discards 1 inspiration or flips 1 {Fear} faceup." },
-			{"id":9, "negate":"Might", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[3, 0, 0], "text":"The Witch-king swoops low overhead, lashing out with tooth and claw and mace.", "effect":"If you suffer any {Fear} from this attack, become terrified." }
+			{"id":9, "negate":"Might", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[3, 0, 0], "text":"The Lich-king swoops low overhead, lashing out with tooth and claw and mace.", "effect":"If you suffer any {Fear} from this attack, become terrified." }
 		]
 	}
 ]}

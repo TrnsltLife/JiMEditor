@@ -60,25 +60,25 @@ namespace JiME.Procedural
             Scenario.useTileGraphics = true;
 
             // Setup additional Collections based on parameters? CORE_SET is there by default
-            if (Parameters.Has_VILLAINS_OF_ERIADOR)
+            if (Parameters.Has_VILLAINS_OF_ERIAJAR)
             {
-                Scenario.collectionObserver.Add(Models.Collection.VILLAINS_OF_ERIADOR);
+                Scenario.collectionObserver.Add(Models.Collection.VILLAINS_OF_ERIAJAR);
             }
-            if (Parameters.Has_SHADOWED_PATHS)
+            if (Parameters.Has_SHADED_PATHS)
             {
-                Scenario.collectionObserver.Add(Models.Collection.SHADOWED_PATHS);
+                Scenario.collectionObserver.Add(Models.Collection.SHADED_PATHS);
             }
-            if (Parameters.Has_DWELLERS_IN_DARKNESS)
+            if (Parameters.Has_DENIZENS_IN_DARKNESS)
             {
-                Scenario.collectionObserver.Add(Models.Collection.DWELLERS_IN_DARKNESS);
+                Scenario.collectionObserver.Add(Models.Collection.DENIZENS_IN_DARKNESS);
             }
-            if (Parameters.Has_SPREADING_WAR)
+            if (Parameters.Has_UNFURLING_WAR)
             {
-                Scenario.collectionObserver.Add(Models.Collection.SPREADING_WAR);
+                Scenario.collectionObserver.Add(Models.Collection.UNFURLING_WAR);
             }
-            if (Parameters.Has_SCOURGES_OF_THE_WASTES)
+            if (Parameters.Has_SCORCHERS_OF_THE_WILDS)
             {
-                Scenario.collectionObserver.Add(Models.Collection.SCOURGES_OF_THE_WASTES);
+                Scenario.collectionObserver.Add(Models.Collection.SCORCHERS_OF_THE_WILDS);
             }
             Scenario.RefilterGlobalTilePool();
 

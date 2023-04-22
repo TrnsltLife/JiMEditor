@@ -94,7 +94,7 @@
 					<RadioButton GroupName="Terrain" x:Name="wallRadio" Content="Wall" Margin="0,0,18,0" Foreground="White"/>
 				</WrapPanel>
 
-				<!-- Shadowed Paths -->
+				<!-- Shaded Paths -->
 				<Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Fill="Black" />
 				<TextBlock Grid.Row="1" Grid.Column="0" Text="p" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
 				<WrapPanel Grid.Row="1" Grid.Column="1">
@@ -104,7 +104,7 @@
 					<RadioButton GroupName="Terrain" x:Name="webRadio" Content="Web" Margin="0,0,20,0" Foreground="White"/>
 				</WrapPanel>
 
-				<!-- Spreading War -->
+				<!-- Unfurling War -->
 				<Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Fill="DarkRed" />
 				<TextBlock Grid.Row="2" Grid.Column="0" Text="w" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
 				<WrapPanel Grid.Row="2" Grid.Column="1">

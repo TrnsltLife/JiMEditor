@@ -269,11 +269,11 @@ namespace JiME
 					pi.fileName = dInfo.Name;
 					pi.fileVersion = c.fileVersion;
 					pi.collectionIcons  = (c.collectionCollection.Contains(Collection.CORE_SET) ? Collection.CORE_SET.FontCharacter : "")
-										+ (c.collectionCollection.Contains(Collection.VILLAINS_OF_ERIADOR) ? Collection.VILLAINS_OF_ERIADOR.FontCharacter : "")
-										+ (c.collectionCollection.Contains(Collection.SHADOWED_PATHS) ? Collection.SHADOWED_PATHS.FontCharacter : "")
-										+ (c.collectionCollection.Contains(Collection.DWELLERS_IN_DARKNESS) ? Collection.DWELLERS_IN_DARKNESS.FontCharacter : "")
-										+ (c.collectionCollection.Contains(Collection.SPREADING_WAR) ? Collection.SPREADING_WAR.FontCharacter : "")
-										+ (c.collectionCollection.Contains(Collection.SCOURGES_OF_THE_WASTES) ? Collection.SCOURGES_OF_THE_WASTES.FontCharacter : "");
+										+ (c.collectionCollection.Contains(Collection.VILLAINS_OF_ERIAJAR) ? Collection.VILLAINS_OF_ERIAJAR.FontCharacter : "")
+										+ (c.collectionCollection.Contains(Collection.SHADED_PATHS) ? Collection.SHADED_PATHS.FontCharacter : "")
+										+ (c.collectionCollection.Contains(Collection.DENIZENS_IN_DARKNESS) ? Collection.DENIZENS_IN_DARKNESS.FontCharacter : "")
+										+ (c.collectionCollection.Contains(Collection.UNFURLING_WAR) ? Collection.UNFURLING_WAR.FontCharacter : "")
+										+ (c.collectionCollection.Contains(Collection.SCORCHERS_OF_THE_WILDS) ? Collection.SCORCHERS_OF_THE_WILDS.FontCharacter : "");
 					items.Add( pi );
 				}
 			}
@@ -287,11 +287,11 @@ namespace JiME
 					items.Add( new ProjectItem() { Title = s.scenarioName, projectType = s.projectType, Date = s.saveDate, fileName = fi.Name, fileVersion = s.fileVersion,
 
 						collectionIcons = (s.IsCollectionEnabled(Collection.CORE_SET) ? Collection.CORE_SET.FontCharacter : "")
-										+ (s.IsCollectionEnabled(Collection.VILLAINS_OF_ERIADOR) ? Collection.VILLAINS_OF_ERIADOR.FontCharacter : "")
-										+ (s.IsCollectionEnabled(Collection.SHADOWED_PATHS) ? Collection.SHADOWED_PATHS.FontCharacter : "")
-										+ (s.IsCollectionEnabled(Collection.DWELLERS_IN_DARKNESS) ? Collection.DWELLERS_IN_DARKNESS.FontCharacter : "")
-										+ (s.IsCollectionEnabled(Collection.SPREADING_WAR) ? Collection.SPREADING_WAR.FontCharacter : "")
-										+ (s.IsCollectionEnabled(Collection.SCOURGES_OF_THE_WASTES) ? Collection.SCOURGES_OF_THE_WASTES.FontCharacter : "")
+										+ (s.IsCollectionEnabled(Collection.VILLAINS_OF_ERIAJAR) ? Collection.VILLAINS_OF_ERIAJAR.FontCharacter : "")
+										+ (s.IsCollectionEnabled(Collection.SHADED_PATHS) ? Collection.SHADED_PATHS.FontCharacter : "")
+										+ (s.IsCollectionEnabled(Collection.DENIZENS_IN_DARKNESS) ? Collection.DENIZENS_IN_DARKNESS.FontCharacter : "")
+										+ (s.IsCollectionEnabled(Collection.UNFURLING_WAR) ? Collection.UNFURLING_WAR.FontCharacter : "")
+										+ (s.IsCollectionEnabled(Collection.SCORCHERS_OF_THE_WILDS) ? Collection.SCORCHERS_OF_THE_WILDS.FontCharacter : "")
 					});
 			}
 			return items;

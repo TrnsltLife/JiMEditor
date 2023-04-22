@@ -22,20 +22,20 @@ namespace JiME.Views
 		int Heavy { get { return 4; } }
 
 		List<RadioButton> coreSetList;
-		List<RadioButton> villainsOfEriadorList;
-		List<RadioButton> shadowedPathsList;
-		List<RadioButton> dwellersInDarknessList;
-		List<RadioButton> spreadingWarList;
-		List<RadioButton> scourgesOfTheWastesList;
+		List<RadioButton> villainsOfEriajarList;
+		List<RadioButton> shadedPathsList;
+		List<RadioButton> denizensInDarknessList;
+		List<RadioButton> unfurlingWarList;
+		List<RadioButton> scorchersOfTheWildsList;
 		List<RadioButton> allMonsterList;
 
 
 		string[] monsterNames = (Collection.CORE_SET.Monsters.Select(m => m.dataName))
-			.Concat(Collection.VILLAINS_OF_ERIADOR.Monsters.Select(m => m.dataName)).ToArray()
-			.Concat(Collection.SHADOWED_PATHS.Monsters.Select(m => m.dataName)).ToArray()
-			.Concat(Collection.DWELLERS_IN_DARKNESS.Monsters.Select(m => m.dataName)).ToArray()
-			.Concat(Collection.SPREADING_WAR.Monsters.Select(m => m.dataName)).ToArray()
-			.Concat(Collection.SCOURGES_OF_THE_WASTES.Monsters.Select(m => m.dataName)).ToArray();
+			.Concat(Collection.VILLAINS_OF_ERIAJAR.Monsters.Select(m => m.dataName)).ToArray()
+			.Concat(Collection.SHADED_PATHS.Monsters.Select(m => m.dataName)).ToArray()
+			.Concat(Collection.DENIZENS_IN_DARKNESS.Monsters.Select(m => m.dataName)).ToArray()
+			.Concat(Collection.UNFURLING_WAR.Monsters.Select(m => m.dataName)).ToArray()
+			.Concat(Collection.SCORCHERS_OF_THE_WILDS.Monsters.Select(m => m.dataName)).ToArray();
 
 		public MonsterEditorWindow(Scenario s, Monster m = null )
 		{
@@ -69,28 +69,28 @@ namespace JiME.Views
 
 			//The order of the monsters in these lists is important to maintain unchanged because the order (0-26) tells the companion app which monster to use.
 			//The order also corresponds to the order in the MonsterType enum.
-			coreSetList = new List<RadioButton>() { ruffianRB, goblinScoutRB, orcHunterRB, orcMarauderRB, hungryWargRB, hillTrollRB, wightRB };
-			villainsOfEriadorList = new List<RadioButton>() { atarinRB, gulgotarRB, coalfangRB };
-			shadowedPathsList = new List<RadioButton>() { giantSpiderRB, pitGoblinRB, orcTaskmasterRB, shadowmanRB, namelessThingRB, caveTrollRB, balrogRB, spawnOfUngoliantRB };
-			dwellersInDarknessList = new List<RadioButton>() { supplicantOfMorgothRB, ursaRB, ollieRB };
-			spreadingWarList = new List<RadioButton>() { fellBeastRB, wargRiderRB, siegeEngineRB, warOliphauntRB, soldierRB, urukWarriorRB };
-			scourgesOfTheWastesList = new List<RadioButton>() { lordAngonRB, witchKingOfAngmarRB, eadrisRB };
+			coreSetList = new List<RadioButton>() { ruffianRB, goblinScoutRB, orcHunterRB, orcMarauderRB, hungryVargRB, hillTrollRB, wightRB };
+			villainsOfEriajarList = new List<RadioButton>() { atariRB, gargletargRB, chartoothRB };
+			shadedPathsList = new List<RadioButton>() { giantSpiderRB, pitGoblinRB, orcTaskmasterRB, shadowmanRB, anonymousThingRB, caveTrollRB, balerockRB, spawnOfUglyGiantRB };
+			denizensInDarknessList = new List<RadioButton>() { supplicantOfMoreGothRB, ursaRB, ollieRB };
+			unfurlingWarList = new List<RadioButton>() { foulBeastRB, vargRiderRB, siegeEngineRB, warElephantRB, soldierRB, highOrcWarriorRB };
+			scorchersOfTheWildsList = new List<RadioButton>() { lordJavelinRB, lichKingOfAngerRB, endrisRB };
 			allMonsterList = new List<RadioButton>();
 			allMonsterList.AddRange(coreSetList);
-			allMonsterList.AddRange(villainsOfEriadorList);
-			allMonsterList.AddRange(shadowedPathsList);
-			allMonsterList.AddRange(dwellersInDarknessList);
-			allMonsterList.AddRange(spreadingWarList);
-			allMonsterList.AddRange(scourgesOfTheWastesList);
+			allMonsterList.AddRange(villainsOfEriajarList);
+			allMonsterList.AddRange(shadedPathsList);
+			allMonsterList.AddRange(denizensInDarknessList);
+			allMonsterList.AddRange(unfurlingWarList);
+			allMonsterList.AddRange(scorchersOfTheWildsList);
 
 			Dictionary<List<RadioButton>, Collection> checkboxCollectionMap =
 				new Dictionary<List<RadioButton>, Collection>() {
 					{coreSetList, Collection.CORE_SET},
-					{villainsOfEriadorList, Collection.VILLAINS_OF_ERIADOR},
-					{shadowedPathsList, Collection.SHADOWED_PATHS},
-					{dwellersInDarknessList, Collection.DWELLERS_IN_DARKNESS},
-					{spreadingWarList, Collection.SPREADING_WAR},
-					{scourgesOfTheWastesList, Collection.SCOURGES_OF_THE_WASTES}
+					{villainsOfEriajarList, Collection.VILLAINS_OF_ERIAJAR},
+					{shadedPathsList, Collection.SHADED_PATHS},
+					{denizensInDarknessList, Collection.DENIZENS_IN_DARKNESS},
+					{unfurlingWarList, Collection.UNFURLING_WAR},
+					{scorchersOfTheWildsList, Collection.SCORCHERS_OF_THE_WILDS}
 			};
 
 			//monster type radio buttons
@@ -277,8 +277,8 @@ namespace JiME.Views
 
 		private void AdjustEnemyCountComboBox(Monster m)
         {
-			//This enforces the limits of enemy group size. e.g. there can be 3 Goblin Scouts in a group, but only 2 Cave Trolls, or only 1 Nameless Thing
-			if(monster.count > monster.groupLimit)
+			//This enforces the limits of enemy group size. e.g. there can be 3 Goblin Scouts in a group, but only 2 Cave Trolls, or only 1 Anonymous Thing
+			if (monster.count > monster.groupLimit)
             {
 				monster.count = monster.groupLimit;
             }

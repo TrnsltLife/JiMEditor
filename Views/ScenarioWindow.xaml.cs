@@ -140,25 +140,25 @@ namespace JiME.Views
                 {
 					coreSetCB.IsChecked = true;
                 }
-				else if(collection == Collection.VILLAINS_OF_ERIADOR)
+				else if(collection == Collection.VILLAINS_OF_ERIAJAR)
                 {
-					villainsOfEriadorCB.IsChecked = true;
+					villainsOfEriajarCB.IsChecked = true;
                 }
-				else if(collection == Collection.SHADOWED_PATHS)
+				else if(collection == Collection.SHADED_PATHS)
                 {
-					shadowedPathsCB.IsChecked = true;
+					shadedPathsCB.IsChecked = true;
                 }
-				else if(collection == Collection.DWELLERS_IN_DARKNESS)
+				else if(collection == Collection.DENIZENS_IN_DARKNESS)
                 {
-					dwellersInDarknessCB.IsChecked = true;
+					denizensInDarknessCB.IsChecked = true;
                 }
-				else if(collection == Collection.SPREADING_WAR)
+				else if(collection == Collection.UNFURLING_WAR)
                 {
-					spreadingWarCB.IsChecked = true;
+					unfurlingWarCB.IsChecked = true;
                 }
-				else if (collection == Collection.SCOURGES_OF_THE_WASTES)
+				else if (collection == Collection.SCORCHERS_OF_THE_WILDS)
 				{
-					scourgesOfTheWastesCB.IsChecked = true;
+					scorchersOfTheWildsCB.IsChecked = true;
 				}
 			}
 		}
