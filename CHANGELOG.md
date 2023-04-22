@@ -19,3 +19,7 @@ All notable changes to this project will be documented in this file.
   - After generation, the dialog can "ACCEPT" the Scenario which either takes you to the main Scenario editor OR adds the Scenario to the Campaign
   - NOTE: This feature is EXPERIMENTAL and the generated Scenario -- while technically playable -- is very much unbalanced and unfinished at the moment.
     It can still be used for testing purposes or as a starting point for generating a Scenatio manually.
+- Added "Skins" to group of folders to exclude from treating as a Campaign folder.
+
+### Changed
+- Changed a lot of names in text and variable names to move away from names that are probably trademarked or could be.
