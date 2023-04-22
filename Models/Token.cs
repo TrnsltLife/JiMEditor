@@ -160,13 +160,13 @@ namespace JiME
 			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Table.png"))),
 			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Wall.png"))),
 
-			//Shadowed Paths
+			//Shaded Paths
 			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Elevation.png"))),
 			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Log.png"))),
 			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Rubble.png"))),
 			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Web.png"))),
 
-			//Spreading War
+			//Unfurling War
 			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Barricade.png"))),
 			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Chest.png"))),
 			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Terrain/Fence.png"))),

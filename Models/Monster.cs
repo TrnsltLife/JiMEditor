@@ -419,8 +419,6 @@ namespace JiME
 			}
 		}
 
-		//public static string[] monsterNames = { "Ruffian", "Goblin Scout", "Orc Hunter", "Orc Marauder", "Warg", "Hill Troll", "Wight" };
-
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		public Monster() { }

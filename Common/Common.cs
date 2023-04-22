@@ -22,12 +22,12 @@ namespace JiME
 	/// The order for the first 7 (core set) was set by GlowPuff and is kept for backwards compatibility.
 	/// The order for the other sets is kept in the same order as the order in the original JiME engine, although not sharing the same enum int values.
 	/// </summary>
-	public enum MonsterType { Ruffian, GoblinScout, OrcHunter, OrcMarauder, Warg, HillTroll, Wight, //0 - 6
-							  Atarin, Gulgotar, Coalfang, //7-9
-							  GiantSpider, PitGoblin, OrcTaskmaster, Shadowman, NamelessThing, CaveTroll, Balrog, SpawnOfUngoliant, //10-17
-							  SupplicantOfMorgoth, Ursa, Ollie, //18-20
-							  FellBeast, WargRider, SiegeEngine, WarOliphaunt, Soldier, UrukWarrior, //21-26
-							  LordAngon, WitchKingOfAngmar, Eadris //27-29
+	public enum MonsterType { Ruffian, GoblinScout, OrcHunter, OrcMarauder, Varg, HillTroll, Wight, //0 - 6
+							  Atari, Gargletarg, Chartooth, //7-9
+							  GiantSpider, PitGoblin, OrcTaskmaster, Shadowman, AnonymousThing, CaveTroll, Balerock, SpawnOfUglyGiant, //10-17
+							  SupplicantOfMoreGoth, Ursa, Ollie, //18-20
+							  FoulBeast, VargRider, SiegeEngine, WarElephant, Soldier, HighOrcWarrior, //21-26
+							  LordJavelin, LichKingOfAnger, Endris //27-29
 	}
 	public enum TileType { Hex, Battle, Square }
 	public enum ThreatAttributes { }//armor, elite, etc
@@ -43,8 +43,8 @@ namespace JiME
 	/// The order of the terrain in this enum is important to maintain unchanged and the order correlates with the data in Collection.cs and in the companion app.
 	/// </summary>
 	public enum TerrainType { None, Barrels, Boulder, Bush, FirePit, Mist, Pit, Statue, Stream, Table, Wall, //Core Set
-							  Elevation, Log, Rubble, Web, //Shadowed Paths
-							  Barricade, Chest, Fence, Fountain, Pond, Trench //Spreading War
+							  Elevation, Log, Rubble, Web, //Shaded Paths
+							  Barricade, Chest, Fence, Fountain, Pond, Trench //Unfurling War
 							}
 	public enum HelpType { Token, Grouping, Enemies, Triggers }
 	public enum DifficultyBias { Light, Medium, Heavy }
