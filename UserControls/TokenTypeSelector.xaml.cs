@@ -268,6 +268,19 @@ namespace JiME.UserControls
 			UpdateHasActivated();
 		}
 
+		private void tokenInteractionTextTB_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			if (interaction != null)
+			{
+				Debug.Log("tokenInteractionTextTB:");
+				Debug.Log("interaction is " + interaction);
+				Debug.Log("interaction.tokenInteractionText is " + interaction.tokenInteractionText);
+				Debug.Log("(TextBox)sender is " + ((TextBox)sender));
+				Debug.Log("((TextBox)Sender).Text is " + ((TextBox)sender).Text);
+				interaction.tokenInteractionText = ((TextBox)sender).Text;
+			}
+		}
+
 		public void AssignValuesFromSelections()
 		{
 			//TokenType

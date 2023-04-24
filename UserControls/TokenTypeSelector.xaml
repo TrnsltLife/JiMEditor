@@ -118,6 +118,11 @@
 			</Grid>
 		</StackPanel>
 
+		<StackPanel Orientation="Horizontal" Visibility="{Binding ElementName=isTokenCB, Path=IsChecked, Converter={StaticResource bvis}}">
+			<TextBlock VerticalAlignment="Center" Style="{StaticResource SubText}" Margin="0,0,5,0">Token Interaction Text <Italic>(Optional)</Italic>:</TextBlock>
+			<TextBox x:Name="tokenInteractionTextTB" Text="{Binding interaction.tokenInteractionText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DefaultTextBox}" Margin="0,5" Width="250" HorizontalAlignment="Left" TextChanged="tokenInteractionTextTB_TextChanged"/>
+		</StackPanel>
+
 		<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Margin="0,5,0,0">
 						Token Interactions are triggered by players as they journey across the map. When a player clicks a Token, the Flavor Text below is shown. The player can decide to use an Action to Interact with the Token, after which the Event Text is shown, along with the Event itself.
 		</TextBlock>
