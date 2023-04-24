@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
   - NOTE: This feature is EXPERIMENTAL and the generated Scenario -- while technically playable -- is very much unbalanced and unfinished at the moment.
     It can still be used for testing purposes or as a starting point for generating a Scenatio manually.
 - Added "Skins" to group of folders to exclude from treating as a Campaign folder.
+- Added new text field to TokenTypeSelector, "Token Interaction Text", that allows custom text to display on token interaction button instead of Search, Threat, etc.
 
 ### Changed
 - Changed a lot of names in text and variable names to move away from names that are probably trademarked or could be.

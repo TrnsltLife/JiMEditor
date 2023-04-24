@@ -77,6 +77,7 @@ namespace JiME
 		int threatReward { get; set; }
 		bool isTokenInteraction { get; set; }
 		string triggerName { get; set; }
+		string tokenInteractionText { get; set; }
 		TokenType tokenType { get; set; }
 		PersonType personType { get; set; }
 
@@ -246,8 +247,8 @@ namespace JiME
 		/// AKA "Engine Version" in the companion app
 		/// Update this number every time the file format changes with new features
 		/// </summary>
-		public static string formatVersion = "1.11";
-		public static string appVersion = "0.21";
+		public static string formatVersion = "1.12";
+		public static string appVersion = "0.22";
 		public static Dictionary<int, BaseTileData> tileDictionary { get; set; } = new Dictionary<int, BaseTileData>();
 		public static Dictionary<int, BaseTileData> tileDictionaryB { get; set; } = new Dictionary<int, BaseTileData>();
 		public static int tolerance = 25;

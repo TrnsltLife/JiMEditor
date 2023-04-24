@@ -5,7 +5,7 @@ namespace JiME
 {
 	public abstract class InteractionBase : IInteraction, INotifyPropertyChanged
 	{
-		string _dataName, _triggerName, _triggerAfterName;
+		string _dataName, _triggerName, _triggerAfterName, _tokenInteractionText;
 		bool _isTokenInteraction;
 		int _loreReward, _xpReward, _threatReward;
 		TokenType _tokenType;
@@ -29,6 +29,7 @@ namespace JiME
 			interact.textBookData = this.textBookData.Clone();
 			interact.eventBookData = this.eventBookData.Clone();
 			interact.interactionType = this.interactionType;
+			interact.tokenInteractionText = this.tokenInteractionText;
 		}
 
 		public string dataName
@@ -61,6 +62,15 @@ namespace JiME
 			{
 				_triggerAfterName = value;
 				NotifyPropertyChanged( "triggerAfterName" );
+			}
+		}
+		public string tokenInteractionText
+		{
+			get => _tokenInteractionText;
+			set
+			{
+				_tokenInteractionText = value;
+				NotifyPropertyChanged("tokenInteractionText");
 			}
 		}
 		public bool isTokenInteraction
@@ -143,6 +153,7 @@ namespace JiME
 			eventBookData = new TextBookData();
 			eventBookData.pages.Add( "Default Event Text.\n\nThis text is shown after the Event is triggered. Use it to tell about the actual event that has been triggered Example: Describe an Enemy Threat, present a Test, describe a Decision, etc." );
 			loreReward = xpReward = threatReward = 0;
+			tokenInteractionText = "";
 		}
 
 		public void NotifyPropertyChanged( string propName )
