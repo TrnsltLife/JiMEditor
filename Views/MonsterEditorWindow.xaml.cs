@@ -71,10 +71,10 @@ namespace JiME.Views
 			//The order also corresponds to the order in the MonsterType enum.
 			coreSetList = new List<RadioButton>() { ruffianRB, goblinScoutRB, orcHunterRB, orcMarauderRB, hungryVargRB, hillTrollRB, wightRB };
 			villainsOfEriajarList = new List<RadioButton>() { atariRB, gargletargRB, chartoothRB };
-			shadedPathsList = new List<RadioButton>() { giantSpiderRB, pitGoblinRB, orcTaskmasterRB, shadowmanRB, anonymousThingRB, caveTrollRB, balerockRB, spawnOfUglyGiantRB };
-			denizensInDarknessList = new List<RadioButton>() { supplicantOfMoreGothRB, ursaRB, ollieRB };
+			shadedPathsList = new List<RadioButton>() { giantSpiderRB, pitGoblinRB, orcTaskmasterRB, shadowmanRB, anonymousThingRB, caveTrollRB, balerockRB, spawnOfUglygiantRB };
+			denizensInDarknessList = new List<RadioButton>() { supplicantOfMoreGothRB, ursulaRB, oliverRB };
 			unfurlingWarList = new List<RadioButton>() { foulBeastRB, vargRiderRB, siegeEngineRB, warElephantRB, soldierRB, highOrcWarriorRB };
-			scorchersOfTheWildsList = new List<RadioButton>() { lordJavelinRB, lichKingOfAngerRB, endrisRB };
+			scorchersOfTheWildsList = new List<RadioButton>() { lordJavelinRB, lichKingRB, endrisRB };
 			allMonsterList = new List<RadioButton>();
 			allMonsterList.AddRange(coreSetList);
 			allMonsterList.AddRange(villainsOfEriajarList);

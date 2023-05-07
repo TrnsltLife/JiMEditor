@@ -381,7 +381,7 @@ namespace JiME
 			}
 			else
             {
-				MessageBox.Show("You can't delete the default Enemy Attack Groups, but you can modify them.", "Cannot Delete Enemy Attack Group", MessageBoxButton.OK, MessageBoxImage.Information);
+				MessageBox.Show("You can't delete the default Enemy Attack Groups, but you can copy them and modify the copy.", "Cannot Delete Enemy Attack Group", MessageBoxButton.OK, MessageBoxImage.Information);
 			}
 		}
 
@@ -389,8 +389,15 @@ namespace JiME
 		{
 			int idx = activationsUC.dataListView.SelectedIndex;
 			MonsterActivations act = (MonsterActivations)activationsUC.dataListView.Items[idx];
-			ActivationsEditorWindow ow = new ActivationsEditorWindow(scenario, ((MonsterActivations)activationsUC.dataListView.SelectedItem), false);
-			ow.ShowDialog();
+			if (idx != -1 && act.id >= 1000) //Don't allow modifying the basic enemy activations. Only allow modifying built-in custom activations and user custom activations.
+			{
+				ActivationsEditorWindow ow = new ActivationsEditorWindow(scenario, ((MonsterActivations)activationsUC.dataListView.SelectedItem), false);
+				ow.ShowDialog();
+			}
+			else
+			{
+				MessageBox.Show("You can't modify the default Enemy Attack Groups, but you can copy them and modify the copy.", "Cannot Modify Enemy Attack Group", MessageBoxButton.OK, MessageBoxImage.Information);
+			}
 		}
 
 		void OnDuplicateInteraction(object sender, EventArgs e)

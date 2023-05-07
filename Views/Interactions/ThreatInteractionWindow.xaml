@@ -364,7 +364,7 @@
 											<CheckBox Grid.Row="4" Grid.Column="1" x:Name="orcTaskmasterCB" Content="Orc Taskmaster x6 (14)" Foreground="White" Padding="0,0,5,0"/>
 											<CheckBox Grid.Row="4" Grid.Column="2" x:Name="pitGoblinCB" Content="Pit Goblin x6 (4)" Foreground="White" Padding="0,0,5,0"/>
 											<CheckBox Grid.Row="4" Grid.Column="3" x:Name="shadowmanCB" Content="Shadowman x3 (17)" Foreground="White" Padding="0,0,5,0"/>
-											<CheckBox Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="2" x:Name="spawnOfUglyGiantCB" Content="Spawn of Ugly-Giant (X)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="2" x:Name="spawnOfUglygiantCB" Content="Spawn of Uglygiant (X)" Foreground="White" Padding="0,0,5,0"/>
 
 											<!-- Denizens in Darkness -->
 											<Rectangle Grid.Row="5" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" Fill="Purple" />
@@ -372,8 +372,8 @@
 												<TextBlock Text="d" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
 												<CheckBox Click="collection_Click" x:Name="denizensOfDarknessCB" Content="Denizens of Darkness:" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"/>
 											</StackPanel>
-											<CheckBox Grid.Row="5" Grid.Column="1" x:Name="ollieCB" Content="Ollie (X)" Foreground="White" Padding="0,0,5,0"/>
-											<CheckBox Grid.Row="5" Grid.Column="2" x:Name="ursaCB" Content="Ursa (X)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="5" Grid.Column="1" x:Name="oliverCB" Content="Oliver (X)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="5" Grid.Column="2" x:Name="ursulaCB" Content="Ursula (X)" Foreground="White" Padding="0,0,5,0"/>
 											<CheckBox Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="2" x:Name="supplicantOfMoreGothCB" Content="Supplicant of More-Goth (X)" Foreground="White" Padding="0,0,5,0"/>
 
 											<!-- Unfurling War -->
@@ -404,7 +404,7 @@
 											</StackPanel>
 											<CheckBox Grid.Row="8" Grid.Column="1" x:Name="lordJavelinCB" Content="Lord Javelin (X)" Foreground="White" Padding="0,0,5,0"/>
 											<CheckBox Grid.Row="8" Grid.Column="2" x:Name="endrisCB" Content="Endris (X)" Foreground="White" Padding="0,0,5,0"/>
-											<CheckBox Grid.Row="8" Grid.Column="3" Grid.ColumnSpan="2" x:Name="lichKingOfAngerCB" Content="Lich-king of Anger (X)" Foreground="White" Padding="0,0,5,0"/>
+											<CheckBox Grid.Row="8" Grid.Column="3" Grid.ColumnSpan="2" x:Name="lichKingCB" Content="Lich-King (X)" Foreground="White" Padding="0,0,5,0"/>
 										</Grid>
 
 										<TextBlock Text="The Companion App will randomly spend the Base Pool Points to create Enemy Groups using the Enemies you check above."  Style="{StaticResource SubText}" TextWrapping="Wrap" Margin="0,5,0,0"/>

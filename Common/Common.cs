@@ -24,10 +24,10 @@ namespace JiME
 	/// </summary>
 	public enum MonsterType { Ruffian, GoblinScout, OrcHunter, OrcMarauder, Varg, HillTroll, Wight, //0 - 6
 							  Atari, Gargletarg, Chartooth, //7-9
-							  GiantSpider, PitGoblin, OrcTaskmaster, Shadowman, AnonymousThing, CaveTroll, Balerock, SpawnOfUglyGiant, //10-17
-							  SupplicantOfMoreGoth, Ursa, Ollie, //18-20
+							  GiantSpider, PitGoblin, OrcTaskmaster, Shadowman, AnonymousThing, CaveTroll, Balerock, SpawnOfUglygiant, //10-17
+							  SupplicantOfMoreGoth, Ursula, Oliver, //18-20
 							  FoulBeast, VargRider, SiegeEngine, WarElephant, Soldier, HighOrcWarrior, //21-26
-							  LordJavelin, LichKingOfAnger, Endris //27-29
+							  LordJavelin, LichKing, Endris //27-29
 	}
 	public enum TileType { Hex, Battle, Square }
 	public enum ThreatAttributes { }//armor, elite, etc

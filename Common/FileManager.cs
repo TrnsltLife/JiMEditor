@@ -299,7 +299,7 @@ namespace JiME
 
 		public static Campaign LoadCampaign( string campaignGUID )
 		{
-			if ( campaignGUID == "Saves" || campaignGUID == "Skins" )
+			if ( campaignGUID == "Saves" || campaignGUID == "Skins" || campaignGUID == "Languages")
 				return null;
 
 			string basePath = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ), "Your Journey", campaignGUID );
