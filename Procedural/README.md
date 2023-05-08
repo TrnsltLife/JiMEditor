@@ -1,5 +1,8 @@
 ﻿# Milestones and Tasks
 - Improvements 
+ - Ideas from actual gameplay
+   - Threat track sometimes starts darkness at some point --> threat should have different progressions that are controlled by the template
+   - Boss level enemies may need to be killed multiple times
  - Implement more StoryArchetypes (that can use the same templates than the old ones, perhaps with some archetype specific details)
    - Some fragments can be duplicates --> there should be at least 2-3 options for each objective in the StoryTemplate
    - Also need to mark certain interactions somehow to be part of the "main goal" of the scenario and have different texts, upate Threat-style as well

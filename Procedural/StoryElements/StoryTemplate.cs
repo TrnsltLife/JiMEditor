@@ -267,10 +267,10 @@ namespace JiME.Procedural.StoryElements
 
         static StoryTemplate()
         {
+            // Read the basic templates
             var assembly = Assembly.GetExecutingAssembly();
             string resourceName = assembly.GetManifestResourceNames()
                 .Single(str => str.Contains(".story-templates.json"));
-
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
             {
                 using (StreamReader reader = new StreamReader(stream))
@@ -280,11 +280,32 @@ namespace JiME.Procedural.StoryElements
                     s_templates = list.SelectToken("templates")
                         .ToObject<List<StoryTemplate>>()
                         .ToDictionary(x => x.Name, x => x);
-                    Console.WriteLine("Story Templates Loaded: " + s_templates.Count);
 
                     s_tokens = list.SelectToken("tokens").ToObject<Dictionary<string, Dictionary<string, List<string>>>>();
                 }
             }
+
+            // Read additional templates
+            var additionalTemplates = assembly.GetManifestResourceNames().Where(s => s.Contains(".Assets.StoryTemplates.")).ToList();
+            var deserilizer = new JsonSerializer();
+            foreach (var additionalTemplate in additionalTemplates)
+            {
+                using (Stream stream = assembly.GetManifestResourceStream(additionalTemplate))
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        var template = (StoryTemplate)deserilizer.Deserialize(reader, typeof(StoryTemplate));
+                        if (s_templates.ContainsKey(template.Name))
+                        {
+                            throw new ArgumentException("Duplicate StoryTemplate name found: " + template.Name);
+                        }
+                        s_templates.Add(template.Name, template);
+                    }
+                }
+            }
+
+            // Total templates
+            Console.WriteLine("Story Templates Loaded: " + s_templates.Count);
         }
         #endregion
         #region Helpers
