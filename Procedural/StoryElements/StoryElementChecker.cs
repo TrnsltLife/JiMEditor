@@ -14,7 +14,7 @@ namespace JiME.Procedural.StoryElements
         /// <summary>
         /// Logs in ERROR messages in case of FATAL problems. Those should be interpreted as "Cannot continue generation"
         /// </summary>
-        public static void PerformCheck(ProceduralGeneratorContext ctx, bool verbose)
+        public static void PerformCheck(LogContext ctx, bool verbose)
         {
             // Prepare helper that only logs if verbose is requested
             Action<string> logInfoVerbose = s => { if (verbose) { ctx.LogInfo(s); } };
@@ -37,7 +37,7 @@ namespace JiME.Procedural.StoryElements
             }
         }
 
-        private static void CheckCollection<T>(Action<string> logInfoVerbose, ProceduralGeneratorContext ctx, IEnumerable<T> allNeeded, IEnumerable<T> allKnown, string type)
+        private static void CheckCollection<T>(Action<string> logInfoVerbose, LogContext ctx, IEnumerable<T> allNeeded, IEnumerable<T> allKnown, string type)
         {
             logInfoVerbose("Checking known " + type + "s...");
             var allFound = true;
@@ -74,7 +74,7 @@ namespace JiME.Procedural.StoryElements
             }
         }
 
-        private static void CheckTemplate(Action<string> logInfoVerbose, ProceduralGeneratorContext ctx, string templateName)
+        private static void CheckTemplate(Action<string> logInfoVerbose, LogContext ctx, string templateName)
         {
             ctx.LogInfo("Checking StoryTemplate: " + templateName);
             var template = StoryTemplate.GetTemplate(templateName);
@@ -144,7 +144,7 @@ namespace JiME.Procedural.StoryElements
             // TODO: All the other Story Template properties, text replace tokens, antagonist types etc.
         }
 
-        private static void CheckListContainsAtLeastOne<T>(Action<string> logInfoVerbose, ProceduralGeneratorContext ctx, StoryArchetype.Type? archetype, IEnumerable<T> collection, string type)
+        private static void CheckListContainsAtLeastOne<T>(Action<string> logInfoVerbose, LogContext ctx, StoryArchetype.Type? archetype, IEnumerable<T> collection, string type)
         {
             if (collection?.Count() > 0)
             {
@@ -156,7 +156,7 @@ namespace JiME.Procedural.StoryElements
             }
         }
 
-        private static void CheckDictContainsAtLeastOne<T, V>(Action<string> logInfoVerbose, ProceduralGeneratorContext ctx, StoryArchetype.Type? archetype, Dictionary<T, List<V>> dictionary, T key, string type)
+        private static void CheckDictContainsAtLeastOne<T, V>(Action<string> logInfoVerbose, LogContext ctx, StoryArchetype.Type? archetype, Dictionary<T, List<V>> dictionary, T key, string type)
         {
             if (dictionary.ContainsKey(key) && dictionary[key].Count() > 0)
             {

@@ -60,7 +60,7 @@
 				"AcquireTreasure": 	     	[ { "Reminder":  "Find the stolen statue", 
 												"IntroText": "The stolen status has been hidden by {names:ANTAGONIST}. Find it before it is too late." } ],	
 				"ReachFinalDestination":   	[ { "Reminder":  "Reach the strongbox", 
-												"IntroText": "The statue has been placed in a strongbox within the orc encampment. Get to it and take back the statue." } ],														
+												"IntroText": "The statue has been placed in a strongbox within the orc encampment. Get to it and take back the statue." } ]							
 			},			
 			"Resolutions": {
 				"KillAntagonist": ["You cleave {names:ANTAGONIST}'s head off and the others scutter away. You find the Statue of Yavanna in {names:ANTAGONIST}'s corpse and return it back to the {adjectives:BYSTANDER} village."],
@@ -271,6 +271,6 @@
 		"AntagonistTokenText": "Huge orc with nasty scars is sitting  by the fire. Other smaller orcs hang around nearby.",
 		"AntagonistActionText": "The huge orc shouts: 'Me {names:ANTAGONIST}! {names:ANTAGONIST} SMASH!' and charges towards you.",
 		"NormalTokenText": "You hear rustling nearby -- the enemies are near!",
-		"NormalActionText": "Small band of orcs and goblins ambush you!",
+		"NormalActionText": "Small band of orcs and goblins ambush you!"
 	}]
 }

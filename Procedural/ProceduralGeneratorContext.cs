@@ -5,14 +5,11 @@ using JiME.Procedural.StoryElements;
 
 namespace JiME.Procedural
 {
-    public class ProceduralGeneratorContext
+    public class ProceduralGeneratorContext : LogContext
     {
         public ProceduralGeneratorParameters Parameters { get; private set; }
         public Scenario Scenario { get; private set; }
         public Random Random { get; private set; }
-
-        public List<LogItem> GeneratorLogs { get; private set; } = new List<LogItem>();
-        public bool HasErrors { get; private set; }
 
         private int _nextTriggerId = 1;
 
@@ -107,50 +104,9 @@ namespace JiME.Procedural
                 Scenario.wallTypes[i] = 0;//0=none, 1=wall, 2=river
         }
         
-        public void LogInfo(string msg, params object[] args)
-        {
-            GeneratorLogs.Add(new LogItem()
-            {
-                Type = LogType.Info,
-                Message = string.Format(msg, args)
-            });
-        }
-
-        public void LogWarning(string msg, params object[] args)
-        {
-            GeneratorLogs.Add(new LogItem()
-            {
-                Type = LogType.Warning,
-                Message = string.Format(msg, args)
-            });
-        }
-
-        public void LogError(string msg, params object[] args)
-        {
-            GeneratorLogs.Add(new LogItem()
-            {
-                Type = LogType.Error,
-                Message = string.Format(msg, args)
-            });
-            HasErrors = true;
-        }
-
         public void ClearScenario()
         {
             Scenario = null;
-        }
-
-        public enum LogType
-        {
-            Info,
-            Warning,
-            Error
-        }
-
-        public class LogItem
-        {
-            public LogType Type { get; set; }
-            public string Message { get; set; }
         }
     }
 }

@@ -123,6 +123,7 @@
     <Compile Include="Procedural\GenerationLogic\GeneratorUtils.cs" />
     <Compile Include="Procedural\GenerationLogic\LocationUtils.cs" />
     <Compile Include="Procedural\ProceduralGeneratorContext.cs" />
+    <Compile Include="Procedural\LogContext.cs" />
     <Compile Include="Procedural\ProceduralGenerator.cs" />
     <Compile Include="Procedural\ProceduralGeneratorParameters.cs" />
     <Compile Include="Procedural\GenerationLogic\StoryGenerator.cs" />
