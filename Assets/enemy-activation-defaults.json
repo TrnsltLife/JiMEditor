@@ -1,14 +1,13 @@
 {"activations":[
 	{
-		"name":"None",
-		"id":-1,
-		"collection":0,
-		"activations":
-		[
+		"name": "None",
+		"id": -1,
+		"collection": 0,
+		"activations": [
 		]
 	},
 	{
-		"name":"Ruffian",
+		"name": "Ruffian",
 		"id":0,
 		"collection":1,
 		"activations":
@@ -48,7 +47,7 @@
 		]
 	},
 	{
-		"name":"Orc Hunter",
+		"name": "Orc Hunter",
 		"id":2,
 		"collection":1,
 		"activations":
@@ -68,7 +67,7 @@
 		]
 	},
 	{
-		"name":"Orc Marauder",
+		"name": "Orc Marauder",
 		"id":3,
 		"collection":1,
 		"activations":
@@ -108,7 +107,7 @@
 		]
 	},
 	{
-		"name":"Hill Troll",
+		"name": "Hill Troll",
 		"id":5,
 		"collection":1,
 		"activations":
