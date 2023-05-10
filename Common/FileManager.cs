@@ -45,12 +45,12 @@ namespace JiME
 		public List<IInteraction> interactions { get; set; }
 		public List<Trigger> triggers { get; set; }
 		public List<Objective> objectives { get; set; }
+		[JsonConverter(typeof(ActivationsListConverter))]
 		public List<MonsterActivations> activations { get; set; }
 		public List<TextBookData> resolutions { get; set; }
 		public List<Threat> threats { get; set; }
 		public List<Chapter> chapters { get; set; }
 		[JsonConverter(typeof(CollectionListConverter))]
-		//[JsonIgnore]
 		public List<Collection> collections { get; set; } = new List<Collection>();
 		public List<int> globalTiles { get; set; }
 		public Dictionary<string, bool> scenarioEndStatus { get; set; } = new Dictionary<string, bool>();

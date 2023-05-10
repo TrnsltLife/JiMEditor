@@ -386,6 +386,8 @@ namespace JiME
 			if ( s.scenarioGUID.ToString() == "00000000-0000-0000-0000-000000000000" )
 				s.scenarioGUID = Guid.NewGuid();
 
+			s.AddDefaultActivations();
+
 			//sort the observer lists by name
 			//List<IInteraction> sorted = s.interactionObserver.OrderBy( key => key.dataName != "None" ).ThenBy( key => key.dataName ).ToList();
 			//for ( int i = 0; i < sorted.Count; i++ )
@@ -447,14 +449,7 @@ namespace JiME
 			objectiveObserver.Add( obj );
 
 			//Add the default enemy activations
-			if (activationsObserver == null || activationsObserver.Count == 0)
-			{
-				foreach (DefaultActivations defAct in Utils.defaultActivations)
-				{
-					MonsterActivations act = new MonsterActivations(defAct);
-					activationsObserver.Add(act);
-				}
-			}
+			AddDefaultActivations();
 
 			//starting chapter - always at least one in the scenario
 			Chapter chapter = new Chapter( "Start" ) { isEmpty = true };
@@ -463,6 +458,27 @@ namespace JiME
 			wallTypes = new int[22];
 			for ( int i = 0; i < 22; i++ )
 				wallTypes[i] = 0;//0=none, 1=wall, 2=river
+		}
+
+		public void AddDefaultActivations()
+        {
+			//Remove default activations if they exist
+			for(int i = activationsObserver.Count - 1; i >= 0; i-- )
+            {
+                if (activationsObserver[i].id < 1000)
+                {
+					activationsObserver.RemoveAt(i);
+                }
+            }
+
+			//Add the default enemy activations
+			int j = 0;
+			foreach (DefaultActivations defAct in Utils.defaultActivations)
+			{
+				MonsterActivations act = new MonsterActivations(defAct);
+				activationsObserver.Insert(j, act);
+				j++;
+			}
 		}
 
 		public void AddDefaultTerrainInteractions()

@@ -24,5 +24,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Changed a lot of names in text and variable names to move away from names that are probably trademarked or could be.
-- Removed enemy attack descriptions that aren't directly related to the enemy figurines. Relocated some enemy attack descriptions.
 - Disabled the ability to modify the default enemy attack descriptions. Authors are required to make a copy in order to modify it.
+- When a scenario is saved out, it only includes Monster Activations that are custom, not the default Activations
+
+### Removed
+- Removed enemy attack descriptions that aren't directly related to the enemy figurines. Relocated some enemy attack descriptions.
