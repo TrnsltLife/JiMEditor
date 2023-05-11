@@ -19,8 +19,13 @@ All notable changes to this project will be documented in this file.
   - After generation, the dialog can "ACCEPT" the Scenario which either takes you to the main Scenario editor OR adds the Scenario to the Campaign
   - NOTE: This feature is EXPERIMENTAL and the generated Scenario -- while technically playable -- is very much unbalanced and unfinished at the moment.
     It can still be used for testing purposes or as a starting point for generating a Scenatio manually.
-- Added "Skins" to group of folders to exclude from treating as a Campaign folder.
+- Added "Skins" and "Languages" to the group of folders to exclude from treating as a Campaign folder.
 - Added new text field to TokenTypeSelector, "Token Interaction Text", that allows custom text to display on token interaction button instead of Search, Threat, etc.
 
 ### Changed
 - Changed a lot of names in text and variable names to move away from names that are probably trademarked or could be.
+- Disabled the ability to modify the default enemy attack descriptions. Authors are required to make a copy in order to modify it.
+- When a scenario is saved out, it only includes Monster Activations that are custom, not the default Activations
+
+### Removed
+- Removed enemy attack descriptions that aren't directly related to the enemy figurines. Relocated some enemy attack descriptions.

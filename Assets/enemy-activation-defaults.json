@@ -1,14 +1,13 @@
 {"activations":[
 	{
-		"name":"None",
-		"id":-1,
-		"collection":0,
-		"activations":
-		[
+		"name": "None",
+		"id": -1,
+		"collection": 0,
+		"activations": [
 		]
 	},
 	{
-		"name":"Ruffian",
+		"name": "Ruffian",
 		"id":0,
 		"collection":1,
 		"activations":
@@ -48,7 +47,7 @@
 		]
 	},
 	{
-		"name":"Orc Hunter",
+		"name": "Orc Hunter",
 		"id":2,
 		"collection":1,
 		"activations":
@@ -68,7 +67,7 @@
 		]
 	},
 	{
-		"name":"Orc Marauder",
+		"name": "Orc Marauder",
 		"id":3,
 		"collection":1,
 		"activations":
@@ -108,7 +107,7 @@
 		]
 	},
 	{
-		"name":"Hill Troll",
+		"name": "Hill Troll",
 		"id":5,
 		"collection":1,
 		"activations":
@@ -290,7 +289,7 @@
 		]
 	},
 	{
-		"name":"Spawn of Ugly-Giant",
+		"name":"Spawn of Uglygiant",
 		"id":17,
 		"collection":3,
 		"activations":
@@ -300,36 +299,44 @@
 			{"id":3, "negate":"Spirit", "valid":[true, false, false], "damage":[0, 0, 0], "fear":[3, 0, 0], "text":"The spider stares at you with its myriad of glittering eyes, and you feel transfixed.", "effect":"After this attack, suffer 1 additional facedown <font=\"Icon\">F</font>." },
 			{"id":4, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"It seems that the spider is used to relying on trapped prey, and if you keep moving you may still survive.", "effect":"After this attack, discard 1 inspiration." },
 			{"id":5, "negate":"Agility", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[1, 0, 0], "text":"Stringy bits of web trail behind the beast, threatening to slow you down.", "effect":"" },
-			{"id":6, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[3, 0, 0], "text":"The enormous spawn of Ugly-Giant is ancient, and wily, and moves with unsettling grace.", "effect":"" },
+			{"id":6, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[3, 0, 0], "text":"The enormous spawn of Uglygiant is ancient, and wily, and moves with unsettling grace.", "effect":"" },
 			{"id":7, "negate":"Might", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[0, 0, 0], "text":"Two clawed legs seek to pin you down for the sting to strike true.", "effect":"If you suffer any <font=\"Icon\">D</font> from this attack, suffer 1 additional <font=\"Icon\">F</font>." }
 		]
 	},
-	
+		{
+		"name":"Supplicant of More-Goth",
+		"id":18,
+		"collection":3,
+		"activations":
+		[
+			{"id":1, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[2, 0, 0], "text":"The Supplicant of More-Goth delivers a litany of foul curses.", "effect":"" }
+		]
+	},
 	{
-		"name":"Ursa",
+		"name":"Ursula",
 		"id":19,
 		"collection":4,
 		"activations":
 		[
-			{"id":1, "negate":"Might", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[1, 0, 0], "text":"Ursa fights with a reckless hatred.", "effect":"After this attack, flip 2 <font=\"Icon\">D</font> faceup. Then move Ursa to the closest space without a hero." },
-			{"id":2, "negate":"Wit", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"Ursa, smirking, seems to waver in and out of existence, only corporeal at the moment of striking.", "effect":"" },
-			{"id":3, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[3, 0, 0], "text":"You feel the chill of the grave all around you, leeching the hope out of your heart.", "effect":"After this attack, flip 2 <font=\"Icon\">F</font> faceup. Then move Ursa to the closest space without a hero." },
-			{"id":4, "negate":"Spirit", "valid":[true, false, false], "damage":[0, 0, 0], "fear":[3, 0, 0], "text":"The ghostly light around your foe is painful to behold.", "effect":"If you suffer any <font=\"Icon\">F</font> from this attack, shuffle 1 weakness into your deck. Then move Ursa to the closest space without a hero." },
-			{"id":5, "negate":"Agility", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"Ursa's hammer strikes like a bolt in a thunderstorm.", "effect":"" },
+			{"id":1, "negate":"Might", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[1, 0, 0], "text":"Ursula fights with a reckless hatred.", "effect":"After this attack, flip 2 <font=\"Icon\">D</font> faceup. Then move Ursula to the closest space without a hero." },
+			{"id":2, "negate":"Wit", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"Ursula, smirking, seems to waver in and out of existence, only corporeal at the moment of striking.", "effect":"" },
+			{"id":3, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[3, 0, 0], "text":"You feel the chill of the grave all around you, leeching the hope out of your heart.", "effect":"After this attack, flip 2 <font=\"Icon\">F</font> faceup. Then move Ursula to the closest space without a hero." },
+			{"id":4, "negate":"Spirit", "valid":[true, false, false], "damage":[0, 0, 0], "fear":[3, 0, 0], "text":"The ghostly light around your foe is painful to behold.", "effect":"If you suffer any <font=\"Icon\">F</font> from this attack, shuffle 1 weakness into your deck. Then move Ursula to the closest space without a hero." },
+			{"id":5, "negate":"Agility", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"Ursula's hammer strikes like a bolt in a thunderstorm.", "effect":"" },
 			{"id":6, "negate":"Spirit", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"\"You call yourselves warriors? Show me!\"", "effect":"If you suffer any <font=\"Icon\">F</font> from this attack, discard 1 inspiration." },
-			{"id":7, "negate":"Might", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[0, 0, 0], "text":"Ursa hefts her hammer with both hands, creating a far more powerful blow.", "effect":"After this attack, discard all boons. Then move Ursa to the closest space without a hero." }
+			{"id":7, "negate":"Might", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[0, 0, 0], "text":"Ursula hefts her hammer with both hands, creating a far more powerful blow.", "effect":"After this attack, discard all boons. Then move Ursula to the closest space without a hero." }
 		]
 	},
 	{
-		"name":"Ollie",
+		"name":"Oliver",
 		"id":20,
 		"collection":4,
 		"activations":
 		[
-			{"id":1, "negate":"Spirit", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"Ollie's grin is savage and bloody, teeth like yellow stones cracked through with mud.", "effect":"If you suffer <font=\"Icon\">F</font> from this attack, discard all of your inspiration." },
-			{"id":2, "negate":"Might", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[0, 0, 0], "text":"\"How dare puny creatures like you imprison me?\" Ollie's fury increases.", "effect":"If you are a Dwarf or Human, reveal 1 fewer card." },
-			{"id":3, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[0, 0, 0], "text":"With the strength of stone and the fury of a wild beast, Ollie attacks again and again.", "effect":"If you suffer <font=\"Icon\">D</font> from this attack, suffer 2 additional facedown <font=\"Icon\">D</font>." },
-			{"id":4, "negate":"Might", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[0, 0, 0], "text":"Ollie's blows shake the ground with their impact.", "effect":"" },
+			{"id":1, "negate":"Spirit", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"Oliver's grin is savage and bloody, teeth like yellow stones cracked through with mud.", "effect":"If you suffer <font=\"Icon\">F</font> from this attack, discard all of your inspiration." },
+			{"id":2, "negate":"Might", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[0, 0, 0], "text":"\"How dare puny creatures like you imprison me?\" Oliver's fury increases.", "effect":"If you are a Dwarf or Human, reveal 1 fewer card." },
+			{"id":3, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[0, 0, 0], "text":"With the strength of stone and the fury of a wild beast, Oliver attacks again and again.", "effect":"If you suffer <font=\"Icon\">D</font> from this attack, suffer 2 additional facedown <font=\"Icon\">D</font>." },
+			{"id":4, "negate":"Might", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[0, 0, 0], "text":"Oliver's blows shake the ground with their impact.", "effect":"" },
 			{"id":5, "negate":"Wisdom", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"A quick tactical choice could avoid the troll's furious assault.", "effect":"" },
 			{"id":6, "negate":"Wit", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"If you think quickly, there might be a way to evade the troll for a little while longer.", "effect":"" }
 		]
@@ -381,18 +388,18 @@
 		]
 	},
 	{
-		"name":"War Oliphaunt",
+		"name":"War Elephant",
 		"id":24,
 		"collection":5,
 		"activations":
 		[
-			{"id":1, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"Thundering and crashing, the oliphaunt tramples everything underfoot.", "effect":"This attack affects each hero in the enemy's space.  After this enemy's activation, move all other enemies in its space to the adjacent space with the most heroes." },
-			{"id":2, "negate":"Agility", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[1, 0, 0], "text":"The swinging tusks of the oliphaunt force you to dodge again and again.", "effect":"This attack affects each hero in this enemy's space.  After this enemy's activation, move all other enemies in its space to the adjacent space with the most heroes." },
-			{"id":3, "negate":"Agility", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"Spears hurled by warriors mounted on the back of the oliphaunt fly through the air around you!", "effect":"If you suffer no <font=\"Icon\">D</font> or <font=\"Icon\">F</font> from this attack, become emboldened.  After this enemy's activation, move all other enemies in its space to the adjacent space with the most heroes." },
-			{"id":4, "negate":"Wit", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"As massive as the oliphaunt is, its feet move with shocking speed and crushing weight.", "effect":"If you suffer any <font=\"Icon\">D</font> from this attack, flip 1 <font=\"Icon\">F</font> faceup.  After this enemy's activation, move all other enemies in its space to the adjacent space with the most heroes." },
-			{"id":5, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"The oliphaunt rears back and slams its whole weight down, causing the earth to tremble like the skin of a beaten drum.", "effect":"After this attack, discard 1 prepared card.  After this enemy's activation, move all other enemies in its space to the adjacent space with the most heroes." },
-			{"id":6, "negate":"Wit", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"Short charges bring the oliphaunt's tusks around to spear its target while keeping all other threats at a distance.", "effect":"This attack affects each hero in this enemy's space.  After this enemy's activation, move all other enemies in its space to the adjacent space with the most heroes." },
-			{"id":7, "negate":"Might", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[2, 0, 0], "text":"Quick as a striking snake, the oliphaunt grabs you with its trunk and hurls you to the ground.", "effect":"If you suffer any <font=\"Icon\">D</font> from this attack, place your hero in the adjacent space with the fewest other heroes. After this enemy's activation, move all other enemies in its space to the adjacent space with the most heroes." }
+			{"id":1, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"Thundering and crashing, the elephant tramples everything underfoot.", "effect":"This attack affects each hero in the enemy's space.  After this enemy's activation, move all other enemies in its space to the adjacent space with the most heroes." },
+			{"id":2, "negate":"Agility", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[1, 0, 0], "text":"The swinging tusks of the elephant force you to dodge again and again.", "effect":"This attack affects each hero in this enemy's space.  After this enemy's activation, move all other enemies in its space to the adjacent space with the most heroes." },
+			{"id":3, "negate":"Agility", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"Spears hurled by warriors mounted on the back of the elephant fly through the air around you!", "effect":"If you suffer no <font=\"Icon\">D</font> or <font=\"Icon\">F</font> from this attack, become emboldened.  After this enemy's activation, move all other enemies in its space to the adjacent space with the most heroes." },
+			{"id":4, "negate":"Wit", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"As massive as the elephant is, its feet move with shocking speed and crushing weight.", "effect":"If you suffer any <font=\"Icon\">D</font> from this attack, flip 1 <font=\"Icon\">F</font> faceup.  After this enemy's activation, move all other enemies in its space to the adjacent space with the most heroes." },
+			{"id":5, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"The elephant rears back and slams its whole weight down, causing the earth to tremble like the skin of a beaten drum.", "effect":"After this attack, discard 1 prepared card.  After this enemy's activation, move all other enemies in its space to the adjacent space with the most heroes." },
+			{"id":6, "negate":"Wit", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"Short charges bring the elephant's tusks around to spear its target while keeping all other threats at a distance.", "effect":"This attack affects each hero in this enemy's space.  After this enemy's activation, move all other enemies in its space to the adjacent space with the most heroes." },
+			{"id":7, "negate":"Might", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[2, 0, 0], "text":"Quick as a striking snake, the elephant grabs you with its trunk and hurls you to the ground.", "effect":"If you suffer any <font=\"Icon\">D</font> from this attack, place your hero in the adjacent space with the fewest other heroes. After this enemy's activation, move all other enemies in its space to the adjacent space with the most heroes." }
 		]
 	},
 	{
@@ -411,18 +418,18 @@
 		]
 	},
 	{
-		"name":"Uruk Warrior",
+		"name":"High-Orc Warrior",
 		"id":26,
 		"collection":5,
 		"activations":
 		[
-			{"id":1, "negate":"Might", "valid":[true, true, true], "damage":[1, 2, 2], "fear":[1, 1, 1], "text":"Fiercer than their Orc cousins, the Uruk have no fear of pain, fighting with reckless fervor.", "effect":"If you reveal at least 1 <font=\"Icon\">f</font> during this test, suffer 2 facedown <font=\"Icon\">D</font>." },
-			{"id":2, "negate":"Wisdom", "valid":[true, true, true], "damage":[2, 3, 3], "fear":[0, 0, 0], "text":"The Uruk's attacks are unpredictable and wild, but still possible to deflect for a skilled warrior.", "effect":"" },
-			{"id":3, "negate":"Might", "valid":[true, true, true], "damage":[3, 4, 5], "fear":[0, 0, 0], "text":"Attacking with doubled fists, the Uruk hammers your defenses with overwhelming might.", "effect":"If you have a <font=\"Icon\">T</font> item equipped, prevent 2 <font=\"Icon\">D</font>." },
+			{"id":1, "negate":"Might", "valid":[true, true, true], "damage":[1, 2, 2], "fear":[1, 1, 1], "text":"Fiercer than their Orc cousins, the High-Orc have no fear of pain, fighting with reckless fervor.", "effect":"If you reveal at least 1 <font=\"Icon\">f</font> during this test, suffer 2 facedown <font=\"Icon\">D</font>." },
+			{"id":2, "negate":"Wisdom", "valid":[true, true, true], "damage":[2, 3, 3], "fear":[0, 0, 0], "text":"The High-Orc's attacks are unpredictable and wild, but still possible to deflect for a skilled warrior.", "effect":"" },
+			{"id":3, "negate":"Might", "valid":[true, true, true], "damage":[3, 4, 5], "fear":[0, 0, 0], "text":"Attacking with doubled fists, the High-Orc hammers your defenses with overwhelming might.", "effect":"If you have a <font=\"Icon\">T</font> item equipped, prevent 2 <font=\"Icon\">D</font>." },
 			{"id":4, "negate":"Wisdom", "valid":[true, true, true], "damage":[1, 2, 2], "fear":[2, 2, 3], "text":"Your foe snarls a challenge, ready for whatever tricks you plan to use to evade their grasp.", "effect":"" },
-			{"id":5, "negate":"Might", "valid":[true, true, true], "damage":[1, 2, 2], "fear":[2, 1, 2], "text":"In close combat, the bulk of the Uruk is sometimes all you can see, leaving you isolated and desperate.", "effect":"If you reveal at least 1 <font=\"Icon\">f</font> during this test, become terrified." },
-			{"id":6, "negate":"Wisdom", "valid":[true, true, true], "damage":[1, 2, 2], "fear":[2, 1, 2], "text":"The longer reach of the Uruk leaves little room to maneuver in combat.", "effect":"" },
-			{"id":7, "negate":"Spirit", "valid":[true, true, true], "damage":[3, 3, 3], "fear":[0, 0, 1], "text":"With a massive roar, the Uruk charges!", "effect":"After this attack, discard 1 inspiration." }
+			{"id":5, "negate":"Might", "valid":[true, true, true], "damage":[1, 2, 2], "fear":[2, 1, 2], "text":"In close combat, the bulk of the High-Orc is sometimes all you can see, leaving you isolated and desperate.", "effect":"If you reveal at least 1 <font=\"Icon\">f</font> during this test, become terrified." },
+			{"id":6, "negate":"Wisdom", "valid":[true, true, true], "damage":[1, 2, 2], "fear":[2, 1, 2], "text":"The longer reach of the High-Orc leaves little room to maneuver in combat.", "effect":"" },
+			{"id":7, "negate":"Spirit", "valid":[true, true, true], "damage":[3, 3, 3], "fear":[0, 0, 1], "text":"With a massive roar, the High-Orc charges!", "effect":"After this attack, discard 1 inspiration." }
 		]
 	},
 	
@@ -436,12 +443,20 @@
 		]
 	},
 	{
-		"name":"Lich-king of Anger",
+		"name":"Lich-King",
 		"id":28,
 		"collection":6,
 		"activations":
 		[
-			{"id":1, "negate":"Random", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"Cold fear squeezes your heart as the Lich-king strikes at you with mighty blows!"}
+			{"id":1, "negate":"Might", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[0, 0, 0], "text":"The Lich-King swoops low overhead, lashing out with tooth and claw and mace.", "effect":"If you have a <font=\"Icon\">T</font> item equipped, prevent 2 <font=\"Icon\">D</font>." },
+			{"id":2, "negate":"Wisdom", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[3, 0, 0], "text":"Another horrible scream sets your teeth on edge, and you briefly consider retreat.", "effect":"If you suffer any <font=\"Icon\">F</font> from this attack, become terrified." },
+			{"id":3, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"The relentless assault leaves you breathless and unprepared for the next blow.", "effect":"After this attack, each hero that is not in an enemy's space either discards 1 inspiration or flips 1 <font=\"Icon\">F</font> faceup." },
+			{"id":4, "negate":"Wisdom", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"Another horrible scream sets your teeth on edge, and you briefly consider retreat.", "effect":"After this attack, each hero that is not in an enemy's space either discards 1 inspiration or flips 1 <font=\"Icon\">F</font> faceup." },
+			{"id":5, "negate":"Wisdom", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"Another horrible scream sets your teeth on edge, and you briefly consider retreat.", "effect":"If you have a <font=\"Icon\">T</font> item equipped, prevent 2 <font=\"Icon\">D</font>." },
+			{"id":6, "negate":"Might", "valid":[true, false, false], "damage":[0, 0, 0], "fear":[4, 0, 0], "text":"The Lich-King swoops low overhead, lashing out with tooth and claw and mace.", "effect":"After this attack, each hero that is not in an enemy's space either discards 1 inspiration or flips 1 <font=\"Icon\">F</font> faceup." },
+			{"id":7, "negate":"Wisdom", "valid":[true, false, false], "damage":[0, 0, 0], "fear":[4, 0, 0], "text":"Another horrible scream sets your teeth on edge, and you briefly consider retreat.", "effect":"If you suffer any <font=\"Icon\">F</font> from this attack, become terrified." },
+			{"id":8, "negate":"Agility", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[0, 0, 0], "text":"The relentless assault leaves you breathless and unprepared for the next blow.", "effect":"After this attack, each hero that is not in an enemy's space either discards 1 inspiration or flips 1 <font=\"Icon\">F</font> faceup." },
+			{"id":9, "negate":"Might", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[3, 0, 0], "text":"The Lich-King swoops low overhead, lashing out with tooth and claw and mace.", "effect":"If you suffer any <font=\"Icon\">F</font> from this attack, become terrified." }
 		]
 	},
 	{
@@ -451,237 +466,6 @@
 		"activations":
 		[
 			{"id":1, "negate":"Random", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[0, 0, 0], "text":"Endris attacks you!"}
-		]
-	},
-	
-
-	{
-		"name":"Uluk",
-		"id":1000,
-		"collection":1,
-		"activations":
-		[
-			{"id":1, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[4, 0, 0], "text":"Ulûk's beady eyes fall on you, focusing malevolence and madness on your small frame.", "effect":"After this attack, Ulûk moves 1 away from the closest hero." },
-			{"id":2, "negate":"Spirit", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[0, 0, 0], "text":"Ulûk's beady eyes fall on you, focusing malevolence and madness on your small frame.", "effect":"After this attack, Ulûk moves 1 away from the closest hero." },
-			{"id":3, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[1, 0, 0], "text":"In a frenzy, Ulûk slashes at you with jagged, filthy claws. ", "effect":"After this attack, Ulûk moves 1 away from the closest hero." },
-			{"id":4, "negate":"Might", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[1, 0, 0], "text":"Massive muscles roll under Ulûk's scarred hide as blow after blow crash to earth around you. ", "effect":"After this attack, Ulûk moves 1 away from the closest hero." }
-		]
-	},
-	{
-		"name":"Uluk Finale",
-		"id":1001,
-		"collection":1,
-		"activations":
-		[
-			{"id":1, "negate":"Might", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"Ulûk hammers at your defenses with fist and chain.", "effect":"Before a hero uses guard, reduce its value by 1." },
-			{"id":2, "negate":"Agility", "valid":[true, false, false], "damage":[5, 0, 0], "fear":[0, 0, 0], "text":"In a frenzy, Ulûk slashes at you with jagged, filthy claws.", "effect":"After this attack, if you suffered <font=\"Icon\">D</font>, gain 1 weakness and prepare it." },
-			{"id":3, "negate":"Spirit", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[3, 0, 0], "text":"Ulûk's beady eyes fall on you, focusing malevolence and madness on your small frame.", "effect":"After the attack, if you suffer no <font=\"Icon\">F</font>, scout 1." },
-			{"id":4, "negate":"Might", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[1, 0, 0], "text":"Massive muscles roll under Ulûk's scarred hide as blow after blow crash to earth around you.", "effect":"Before this attack, each hero in this space flips 1 <font=\"Icon\">D</font> faceup." }
-		]
-	},
-
-	{
-		"name":"Chartooth Decoy",
-		"id":1002,
-		"collection":3,
-		"activations":
-		[
-			{"id":1, "negate":"Might", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"The Varg tears at you, jaws snapping and foaming.", "effect":"If you suffer <font=\"Icon\">D</font> or <font=\"Icon\">F</font> from this attack, suffer 1 additional facedown <font=\"Icon\">F</font>." },
-			{"id":2, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[1, 0, 0], "text":"The Varg latches onto your leg, thrashing wildly in an attempt to bring you to the ground!", "effect":"If you suffer <font=\"Icon\">D</font> from this attack, discard 1 prepared card. If you suffer <font=\"Icon\">F</font> from this attack, discard 1 inspiration." },
-			{"id":3, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[3, 0, 0], "text":"The Varg snarls at you before leaping, saliva and blood mingling and oozing over the tips of her fangs.", "effect":"Before this attack, discard 1 boon." }
-		]
-	},
-	{
-		"name":"Weak Varg",
-		"id":1003,
-		"collection":3,
-		"activations":
-		[
-			{"id":5, "negate":"Wit", "valid":[true, true, true], "damage":[1, 2, 3], "fear":[1, 1, 2], "text":"A giant beast charges you, slavering for your blood.", "effect":"After this attack, discard 1 inspiration." },
-			{"id":7, "negate":"Might", "valid":[true, true, true], "damage":[1, 2, 3], "fear":[1, 1, 2], "text":"A beast lunges at you, its claws slicing through the air.", "effect":"" },
-			{"id":8, "negate":"Wit", "valid":[false, true, true], "damage":[0, 1, 2], "fear":[0, 2, 3], "text":"The Vargs circle you and attempts to attack you from behind.", "effect":"After this attack, discard 1 prepared card." },
-			{"id":10, "negate":"Agility", "valid":[true, true, true], "damage":[1, 2, 3], "fear":[1, 1, 2], "text":"A monstrous wolf lunges at you with a flurry of teeth and claws.", "effect":"" },
-			{"id":11, "negate":"Spirit", "valid":[true, true, true], "damage":[1, 2, 2], "fear":[1, 2, 3], "text":"A stench rises from the Varg's pelt, and as it closes in on you, you can feel its growl deep in your bones.", "effect":"" }
-		]
-	},
-	{
-		"name":"Mushroom Thief",
-		"id":1004,
-		"collection":3,
-		"activations":
-		[
-			{"id":1, "negate":"Agility", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[0, 0, 0], "text":"The thief wields his sack of mushrooms like an ungainly club!", "effect":"All <font=\"Icon\">D</font> suffered from this attack is facedown." },
-			{"id":2, "negate":"Agility", "valid":[true, false, false], "damage":[0, 0, 0], "fear":[2, 0, 0], "text":"The thief pelts you with mushrooms!", "effect":"After this attack, the Mushroom Thief moves into an adjacent space with no heroes (if possible)." }
-		]
-	},
-	{
-		"name":"Doorsmasher the Troll",
-		"id":1005,
-		"collection":3,
-		"activations":
-		[
-			{"id":1, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"The troll hefts a piece of rubble and hurls it at you. ", "effect":"If you suffer <font=\"Icon\">D</font> or <font=\"Icon\">F</font> from this attack, discard 1 inspiration." }
-		]
-	},
-	{
-		"name":"Grot Elf-Breaker",
-		"id":1006,
-		"collection":3,
-		"activations":
-		[
-			{"id":1, "negate":"Might", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[0, 0, 0], "text":"The Orc makes a devastatingly quick two-handed strike with his huge hammer.", "effect":"After this attack, Grot Elf-Breaker moves to the adjacent space with the most enemies." },
-			{"id":2, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[2, 0, 0], "text":"The Orc smashes his hammer against the ground before lunging forward. ", "effect":"Before this attack, flip 1 <font=\"Icon\">F</font> faceup." }
-		]
-	},
-	{
-		"name":"Ogruk Dwarf-Cutter",
-		"id":1007,
-		"collection":3,
-		"activations":
-		[
-			{"id":1, "negate":"Agility", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[1, 0, 0], "text":"The Orc cuts dizzying arcs through the air with his axes.", "effect":"Before this attack, flip 1 <font=\"Icon\">D</font> faceup." },
-			{"id":2, "negate":"Wit", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[0, 0, 0], "text":"The Orc attacks in a flurry, deftly bypassing shields and armour.", "effect":"Heroes cannot use guard to negate <font=\"Icon\">D</font> from this attack." }
-		]
-	},
-
-	{
-		"name":"Nalka",
-		"id":1008,
-		"collection":3,
-		"activations":
-		[
-			{"id":1, "negate":"Might", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[3, 0, 0], "text":"The hungry beast attacks with ferocity.", "effect":"After this attack, each hero in Nalka's space flips 1 <font=\"Icon\">F</font> faceup." },
-			{"id":2, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"The only way to survive is to avoid the stabbing legs, fangs, and sting of the beast.", "effect":"After this attack, each hero who suffered <font=\"Icon\">D</font> flips 1 <font=\"Icon\">F</font> faceup." },
-			{"id":3, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[3, 0, 0], "text":"Nalka stares at you with unnerving intelligence in his glittering eyes, and you feel transfixed.", "effect":"After this attack, each hero who suffered <font=\"Icon\">F</font> flips 1 <font=\"Icon\">D</font> faceup." },
-			{"id":4, "negate":"Agility", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"Nalka forces you to dodge his poisonous sting again and again.", "effect":"Before this attack, each hero discards the top 2 cards of their deck." },
-			{"id":5, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"Stringy bits of web trail behind the beast, threatening to slow you down.", "effect":"Before this attack, each hero who has 1 or more <font=\"Icon\">F</font> discards all their boons." },
-			{"id":6, "negate":"Spirit", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[3, 0, 0], "text":"Nalka is ancient, and wily, and moves with unsettling grace.", "effect":"After this attack, each hero discards 1 inspiration." },
-			{"id":7, "negate":"Might", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"Two clawed legs seek to pin you down for the sting to strike true.", "effect":"After this attack, each hero who suffered no <font=\"Icon\">D</font> or <font=\"Icon\">F</font> gains 1 inspiration." }
-		]
-	},
-	{
-		"name":"Nalka 2",
-		"id":1009,
-		"collection":3,
-		"activations":
-		[
-			{"id":1, "negate":"Might", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[3, 0, 0], "text":"The hungry beast attacks with ferocity.", "effect":"After this attack, each hero in Nalka's space flips 1 <font=\"Icon\">F</font> faceup." },
-			{"id":2, "negate":"Wit", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"Nalka is relentless and cruel, using his instincts to hem you in.", "effect":"After this attack, each hero who suffered <font=\"Icon\">D</font> flips 1 <font=\"Icon\">F</font> faceup." },
-			{"id":3, "negate":"Wit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[3, 0, 0], "text":"Your foe has used centuries of hunger to hone his rage.", "effect":"After this attack, each hero who suffered <font=\"Icon\">F</font> flips 1 <font=\"Icon\">D</font> faceup." },
-			{"id":4, "negate":"Agility", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"Nalka rears and slams his many claws to the earth, shaking even the thick-trunked trees around the glade!", "effect":"Before this attack, each hero discards the top 2 cards of their deck." },
-			{"id":5, "negate":"Wisdom", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"The beast's sting drips with vile venom, which hisses as it hits the earth. ", "effect":"Before this attack, each hero who has 1 or more <font=\"Icon\">F</font> discards all their boons." },
-			{"id":6, "negate":"Spirit", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[3, 0, 0], "text":"The ancient spider seems to whisper your deepest fears in your ear, even when he is far from the reach of your blade.", "effect":"After this attack, each hero discards 1 inspiration." },
-			{"id":7, "negate":"Spirit", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"Such a beast from the early days of creation strikes fear and awe into your heart.", "effect":"After this attack, each hero who suffered no <font=\"Icon\">D</font> or <font=\"Icon\">F</font> gains 1 inspiration." }
-		]
-	},
-	{
-		"name":"Master of the Pit (Balerock)",
-		"id":1010,
-		"collection":3,
-		"activations":
-		[
-			{"id":1, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[2, 0, 0], "text":"The Supplicant of More-Goth delivers a litany of foul curses.", "effect":"After this attack, the Balerock moves 1 space toward the hero with the Crown of Shadows." }
-		]
-	},
-	{
-		"name":"Watch Commander Shade",
-		"id":1011,
-		"collection":3,
-		"activations":
-		[
-			{"id":1, "negate":"Agility", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"Between wild swings of its sword, the shade cackles nonsense in a broken voice.", "effect":"After this attack, each nearby hero must either spend 1 inspiration or move 1 space away from the Watch Commander Shade." },
-			{"id":2, "negate":"Wit", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[0, 0, 0], "text":"The bright glow around the shade is harsh on your eyes, making it difficult to see where the next attack will strike.", "effect":"After this attack, each nearby hero must either spend 1 inspiration or move 1 space away from the Watch Commander Shade." },
-			{"id":3, "negate":"Might", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[0, 0, 0], "text":"The shade attacks with furor and wild strength!", "effect":"" },
-			{"id":4, "negate":"Wisdom", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[0, 0, 0], "text":"The shade uses its sword like a club, heedless of whether the blade falls on armour or flesh.", "effect":"" },
-			{"id":5, "negate":"Spirit", "valid":[true, false, false], "damage":[0, 0, 0], "fear":[3, 0, 0], "text":"Inhuman noises burst from the shade, keening and cackling madly in turns.", "effect":"After this attack, each nearby hero must either spend 1 inspiration or move 1 space away from the Watch Commander Shade." },
-			{"id":6, "negate":"Might", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"The shade strikes furiously, its tireless, inhuman strength driving you back.", "effect":"After this attack, each nearby hero must either spend 1 inspiration or move 1 space away from the Watch Commander Shade." }
-		]
-	},
-	{
-		"name":"Golden Mask",
-		"id":1012,
-		"collection":3,
-		"activations":
-		[
-			{"id":1, "negate":"Agility", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[0, 0, 0], "text":"You stare with a steely resolve as your foe advances with practiced swings of a club.", "effect":"If you suffer <font=\"Icon\">D</font> from this attack, become emboldened." },
-			{"id":2, "negate":"Might", "valid":[true, false, false], "damage":[0, 0, 0], "fear":[2, 0, 0], "text":"An assailant jabs a nasty-looking sword at you.", "effect":"" },
-			{"id":3, "negate":"Might", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[2, 0, 0], "text":"A man unsheathes a huge sword and attacks!", "effect":"" },
-			{"id":4, "negate":"Spirit", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[1, 0, 0], "text":"Your foe gives you a sniff of disdain before unsheathing a gleaming longsword.", "effect":"" },
-			{"id":5, "negate":"Agility", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[1, 0, 0], "text":"Your foes swing bone-shattering truncheons high and low, trying to give you no means of escape.", "effect":"" },
-			{"id":6, "negate":"Might", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[1, 0, 0], "text":"Your foe's curved blades glint with the promise of your demise.", "effect":"" }
-		]
-	},
-
-	{
-		"name":"Worm Witch",
-		"id":1013,
-		"collection":3,
-		"activations":
-		[
-			{"id":1, "negate":"Spirit", "valid":[true, false, false], "damage":[0, 0, 0], "fear":[2, 0, 0], "text":"\"I am the darkness of the grave, the fate of your bones, and the mother of rot! To my dirt everything shall return, and be quick of it, I have many sharp-toothed mouths to feed here in our black soil.\"", "effect":"If you suffer <font=\"Icon\">F</font> from this attack, shuffle 1 weakness into your deck." },
-			{"id":2, "negate":"Spirit", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[1, 0, 0], "text":"\"I was buried, and the worms ate my flesh. But Ursa has awakened me, and shown me a path to the vengeance I so deserve. Now my worms shall eat your flesh!\"", "effect":"If you suffer <font=\"Icon\">F</font> from this attack, discard all boons." },
-			{"id":3, "negate":"Agility", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[0, 0, 0], "text":"The Worm Witch lunges for you, her bones cracking with the speed.", "effect":"If you suffer <font=\"Icon\">D</font> from this attack, discard 1 inspiration." },
-			{"id":4, "negate":"Wisdom", "valid":[true, false, false], "damage":[1, 0, 0], "fear":[2, 0, 0], "text":"The Worm Witch laughs, the hideous sound reverberating through the tunnels. You claw at your own flesh, desperate to be rid of the awful echoes.", "effect":"After this attack, place this enemy in the space with the closest hero." },
-			{"id":5, "negate":"Wit", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[0, 0, 0], "text":"The Worm Witch waves one claw, and the earth beneath your feet shifts in response. Sharp stalagmites rise from the floor, threatening to skewer you!", "effect":"" },
-			{"id":6, "negate":"Might", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[0, 0, 0], "text":"The earth itself responds to the Worm Witch's call, wrapping you in an embrace of stone and clay.", "effect":"" }
-		]
-	},
-	{
-		"name":"Worm Witch Steed",
-		"id":1014,
-		"collection":3,
-		"activations":
-		[
-			{"id":1, "negate":"Spirit", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[1, 0, 0], "text":"The creature's tongue unfurls, segments separating like a demented flower. Panic blooms within you.", "effect":"If you suffer <font=\"Icon\">D</font> from this attack, discard all boons." },
-			{"id":2, "negate":"Might", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[0, 0, 0], "text":"The Worm Witch kicks a heel to the side of the creature, laughing as her steed attempts to crush you under its weight.", "effect":"" },
-			{"id":3, "negate":"Spirit", "valid":[true, false, false], "damage":[0, 0, 0], "fear":[3, 0, 0], "text":"From her perch on the monstrous worm, the Worm Witch laughs at your desperate evasions.", "effect":"If you suffer <font=\"Icon\">F</font> from this attack, shuffle 1 weakness into your deck." },
-			{"id":4, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[0, 0, 0], "text":"The beast's many-segmented body whips around to hem you in.", "effect":"" },
-			{"id":5, "negate":"Wisdom", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[1, 0, 0], "text":"The Worm Witch drives the creature on, cackling as she cuts off every route of escape.", "effect":"" },
-			{"id":6, "negate":"Wit", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[1, 0, 0], "text":"The creature barrels toward you, its weight cutting into the rock of the cavern and sending sharp-edged rocks flying in all directions.", "effect":"" }
-		]
-	},
-	{
-		"name":"Mercenary Assassin",
-		"id":1015,
-		"collection":5,
-		"activations":
-		[
-			{"id":1, "negate":"Agility", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[1, 0, 0], "text":"The assassin moves with velvet grace, keeping a blade between you.", "effect":"After this attack, the mercenary assassin moves 1 space away from the closest hero." },
-			{"id":2, "negate":"Wisdom", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[1, 0, 0], "text":"Any attempt to banter with the assassin only provokes a cold smile and more silence.", "effect":"After this attack, the mercenary assassin moves 1 space away from the closest hero." },
-			{"id":3, "negate":"Agility", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[1, 0, 0], "text":"The assassin strikes with the speed and venom of a snake.", "effect":"After this attack, the mercenary assassin moves 1 space away from the closest hero." },
-			{"id":4, "negate":"Wit", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[1, 0, 0], "text":"Small twitches of the assassin's hands can predict the next strike, if you watch carefully enough.", "effect":"After this attack, the mercenary assassin moves 1 space away from the closest hero." }
-		]
-	},
-	{
-		"name":"Girandar",
-		"id":1016,
-		"collection":5,
-		"activations":
-		[
-			{"id":1, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[0, 0, 0], "text":"Girandar's spear darts out like the fangs of a striking viper. ", "effect":"" },
-			{"id":2, "negate":"Might", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[0, 0, 0], "text":"The captain's swagger belies her raw strength. Her strikes land like hammer blows.", "effect":"" },
-			{"id":3, "negate":"Might", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[1, 0, 0], "text":"A seasoned veteran, Captain Girandar is implacable.", "effect":"After this attack, if there is another nearby enemy, discard 1 inspiration." },
-			{"id":4, "negate":"Wit", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[0, 0, 0], "text":"The captain's shout stirs her cohorts to action.", "effect":"Before this attack, each hero in a space with an enemy suffers 1 <font=\"Icon\">D</font>." },
-			{"id":5, "negate":"Wisdom", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[0, 0, 0], "text":"Captain Girandar whistles sharply before she strikes. You recognize the signal to her cohorts a moment too late.", "effect":"After this attack, if there is more than 1 enemy figure in this space, become captured." },
-			{"id":6, "negate":"Wisdom", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[0, 0, 0], "text":"The captain's cheap shot catches you off guard.", "effect":"When you test to negate this attack, you cannot spend inspiration." },
-			{"id":7, "negate":"Wit", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[0, 0, 0], "text":"Faster than you thought possible, Girandar feints and flows around your defenses.", "effect":"Before this attack, discard 1 prepared Tactic skill." }
-		]
-	},
-	{
-		"name":"Lich-king",
-		"id":1017,
-		"collection":5,
-		"activations":
-		[
-			{"id":1, "negate":"Might", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[0, 0, 0], "text":"The Lich-king swoops low overhead, lashing out with tooth and claw and mace.", "effect":"If you have a <font=\"Icon\">T</font> item equipped, prevent 2 <font=\"Icon\">D</font>." },
-			{"id":2, "negate":"Wisdom", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[3, 0, 0], "text":"Another horrible scream sets your teeth on edge, and you briefly consider retreat.", "effect":"If you suffer any <font=\"Icon\">F</font> from this attack, become terrified." },
-			{"id":3, "negate":"Agility", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"The relentless assault leaves you breathless and unprepared for the next blow.", "effect":"After this attack, each hero that is not in an enemy's space either discards 1 inspiration or flips 1 <font=\"Icon\">F</font> faceup." },
-			{"id":4, "negate":"Wisdom", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"Another horrible scream sets your teeth on edge, and you briefly consider retreat.", "effect":"After this attack, each hero that is not in an enemy's space either discards 1 inspiration or flips 1 <font=\"Icon\">F</font> faceup." },
-			{"id":5, "negate":"Wisdom", "valid":[true, false, false], "damage":[3, 0, 0], "fear":[2, 0, 0], "text":"Another horrible scream sets your teeth on edge, and you briefly consider retreat.", "effect":"If you have a <font=\"Icon\">T</font> item equipped, prevent 2 <font=\"Icon\">D</font>." },
-			{"id":6, "negate":"Might", "valid":[true, false, false], "damage":[0, 0, 0], "fear":[4, 0, 0], "text":"The Lich-king swoops low overhead, lashing out with tooth and claw and mace.", "effect":"After this attack, each hero that is not in an enemy's space either discards 1 inspiration or flips 1 <font=\"Icon\">F</font> faceup." },
-			{"id":7, "negate":"Wisdom", "valid":[true, false, false], "damage":[0, 0, 0], "fear":[4, 0, 0], "text":"Another horrible scream sets your teeth on edge, and you briefly consider retreat.", "effect":"If you suffer any <font=\"Icon\">F</font> from this attack, become terrified." },
-			{"id":8, "negate":"Agility", "valid":[true, false, false], "damage":[4, 0, 0], "fear":[0, 0, 0], "text":"The relentless assault leaves you breathless and unprepared for the next blow.", "effect":"After this attack, each hero that is not in an enemy's space either discards 1 inspiration or flips 1 <font=\"Icon\">F</font> faceup." },
-			{"id":9, "negate":"Might", "valid":[true, false, false], "damage":[2, 0, 0], "fear":[3, 0, 0], "text":"The Lich-king swoops low overhead, lashing out with tooth and claw and mace.", "effect":"If you suffer any <font=\"Icon\">F</font> from this attack, become terrified." }
 		]
 	}
 ]}

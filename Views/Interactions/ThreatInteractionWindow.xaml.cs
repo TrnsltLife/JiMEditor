@@ -66,10 +66,10 @@ namespace JiME.Views
 			//The order also corresponds to the order in the MonsterType enum.
 			coreSetList = new List<CheckBox>() { ruffianCB, goblinScoutCB, orcHunterCB, orcMarauderCB, hungryVargCB, hillTrollCB, wightCB };
 			villainsOfEriajarList = new List<CheckBox>() { atariCB, gargletargCB, chartoothCB };
-			shadedPathsList = new List<CheckBox>() { giantSpiderCB, pitGoblinCB, orcTaskmasterCB, shadowmanCB, anonymousThingCB, caveTrollCB, balerockCB, spawnOfUglyGiantCB };
-			denizensInDarknessList = new List<CheckBox>() { supplicantOfMoreGothCB, ursaCB, ollieCB };
+			shadedPathsList = new List<CheckBox>() { giantSpiderCB, pitGoblinCB, orcTaskmasterCB, shadowmanCB, anonymousThingCB, caveTrollCB, balerockCB, spawnOfUglygiantCB };
+			denizensInDarknessList = new List<CheckBox>() { supplicantOfMoreGothCB, ursulaCB, oliverCB };
 			unfurlingWarList = new List<CheckBox>() { foulBeastCB, vargRiderCB, siegeEngineCB, warElephantCB, soldierCB, highOrcWarriorCB };
-			scorchersOfTheWildsList = new List<CheckBox>() { lordJavelinCB, lichKingOfAngerCB, endrisCB };
+			scorchersOfTheWildsList = new List<CheckBox>() { lordJavelinCB, lichKingCB, endrisCB };
 
 			allMonsterList = new List<CheckBox>();
 			allMonsterList.AddRange(coreSetList);

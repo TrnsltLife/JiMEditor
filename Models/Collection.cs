@@ -32,7 +32,7 @@ namespace JiME.Models
         );
 
         public static readonly Collection SHADED_PATHS = new Collection(3, "Shaded Paths", "p",
-            //new string[] { "Giant Spider", "Pit Goblin", "Orc Taskmaster", "Shadowman", "Anonymous Thing", "Cave Troll", "Balerock", "Spawn of Ugly-Giant" },
+            //new string[] { "Giant Spider", "Pit Goblin", "Orc Taskmaster", "Shadowman", "Anonymous Thing", "Cave Troll", "Balerock", "Spawn of Uglygiant" },
             new Monster[] {new Monster(10), new Monster(11), new Monster(12), new Monster(13), new Monster(14), new Monster(15), new Monster(16), new Monster(17)},
             new int[] { 102, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 309, 310, 311, 312, 313, 401, 402 }, //tileId
             //         Elevation, Log, Rubble, Web
@@ -41,7 +41,7 @@ namespace JiME.Models
         );
 
         public static readonly Collection DENIZENS_IN_DARKNESS = new Collection(4, "Denizens in Darkness", "d",
-            //new string[] { "Supplicant of More-Goth", "Ursa", "Ollie" },
+            //new string[] { "Supplicant of More-Goth", "Ursula", "Oliver" },
             new Monster[] {new Monster(18), new Monster(19), new Monster(20)}, //tileId
             new int[] {}, //tileId
             new int[] {}, //terrainCount
@@ -58,7 +58,7 @@ namespace JiME.Models
         );
 
         public static readonly Collection SCORCHERS_OF_THE_WILDS = new Collection(6, "Scorchers of the Wilds", "c",
-            //new string[] { "Lord Javelin", "Lich-king of Anger", "Endris" },
+            //new string[] { "Lord Javelin", "Lich-King", "Endris" },
             new Monster[] {new Monster(27), new Monster(28), new Monster(29)},
             new int[] {}, //tileId
             new int[] {}, //terrainCount

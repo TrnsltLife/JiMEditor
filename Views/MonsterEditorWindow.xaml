@@ -105,7 +105,7 @@
 						<RadioButton Click="monsterType_Click" Grid.Row="4" Grid.Column="1" x:Name="orcTaskmasterRB" Content="Orc Taskmaster x6" Foreground="White"/>
 						<RadioButton Click="monsterType_Click" Grid.Row="4" Grid.Column="2" x:Name="pitGoblinRB" Content="Pit Goblin x6" Foreground="White"/>
 						<RadioButton Click="monsterType_Click" Grid.Row="4" Grid.Column="3" x:Name="shadowmanRB" Content="Shadowman x3" Foreground="White"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="4" Grid.Column="4" x:Name="spawnOfUglyGiantRB" Content="Spawn of Ugly-Giant" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="4" Grid.Column="4" x:Name="spawnOfUglygiantRB" Content="Spawn of Uglygiant" Foreground="White"/>
 
 						<!-- Denizens of Darkness -->
 						<Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="6" Fill="Purple" />
@@ -113,8 +113,8 @@
 							<TextBlock Text="d" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
 							<TextBlock Text="Denizens in Darkness:" FontWeight="Bold" Foreground="White" Margin="0,4,4,0"/>
 						</StackPanel>
-						<RadioButton Click="monsterType_Click" Grid.Row="5" Grid.Column="1" x:Name="ollieRB" Content="Ollie" Foreground="White"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="5" Grid.Column="2" x:Name="ursaRB" Content="Ursa" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="5" Grid.Column="1" x:Name="oliverRB" Content="Oliver" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="5" Grid.Column="2" x:Name="ursulaRB" Content="Ursula" Foreground="White"/>
 						<RadioButton Click="monsterType_Click" Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="2" x:Name="supplicantOfMoreGothRB" Content="Supplicant of More-Goth" Foreground="White"/>
 
 						<!-- Unfurling War -->
@@ -140,7 +140,7 @@
 						</StackPanel>
 						<RadioButton Click="monsterType_Click" Grid.Row="8" Grid.Column="1" x:Name="lordJavelinRB" Content="Lord Javelin" Foreground="White"/>
 						<RadioButton Click="monsterType_Click" Grid.Row="8" Grid.Column="2" x:Name="endrisRB" Content="Endris" Foreground="White"/>
-						<RadioButton Click="monsterType_Click" Grid.Row="8" Grid.Column="3" Grid.ColumnSpan="2" x:Name="lichKingOfAngerRB" Content="Lich-king of Anger" Foreground="White"/>
+						<RadioButton Click="monsterType_Click" Grid.Row="8" Grid.Column="3" Grid.ColumnSpan="2" x:Name="lichKingRB" Content="Lich-King" Foreground="White"/>
 					</Grid>
 
 				</StackPanel>
