@@ -1,0 +1,60 @@
+﻿<Window x:Class="JiME.Views.TranslationItemEditorWindow"
+		x:Name="ucRichTextBoxIconEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JiME"
+		xmlns:sys="clr-namespace:System;assembly=mscorlib"
+		xmlns:jime="clr-namespace:JiME"
+		xmlns:uc="clr-namespace:JiME.UserControls"
+        mc:Ignorable="d"
+        Title="Translation Item Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" Width="750" ContentRendered="Window_ContentRendered">
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="auto"/>
+		</Grid.RowDefinitions>
+
+		<StackPanel Margin="5">
+			<Border Style="{StaticResource callout}" Margin="0,10">
+				<StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Style="{StaticResource SubText}" Text="Translation Item Key:"/>
+						<TextBlock Text="{Binding translationItem.key}" Style="{StaticResource Heading}"/>
+					</StackPanel>
+
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Style="{StaticResource Heading}" Margin="0,10,0,0">Original Text:</TextBlock>
+					</StackPanel>
+					<uc:RichTextBoxIconEditor x:Name="textRTB" Text="{Binding defaultTranslation.text, UpdateSourceTrigger=PropertyChanged}"/>
+
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Style="{StaticResource Heading}" Margin="0,10,0,0">Translation: </TextBlock>
+						<TextBlock Style="{StaticResource SubText}" Margin="0,10,0,0" VerticalAlignment="Bottom"><Bold><Italic>Required</Italic></Bold></TextBlock>
+					</StackPanel>
+					<TextBlock Style="{StaticResource SubText}">Write your translation here.</TextBlock>
+					<uc:RichTextBoxIconEditor x:Name="translationRTB" Text="{Binding translationItem.text, UpdateSourceTrigger=PropertyChanged}"/>
+				</StackPanel>
+			</Border>
+		</StackPanel>
+
+		<!--Footer-->
+		<Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Silver" HorizontalAlignment="Stretch" Background="#FF46464A">
+			<WrapPanel HorizontalAlignment="Right" >
+
+				<Button x:Name="okButton" Margin="10" Background="MediumSeaGreen" Click="OkButton_Click" IsDefault="True">
+					<Image Source="/JiME;component/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+
+				<!--
+				<Button x:Name="cancelButton" Margin="0,10,10,10" Background="{StaticResource bgCancelDelete}" Click="CancelButton_Click" IsCancel="True">
+					<Image Source="/JiME;component/Assets/cancel.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+				-->
+			</WrapPanel>
+		</Border>
+	</Grid>
+
+</Window>

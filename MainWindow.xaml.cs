@@ -60,6 +60,11 @@ namespace JiME
 			activationsUC.onSettingsEvent += OnSettingsActivations;
 			activationsUC.onDuplicateEvent += OnDuplicateActivations;
 
+			translationsUC.onAddEvent += OnAddTranslation;
+			translationsUC.onRemoveEvent += OnRemoveTranslation;
+			translationsUC.onSettingsEvent += OnSettingsTranslation;
+			//translationsUC.onDuplicateEvent += OnDuplicationTranslation;
+
 			//Debug.Log( this.FindResource( "mylist" ).GetType() );
 
 			//setup source of UI lists (scenario has to be created first!)
@@ -67,6 +72,7 @@ namespace JiME
 			triggersUC.dataListView.ItemsSource = scenario.triggersObserver;
 			objectivesUC.dataListView.ItemsSource = scenario.objectiveObserver;
 			activationsUC.dataListView.ItemsSource = scenario.activationsObserver;
+			translationsUC.dataListView.ItemsSource = scenario.translationObserver;
 
             // Initiate visualization defer timer so it won't be done multiple times
             WpfUtils.MainThreadDispatcher = this.Dispatcher;
@@ -486,6 +492,24 @@ namespace JiME
 				scenario.activationsObserver.Add(act);
 			}
 		}
+
+		void OnAddTranslation(object sender, EventArgs e)
+		{
+			AddTranslation();
+		}
+
+		void OnRemoveTranslation(object sender, EventArgs e)
+		{
+
+		}
+
+		void OnSettingsTranslation(object sender, EventArgs e)
+		{
+			Dictionary<string, TranslationItem> defaultTranslation = scenario.CollectTranslationItemsAsDictionary();
+
+			TranslationEditorWindow tw = new TranslationEditorWindow(scenario, defaultTranslation, ((Translation)translationsUC.dataListView.SelectedItem), false);
+			tw.ShowDialog();
+		}
 		#endregion
 
 		private void scenarioName_PreviewMouseDown( object sender, System.Windows.Input.MouseButtonEventArgs e )
@@ -579,6 +603,17 @@ namespace JiME
 				scenario.AddActivations(aew.activations);
 			}
 		}
+		
+		void AddTranslation()
+        {
+			Dictionary<string, TranslationItem> defaultTranslation = scenario.CollectTranslationItemsAsDictionary();
+
+			TranslationEditorWindow tw = new TranslationEditorWindow(scenario, defaultTranslation, new Translation());
+			if(tw.ShowDialog() == true)
+            {
+				scenario.AddTranslation(tw.translation);
+            }
+        }
 
 
 		void AddTrigger()

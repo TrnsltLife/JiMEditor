@@ -217,6 +217,8 @@
 					<RowDefinition Height="*"/>
 					<RowDefinition Height="auto"/>
 					<RowDefinition Height="*"/>
+					<RowDefinition Height="auto"/>
+					<RowDefinition Height="*"/>
 				</Grid.RowDefinitions>
 
 				<Border BorderThickness="0,0,0,0" BorderBrush="Gray" Grid.Row="0">
@@ -240,9 +242,12 @@
 
 
 				<Border BorderThickness="0,0,0,0" BorderBrush="Gray" Grid.Row="6">
-					<uc:SidebarListView x:Name="activationsUC" Margin="5" Title="Enemy Attack Group" ShowDuplicateButton="true" />
+					<uc:SidebarListView x:Name="activationsUC" Margin="5" Title="Enemy Attack Groups" ShowDuplicateButton="true" />
 				</Border>
 
+				<Border BorderThickness="0,0,0,0" BorderBrush="Gray" Grid.Row="8">
+					<uc:SidebarListView x:Name="translationsUC" Margin="5" Title="Translations" ShowDuplicateButton="false" />
+				</Border>
 			</Grid>
 		</Border>
 

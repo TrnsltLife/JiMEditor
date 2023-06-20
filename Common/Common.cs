@@ -84,6 +84,13 @@ namespace JiME
 		TerrainType terrainType { get; set; }
 	}
 
+	public interface ITranslationCollector
+    {
+		List<TranslationItem> CollectTranslationItems();
+		string DefaultStringForTranslationKey(string key);
+
+	}
+
 	class Debug
 	{
 		public static void Log( object p )

@@ -11,7 +11,7 @@ namespace JiME
 	/// <summary>
 	/// A standalone mission, or a single mission in a campaign
 	/// </summary>
-	public class Scenario : INotifyPropertyChanged
+	public class Scenario : INotifyPropertyChanged, ITranslationCollector
 	{
 		string _scenarioName, _fileName, _objectiveName, _fileVersion, _specialInstructions, _coverImage;
 		bool _isDirty, _scenarioTypeJourney, _useTileGraphics;
@@ -211,6 +211,7 @@ namespace JiME
 		public ObservableCollection<Objective> objectiveObserver { get; set; }
 		public ObservableCollection<MonsterActivations> activationsObserver { get; set; }
 		//public List<MonsterActivations> filteredActivationsObserver => activationsObserver.Where(a => collectionObserver.Contains(a.collection)).ToList();
+		public ObservableCollection<Translation> translationObserver { get; set; }
 		public ObservableCollection<TextBookData> resolutionObserver { get; set; }
 		public ObservableCollection<Threat> threatObserver { get; set; }
 		public ObservableCollection<Chapter> chapterObserver { get; set; }
@@ -324,6 +325,7 @@ namespace JiME
 			triggersObserver = new ObservableCollection<Trigger>();
 			objectiveObserver = new ObservableCollection<Objective>();
 			activationsObserver = new ObservableCollection<MonsterActivations>();
+			translationObserver = new ObservableCollection<Translation>();
 			resolutionObserver = new ObservableCollection<TextBookData>();
 			threatObserver = new ObservableCollection<Threat>();
 			chapterObserver = new ObservableCollection<Chapter>();
@@ -639,6 +641,52 @@ namespace JiME
 			activationsObserver.Add(activations);
 		}
 
+		public void AddTranslation(Translation translation)
+        {
+			translationObserver.Add(translation);
+        }
+
+		public Dictionary<string, TranslationItem> CollectTranslationItemsAsDictionary()
+        {
+			List<TranslationItem> defaultTranslationList = CollectTranslationItems();
+			Dictionary<string, TranslationItem> defaultTranslation = new Dictionary<string, TranslationItem>();
+			foreach (var item in defaultTranslationList)
+			{
+				defaultTranslation.Add(item.key, item);
+				Console.WriteLine(item.key + " => " + item.text);
+			}
+			return defaultTranslation;
+		}
+
+		public List<TranslationItem> CollectTranslationItems()
+        {
+			List<TranslationItem> defaultTranslations = new List<TranslationItem>();
+			defaultTranslations.Add(new TranslationItem("scenario.scenarioName", scenarioName, false));
+			defaultTranslations.Add(new TranslationItem("scenario.specialInstructions", specialInstructions, false));
+
+			foreach(var objective in objectiveObserver)
+            {
+				defaultTranslations.AddRange(objective.CollectTranslationItems());
+			}
+			/*
+			interactionObserver.CollectionChanged += handler;
+            triggersObserver.CollectionChanged += handler;
+            activationsObserver.CollectionChanged += handler;
+            resolutionObserver.CollectionChanged += handler;
+            threatObserver.CollectionChanged += handler;
+            chapterObserver.CollectionChanged += handler;
+			 */
+
+			return defaultTranslations;
+        }
+
+		public string DefaultStringForTranslationKey(string key)
+        {
+			if (key == "scenario.scenarioName") { return scenarioName; }
+			else if (key == "scenario.specialInstructions") { return specialInstructions; }
+			else return "";
+        }
+
 
 		/// <summary>
 		/// adds a Resolution to Scenario AND adds EndStatus bool for it
@@ -720,6 +768,21 @@ namespace JiME
 			//finally rename the trigger object itself
 			triggersObserver.Where( t => t.dataName == oldName ).First().isMultiTrigger = isMulti;
 			triggersObserver.Where( t => t.dataName == oldName ).First().dataName = newName;
+
+			return true;
+		}
+
+		/// <summary>
+		/// Renames the Translation to a new langCode (if new langCode doesn't already exist)
+		/// </summary>
+		public bool RenameTranslation(string oldLangCode, string newLangCode)
+		{
+			//bail out if new name already exists
+			if (translationObserver.Count(t => t.dataName == newLangCode) > 0)
+				return false;
+
+			//finally rename the translation object itself
+			translationObserver.Where(t => t.dataName == oldLangCode).First().dataName = newLangCode;
 
 			return true;
 		}
