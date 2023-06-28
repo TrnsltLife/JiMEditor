@@ -83,7 +83,7 @@
 						<ItemsControl.ItemTemplate>
 							<DataTemplate>
 								<Border Style="{StaticResource callout}" Margin="0,2">
-									<Grid ShowGridLines="True">
+									<Grid ShowGridLines="False">
 										<Grid.ColumnDefinitions>
 											<ColumnDefinition SharedSizeGroup="GridCheckbox" Width="0.05*"/>
 											<ColumnDefinition SharedSizeGroup="GridKey" Width="0.35*"/>
