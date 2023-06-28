@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Removed
+
+## [v0.25]
+
+### Added
 - Added graph based visualization of the Scenario inside the main Scenario editor Window. 
   - The visualization shows all the major Scenario entities and trigger relations between them.
   - The visualization nodes are clickable to open the editor dialogs for the different entities
