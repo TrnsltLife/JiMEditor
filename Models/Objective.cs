@@ -10,12 +10,11 @@ namespace JiME
 		bool _skipSummary;
 		int _loreReward, _xpReward, _threatReward;
 
-		override public string TranslationKeyName() { Console.WriteLine("TranslationKeyName: " + dataName);  return dataName; }
-		override public string PreviousTranslationKeyName() { Console.WriteLine("PreviousTranslationKeyName: " + dataName); return dataName; }
+		override public string TranslationKeyName() { return dataName; }
+		override public string PreviousTranslationKeyName() { return dataName; }
 
 		override protected void DefineTranslationAccessors()
         {
-			Console.WriteLine("Objective.DefineTranslationAccessors()");
 			List<TranslationAccessor> list = new List<TranslationAccessor>()
             {
 				new TranslationAccessor("objective.{0}.objectiveReminder", () => this.objectiveReminder)

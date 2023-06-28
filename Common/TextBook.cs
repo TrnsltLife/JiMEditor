@@ -7,8 +7,20 @@ namespace JiME
 	/// <summary>
 	/// Describes pages in Scenario introText and resolutionObserver
 	/// </summary>
-	public class TextBookData : INotifyPropertyChanged, ICommonData
+	public class TextBookData : Translatable, INotifyPropertyChanged, ICommonData
 	{
+		override public string TranslationKeyName() { return dataName; }
+		override public string PreviousTranslationKeyName() { return dataName; }
+
+		override protected void DefineTranslationAccessors()
+		{
+			List<TranslationAccessor> list = new List<TranslationAccessor>()
+			{
+				new TranslationAccessor("resolution.{0}.text", () => this.pages[0])
+			};
+			translationAccessors = list;
+		}
+
 		string _dataName, _triggerName;
 
 		public string dataName

@@ -20,7 +20,6 @@ namespace JiME
 
 		override protected void DefineTranslationAccessors()
 		{
-			Console.WriteLine("Objective.DefineTranslationAccessors()");
 			List<TranslationAccessor> list = new List<TranslationAccessor>();
 			translationAccessors = list;
 		}

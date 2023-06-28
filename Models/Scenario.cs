@@ -680,13 +680,14 @@ namespace JiME
 				defaultTranslations.AddRange(chapter.tileObserver.ToList().ConvertAll(tile => ((BaseTile)tile).CollectTranslationItems()).SelectMany(list => list)); //grab lists of TranslationItems from all the chapters tiles and flatten them into one big list
             }
 
+			foreach(var resolution in resolutionObserver)
+            {
+				defaultTranslations.AddRange(resolution.CollectTranslationItems());
+            }
+
 			/*
 			interactionObserver.CollectionChanged += handler;
-            triggersObserver.CollectionChanged += handler;
             activationsObserver.CollectionChanged += handler;
-            resolutionObserver.CollectionChanged += handler;
-            threatObserver.CollectionChanged += handler;
-            chapterObserver.CollectionChanged += handler;
 			 */
 
 			return defaultTranslations;
