@@ -79,8 +79,10 @@ namespace JiME.Views
 				}
 			}
 
-			editTokenButton.IsEnabled = !chapter.usesRandomGroups;
-			disabledMessage.Visibility = chapter.usesRandomGroups ? Visibility.Visible : Visibility.Collapsed;
+			//editTokenButton.IsEnabled = !chapter.usesRandomGroups;
+			//disabledMessage.Visibility = chapter.usesRandomGroups ? Visibility.Visible : Visibility.Collapsed;
+			editTokenButton.IsEnabled = true;
+			disabledMessage.Visibility = Visibility.Collapsed;
 			//SourceInitialized += ( x, y ) =>
 			//{
 			//	this.HideMinimizeAndMaximizeButtons();

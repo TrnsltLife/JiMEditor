@@ -43,6 +43,7 @@ namespace JiME.Views
 			DataContext = this;
 
 			cancelButton.Visibility = (inter == null || showCancelButton) ? Visibility.Visible : Visibility.Collapsed;
+			updateUIForEventGroup();
 
 			//interactions that are NOT Token Interactions
 			interactionObserver = new ObservableCollection<string>( scenario.interactionObserver.Where( x => x.isTokenInteraction ).Select( x => x.dataName ) );
@@ -196,12 +197,23 @@ namespace JiME.Views
 		private void nameTB_TextChanged( object sender, TextChangedEventArgs e )
 		{
 			interaction.dataName = ( (TextBox)sender ).Text;
-			Regex rx = new Regex( @"\sGRP\d+$" );
-			MatchCollection matches = rx.Matches( interaction.dataName );
-			if ( matches.Count > 0 )
+			updateUIForEventGroup();
+		}
+
+		private void updateUIForEventGroup()
+		{
+			Regex rx = new Regex(@"\sGRP\d+$");
+			MatchCollection matches = rx.Matches(interaction.dataName);
+			if (matches.Count > 0)
+			{
 				groupInfo.Text = "This Event is in the following group: " + matches[0].Value.Trim();
+				isReusableCB.Visibility = Visibility.Visible;
+			}
 			else
+			{
 				groupInfo.Text = "This Event is in the following group: None";
+				isReusableCB.Visibility = Visibility.Collapsed;
+			}
 		}
 
 		private void editAltButton_Click( object sender, RoutedEventArgs e )

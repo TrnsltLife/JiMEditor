@@ -82,6 +82,7 @@ namespace JiME
 		PersonType personType { get; set; }
 
 		TerrainType terrainType { get; set; }
+		bool isReusable { get; set; }
 	}
 
 	public interface ITranslationCollector
@@ -255,7 +256,7 @@ namespace JiME
 		/// Update this number every time the file format changes with new features
 		/// </summary>
 		public static string formatVersion = "1.13";
-		public static string appVersion = "0.23";
+		public static string appVersion = "0.25";
 		public static Dictionary<int, BaseTileData> tileDictionary { get; set; } = new Dictionary<int, BaseTileData>();
 		public static Dictionary<int, BaseTileData> tileDictionaryB { get; set; } = new Dictionary<int, BaseTileData>();
 		public static int tolerance = 25;

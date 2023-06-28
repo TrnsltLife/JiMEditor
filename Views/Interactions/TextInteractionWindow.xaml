@@ -55,14 +55,17 @@
 								<TextBlock Text="Rewards are given after the Event is finished activating." Style="{StaticResource SubText}" Margin="0,5,0,0"/>
 							</StackPanel>
 
-							<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-								<Button x:Name="groupHelp" Background="#FFC98800" Click="groupHelp_Click" Width="32" Height="32" Margin="10,0,0,0">
-									<Image Source="/JiME;component/Assets/help.png" Stretch="Uniform"/>
-								</Button>
-								<StackPanel Margin="10,0,0,0">
-									<TextBlock Style="{StaticResource SubText}" Text="You can place this Event into a Random Interaction Group." TextWrapping="Wrap" VerticalAlignment="Center" Width="290"/>
-									<TextBlock x:Name="groupInfo" Margin="0,5,0,0" Style="{StaticResource SubText}" Text="This Event is in the following group: None"/>
+							<StackPanel Orientation="Vertical">
+								<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+									<Button x:Name="groupHelp" Background="#FFC98800" Click="groupHelp_Click" Width="32" Height="32" Margin="10,0,0,0">
+										<Image Source="/JiME;component/Assets/help.png" Stretch="Uniform"/>
+									</Button>
+									<StackPanel Margin="10,0,0,0">
+										<TextBlock Style="{StaticResource SubText}" Text="You can place this Event into a Random Interaction Group." TextWrapping="Wrap" VerticalAlignment="Center" Width="290"/>
+										<TextBlock x:Name="groupInfo" Margin="0,5,0,0" Style="{StaticResource SubText}" Text="This Event is in the following group: None"/>
+									</StackPanel>
 								</StackPanel>
+								<CheckBox x:Name="isReusableCB" Margin="32,20,0,0" Content="This grouped Event can be used more than once" Foreground="White" IsChecked="{Binding interaction.isReusable}" Visibility="Visible" VerticalAlignment="Top"/>
 							</StackPanel>
 						</UniformGrid>
 					</Border>

@@ -27,6 +27,7 @@
 						<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Text="2) Select a Token Type associated with this Token Interaction Event."/>
 						<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Text="3) At the end of the Event Name, use 'GRP#' to place it into an Interaction Group, where # uniquely identifies that group."/>
 						<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Text="4) Use this same GRP# naming convention to add other Token Interactions you create into this group."/>
+						<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Text="5) (optionally) click the checkbox [x] This grouped Event can be used more than once"/>
 						<TextBlock Margin="0,10,0,0" Style="{StaticResource SubText}" TextWrapping="Wrap" Text="For example, two different Events named 'light fire GRP2' and 'orc squad GRP2' will put both of the Events into an Interaction Group with the name 'GRP2'. You can put as many Events into groups as you wish."/>
 						<TextBlock Style="{StaticResource SubText}" Margin="0,10,0,0" TextWrapping="Wrap" Text="NOTE: The Token Interactions in the group don't have to be of the same type. They can be a combination of any of the Event types (Text, Enemies, Stat Tests, etc)." FontStyle="Italic"/>
 					</StackPanel>
@@ -52,7 +53,7 @@
 							Example: Using Tiles 201 and 202, we have 4 spaces available, and we're not using any fixed Tokens. Let's say we assign an Interaction Group to this Tile Block with 6 different Events in it. We can use a maximum of 4 of those 6 Events because there are only 4 spaces available on the Tiles we're using. However, we only want 2 of those 6 Events to randomly spawn Tokens on these Tiles, so we enter 2 into the text box. During the game, the Companion App will randomly choose 2 Events out of the Group and randomly spawn their Token on the tiles. The other 4 Events are discarded.
 						</TextBlock>
 						<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Margin="0,10,0,0">
-							<Bold><Italic>CAUTION</Italic></Bold>: If you assign the same Token Interaction Group to more than one Block, the same Events could be seen by players more than once, causing confusion. On the other hand, Events can be created that are generic enough to appear more than once by design. A good example of this would be creating a Group with 5 different enemy Threat Events in it. This Group can be used over and over to randomly spawn one of the Threats in the Group when it's triggered.
+							<Bold><Italic>CAUTION</Italic></Bold>: You can assign the same Token Interaction Group to more than one Block. Once an Event token has been placed in one Tile Block, it will not be placed in another Tile BLock unless you check the box "This grouped Event can be used more than once". Only do this if you create Events that are generic enough to appear more than once by design. A good example of this might be a Threat Events with enemies that can appear on various places in the map. Or perhaps natural hazards like avalanches or cave-ins that could occur in multiple locations. Or a healing herb that appears in random spots and instructs the player to add a token to their Hero card.
 						</TextBlock>
 					</StackPanel>
 				</Border>
