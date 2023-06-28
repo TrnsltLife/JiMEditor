@@ -206,7 +206,7 @@ namespace JiME.Views
 				sideA.IsChecked = selected.tileSide == "A";
 				sideB.IsChecked = selected.tileSide == "B";
 				sideRandom.IsChecked = selected.tileSide == "Random";
-				if ( !chapter.usesRandomGroups )
+				//if ( !chapter.usesRandomGroups )
 					tokenEditButton.IsEnabled = !sideRandom.IsChecked.Value;
 				ShowExploreStatus();
 			}

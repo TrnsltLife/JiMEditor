@@ -29,6 +29,7 @@ namespace JiME
 			alternativeTextTrigger = "None";
 			eventToActivate = "None";
 			isTokenInteraction = true;
+			isReusable = false;
 		}
 
 		public PersistentTokenInteraction Clone()
