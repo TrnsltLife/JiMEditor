@@ -6,7 +6,7 @@ namespace JiME
 	public abstract class InteractionBase : IInteraction, INotifyPropertyChanged
 	{
 		string _dataName, _triggerName, _triggerAfterName, _tokenInteractionText;
-		bool _isTokenInteraction;
+		bool _isTokenInteraction, _isReusable;
 		int _loreReward, _xpReward, _threatReward;
 		TokenType _tokenType;
 		PersonType _personType;
@@ -30,6 +30,7 @@ namespace JiME
 			interact.eventBookData = this.eventBookData.Clone();
 			interact.interactionType = this.interactionType;
 			interact.tokenInteractionText = this.tokenInteractionText;
+			interact.isReusable = this.isReusable;
 		}
 
 		public string dataName
@@ -132,6 +133,16 @@ namespace JiME
 				NotifyPropertyChanged( "threatReward" );
 			}
 		}
+		public bool isReusable
+		{
+			get => _isReusable;
+			set
+			{
+				_isReusable = value;
+				NotifyPropertyChanged("isReusable");
+			}
+		}
+
 
 		public InteractionType interactionType { get; set; }
 
@@ -154,6 +165,7 @@ namespace JiME
 			eventBookData.pages.Add( "Default Event Text.\n\nThis text is shown after the Event is triggered. Use it to tell about the actual event that has been triggered Example: Describe an Enemy Threat, present a Test, describe a Decision, etc." );
 			loreReward = xpReward = threatReward = 0;
 			tokenInteractionText = "";
+			isReusable = false;
 		}
 
 		public void NotifyPropertyChanged( string propName )
