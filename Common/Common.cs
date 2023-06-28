@@ -89,8 +89,82 @@ namespace JiME
     {
 		List<TranslationItem> CollectTranslationItems();
 		string DefaultStringForTranslationKey(string key);
-
 	}
+
+	public class Translatable
+    {
+        [JsonIgnore]
+		private List<TranslationAccessor> _translationAccessors;
+
+		[JsonIgnore]
+		public List<TranslationAccessor> translationAccessors
+		{
+			get { return _translationAccessors; }
+			set { _translationAccessors = value; }
+		}
+
+		public Translatable()
+        {
+			DefineTranslationAccessors();
+        }
+
+		virtual protected void DefineTranslationAccessors()
+        {
+			translationAccessors = new List<TranslationAccessor>();
+        }
+
+		public List<TranslationItem> CollectTranslationItems()
+        {
+			Console.WriteLine("CollectTranslationItems: " + translationAccessors.Count);
+			List<TranslationItem> items = new List<TranslationItem>();
+			foreach(TranslationAccessor accessor in translationAccessors)
+            {
+				string key = accessor.FormatKey(TranslationKeyName());
+				string val = accessor.RetrieveVal();
+				Console.WriteLine(accessor.keyPattern + " => " + key + " => " + val);
+				items.Add(new TranslationItem(key, val));
+			}
+			return items;
+        }
+
+		public string DefaultStringForTranslationKey(string findKey)
+        {
+			foreach (TranslationAccessor accessor in translationAccessors)
+			{
+				string key = accessor.FormatKey(TranslationKeyName());
+				if(key == findKey)
+                {
+					return accessor.RetrieveVal();
+				}
+			}
+			return "";
+		}
+
+		virtual public string TranslationKeyName() { Console.WriteLine("TranslationKeyName:" + "currentName");  return "currentName"; }
+		virtual public string PreviousTranslationKeyName() { Console.WriteLine("PreviousTranslationKeyName:" + "oldName"); return "oldName"; }
+    }
+
+	public class TranslationAccessor
+    {
+		public string keyPattern;
+		public Func<string> valFunc;
+
+		public TranslationAccessor(string keyPattern, Func<string> valFunc)
+        {
+			this.keyPattern = keyPattern;
+			this.valFunc = valFunc;
+        }
+
+		public string FormatKey(string name)
+        {
+			return String.Format(keyPattern, name);
+        }
+
+		public string RetrieveVal()
+        {
+			return valFunc();
+        }
+    }
 
 	class Debug
 	{
