@@ -9,11 +9,22 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using JiME.Models;
+using System.Collections.Generic;
 
 namespace JiME
 {
 	public class HexTile : BaseTile, INotifyPropertyChanged
 	{
+
+		override protected void DefineTranslationAccessors()
+		{
+			List<TranslationAccessor> list = new List<TranslationAccessor>()
+            {
+				new TranslationAccessor("tile.{0}.exploredText", () => this.flavorBookData.pages[0])
+			};
+			translationAccessors = list;
+		}
+
 		public TextBookData flavorBookData { get; set; }
 
 		public HexTile() 

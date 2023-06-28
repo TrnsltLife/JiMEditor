@@ -9,11 +9,22 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using JiME.Models;
+using System.Collections.Generic;
 
 namespace JiME
 {
-	public class BaseTile : INotifyPropertyChanged, ITile
+	public class BaseTile : Translatable, INotifyPropertyChanged, ITile
 	{
+		override public string TranslationKeyName() { return idNumber.ToString(); }
+		override public string PreviousTranslationKeyName() { return idNumber.ToString(); }
+
+		override protected void DefineTranslationAccessors()
+		{
+			Console.WriteLine("Objective.DefineTranslationAccessors()");
+			List<TranslationAccessor> list = new List<TranslationAccessor>();
+			translationAccessors = list;
+		}
+
 		[JsonIgnore]
 		public Canvas canvas = new Canvas();
         [JsonIgnore]
@@ -104,9 +115,9 @@ namespace JiME
             }
         }
 
-		public BaseTile() {}
+		public BaseTile() : base() {}
 
-		public BaseTile( int n, bool skipBuild = false )
+		public BaseTile(int n, bool skipBuild = false) : base()
 		{
 			idNumber = n;
 			tokenCount = ( n / 100 ) % 10;

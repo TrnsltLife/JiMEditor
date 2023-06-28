@@ -358,6 +358,10 @@ namespace JiME
 			{
 				s.activationsObserver = new ObservableCollection<MonsterActivations>(fm.activations);
 			}
+			if (fm.translations != null)
+			{
+				s.translationObserver = new ObservableCollection<Translation>(fm.translations);
+			}
 			s.resolutionObserver = new ObservableCollection<TextBookData>( fm.resolutions );
 			s.threatObserver = new ObservableCollection<Threat>( fm.threats );
 			s.chapterObserver = new ObservableCollection<Chapter>( fm.chapters );
@@ -658,6 +662,7 @@ namespace JiME
 			return defaultTranslation;
 		}
 
+		//Collect translations from all the various game objects that can have translatable text
 		public List<TranslationItem> CollectTranslationItems()
         {
 			List<TranslationItem> defaultTranslations = new List<TranslationItem>();
@@ -668,6 +673,13 @@ namespace JiME
             {
 				defaultTranslations.AddRange(objective.CollectTranslationItems());
 			}
+
+			foreach(var chapter in chapterObserver)
+            {
+				defaultTranslations.AddRange(chapter.CollectTranslationItems());
+				defaultTranslations.AddRange(chapter.tileObserver.ToList().ConvertAll(tile => ((BaseTile)tile).CollectTranslationItems()).SelectMany(list => list)); //grab lists of TranslationItems from all the chapters tiles and flatten them into one big list
+            }
+
 			/*
 			interactionObserver.CollectionChanged += handler;
             triggersObserver.CollectionChanged += handler;

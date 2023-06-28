@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace JiME
@@ -8,8 +10,21 @@ namespace JiME
 	/// <summary>
 	/// A Chapter contains a batch of Tiles. Each Chapter leads to the next by activating a Trigger
 	/// </summary>
-	public class Chapter : INotifyPropertyChanged, ICommonData
+	public class Chapter : Translatable, INotifyPropertyChanged, ICommonData
 	{
+
+		override public string TranslationKeyName() { return dataName; }
+		override public string PreviousTranslationKeyName() { return dataName; }
+
+		override protected void DefineTranslationAccessors()
+		{
+			List<TranslationAccessor> list = new List<TranslationAccessor>()
+			{
+				new TranslationAccessor("chapter.{0}.exploredText", () => this.flavorBookData.pages[0])
+			};
+			translationAccessors = list;
+		}
+
 		//common
 		string _dataName;
 
@@ -126,7 +141,7 @@ namespace JiME
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		public Chapter( string name )
+		public Chapter( string name ) : base()
 		{
 			dataName = name;
 			GUID = Guid.NewGuid();

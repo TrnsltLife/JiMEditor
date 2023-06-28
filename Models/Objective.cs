@@ -4,11 +4,24 @@ using System.ComponentModel;
 
 namespace JiME
 {
-	public class Objective : INotifyPropertyChanged, ICommonData, ITranslationCollector
+	public class Objective : Translatable, INotifyPropertyChanged, ICommonData /*, ITranslationCollector*/
 	{
 		string _dataName, _eventName, _triggerName, _objectiveReminder, _nextTrigger, _triggeredByName;
 		bool _skipSummary;
 		int _loreReward, _xpReward, _threatReward;
+
+		override public string TranslationKeyName() { Console.WriteLine("TranslationKeyName: " + dataName);  return dataName; }
+		override public string PreviousTranslationKeyName() { Console.WriteLine("PreviousTranslationKeyName: " + dataName); return dataName; }
+
+		override protected void DefineTranslationAccessors()
+        {
+			Console.WriteLine("Objective.DefineTranslationAccessors()");
+			List<TranslationAccessor> list = new List<TranslationAccessor>()
+            {
+				new TranslationAccessor("objective.{0}.objectiveReminder", () => this.objectiveReminder)
+            };
+			translationAccessors = list;
+        }
 
 		public string dataName
 		{
@@ -127,8 +140,10 @@ namespace JiME
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		public Objective( string shortname )
+		public Objective( string shortname ) : base()
 		{
+			DefineTranslationAccessors();
+
 			GUID = Guid.NewGuid();
 			dataName = shortname;
 			eventName = "None";
@@ -185,6 +200,7 @@ namespace JiME
 			PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( name ) );
 		}
 
+		/*
 		public List<TranslationItem> CollectTranslationItems()
 		{
 			List<TranslationItem> defaultTranslations = new List<TranslationItem>();
@@ -198,5 +214,6 @@ namespace JiME
 			if (key == "objective." + dataName + ".objectiveReminder") { return objectiveReminder; }
 			else return "";
 		}
+		*/
 	}
 }
