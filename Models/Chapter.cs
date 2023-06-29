@@ -20,7 +20,7 @@ namespace JiME
 		{
 			List<TranslationAccessor> list = new List<TranslationAccessor>()
 			{
-				new TranslationAccessor("chapter.{0}.exploredText", () => this.flavorBookData.pages[0])
+				new TranslationAccessor("chapter.{0}.exploredText", () => this.noFlavorText ? "" : this.flavorBookData.pages[0])
 			};
 			translationAccessors = list;
 		}

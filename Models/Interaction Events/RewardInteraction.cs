@@ -6,6 +6,12 @@ namespace JiME
 {
 	public class RewardInteraction : InteractionBase, INotifyPropertyChanged, ICommonData
 	{
+		override protected void DefineTranslationAccessors()
+		{
+			translationKeyParents = "reward";
+			base.DefineTranslationAccessors();
+		}
+
 		int _rewardLore, _rewardXP, _rewardThreat;
 
 		public int rewardLore

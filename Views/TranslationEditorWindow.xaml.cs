@@ -33,7 +33,7 @@ namespace JiME.Views
 
 			scenario = s;
 			cancelButton.Visibility = translation == null ? Visibility.Visible : Visibility.Collapsed;
-			//lockIcon.Visibility = activ == null ? Visibility.Collapsed : activ.id < 1000 ? Visibility.Visible : Visibility.Collapsed;
+			//lockIcon.Visibility = activ == null ? Visibility.Collapsed : activ.id < MonsterActivations.START_OF_CUSTOM_ACTIVATIONS ? Visibility.Visible : Visibility.Collapsed;
 			this.translationInitialState = translation ?? new Translation();
 			this.defaultTranslation = defaultTranslation;
 			TranslationUnion();
@@ -137,7 +137,7 @@ namespace JiME.Views
 		private void EditButton_Click( object sender, RoutedEventArgs e )
 		{
 			TranslationItem ti = ((Button)sender).DataContext as TranslationItem;
-			TranslationItemEditorWindow tew = new TranslationItemEditorWindow(ti, defaultTranslation[ti.key]);
+			TranslationItemEditorWindow tew = new TranslationItemEditorWindow(ti, defaultTranslation.ContainsKey(ti.key) ? defaultTranslation[ti.key] : new TranslationItem(ti.key, ""));
 			tew.ShowDialog();
 			NotifyItemChanged(ti);
 			/*

@@ -11,8 +11,21 @@ namespace JiME
 	/// <summary>
 	/// cf. https://boardgamegeek.com/thread/2469108/demystifying-enemies-project-documenting-enemy-sta
 	/// </summary>
-	public class MonsterActivations : INotifyPropertyChanged, ICommonData
+	public class MonsterActivations : Translatable, INotifyPropertyChanged, ICommonData
 	{
+		public static readonly int START_OF_CUSTOM_ACTIVATIONS = 1000;
+
+		override public string TranslationKeyName() { return dataName; }
+		override public string PreviousTranslationKeyName() { return dataName; }
+
+		override protected void DefineTranslationAccessors()
+		{
+			List<TranslationAccessor> list = new List<TranslationAccessor>()
+			{
+				new TranslationAccessor("activation.{0}.name", () => this.dataName)
+			};
+			translationAccessors = list;
+		}
 
 		string _dataName;
 		int _id;

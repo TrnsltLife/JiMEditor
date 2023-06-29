@@ -5,6 +5,12 @@ namespace JiME
 {
 	public class ConditionalInteraction : InteractionBase, INotifyPropertyChanged, ICommonData
 	{
+		override protected void DefineTranslationAccessors()
+		{
+			translationKeyParents = "conditional";
+			base.DefineTranslationAccessors();
+		}
+
 		string _finishedTrigger;
 
 		public ObservableCollection<string> triggerList { get; set; }

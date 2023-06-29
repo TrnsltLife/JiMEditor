@@ -7,6 +7,12 @@ namespace JiME
 {
 	public class ThreatInteraction : InteractionBase, INotifyPropertyChanged, ICommonData
 	{
+		override protected void DefineTranslationAccessors()
+		{
+			translationKeyParents = "enemy";
+			base.DefineTranslationAccessors();
+		}
+
 		string _triggerDefeatedName;
 		bool[] _includedEnemies = new bool[Collection.MONSTERS().Length].Fill(false);
 		int _basePoolPoints;

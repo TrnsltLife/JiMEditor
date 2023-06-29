@@ -376,7 +376,7 @@ namespace JiME
 		{
 			int idx = activationsUC.dataListView.SelectedIndex;
 			MonsterActivations act = (MonsterActivations)activationsUC.dataListView.Items[idx];
-			if (idx != -1 && act.id >= 1000) //Don't allow removing the basic enemy activations. Only allow removing built-in custom activations and user custom activations.
+			if (idx != -1 && act.id >= MonsterActivations.START_OF_CUSTOM_ACTIVATIONS) //Don't allow removing the basic enemy activations. Only allow removing built-in custom activations and user custom activations.
 			{
 				var ret = MessageBox.Show("Are you sure you want to delete this Enemy Attack Group?\n\nALL DESCRIPTIONS AND DAMAGE WILL BE DELETED.", "Delete Enemy Attack Group", MessageBoxButton.YesNo, MessageBoxImage.Question);
 				if (ret == MessageBoxResult.Yes)
@@ -395,7 +395,7 @@ namespace JiME
 		{
 			int idx = activationsUC.dataListView.SelectedIndex;
 			MonsterActivations act = (MonsterActivations)activationsUC.dataListView.Items[idx];
-			if (idx != -1 && act.id >= 1000) //Don't allow modifying the basic enemy activations. Only allow modifying built-in custom activations and user custom activations.
+			if (idx != -1 && act.id >= MonsterActivations.START_OF_CUSTOM_ACTIVATIONS) //Don't allow modifying the basic enemy activations. Only allow modifying built-in custom activations and user custom activations.
 			{
 				ActivationsEditorWindow ow = new ActivationsEditorWindow(scenario, ((MonsterActivations)activationsUC.dataListView.SelectedItem), false);
 				ow.ShowDialog();
@@ -479,9 +479,9 @@ namespace JiME
 
 		void OnDuplicateActivations(object sender, EventArgs e)
 		{
-			//Get next id starting at 2000 to create the new item
+			//Get next id starting at 1000 to create the new item
 			int maxId = scenario.activationsObserver.Max(a => a.id);
-			int newId = Math.Max(maxId+1, 2000); //Get the next id over 2000
+			int newId = Math.Max(maxId+1, MonsterActivations.START_OF_CUSTOM_ACTIVATIONS); //Get the next id over 1000
 			//Get the selected item and clone it
 			int idx = activationsUC.dataListView.SelectedIndex;
 			MonsterActivations act = ((MonsterActivations)activationsUC.dataListView.Items[idx]).Clone(newId);
@@ -594,9 +594,9 @@ namespace JiME
 		void AddActivations()
 		{
 			Console.WriteLine("Add Enemy Activations...");
-			//Get next id starting at 2000 to create the new item
+			//Get next id starting at 1000 to create the new item
 			int maxId = scenario.activationsObserver.Max(a => a.id);
-			int newId = Math.Max(maxId + 1, 2000); //Get the next id over 2000
+			int newId = Math.Max(maxId + 1, MonsterActivations.START_OF_CUSTOM_ACTIVATIONS); //Get the next id over 1000
 			ActivationsEditorWindow aew = new ActivationsEditorWindow(scenario, new MonsterActivations(newId), false);
 			if (aew.ShowDialog() == true)
 			{

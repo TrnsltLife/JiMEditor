@@ -95,6 +95,8 @@ namespace JiME
     {
         [JsonIgnore]
 		private List<TranslationAccessor> _translationAccessors;
+		[JsonIgnore]
+		private string _translationKeyParents;
 
 		[JsonIgnore]
 		public List<TranslationAccessor> translationAccessors
@@ -102,6 +104,13 @@ namespace JiME
 			get { return _translationAccessors; }
 			set { _translationAccessors = value; }
 		}
+
+        [JsonIgnore]
+		public string translationKeyParents
+        {
+			get { return _translationKeyParents; }
+			set { _translationKeyParents = value; }
+        }
 
 		public Translatable()
         {
@@ -119,7 +128,7 @@ namespace JiME
 			List<TranslationItem> items = new List<TranslationItem>();
 			foreach(TranslationAccessor accessor in translationAccessors)
             {
-				string key = accessor.FormatKey(TranslationKeyName());
+				string key = accessor.FormatKey(TranslationKeyName(), translationKeyParents);
 				string val = accessor.RetrieveVal();
 				Console.WriteLine(accessor.keyPattern + " => " + key + " => " + val);
 				items.Add(new TranslationItem(key, val));
@@ -131,7 +140,7 @@ namespace JiME
         {
 			foreach (TranslationAccessor accessor in translationAccessors)
 			{
-				string key = accessor.FormatKey(TranslationKeyName());
+				string key = accessor.FormatKey(TranslationKeyName(), translationKeyParents);
 				if(key == findKey)
                 {
 					return accessor.RetrieveVal();
@@ -140,8 +149,8 @@ namespace JiME
 			return "";
 		}
 
-		virtual public string TranslationKeyName() { Console.WriteLine("TranslationKeyName:" + "currentName");  return "currentName"; }
-		virtual public string PreviousTranslationKeyName() { Console.WriteLine("PreviousTranslationKeyName:" + "oldName"); return "oldName"; }
+		virtual public string TranslationKeyName() { return "currentName"; }
+		virtual public string PreviousTranslationKeyName() { return "oldName"; }
     }
 
 	public class TranslationAccessor
@@ -155,9 +164,9 @@ namespace JiME
 			this.valFunc = valFunc;
         }
 
-		public string FormatKey(string name)
+		public string FormatKey(string name, string parentHierarchy)
         {
-			return String.Format(keyPattern, name);
+			return String.Format(keyPattern, name, parentHierarchy);
         }
 
 		public string RetrieveVal()

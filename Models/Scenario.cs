@@ -471,7 +471,7 @@ namespace JiME
 			//Remove default activations if they exist
 			for(int i = activationsObserver.Count - 1; i >= 0; i-- )
             {
-                if (activationsObserver[i].id < 1000)
+                if (activationsObserver[i].id < MonsterActivations.START_OF_CUSTOM_ACTIVATIONS)
                 {
 					activationsObserver.RemoveAt(i);
                 }
@@ -656,8 +656,8 @@ namespace JiME
 			Dictionary<string, TranslationItem> defaultTranslation = new Dictionary<string, TranslationItem>();
 			foreach (var item in defaultTranslationList)
 			{
-				defaultTranslation.Add(item.key, item);
 				Console.WriteLine(item.key + " => " + item.text);
+				defaultTranslation.Add(item.key, item);
 			}
 			return defaultTranslation;
 		}
@@ -677,7 +677,8 @@ namespace JiME
 			foreach(var chapter in chapterObserver)
             {
 				defaultTranslations.AddRange(chapter.CollectTranslationItems());
-				defaultTranslations.AddRange(chapter.tileObserver.ToList().ConvertAll(tile => ((BaseTile)tile).CollectTranslationItems()).SelectMany(list => list)); //grab lists of TranslationItems from all the chapters tiles and flatten them into one big list
+				//grab lists of TranslationItems from all the chapters tiles and flatten them into one big list
+				defaultTranslations.AddRange(chapter.tileObserver.ToList().ConvertAll(tile => ((BaseTile)tile).CollectTranslationItems()).SelectMany(list => list));
             }
 
 			foreach(var resolution in resolutionObserver)
@@ -685,10 +686,27 @@ namespace JiME
 				defaultTranslations.AddRange(resolution.CollectTranslationItems());
             }
 
-			/*
-			interactionObserver.CollectionChanged += handler;
-            activationsObserver.CollectionChanged += handler;
-			 */
+			foreach (var activation in activationsObserver)
+			{
+				if (activation.id >= MonsterActivations.START_OF_CUSTOM_ACTIVATIONS)
+				{
+					defaultTranslations.AddRange(activation.CollectTranslationItems());
+					//grab lists of TranslationItems from all the chapters tiles and flatten them into one big list
+					defaultTranslations.AddRange(activation.activations.ToList().ConvertAll(item =>
+					{
+						item.translationKeyParents = activation.dataName;
+						return item.CollectTranslationItems();
+					}).SelectMany(list => list));
+				}
+			}
+
+			foreach (var interaction in interactionObserver)
+            {
+				defaultTranslations.AddRange(((InteractionBase)interaction).CollectTranslationItems());
+            }
+
+			//remove default translations with empty value
+			defaultTranslations = defaultTranslations.FindAll(it => !String.IsNullOrWhiteSpace(it.text)).ToList();
 
 			return defaultTranslations;
         }
