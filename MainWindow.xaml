@@ -22,39 +22,35 @@
 		<CommandBinding Command="local:MyCommands.SaveProjectAs" Executed="CommandSaveProjectAs_Executed" CanExecute="CommandSaveProjectAs_CanExecute"/>
 		<CommandBinding Command="local:MyCommands.NewChapter" Executed="CommandNewChapter_Executed" CanExecute="CommandNewChapter_CanExecute"/>
 		<!--Popup menu-->
-		<CommandBinding Command="local:MyCommands.NewTextInteraction" Executed="CommandNewTextInteraction_Executed" CanExecute="CommandNewTextInteraction_CanExecute"/>
-		<CommandBinding Command="local:MyCommands.NewBranchInteraction" Executed="CommandNewBranchInteraction_Executed" CanExecute="CommandNewBranchInteraction_CanExecute"/>
-		<CommandBinding Command="local:MyCommands.NewThreatInteraction" Executed="CommandNewThreatInteraction_Executed" CanExecute="CommandNewThreatInteraction_CanExecute"/>
-		<CommandBinding Command="local:MyCommands.NewTestInteraction" Executed="CommandNewTestInteraction_Executed" CanExecute="CommandNewTestInteraction_CanExecute"/>
-		<CommandBinding Command="local:MyCommands.NewDecisionInteraction" Executed="CommandNewDecisionInteraction_Executed" CanExecute="CommandNewDecisionInteraction_CanExecute"/>
-		<CommandBinding Command="local:MyCommands.NewMultiInteraction" Executed="CommandNewMultiInteraction_Executed" CanExecute="CommandNewMultiInteraction_CanExecute"/>
-		<CommandBinding Command="local:MyCommands.NewPersistentInteraction" Executed="CommandNewPersistentInteraction_Executed" CanExecute="CommandNewPersistentInteraction_CanExecute"/>
 		<CommandBinding Command="local:MyCommands.NewConditionalInteraction" Executed="CommandNewConditionalInteraction_Executed" CanExecute="CommandNewConditionalInteraction_CanExecute"/>
+		<CommandBinding Command="local:MyCommands.NewDecisionInteraction" Executed="CommandNewDecisionInteraction_Executed" CanExecute="CommandNewDecisionInteraction_CanExecute"/>
 		<CommandBinding Command="local:MyCommands.NewDialogInteraction" Executed="CommandNewDialogInteraction_Executed" CanExecute="CommandNewDialogInteraction_CanExecute"/>
+		<CommandBinding Command="local:MyCommands.NewThreatInteraction" Executed="CommandNewThreatInteraction_Executed" CanExecute="CommandNewThreatInteraction_CanExecute"/>
+		<CommandBinding Command="local:MyCommands.NewMultiInteraction" Executed="CommandNewMultiInteraction_Executed" CanExecute="CommandNewMultiInteraction_CanExecute"/>
 		<CommandBinding Command="local:MyCommands.NewReplaceTokenInteraction" Executed="CommandNewReplaceTokenInteraction_Executed" CanExecute="CommandNewReplaceTokenInteraction_CanExecute"/>
 		<CommandBinding Command="local:MyCommands.NewRewardInteraction" Executed="CommandNewRewardInteraction_Executed" CanExecute="CommandNewRewardInteraction_CanExecute"/>
+		<CommandBinding Command="local:MyCommands.NewPersistentInteraction" Executed="CommandNewPersistentInteraction_Executed" CanExecute="CommandNewPersistentInteraction_CanExecute"/>
+		<CommandBinding Command="local:MyCommands.NewTextInteraction" Executed="CommandNewTextInteraction_Executed" CanExecute="CommandNewTextInteraction_CanExecute"/>
+		<CommandBinding Command="local:MyCommands.NewTestInteraction" Executed="CommandNewTestInteraction_Executed" CanExecute="CommandNewTestInteraction_CanExecute"/>
+		<CommandBinding Command="local:MyCommands.NewBranchInteraction" Executed="CommandNewBranchInteraction_Executed" CanExecute="CommandNewBranchInteraction_CanExecute"/>
 
 	</Window.CommandBindings>
 
 	<Window.Resources>
 		<ContextMenu x:Key="cmButton">
-			<MenuItem Command="local:MyCommands.NewTextInteraction" CommandTarget="{Binding Path=PlacementTarget,
-                        RelativeSource={RelativeSource AncestorType=ContextMenu}
-               }">
-			</MenuItem>
-			<MenuItem Command="local:MyCommands.NewBranchInteraction" CommandTarget="{Binding Path=PlacementTarget,
-                        RelativeSource={RelativeSource AncestorType=ContextMenu}
-               }">
-			</MenuItem>
-			<MenuItem Command="local:MyCommands.NewThreatInteraction" CommandTarget="{Binding Path=PlacementTarget,
-                        RelativeSource={RelativeSource AncestorType=ContextMenu}
-               }">
-			</MenuItem>
-			<MenuItem Command="local:MyCommands.NewTestInteraction" CommandTarget="{Binding Path=PlacementTarget,
+			<MenuItem Command="local:MyCommands.NewConditionalInteraction" CommandTarget="{Binding Path=PlacementTarget,
                         RelativeSource={RelativeSource AncestorType=ContextMenu}
                }">
 			</MenuItem>
 			<MenuItem Command="local:MyCommands.NewDecisionInteraction" CommandTarget="{Binding Path=PlacementTarget,
+                        RelativeSource={RelativeSource AncestorType=ContextMenu}
+               }">
+			</MenuItem>
+			<MenuItem Command="local:MyCommands.NewDialogInteraction" CommandTarget="{Binding Path=PlacementTarget,
+                        RelativeSource={RelativeSource AncestorType=ContextMenu}
+               }">
+			</MenuItem>
+			<MenuItem Command="local:MyCommands.NewThreatInteraction" CommandTarget="{Binding Path=PlacementTarget,
                         RelativeSource={RelativeSource AncestorType=ContextMenu}
                }">
 			</MenuItem>
@@ -66,19 +62,23 @@
                         RelativeSource={RelativeSource AncestorType=ContextMenu}
                }">
 			</MenuItem>
-			<MenuItem Command="local:MyCommands.NewConditionalInteraction" CommandTarget="{Binding Path=PlacementTarget,
-                        RelativeSource={RelativeSource AncestorType=ContextMenu}
-               }">
-			</MenuItem>
-			<MenuItem Command="local:MyCommands.NewDialogInteraction" CommandTarget="{Binding Path=PlacementTarget,
-                        RelativeSource={RelativeSource AncestorType=ContextMenu}
-               }">
-			</MenuItem>
 			<MenuItem Command="local:MyCommands.NewReplaceTokenInteraction" CommandTarget="{Binding Path=PlacementTarget,
                         RelativeSource={RelativeSource AncestorType=ContextMenu}
                }">
 			</MenuItem>
 			<MenuItem Command="local:MyCommands.NewRewardInteraction" CommandTarget="{Binding Path=PlacementTarget,
+                        RelativeSource={RelativeSource AncestorType=ContextMenu}
+               }">
+			</MenuItem>
+			<MenuItem Command="local:MyCommands.NewTestInteraction" CommandTarget="{Binding Path=PlacementTarget,
+                        RelativeSource={RelativeSource AncestorType=ContextMenu}
+               }">
+			</MenuItem>
+			<MenuItem Command="local:MyCommands.NewBranchInteraction" CommandTarget="{Binding Path=PlacementTarget,
+                        RelativeSource={RelativeSource AncestorType=ContextMenu}
+               }">
+			</MenuItem>
+			<MenuItem Command="local:MyCommands.NewTextInteraction" CommandTarget="{Binding Path=PlacementTarget,
                         RelativeSource={RelativeSource AncestorType=ContextMenu}
                }">
 			</MenuItem>
