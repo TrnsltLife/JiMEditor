@@ -233,6 +233,7 @@ namespace JiME.Views
 			if ( resolutionCB.SelectedIndex < 0 )
 				return;
 
+			Dictionary<string, string> originals = scenario.resolutionObserver[resolutionCB.SelectedIndex].CaptureStartingValues();
 			TextEditorWindow te = new TextEditorWindow( scenario, EditMode.Resolution, scenario.resolutionObserver[resolutionCB.SelectedIndex] );
 			bool chk = true;//default to true
 			if ( scenario.scenarioEndStatus.TryGetValue( scenario.resolutionObserver[resolutionCB.SelectedIndex].dataName, out chk ) )
@@ -259,6 +260,8 @@ namespace JiME.Views
 				//otherwise update value
 				else
 					scenario.scenarioEndStatus[te.shortName] = te.successChecked;
+
+				scenario.resolutionObserver[resolutionCB.SelectedIndex].DecertifyChangedValues(scenario.translationObserver, originals);
 			}
 
 			scenario.PruneScenarioEnd();

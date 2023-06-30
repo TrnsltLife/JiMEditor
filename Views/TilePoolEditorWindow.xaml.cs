@@ -263,6 +263,7 @@ namespace JiME.Views
 		{
 			if ( selected != null )
 			{
+				Dictionary<string, string> originals = selected.CaptureStartingValues();
 				TextEditorWindow tw = new TextEditorWindow( scenario, EditMode.Flavor, selected.flavorBookData );
 				if ( tw.ShowDialog() == true )
 					selected.flavorBookData.pages = tw.textBookController.pages;
@@ -271,6 +272,8 @@ namespace JiME.Views
 					exploreStatus.Text = "Exploration Text is Empty";
 				else
 					exploreStatus.Text = "Exploration Text is Set";
+
+				selected.DecertifyChangedValues(scenario.translationObserver, originals);
 			}
 		}
 	}

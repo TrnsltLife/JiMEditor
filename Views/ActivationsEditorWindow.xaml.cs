@@ -94,9 +94,11 @@ namespace JiME.Views
 		private void EditButton_Click( object sender, RoutedEventArgs e )
 		{
 			MonsterActivationItem mai = ( (Button)sender ).DataContext as MonsterActivationItem;
+			Dictionary<string, string> originals = mai.CaptureStartingValues();
 			MonsterActivationItemEditorWindow maie = new MonsterActivationItemEditorWindow(scenario, activations, mai, false);
 			maie.ShowDialog();
 			NotifyItemChanged(mai);
+			mai.DecertifyChangedValues(scenario.translationObserver, originals);
 		}
 
 		private void NotifyItemChanged(MonsterActivationItem mai)
