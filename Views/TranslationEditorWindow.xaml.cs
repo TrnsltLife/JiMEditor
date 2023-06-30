@@ -63,12 +63,29 @@ namespace JiME.Views
             {
 				if(!translationDict.ContainsKey(entity.Key))
                 {
+					//Clone the defaultTranslation item with the key and text
 					TranslationItem clonedItem = entity.Value.Clone();
 					clonedItem.translationOK = false;
 					translation.translationItems.Add(clonedItem);
 					translationDict.Add(entity.Key, clonedItem);
-                }
-            }
+
+					/*
+					//Create an untranslated item with the key but no text
+					TranslationItem untranslatedItem = new TranslationItem(entity.Key);
+					translation.translationItems.Add(untranslatedItem);
+					translationDict.Add(entity.Key, untranslatedItem);
+					*/
+				}
+			}
+
+			//Make sure all the items are sorted alphabetically
+			List<TranslationItem> sortedList = translation.translationItems.ToList();
+			sortedList.Sort();
+			translation.translationItems.Clear();
+			foreach (var item in sortedList)
+			{
+				translation.translationItems.Add(item);
+			}
 		}
 
 		bool TryClosing()
@@ -102,7 +119,10 @@ namespace JiME.Views
 			translationInitialState.translationItems.Clear();
 			foreach (var item in translation.translationItems)
 			{
-				if((item.superfluous && item.text.Trim() == "") || item.deleted || (item.added && item.text.Trim() == "")) { continue; }
+				if(item.text == defaultTranslation[item.key].text && !item.translationOK) { continue; }
+				else if((item.superfluous && item.text.Trim() == "")) { continue; }
+				else if ((item.added && item.text.Trim() == "")) { continue; }
+				else if (item.deleted) { continue; }
 				else
 				{
 					translationInitialState.translationItems.Add(item);

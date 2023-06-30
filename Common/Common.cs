@@ -85,12 +85,6 @@ namespace JiME
 		bool isReusable { get; set; }
 	}
 
-	public interface ITranslationCollector
-    {
-		List<TranslationItem> CollectTranslationItems();
-		string DefaultStringForTranslationKey(string key);
-	}
-
 	public class Translatable
     {
         [JsonIgnore]
@@ -124,13 +118,11 @@ namespace JiME
 
 		public List<TranslationItem> CollectTranslationItems()
         {
-			Console.WriteLine("CollectTranslationItems: " + translationAccessors.Count);
 			List<TranslationItem> items = new List<TranslationItem>();
 			foreach(TranslationAccessor accessor in translationAccessors)
             {
 				string key = accessor.FormatKey(TranslationKeyName(), translationKeyParents);
 				string val = accessor.RetrieveVal();
-				Console.WriteLine(accessor.keyPattern + " => " + key + " => " + val);
 				items.Add(new TranslationItem(key, val));
 			}
 			return items;
@@ -151,7 +143,40 @@ namespace JiME
 
 		virtual public string TranslationKeyName() { return "currentName"; }
 		virtual public string PreviousTranslationKeyName() { return "oldName"; }
-    }
+
+		public Dictionary<string, string> CaptureStartingValues()
+        {
+			Dictionary<string, string> result = new Dictionary<string, string>();
+			foreach (TranslationAccessor accessor in translationAccessors)
+			{
+				string key = accessor.keyPattern; //just the bare keyPattern without having its {0} placeholders replaced
+				string val = accessor.RetrieveVal();
+				Console.WriteLine("CaptureStartingValues: " + key + " => " + val);
+				result.Add(key, val);
+			}
+			return result;
+        }
+
+		public void DecertifyChangedValues(ObservableCollection<Translation> translations, Dictionary<string, string> originals)
+        {
+			foreach (TranslationAccessor accessor in translationAccessors)
+			{
+				string key = accessor.keyPattern; //just the bare keyPattern without having its {0} placeholders replaced
+				string formattedKey = accessor.FormatKey(TranslationKeyName(), translationKeyParents);
+				string val = accessor.RetrieveVal();
+
+                //See if the value changed
+                if (originals[key] != val)
+                {
+					//Dercertify the translation in all the languages
+					foreach(var translation in translations)
+                    {
+						translation.DecertifyKey(formattedKey);
+					}
+                }
+			}
+		}
+	}
 
 	public class TranslationAccessor
     {

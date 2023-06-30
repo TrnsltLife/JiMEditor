@@ -83,6 +83,12 @@ namespace JiME
 			translationItems.Where(it => it.key.StartsWith(keyStart)).ToList().ForEach(it => Regex.Replace(it.key, "^" + Regex.Escape(keyStart), keyStartReplace));
         }
 
+		public void DecertifyKey(string key)
+        {
+			//Replace values
+			translationItems.Where(it => it.key == key).ToList().ForEach(it => it.translationOK = false);
+        }
+
 		public void SetNeedsTranslation(string key)
         {
 			translationItems.Where(it => it.key == key).ToList().ForEach(it => it.translationOK = true);

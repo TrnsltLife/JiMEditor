@@ -288,58 +288,91 @@ namespace JiME
         { 
 			if (interactionItem is TextInteraction )
 			{
-				TextInteractionWindow tw = new TextInteractionWindow( scenario, (TextInteraction)interactionItem);
+				TextInteraction castInteraction = (TextInteraction)interactionItem;
+				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
+				TextInteractionWindow tw = new TextInteractionWindow( scenario, castInteraction);
 				tw.ShowDialog();
+				castInteraction.DecertifyChangedValues(scenario.translationObserver, originalValues);
 			}
 			else if (interactionItem is BranchInteraction )
 			{
-				BranchInteractionWindow bw = new BranchInteractionWindow( scenario, (BranchInteraction)interactionItem);
+				BranchInteraction castInteraction = (BranchInteraction)interactionItem;
+				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
+				BranchInteractionWindow bw = new BranchInteractionWindow( scenario, castInteraction);
 				bw.ShowDialog();
+				castInteraction.DecertifyChangedValues(scenario.translationObserver, originalValues);
 			}
 			else if (interactionItem is TestInteraction )
 			{
-				TestInteractionWindow bw = new TestInteractionWindow( scenario, (TestInteraction)interactionItem);
+				TestInteraction castInteraction = (TestInteraction)interactionItem;
+				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
+				TestInteractionWindow bw = new TestInteractionWindow( scenario, castInteraction);
 				bw.ShowDialog();
+				castInteraction.DecertifyChangedValues(scenario.translationObserver, originalValues);
 			}
 			else if (interactionItem is DecisionInteraction )
 			{
-				DecisionInteractionWindow bw = new DecisionInteractionWindow( scenario, (DecisionInteraction)interactionItem);
+				DecisionInteraction castInteraction = (DecisionInteraction)interactionItem;
+				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
+				DecisionInteractionWindow bw = new DecisionInteractionWindow( scenario, castInteraction);
 				bw.ShowDialog();
+				castInteraction.DecertifyChangedValues(scenario.translationObserver, originalValues);
 			}
 			else if ( interactionItem is ThreatInteraction )
 			{
-				ThreatInteractionWindow bw = new ThreatInteractionWindow( scenario, (ThreatInteraction)interactionItem );
+				ThreatInteraction castInteraction = (ThreatInteraction)interactionItem;
+				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
+				ThreatInteractionWindow bw = new ThreatInteractionWindow( scenario, castInteraction);
 				bw.ShowDialog();
+				castInteraction.DecertifyChangedValues(scenario.translationObserver, originalValues);
 			}
 			else if ( interactionItem is MultiEventInteraction )
 			{
-				MultiEventWindow bw = new MultiEventWindow( scenario, (MultiEventInteraction)interactionItem );
+				MultiEventInteraction castInteraction = (MultiEventInteraction)interactionItem;
+				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
+				MultiEventWindow bw = new MultiEventWindow( scenario, castInteraction);
 				bw.ShowDialog();
+				castInteraction.DecertifyChangedValues(scenario.translationObserver, originalValues);
 			}
 			else if ( interactionItem is PersistentTokenInteraction )
 			{
-				PersistentInteractionWindow bw = new PersistentInteractionWindow( scenario, (PersistentTokenInteraction)interactionItem );
+				PersistentTokenInteraction castInteraction = (PersistentTokenInteraction)interactionItem;
+				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
+				PersistentInteractionWindow bw = new PersistentInteractionWindow( scenario, castInteraction);
 				bw.ShowDialog();
+				castInteraction.DecertifyChangedValues(scenario.translationObserver, originalValues);
 			}
 			else if ( interactionItem is ConditionalInteraction )
 			{
-				ConditionalInteractionWindow bw = new ConditionalInteractionWindow( scenario, (ConditionalInteraction)interactionItem );
+				ConditionalInteraction castInteraction = (ConditionalInteraction)interactionItem;
+				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
+				ConditionalInteractionWindow bw = new ConditionalInteractionWindow( scenario, castInteraction);
 				bw.ShowDialog();
+				castInteraction.DecertifyChangedValues(scenario.translationObserver, originalValues);
 			}
 			else if ( interactionItem is DialogInteraction )
 			{
-				DialogInteractionWindow bw = new DialogInteractionWindow( scenario, (DialogInteraction)interactionItem );
+				DialogInteraction castInteraction = (DialogInteraction)interactionItem;
+				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
+				DialogInteractionWindow bw = new DialogInteractionWindow( scenario, castInteraction);
 				bw.ShowDialog();
+				castInteraction.DecertifyChangedValues(scenario.translationObserver, originalValues);
 			}
 			else if ( interactionItem is ReplaceTokenInteraction )
 			{
-				ReplaceTokenInteractionWindow bw = new ReplaceTokenInteractionWindow( scenario, (ReplaceTokenInteraction)interactionItem );
+				ReplaceTokenInteraction castInteraction = (ReplaceTokenInteraction)interactionItem;
+				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
+				ReplaceTokenInteractionWindow bw = new ReplaceTokenInteractionWindow( scenario, castInteraction);
 				bw.ShowDialog();
+				castInteraction.DecertifyChangedValues(scenario.translationObserver, originalValues);
 			}
 			else if ( interactionItem is RewardInteraction )
 			{
-				RewardInteractionWindow bw = new RewardInteractionWindow( scenario, (RewardInteraction)interactionItem );
+				RewardInteraction castInteraction = (RewardInteraction)interactionItem;
+				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
+				RewardInteractionWindow bw = new RewardInteractionWindow( scenario, castInteraction);
 				bw.ShowDialog();
+				castInteraction.DecertifyChangedValues(scenario.translationObserver, originalValues);
 			}
 		}
 
@@ -361,8 +394,10 @@ namespace JiME
 
         private void OpenObjectiveEditor(Objective o)
 		{
+			Dictionary<string, string> originalValues = o.CaptureStartingValues();
 			ObjectiveEditorWindow ow = new ObjectiveEditorWindow( scenario, o, false );
 			ow.ShowDialog();
+			o.DecertifyChangedValues(scenario.translationObserver, originalValues);
 		}
 
 
@@ -564,12 +599,14 @@ namespace JiME
 
         private void OpenScenarioEditor()
 		{
+			Dictionary<string, string> originalValues = scenario.CaptureStartingValues();
 			ScenarioWindow sw = new ScenarioWindow( scenario );
 			sw.Owner = this;
 			if ( sw.ShowDialog() == true )
 			{
 				scenario.scenarioName = sw.scenarioName;
 			}
+			scenario.DecertifyChangedValues(scenario.translationObserver, originalValues);
 		}   
 
         private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e )

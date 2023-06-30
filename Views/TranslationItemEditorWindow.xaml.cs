@@ -19,6 +19,8 @@ namespace JiME.Views
 		public TranslationItem translationItem { get; set; }
 		public TranslationItem defaultTranslation { get; set; }
 
+		private string originalText;
+
 		public TranslationItemEditorWindow(TranslationItem translationItem, TranslationItem defaultTranslation)
 		{
 			InitializeComponent();
@@ -26,6 +28,7 @@ namespace JiME.Views
 
 			this.translationItem = translationItem;
 			this.defaultTranslation = defaultTranslation;
+			originalText = translationItem.text; //use this to keep track if text has changed during editing
 		}
 
 		private void OkButton_Click( object sender, RoutedEventArgs e )
@@ -39,6 +42,13 @@ namespace JiME.Views
 				//return;
 			}
 			Console.WriteLine("OKButton_Click " + translationItem.text);
+
+			//If the text has changed during editing, set the flat to true.
+			//TODO Figure out a way to update the item in the TranslationEditorWindow's list
+			if (translationItem.text != originalText)
+            {
+				translationItem.updatedWhileEditing = true;
+            }
 			DialogResult = true;
 		}
 

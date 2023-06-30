@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:JiME"
         mc:Ignorable="d"
         ContentRendered="Window_ContentRendered"
-        Title="Translation Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" Width="875" Height="900" Closing="Window_Closing">
+        Title="Translation Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" Width="900" Height="900" Closing="Window_Closing">
 
 	<Window.Resources>
 		<BooleanToVisibilityConverter x:Key="bvis"/>
@@ -57,23 +57,23 @@
 				<Border Style="{StaticResource callout}" Margin="0,2">
 					<Grid>
 						<Grid.ColumnDefinitions>
-							<ColumnDefinition SharedSizeGroup="GridCheckbox" Width="0.05*"/>
-							<ColumnDefinition SharedSizeGroup="GridKey" Width="0.35*"/>
-							<ColumnDefinition SharedSizeGroup="GridText" Width="0.5*"/>
-							<ColumnDefinition SharedSizeGroup="GridEdit" Width="0.05*"/>
-							<ColumnDefinition SharedSizeGroup="GridDelete" Width="0.05*"/>
+							<ColumnDefinition SharedSizeGroup="GridCheckbox" Width="40"/>
+							<ColumnDefinition SharedSizeGroup="GridKey" Width="225" MaxWidth="225"/>
+							<ColumnDefinition SharedSizeGroup="GridText" Width="500" MaxWidth="500"/>
+							<ColumnDefinition SharedSizeGroup="GridEdit" Width="60"/>
+							<ColumnDefinition SharedSizeGroup="GridDelete" Width="60"/>
 						</Grid.ColumnDefinitions>
 
-						<TextBlock Grid.Column="0" Text="Done" Foreground="White"/>
-						<TextBlock Grid.Column="1" Text="Key" Foreground="White"/>
-						<TextBlock Grid.Column="2" Text="Translation" Foreground="White"/>
-						<TextBlock Grid.Column="3" Text="Edit" Foreground="White"/>
-						<TextBlock Grid.Column="4" Text="Delete" Foreground="White"/>
+						<TextBlock Grid.Column="0" Text="Done" Foreground="White" HorizontalAlignment="Left"/>
+						<TextBlock Grid.Column="1" Text="Key" Foreground="White" HorizontalAlignment="Left"/>
+						<TextBlock Grid.Column="2" Text="Translation" Foreground="White" HorizontalAlignment="Left"/>
+						<TextBlock Grid.Column="3" Text="Edit" Foreground="White" HorizontalAlignment="Left"/>
+						<TextBlock Grid.Column="4" Text="Delete" Foreground="White" HorizontalAlignment="Left"/>
 					</Grid>
 				</Border>
 
 				<!--items-->
-				<ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" MaxHeight="350" Grid.IsSharedSizeScope="True">
+				<ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Visible" MaxHeight="350" Grid.IsSharedSizeScope="True">
 					<ItemsControl ItemsSource="{Binding translation.translationItems}">
 						<ItemsControl.ItemsPanel>
 							<ItemsPanelTemplate>
@@ -85,21 +85,21 @@
 								<Border Style="{StaticResource callout}" Margin="0,2">
 									<Grid ShowGridLines="False">
 										<Grid.ColumnDefinitions>
-											<ColumnDefinition SharedSizeGroup="GridCheckbox" Width="0.05*"/>
-											<ColumnDefinition SharedSizeGroup="GridKey" Width="0.35*"/>
-											<ColumnDefinition SharedSizeGroup="GridText" Width="0.5*"/>
-											<ColumnDefinition SharedSizeGroup="GridEdit" Width="0.05*"/>
-											<ColumnDefinition SharedSizeGroup="GridDelete" Width="0.05*"/>
+											<ColumnDefinition SharedSizeGroup="GridCheckbox" Width="40"/>
+											<ColumnDefinition SharedSizeGroup="GridKey" Width="*" MaxWidth="195"/>
+											<ColumnDefinition SharedSizeGroup="GridText" Width="500" MaxWidth="500"/>
+											<ColumnDefinition SharedSizeGroup="GridEdit" Width="60"/>
+											<ColumnDefinition SharedSizeGroup="GridDelete" Width="60"/>
 										</Grid.ColumnDefinitions>
 
-										<CheckBox Grid.Column="0" IsChecked="{Binding translationOK}" Margin="5.0" />
-										<TextBlock Grid.Column="1" Text="{Binding key}" MaxHeight="32" Foreground="White"/>
-										<FlowDocumentScrollViewer Grid.Column="2" Document="{Binding TextFlowDocument}" MaxHeight="32" Foreground="White" VerticalScrollBarVisibility="Disabled"/>
+										<CheckBox Grid.Column="0" IsChecked="{Binding translationOK}" Margin="5,0" />
+										<TextBlock Grid.Column="1" Text="{Binding key}" MaxHeight="32" MaxWidth="195" Foreground="White" TextWrapping="Wrap" />
+										<FlowDocumentScrollViewer Grid.Column="2" Document="{Binding TextFlowDocument}" MaxHeight="32" MaxWidth="500" Foreground="White"  VerticalScrollBarVisibility="Disabled"/>
 
 										<Button Grid.Column="3" x:Name="editButton" Background="CornflowerBlue" Click="EditButton_Click" IsDefault="True" Width="32" Height="32" Margin="5,0" DataContext="{Binding}">
 											<Image Source="/JiME;component/Assets/edit.png" Stretch="Uniform" />
 										</Button>
-										<Button Grid.Column="4" x:Name="deleteButton" Background="{StaticResource bgCancelDelete}" Click="DeleteButton_Click" IsDefault="True" Width="32" Height="32" DataContext="{Binding}">
+										<Button Grid.Column="4" x:Name="deleteButton" Background="{StaticResource bgCancelDelete}" Click="DeleteButton_Click" IsDefault="True" Width="32" Height="32" Margin="5,0" DataContext="{Binding}">
 											<Image Source="/JiME;component/Assets/remove.png" Stretch="Uniform" />
 										</Button>
 									</Grid>

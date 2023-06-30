@@ -13,7 +13,7 @@ namespace JiME
 		{
 			List<TranslationAccessor> list = new List<TranslationAccessor>()
 			{
-				new TranslationAccessor("event.{1}.{0}.tokenInteractionText", () => this.isTokenInteraction ? "" : this.dataName),
+				new TranslationAccessor("event.{1}.{0}.tokenText", () => this.isTokenInteraction ? "" : this.dataName),
 				new TranslationAccessor("event.{1}.{0}.flavorText", () => this.textBookData.pages[0].StartsWith("Default Flavor Text") ? "" : this.textBookData.pages[0]),
 				new TranslationAccessor("event.{1}.{0}.eventText", () => this.eventBookData.pages[0].StartsWith("Default Event Text") ? "" : this.eventBookData.pages[0])
 			};

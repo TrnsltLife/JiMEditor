@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using JiME.Models;
@@ -11,6 +12,16 @@ namespace JiME
 		{
 			translationKeyParents = "enemy";
 			base.DefineTranslationAccessors();
+			/*
+			List<TranslationAccessor> list = new List<TranslationAccessor>();
+			int index = 0;
+			foreach(var monster in monsterCollection)
+            {
+				list.Add(new TranslationAccessor("event.{1}.{0}.scripted." + index + ".name" , () => monster.dataName));
+				index++;
+			}
+			translationAccessors.AddRange(list);
+			*/
 		}
 
 		string _triggerDefeatedName;

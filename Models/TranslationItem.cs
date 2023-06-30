@@ -8,16 +8,21 @@ using JiME.UserControls;
 
 namespace JiME
 {
-	public class TranslationItem : INotifyPropertyChanged
+	public class TranslationItem : INotifyPropertyChanged, IComparable<TranslationItem>
 	{
 
 		string _key, _text;
 		bool _translationOK;
-		bool _superfluous;
-		bool _added;
-		bool _deleted;
+
+		//The following items are just used during editing the translation list and translation text to keep track of state
 		[JsonIgnore]
-		bool _updatedWhileEditing = false;
+		bool _superfluous; //item exists in the translation but not in the defaultTranslation
+		[JsonIgnore]
+		bool _added; //item added during editing
+        [JsonIgnore]
+		bool _deleted; //item deleted during eidting
+		[JsonIgnore]
+		bool _updatedWhileEditing; //item updated during editing (text changed)
 
 		public Guid GUID { get; set; }
 
@@ -60,6 +65,7 @@ namespace JiME
 			}
 		}
 
+        [JsonIgnore]
 		public bool superfluous
 		{
 			get => _superfluous;
@@ -73,6 +79,7 @@ namespace JiME
 			}
 		}
 
+		[JsonIgnore]
 		public bool added
 		{
 			get => _added;
@@ -86,6 +93,7 @@ namespace JiME
 			}
 		}
 
+		[JsonIgnore]
 		public bool deleted
 		{
 			get => _deleted;
@@ -138,15 +146,16 @@ namespace JiME
         {
 			this.key = key;
 			this.text = "";
-			this.translationOK = true;
+			this.translationOK = false;
         }
 
 		public TranslationItem(string key, string text)
 		{
 			this.key = key;
 			this.text = text;
-			this.translationOK = true;
+			this.translationOK = false;
 		}
+
 		public TranslationItem(string key, string text, bool translationOK)
 		{
 			this.key = key;
@@ -167,5 +176,11 @@ namespace JiME
 		{
 			PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( propName ) );
 		}
-	}
+
+        public int CompareTo(TranslationItem other)
+        {
+			if(other == null) { return key.CompareTo(null); }
+            return key.CompareTo(other.key);
+        }
+    }
 }

@@ -17,7 +17,8 @@ namespace JiME
         {
 			List<TranslationAccessor> list = new List<TranslationAccessor>()
             {
-				new TranslationAccessor("objective.{0}.objectiveReminder", () => this.objectiveReminder)
+				new TranslationAccessor("objective.{0}.reminder", () => this.objectiveReminder),
+				new TranslationAccessor("objective.{0}.summary", () => this.skipSummary ? "" : this.textBookData.pages[0])
             };
 			translationAccessors = list;
         }

@@ -11,8 +11,22 @@ namespace JiME
 	/// <summary>
 	/// A standalone mission, or a single mission in a campaign
 	/// </summary>
-	public class Scenario : INotifyPropertyChanged, ITranslationCollector
+	public class Scenario : Translatable, INotifyPropertyChanged
 	{
+		override public string TranslationKeyName() { return scenarioName; }
+		override public string PreviousTranslationKeyName() { return scenarioName; }
+
+		override protected void DefineTranslationAccessors()
+		{
+			List<TranslationAccessor> list = new List<TranslationAccessor>()
+			{
+				new TranslationAccessor("scenario.scenarioName", () => this.scenarioName),
+				new TranslationAccessor("scenario.specialInstructions", () => this.specialInstructions),
+				new TranslationAccessor("scenario.introduction", () => this.introBookData.pages[0])
+			};
+			translationAccessors = list;
+		}
+
 		string _scenarioName, _fileName, _objectiveName, _fileVersion, _specialInstructions, _coverImage;
 		bool _isDirty, _scenarioTypeJourney, _useTileGraphics;
 		int _threatMax, _loreReward, _xpReward, _shadowFear, _loreStartValue, _xpStartValue;
@@ -652,7 +666,8 @@ namespace JiME
 
 		public Dictionary<string, TranslationItem> CollectTranslationItemsAsDictionary()
         {
-			List<TranslationItem> defaultTranslationList = CollectTranslationItems();
+			List<TranslationItem> defaultTranslationList = CollectAllTranslationItems();
+			defaultTranslationList.Sort();
 			Dictionary<string, TranslationItem> defaultTranslation = new Dictionary<string, TranslationItem>();
 			foreach (var item in defaultTranslationList)
 			{
@@ -663,11 +678,14 @@ namespace JiME
 		}
 
 		//Collect translations from all the various game objects that can have translatable text
-		public List<TranslationItem> CollectTranslationItems()
+		public List<TranslationItem> CollectAllTranslationItems()
         {
 			List<TranslationItem> defaultTranslations = new List<TranslationItem>();
-			defaultTranslations.Add(new TranslationItem("scenario.scenarioName", scenarioName, false));
-			defaultTranslations.Add(new TranslationItem("scenario.specialInstructions", specialInstructions, false));
+
+			defaultTranslations.AddRange(this.CollectTranslationItems());
+
+			//defaultTranslations.Add(new TranslationItem("scenario.scenarioName", scenarioName, false));
+			//defaultTranslations.Add(new TranslationItem("scenario.specialInstructions", specialInstructions, false));
 
 			foreach(var objective in objectiveObserver)
             {
@@ -709,13 +727,6 @@ namespace JiME
 			defaultTranslations = defaultTranslations.FindAll(it => !String.IsNullOrWhiteSpace(it.text)).ToList();
 
 			return defaultTranslations;
-        }
-
-		public string DefaultStringForTranslationKey(string key)
-        {
-			if (key == "scenario.scenarioName") { return scenarioName; }
-			else if (key == "scenario.specialInstructions") { return specialInstructions; }
-			else return "";
         }
 
 
