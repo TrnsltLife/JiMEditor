@@ -21,7 +21,7 @@ namespace JiME
 			List<TranslationAccessor> list = new List<TranslationAccessor>()
 			{
 				new TranslationAccessor("scenario.scenarioName", () => this.scenarioName),
-				new TranslationAccessor("scenario.specialInstructions", () => this.specialInstructions),
+				new TranslationAccessor("scenario.instructions", () => this.specialInstructions),
 				new TranslationAccessor("scenario.introduction", () => this.introBookData.pages[0])
 			};
 			translationAccessors = list;

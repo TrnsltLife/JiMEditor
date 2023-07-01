@@ -22,22 +22,43 @@
 
 		<StackPanel Orientation="Vertical">
 			<StackPanel Margin="0,5,0,0" HorizontalAlignment="Stretch">
-				<Border Style="{StaticResource callout}">
-					<StackPanel Margin="0">
-						<TextBlock x:Name="nameLabel" Style="{StaticResource Heading}" Text="Language Code:"/>
-						<TextBlock Style="{StaticResource SubText}">
-								Select or type a 2 or 3 letter ISO-639 language code. <Bold><Italic>Required</Italic></Bold>
-						</TextBlock>
-						<StackPanel Orientation="Horizontal" Margin="0,0,0,0">
-							<ComboBox x:Name="langCodeCB" Text="{Binding translation.dataName}" IsEditable="True" Margin="0,5,10,0" Width="250" HorizontalAlignment="Left">
-								<ComboBoxItem>cz</ComboBoxItem>
-								<ComboBoxItem>de</ComboBoxItem>
-								<ComboBoxItem>en</ComboBoxItem>
-								<ComboBoxItem>fr</ComboBoxItem>
-							</ComboBox>
+				<Grid HorizontalAlignment="Stretch">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="0.5*"/>
+							<ColumnDefinition Width="0.5*"/>
+						</Grid.ColumnDefinitions>
+
+					<Border Grid.Column="0" Style="{StaticResource callout}">
+						<StackPanel Margin="0">
+							<TextBlock x:Name="langCodeLabel" Style="{StaticResource Heading}" Text="Language Code:"/>
+							<TextBlock Style="{StaticResource SubText}">
+									Select or type a 2 or 3 letter ISO-639 language code. (e.g. fr, es)
+							</TextBlock>
+							<StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+								<ComboBox x:Name="langCodeCB" Text="{Binding translation.dataName}" IsEditable="True" Margin="0,5,10,0" Width="250" HorizontalAlignment="Left">
+									<ComboBoxItem>cz</ComboBoxItem>
+									<ComboBoxItem>de</ComboBoxItem>
+									<ComboBoxItem>en</ComboBoxItem>
+									<ComboBoxItem>fr</ComboBoxItem>
+								</ComboBox>
+								<TextBlock Style="{StaticResource SubText}" Margin="5,5"><Bold><Italic>Required</Italic></Bold></TextBlock>
+							</StackPanel>
 						</StackPanel>
-					</StackPanel>
-				</Border>
+					</Border>
+
+					<Border  Grid.Column="1" Style="{StaticResource callout}">
+						<StackPanel Margin="0">
+							<TextBlock x:Name="langNameLabel" Style="{StaticResource Heading}" Text="Language Name:"/>
+							<TextBlock Style="{StaticResource SubText}">
+									Type the name of the language (e.g. Français, Español). <Bold><Italic>Required</Italic></Bold>
+							</TextBlock>
+							<StackPanel Orientation="Horizontal">
+								<TextBox x:Name="langNameTB" Text="{Binding translation.langName}" Margin="0,5,10,0" Width="250" HorizontalAlignment="Left"/>
+								<TextBlock Style="{StaticResource SubText}" Margin="5,5"><Bold><Italic>Required</Italic></Bold></TextBlock>
+							</StackPanel>
+						</StackPanel>
+					</Border>
+				</Grid>
 
 
 				<Border Style="{StaticResource callout}">
@@ -82,7 +103,7 @@
 						</ItemsControl.ItemsPanel>
 						<ItemsControl.ItemTemplate>
 							<DataTemplate>
-								<Border Style="{StaticResource callout}" Margin="0,2">
+								<Border Style="{StaticResource callout}" Margin="0,2" Background="{Binding Background}">
 									<Grid ShowGridLines="False">
 										<Grid.ColumnDefinitions>
 											<ColumnDefinition SharedSizeGroup="GridCheckbox" Width="40"/>

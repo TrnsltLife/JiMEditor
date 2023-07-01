@@ -16,7 +16,8 @@ namespace JiME
 				new TranslationAccessor("event.{1}.{0}.choice2", () => this.choice2),
 				new TranslationAccessor("event.{1}.{0}.text2", () => this.c2Text),
 				new TranslationAccessor("event.{1}.{0}.choice3", () => this.choice3),
-				new TranslationAccessor("event.{1}.{0}.text3", () => this.c3Text)
+				new TranslationAccessor("event.{1}.{0}.text3", () => this.c3Text),
+				new TranslationAccessor("event.{1}.{0}.persistentText", () => this.isPersistent ? this.persistentText : "")
 			};
 			translationAccessors.AddRange(list);
 		}

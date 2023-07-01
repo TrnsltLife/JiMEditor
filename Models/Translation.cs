@@ -15,7 +15,8 @@ namespace JiME
 	public class Translation : INotifyPropertyChanged
 	{
 
-		string _dataName;
+		string _dataName; //contains the language code
+		string _langName;
 		//TODO Change this to a Dictionary instead?
 		ObservableCollection<TranslationItem> _translationItems = new ObservableCollection<TranslationItem>();
 
@@ -30,6 +31,19 @@ namespace JiME
 				{
 					_dataName = value;
 					NotifyPropertyChanged("dataName");
+				}
+			}
+		}
+
+		public string langName
+		{
+			get => _langName;
+			set
+			{
+				if (value != _langName)
+				{
+					_langName = value;
+					NotifyPropertyChanged("langName");
 				}
 			}
 		}

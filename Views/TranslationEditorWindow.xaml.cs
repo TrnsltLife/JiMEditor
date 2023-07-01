@@ -48,12 +48,13 @@ namespace JiME.Views
         {
 			translationDict = new Dictionary<string, TranslationItem>(); //hold the keys from the language translation for easy lookup as we add in keys from the default translation that are missing in the language translation
 			translation = new Translation(translationInitialState.dataName);
+			translation.langName = translationInitialState.langName;
 
 			//First copy all the TranslationItems from the language translation into the translation list
 			foreach(var item in translationInitialState.translationItems)
             {
-				item.superfluous = !defaultTranslation.ContainsKey(item.key); //If it's not in the defaultTranslation, we really don't need this item anymore. But it might have a translated string the creator still needs to reference so don't delete it automatically.
 				TranslationItem clonedItem = item.Clone();
+				clonedItem.superfluous = !defaultTranslation.ContainsKey(item.key); //If it's not in the defaultTranslation, we really don't need this item anymore. But it might have a translated string the creator still needs to reference so don't delete it automatically.
 				translation.translationItems.Add(clonedItem);
 				translationDict.Add(item.key, clonedItem);
             }
@@ -68,13 +69,6 @@ namespace JiME.Views
 					clonedItem.translationOK = false;
 					translation.translationItems.Add(clonedItem);
 					translationDict.Add(entity.Key, clonedItem);
-
-					/*
-					//Create an untranslated item with the key but no text
-					TranslationItem untranslatedItem = new TranslationItem(entity.Key);
-					translation.translationItems.Add(untranslatedItem);
-					translationDict.Add(entity.Key, untranslatedItem);
-					*/
 				}
 			}
 
@@ -97,7 +91,10 @@ namespace JiME.Views
 				MessageBox.Show( "Give this Translation a unique language code.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
 				return false;
 			}
-
+			else if ( translation.langName == "")
+            {
+				MessageBox.Show("Give this Translation a language name so the players can tell what language it is.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
 			return true;
 		}
 
@@ -116,10 +113,11 @@ namespace JiME.Views
 			DialogResult = true;
 
 			translationInitialState.dataName = translation.dataName;
+			translationInitialState.langName = translation.langName;
 			translationInitialState.translationItems.Clear();
 			foreach (var item in translation.translationItems)
 			{
-				if(item.text == defaultTranslation[item.key].text && !item.translationOK) { continue; }
+				if(defaultTranslation.ContainsKey(item.key) && item.text == defaultTranslation[item.key].text && !item.translationOK) { continue; }
 				else if((item.superfluous && item.text.Trim() == "")) { continue; }
 				else if ((item.added && item.text.Trim() == "")) { continue; }
 				else if (item.deleted) { continue; }

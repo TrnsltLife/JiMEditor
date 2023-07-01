@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.ComponentModel;
 using Newtonsoft.Json;
 using JiME.UserControls;
+using System.Windows.Media;
 
 namespace JiME
 {
@@ -23,6 +24,16 @@ namespace JiME
 		bool _deleted; //item deleted during eidting
 		[JsonIgnore]
 		bool _updatedWhileEditing; //item updated during editing (text changed)
+
+
+        [JsonIgnore]
+		public Brush Background
+        {
+			get {
+				return new SolidColorBrush(
+					superfluous ? Colors.Gray :
+					translationOK ? Color.FromRgb(0x46, 0x46, 0x4a) : Colors.DarkOrange); }
+        }
 
 		public Guid GUID { get; set; }
 
