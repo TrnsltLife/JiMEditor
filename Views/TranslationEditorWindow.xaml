@@ -78,6 +78,18 @@
 				<Border Style="{StaticResource callout}" Margin="0,2">
 					<Grid>
 						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width=".33*"/>
+							<ColumnDefinition Width=".33*"/>
+							<ColumnDefinition Width=".33*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock Grid.Column="0" Text="Translation OK" Foreground="White"/>
+						<TextBlock Grid.Column="1" Text="No longer needed. Do you want to copy the text?" Foreground="White" Background="Gray"/>
+						<TextBlock Grid.Column="2" Text="Needs translation or approval." Foreground="White" Background="DarkOrange"/>
+					</Grid>
+				</Border>
+				<Border Style="{StaticResource callout}" Margin="0,2">
+					<Grid>
+						<Grid.ColumnDefinitions>
 							<ColumnDefinition SharedSizeGroup="GridCheckbox" Width="40"/>
 							<ColumnDefinition SharedSizeGroup="GridKey" Width="225" MaxWidth="225"/>
 							<ColumnDefinition SharedSizeGroup="GridText" Width="500" MaxWidth="500"/>
