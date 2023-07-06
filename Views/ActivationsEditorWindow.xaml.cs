@@ -94,11 +94,9 @@ namespace JiME.Views
 		private void EditButton_Click( object sender, RoutedEventArgs e )
 		{
 			MonsterActivationItem mai = ( (Button)sender ).DataContext as MonsterActivationItem;
-			Dictionary<string, string> originals = mai.CaptureStartingValues();
 			MonsterActivationItemEditorWindow maie = new MonsterActivationItemEditorWindow(scenario, activations, mai, false);
-			maie.ShowDialog();
+			mai.HandleWindow(maie, scenario.translationObserver);
 			NotifyItemChanged(mai);
-			mai.DecertifyChangedValues(scenario.translationObserver, originals);
 		}
 
 		private void NotifyItemChanged(MonsterActivationItem mai)
@@ -114,8 +112,9 @@ namespace JiME.Views
 			if (ret == MessageBoxResult.Yes)
 			{
 				MonsterActivationItem mai = ((Button)sender).DataContext as MonsterActivationItem;
+				mai.UpdateKeysStartingWith(scenario.translationObserver, activations.TranslationKeyPrefix() + mai.id.ToString() + ".", activations.TranslationKeyPrefix() + "deleted." + mai.GUID + "."); //update translation key of deleted item to use its GUID
 				activations.activations.Remove(mai);
-				activations.RenumberActivations();
+				activations.RenumberActivations(scenario.translationObserver);
 			}
 		}
 

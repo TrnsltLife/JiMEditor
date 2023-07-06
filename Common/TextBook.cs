@@ -10,7 +10,7 @@ namespace JiME
 	public class TextBookData : Translatable, INotifyPropertyChanged, ICommonData
 	{
 		override public string TranslationKeyName() { return dataName; }
-		override public string PreviousTranslationKeyName() { return dataName; }
+		override public string TranslationKeyPrefix() { return String.Format("resolution.{0}.", TranslationKeyName()); }
 
 		override protected void DefineTranslationAccessors()
 		{

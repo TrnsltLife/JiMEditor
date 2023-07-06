@@ -12,16 +12,6 @@ namespace JiME
 		{
 			translationKeyParents = "enemy";
 			base.DefineTranslationAccessors();
-			/*
-			List<TranslationAccessor> list = new List<TranslationAccessor>();
-			int index = 0;
-			foreach(var monster in monsterCollection)
-            {
-				list.Add(new TranslationAccessor("event.{1}.{0}.scripted." + index + ".name" , () => monster.dataName));
-				index++;
-			}
-			translationAccessors.AddRange(list);
-			*/
 		}
 
 		string _triggerDefeatedName;
@@ -111,6 +101,38 @@ namespace JiME
 		{
 			monsterCollection.Add( m );
 		}
+
+		public void RenumberMonsters(ObservableCollection<Translation> translations)
+		{
+			int i = 1;
+			foreach (var monster in monsterCollection)
+			{
+				//TODO What to do with the key that gets deleted when it has
+				Console.WriteLine("Renumber " + TranslationKeyPrefix() + "monster." + monster.index.ToString() + "." + " => " + TranslationKeyPrefix() + "monster." + i.ToString() + ".");
+				this.UpdateKeysStartingWith(translations, TranslationKeyPrefix() + "monster." + monster.index.ToString() + ".", TranslationKeyPrefix() + "monster." + i.ToString() + "."); //update translation keys with the renumbering
+				monster.index = i;
+				i++;
+			}
+			NotifyPropertyChanged("monstersCollection");
+		}
+
+		public void CheckMonsterNumbering(ObservableCollection<Translation> translations)
+        {
+			int i = 1;
+			bool needsRenumbering = false;
+			foreach(var monster in monsterCollection)
+            {
+				if(monster.index != i)
+                {
+					needsRenumbering = true;
+					break;
+                }
+            }
+			if(needsRenumbering)
+            {
+				RenumberMonsters(translations);
+            }
+        }
 
 		//Help handle a situation where an old file type had less enemies available than we do now.
 		public void ResizeIncludedEnemies()

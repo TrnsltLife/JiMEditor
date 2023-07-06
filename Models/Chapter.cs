@@ -14,7 +14,7 @@ namespace JiME
 	{
 
 		override public string TranslationKeyName() { return dataName; }
-		override public string PreviousTranslationKeyName() { return dataName; }
+		override public string TranslationKeyPrefix() { return String.Format("chapter.{0}.", TranslationKeyName()); }
 
 		override protected void DefineTranslationAccessors()
 		{

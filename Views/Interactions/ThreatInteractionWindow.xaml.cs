@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using JiME.Models;
+using System;
 
 namespace JiME.Views
 {
@@ -232,6 +233,7 @@ namespace JiME.Views
 			MonsterEditorWindow me = new MonsterEditorWindow(scenario);
 			if ( me.ShowDialog() == true )
 			{
+				me.monster.index = (interaction.monsterCollection.Count + 1);
 				interaction.AddMonster( me.monster );
 			}
 		}
@@ -249,7 +251,10 @@ namespace JiME.Views
 			if (ret == MessageBoxResult.Yes)
 			{
 				Monster m = ((Button)sender).DataContext as Monster;
+				if(m.GUID == Guid.Empty) { m.GUID = Guid.NewGuid(); }
+				interaction.UpdateKeysStartingWith(scenario.translationObserver, interaction.TranslationKeyPrefix() + "monster." + m.index.ToString() + ".", interaction.TranslationKeyPrefix() + "monster.deleted." + m.GUID + "."); //update translation key of deleted item to use its GUID
 				interaction.monsterCollection.Remove(m);
+				interaction.RenumberMonsters(scenario.translationObserver);
 			}
 		}
 

@@ -15,7 +15,7 @@ namespace JiME
 	public class MonsterActivationItem : Translatable, INotifyPropertyChanged, ICommonData
 	{
 		override public string TranslationKeyName() { return dataName; }
-		override public string PreviousTranslationKeyName() { return dataName; }
+		override public string TranslationKeyPrefix() { return String.Format("activation.{1}.{0}.", TranslationKeyName(), translationKeyParents); }
 
 		override protected void DefineTranslationAccessors()
 		{

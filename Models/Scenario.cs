@@ -13,8 +13,8 @@ namespace JiME
 	/// </summary>
 	public class Scenario : Translatable, INotifyPropertyChanged
 	{
-		override public string TranslationKeyName() { return scenarioName; }
-		override public string PreviousTranslationKeyName() { return scenarioName; }
+		override public string TranslationKeyName() { return "scenario"; }
+		override public string TranslationKeyPrefix() { return "scenario."; }
 
 		override protected void DefineTranslationAccessors()
 		{
@@ -684,9 +684,6 @@ namespace JiME
 
 			defaultTranslations.AddRange(this.CollectTranslationItems());
 
-			//defaultTranslations.Add(new TranslationItem("scenario.scenarioName", scenarioName, false));
-			//defaultTranslations.Add(new TranslationItem("scenario.specialInstructions", specialInstructions, false));
-
 			foreach(var objective in objectiveObserver)
             {
 				defaultTranslations.AddRange(objective.CollectTranslationItems());
@@ -721,7 +718,28 @@ namespace JiME
 			foreach (var interaction in interactionObserver)
             {
 				defaultTranslations.AddRange(((InteractionBase)interaction).CollectTranslationItems());
-            }
+
+				if(interaction is ThreatInteraction)
+                {
+					ThreatInteraction threat = (ThreatInteraction)interaction;
+					threat.CheckMonsterNumbering(this.translationObserver);
+					//Collect the monster translations
+					defaultTranslations.AddRange(threat.monsterCollection.ToList().ConvertAll(item =>
+					{
+						item.translationKeyParents = threat.dataName;
+						return item.CollectTranslationItems();
+					}).SelectMany(list => list));
+
+					/*
+					List<TranslationAccessor> list = new List<TranslationAccessor>();
+					foreach (var monster in threat.monsterCollection)
+					{
+						list.Add(new TranslationAccessor("event.{1}.{0}.monster." + monster.index + ".name", () => monster.dataName));
+					}
+					translationAccessors.AddRange(list);
+					*/
+				}
+			}
 
 			//remove default translations with empty value
 			defaultTranslations = defaultTranslations.FindAll(it => !String.IsNullOrWhiteSpace(it.text)).ToList();

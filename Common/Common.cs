@@ -142,7 +142,7 @@ namespace JiME
 		}
 
 		virtual public string TranslationKeyName() { return "currentName"; }
-		virtual public string PreviousTranslationKeyName() { return "oldName"; }
+		virtual public string TranslationKeyPrefix() { return "currentName."; }
 
 		public Dictionary<string, string> CaptureStartingValues()
         {
@@ -157,12 +157,12 @@ namespace JiME
 			return result;
         }
 
-		public void DecertifyChangedValues(ObservableCollection<Translation> translations, Dictionary<string, string> originals)
+		public void DecertifyChangedValues(ObservableCollection<Translation> translations, Dictionary<string, string> originals, string originalKeyName)
         {
 			foreach (TranslationAccessor accessor in translationAccessors)
 			{
 				string key = accessor.keyPattern; //just the bare keyPattern without having its {0} placeholders replaced
-				string formattedKey = accessor.FormatKey(TranslationKeyName(), translationKeyParents);
+				string formattedKey = accessor.FormatKey(originalKeyName, translationKeyParents);
 				string val = accessor.RetrieveVal();
 
                 //See if the value changed
@@ -175,6 +175,39 @@ namespace JiME
 					}
                 }
 			}
+		}
+
+		public void UpdateKeysStartingWith(ObservableCollection<Translation> translations, string originalPrefix)
+		{
+			UpdateKeysStartingWith(translations, originalPrefix, TranslationKeyPrefix());
+		}
+
+		public void UpdateKeysStartingWith(ObservableCollection<Translation> translations, string originalPrefix, string newPrefix)
+		{
+			Console.WriteLine("UpdateKeysStartingWith -> originalPrefix: " + originalPrefix + " newPrefix: " + newPrefix + ")");
+			if(originalPrefix != newPrefix)
+            {
+				foreach(var translation in translations)
+                {
+					Console.WriteLine(translation.dataName + " ->  UpdateKeysStaringWith(" + originalPrefix + ", " + newPrefix + ")");
+					translation.UpdateKeysStartingWith(originalPrefix, newPrefix);
+                }
+            }
+        }
+
+		public bool? HandleWindow(Window w, ObservableCollection<Translation> translations)
+        {
+			Dictionary<string, string> originalValues = CaptureStartingValues();
+			string originalPrefix = TranslationKeyPrefix();
+			string originalKeyName = TranslationKeyName();
+			bool? result =  w.ShowDialog();
+			UpdateKeysStartingWith(translations, originalPrefix);
+			DecertifyChangedValues(translations, originalValues, originalKeyName); //decertify changed values under the originalKeyName
+			if (TranslationKeyName() != originalKeyName)
+			{
+				DecertifyChangedValues(translations, originalValues, TranslationKeyName()); //decertify changed values under the current key name
+			}
+			return result;
 		}
 	}
 

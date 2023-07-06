@@ -91,15 +91,25 @@ namespace JiME
 			return newTranslation;
         }
 
-		public void UpdateKeysStartingWith(string keyStart, string keyStartReplace)
+		public void UpdateKeysStartingWith(string originalPrefix, string newPrefix)
         {
-			//Call this to update a key or set of keys. e.g. when an Event changes names, and the translation needs to change from event.First Name.etc to event.Changed Name.etc
-			translationItems.Where(it => it.key.StartsWith(keyStart)).ToList().ForEach(it => Regex.Replace(it.key, "^" + Regex.Escape(keyStart), keyStartReplace));
+			//Call this to update a key or set of keys when the dataName (etc.) changes. e.g. when an Event changes names, and the translation needs to change from event.First Name.etc to event.Changed Name.etc
+			if (originalPrefix != newPrefix)
+			{
+				//translationItems.Where(it => it.key.StartsWith(originalPrefix)).ToList().ForEach(it => it.key = Regex.Replace(it.key, "^" + Regex.Escape(originalPrefix), newPrefix));
+				foreach(var item in translationItems)
+                {
+					if(item.key.StartsWith(originalPrefix))
+                    {
+						item.key = Regex.Replace(item.key, "^" + Regex.Escape(originalPrefix), newPrefix);
+                    }
+                }
+			}
         }
 
 		public void DecertifyKey(string key)
         {
-			//Replace values
+			//Mark the translation item as needing retranslation/review
 			translationItems.Where(it => it.key == key).ToList().ForEach(it => it.translationOK = false);
         }
 

@@ -67,6 +67,7 @@ namespace JiME.Views
 					//Clone the defaultTranslation item with the key and text
 					TranslationItem clonedItem = entity.Value.Clone();
 					clonedItem.translationOK = false;
+					clonedItem.text = ""; //actually, don't set the text
 					translation.translationItems.Add(clonedItem);
 					translationDict.Add(entity.Key, clonedItem);
 				}
@@ -112,14 +113,16 @@ namespace JiME.Views
 			closing = true;
 			DialogResult = true;
 
+			//Collect the data to put back into translationInitialState
 			translationInitialState.dataName = translation.dataName;
 			translationInitialState.langName = translation.langName;
 			translationInitialState.translationItems.Clear();
 			foreach (var item in translation.translationItems)
 			{
 				if(defaultTranslation.ContainsKey(item.key) && item.text == defaultTranslation[item.key].text && !item.translationOK) { continue; }
-				else if((item.superfluous && item.text.Trim() == "")) { continue; }
+				else if ((item.superfluous && item.text.Trim() == "")) { continue; }
 				else if ((item.added && item.text.Trim() == "")) { continue; }
+				else if (item.text.Trim() == "") { continue; }
 				else if (item.deleted) { continue; }
 				else
 				{

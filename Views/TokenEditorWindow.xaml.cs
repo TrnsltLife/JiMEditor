@@ -261,6 +261,8 @@ namespace JiME.Views
 			{
 				HexTile hexTile = (HexTile)tile;
 				Dictionary<string, string> originals = hexTile.CaptureStartingValues();
+				string originalKeyName = hexTile.TranslationKeyName();
+				string originalPrefix = hexTile.TranslationKeyPrefix();
 				TextEditorWindow tw = new TextEditorWindow(scenario, EditMode.Flavor, hexTile.flavorBookData);
 				if (tw.ShowDialog() == true)
 					hexTile.flavorBookData.pages = tw.textBookController.pages;
@@ -270,7 +272,8 @@ namespace JiME.Views
 				else
 					exploreStatus.Text = "Exploration Text is Set";
 
-				hexTile.DecertifyChangedValues(scenario.translationObserver, originals);
+				hexTile.UpdateKeysStartingWith(scenario.translationObserver, originalKeyName);
+				hexTile.DecertifyChangedValues(scenario.translationObserver, originals, originalKeyName);
 			}
 			else
             {

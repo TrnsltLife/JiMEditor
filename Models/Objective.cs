@@ -11,7 +11,7 @@ namespace JiME
 		int _loreReward, _xpReward, _threatReward;
 
 		override public string TranslationKeyName() { return dataName; }
-		override public string PreviousTranslationKeyName() { return dataName; }
+		override public string TranslationKeyPrefix() { return String.Format("objective.{0}.", TranslationKeyName()); }
 
 		override protected void DefineTranslationAccessors()
         {

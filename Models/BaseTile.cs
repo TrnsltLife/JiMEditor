@@ -16,7 +16,7 @@ namespace JiME
 	public class BaseTile : Translatable, INotifyPropertyChanged, ITile
 	{
 		override public string TranslationKeyName() { return idNumber.ToString(); }
-		override public string PreviousTranslationKeyName() { return idNumber.ToString(); }
+		override public string TranslationKeyPrefix() { return idNumber.ToString(); }
 
 		override protected void DefineTranslationAccessors()
 		{

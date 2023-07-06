@@ -7,7 +7,7 @@ namespace JiME
 	public abstract class InteractionBase : Translatable, IInteraction, INotifyPropertyChanged
 	{
 		override public string TranslationKeyName() { return dataName; }
-		override public string PreviousTranslationKeyName() { return dataName; }
+		override public string TranslationKeyPrefix() { return String.Format("event.{1}.{0}.", TranslationKeyName(), translationKeyParents); }
 
 		override protected void DefineTranslationAccessors()
 		{
