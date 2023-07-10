@@ -169,6 +169,7 @@ namespace JiME.UserControls
 
 					//any other Run, Span, List, TextDecoration
 					s = Regex.Replace(s, @"<Run[^>]*>", "");
+					s = Regex.Replace(s, @"</Run[^>]*>", ""); //added this when having trouble switching Windows input method to French and adding accented characters. It was adding </Run> after the character. But </Run> wasn't being removed and was causing a parse error.
 					s = Regex.Replace(s, @"<Span[^>]*>", "");
 					s = Regex.Replace(s, @"</Span[^>]*>", "");
 					s = Regex.Replace(s, @"<List[^>]*>", "");
@@ -193,7 +194,11 @@ namespace JiME.UserControls
 			string originalHtml = html;
 			FlowDocument document = iconRTB.Document;
 			document.Blocks.Clear();
-			iconRTB.Document = RichTextBoxIconEditor.CreateFlowDocumentFromSimpleHtml(html, "</Paragraph><Paragraph xml:space=\"preserve\">");
+			FlowDocument newDocument = RichTextBoxIconEditor.CreateFlowDocumentFromSimpleHtml(html, "</Paragraph><Paragraph xml:space=\"preserve\">");
+			if (newDocument != null)
+			{
+				iconRTB.Document = newDocument;
+			}
 		}
 
 		public static FlowDocument CreateFlowDocumentFromSimpleHtml(string html, string paragraphReplacement=" ", string paragraphAttributes="")
@@ -234,9 +239,9 @@ namespace JiME.UserControls
 			}
 			catch
 			{
-				//Debug.Log("Problem converting simple html");
-				//Debug.Log("original: " + originalHtml);
-				//Debug.Log("transform " + html);
+				Debug.Log("Problem converting simple html");
+				Debug.Log("original: " + originalHtml);
+				Debug.Log("transform " + html);
 				System.Windows.Forms.MessageBox.Show("An error occurred while trying to load your text. The underlying HTML may have been corrupted and you may need to fix it in the .jime file. Copy it with Ctrl+C. Here's what it looks like:\r\n\r\n" + originalHtml,
 					"Error Loading Text",
 					System.Windows.Forms.MessageBoxButtons.OK,
