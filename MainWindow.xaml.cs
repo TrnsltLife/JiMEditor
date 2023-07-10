@@ -514,7 +514,18 @@ namespace JiME
 
 		void OnRemoveTranslation(object sender, EventArgs e)
 		{
-
+			int idx = translationsUC.dataListView.SelectedIndex;
+			Translation translation = (Translation)translationsUC.dataListView.Items[idx];
+			var ret = MessageBox.Show("Are you sure you want to delete this Translation?\n\n" + translation.langName + " / " + translation.dataName + "\n\nALL TRANSLATION TEXT FOR THIS LANGUAGE WILL BE DELETED.\n\nThis cannot be undone.", "Delete Translation: " + translation.langName + " / " + translation.dataName, MessageBoxButton.YesNo, MessageBoxImage.Question);
+			if (ret == MessageBoxResult.Yes)
+			{
+				var ret2 = MessageBox.Show("Please Reconfirm:\n\nAre you REALLY, REALLY sure you want to delete this Translation?\n\n" + translation.langName + " / " + translation.dataName + "\n\nALL TRANSLATION TEXT FOR THIS LANGUAGE WILL BE DELETED.\n\nThis cannot be undone.", "Delete Translation: " + translation.langName + " / " + translation.dataName, MessageBoxButton.YesNo, MessageBoxImage.Question);
+				if (ret2 == MessageBoxResult.Yes)
+				{
+					scenario.RemoveData(translationsUC.dataListView.Items[idx]);
+					translationsUC.dataListView.SelectedIndex = Math.Max(idx - 1, 0);
+				}
+			}
 		}
 
 		void OnSettingsTranslation(object sender, EventArgs e)

@@ -780,6 +780,14 @@ namespace JiME
 
 		public void RemoveData<T>( T item )
 		{
+			if (item is Translation)
+			{
+				translationObserver.Remove(item as Translation);
+				return;
+			}
+
+
+
 			if ( ( (ICommonData)item ).isEmpty )
 				return;
 
