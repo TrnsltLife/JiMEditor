@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Text.RegularExpressions;
 using System.Collections.Specialized;
+using System.Collections.Generic;
 
 namespace JiME.Views
 {
@@ -259,6 +260,9 @@ namespace JiME.Views
 			if (tile.tileType == TileType.Hex)
 			{
 				HexTile hexTile = (HexTile)tile;
+				Dictionary<string, string> originals = hexTile.CaptureStartingValues();
+				string originalKeyName = hexTile.TranslationKeyName();
+				string originalPrefix = hexTile.TranslationKeyPrefix();
 				TextEditorWindow tw = new TextEditorWindow(scenario, EditMode.Flavor, hexTile.flavorBookData);
 				if (tw.ShowDialog() == true)
 					hexTile.flavorBookData.pages = tw.textBookController.pages;
@@ -267,6 +271,9 @@ namespace JiME.Views
 					exploreStatus.Text = "Exploration Text is Empty";
 				else
 					exploreStatus.Text = "Exploration Text is Set";
+
+				hexTile.UpdateKeysStartingWith(scenario.translationObserver, originalKeyName);
+				hexTile.DecertifyChangedValues(scenario.translationObserver, originals, originalKeyName);
 			}
 			else
             {

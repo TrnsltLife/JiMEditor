@@ -263,6 +263,9 @@ namespace JiME.Views
 		{
 			if ( selected != null )
 			{
+				Dictionary<string, string> originals = selected.CaptureStartingValues();
+				string originalKeyName = selected.TranslationKeyName();
+				string originalPrefix = selected.TranslationKeyPrefix();
 				TextEditorWindow tw = new TextEditorWindow( scenario, EditMode.Flavor, selected.flavorBookData );
 				if ( tw.ShowDialog() == true )
 					selected.flavorBookData.pages = tw.textBookController.pages;
@@ -271,6 +274,8 @@ namespace JiME.Views
 					exploreStatus.Text = "Exploration Text is Empty";
 				else
 					exploreStatus.Text = "Exploration Text is Set";
+				selected.UpdateKeysStartingWith(scenario.translationObserver, originalPrefix);
+				selected.DecertifyChangedValues(scenario.translationObserver, originals, originalKeyName);
 			}
 		}
 	}

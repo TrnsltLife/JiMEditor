@@ -19,7 +19,7 @@ namespace JiME
 		{
 			List<MonsterActivations> activationsList = (List<MonsterActivations>)value;
 			List<MonsterActivations> filteredList = new List<MonsterActivations>();
-			activationsList.FindAll(it => it.id >= 1000).ForEach(it => filteredList.Add(it));
+			activationsList.FindAll(it => it.id >= MonsterActivations.START_OF_CUSTOM_ACTIVATIONS).ForEach(it => filteredList.Add(it));
 			JToken t = JToken.FromObject(filteredList);
 			t.WriteTo(writer);
 		}

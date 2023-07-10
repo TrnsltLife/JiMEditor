@@ -85,6 +85,154 @@ namespace JiME
 		bool isReusable { get; set; }
 	}
 
+	public class Translatable
+    {
+        [JsonIgnore]
+		private List<TranslationAccessor> _translationAccessors;
+		[JsonIgnore]
+		private string _translationKeyParents;
+
+		[JsonIgnore]
+		public List<TranslationAccessor> translationAccessors
+		{
+			get { return _translationAccessors; }
+			set { _translationAccessors = value; }
+		}
+
+        [JsonIgnore]
+		public string translationKeyParents
+        {
+			get { return _translationKeyParents; }
+			set { _translationKeyParents = value; }
+        }
+
+		public Translatable()
+        {
+			DefineTranslationAccessors();
+        }
+
+		virtual protected void DefineTranslationAccessors()
+        {
+			translationAccessors = new List<TranslationAccessor>();
+        }
+
+		public List<TranslationItem> CollectTranslationItems()
+        {
+			List<TranslationItem> items = new List<TranslationItem>();
+			foreach(TranslationAccessor accessor in translationAccessors)
+            {
+				string key = accessor.FormatKey(TranslationKeyName(), translationKeyParents);
+				string val = accessor.RetrieveVal();
+				items.Add(new TranslationItem(key, val));
+			}
+			return items;
+        }
+
+		public string DefaultStringForTranslationKey(string findKey)
+        {
+			foreach (TranslationAccessor accessor in translationAccessors)
+			{
+				string key = accessor.FormatKey(TranslationKeyName(), translationKeyParents);
+				if(key == findKey)
+                {
+					return accessor.RetrieveVal();
+				}
+			}
+			return "";
+		}
+
+		virtual public string TranslationKeyName() { return "currentName"; }
+		virtual public string TranslationKeyPrefix() { return "currentName."; }
+
+		public Dictionary<string, string> CaptureStartingValues()
+        {
+			Dictionary<string, string> result = new Dictionary<string, string>();
+			foreach (TranslationAccessor accessor in translationAccessors)
+			{
+				string key = accessor.keyPattern; //just the bare keyPattern without having its {0} placeholders replaced
+				string val = accessor.RetrieveVal();
+				Console.WriteLine("CaptureStartingValues: " + key + " => " + val);
+				result.Add(key, val);
+			}
+			return result;
+        }
+
+		public void DecertifyChangedValues(ObservableCollection<Translation> translations, Dictionary<string, string> originals, string originalKeyName)
+        {
+			foreach (TranslationAccessor accessor in translationAccessors)
+			{
+				string key = accessor.keyPattern; //just the bare keyPattern without having its {0} placeholders replaced
+				string formattedKey = accessor.FormatKey(originalKeyName, translationKeyParents);
+				string val = accessor.RetrieveVal();
+
+                //See if the value changed
+                if (originals[key] != val)
+                {
+					//Dercertify the translation in all the languages
+					foreach(var translation in translations)
+                    {
+						translation.DecertifyKey(formattedKey);
+					}
+                }
+			}
+		}
+
+		public void UpdateKeysStartingWith(ObservableCollection<Translation> translations, string originalPrefix)
+		{
+			UpdateKeysStartingWith(translations, originalPrefix, TranslationKeyPrefix());
+		}
+
+		public void UpdateKeysStartingWith(ObservableCollection<Translation> translations, string originalPrefix, string newPrefix)
+		{
+			Console.WriteLine("UpdateKeysStartingWith -> originalPrefix: " + originalPrefix + " newPrefix: " + newPrefix + ")");
+			if(originalPrefix != newPrefix)
+            {
+				foreach(var translation in translations)
+                {
+					Console.WriteLine(translation.dataName + " ->  UpdateKeysStaringWith(" + originalPrefix + ", " + newPrefix + ")");
+					translation.UpdateKeysStartingWith(originalPrefix, newPrefix);
+                }
+            }
+        }
+
+		public bool? HandleWindow(Window w, ObservableCollection<Translation> translations)
+        {
+			Dictionary<string, string> originalValues = CaptureStartingValues();
+			string originalPrefix = TranslationKeyPrefix();
+			string originalKeyName = TranslationKeyName();
+			bool? result =  w.ShowDialog();
+			UpdateKeysStartingWith(translations, originalPrefix);
+			DecertifyChangedValues(translations, originalValues, originalKeyName); //decertify changed values under the originalKeyName
+			if (TranslationKeyName() != originalKeyName)
+			{
+				DecertifyChangedValues(translations, originalValues, TranslationKeyName()); //decertify changed values under the current key name
+			}
+			return result;
+		}
+	}
+
+	public class TranslationAccessor
+    {
+		public string keyPattern;
+		public Func<string> valFunc;
+
+		public TranslationAccessor(string keyPattern, Func<string> valFunc)
+        {
+			this.keyPattern = keyPattern;
+			this.valFunc = valFunc;
+        }
+
+		public string FormatKey(string name, string parentHierarchy)
+        {
+			return String.Format(keyPattern, name, parentHierarchy);
+        }
+
+		public string RetrieveVal()
+        {
+			return valFunc();
+        }
+    }
+
 	class Debug
 	{
 		public static void Log( object p )
@@ -248,7 +396,7 @@ namespace JiME
 		/// AKA "Engine Version" in the companion app
 		/// Update this number every time the file format changes with new features
 		/// </summary>
-		public static string formatVersion = "1.13";
+		public static string formatVersion = "1.14";
 		public static string appVersion = "0.25";
 		public static Dictionary<int, BaseTileData> tileDictionary { get; set; } = new Dictionary<int, BaseTileData>();
 		public static Dictionary<int, BaseTileData> tileDictionaryB { get; set; } = new Dictionary<int, BaseTileData>();

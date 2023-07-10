@@ -5,6 +5,12 @@ namespace JiME
 {
 	public class BranchInteraction : InteractionBase, INotifyPropertyChanged, ICommonData
 	{
+		override protected void DefineTranslationAccessors()
+		{
+			translationKeyParents = "story-branch";
+			base.DefineTranslationAccessors();
+		}
+
 		bool _branchTestEvent;
 
 		//Story branch

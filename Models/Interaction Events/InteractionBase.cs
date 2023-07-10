@@ -1,10 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace JiME
 {
-	public abstract class InteractionBase : IInteraction, INotifyPropertyChanged
+	public abstract class InteractionBase : Translatable, IInteraction, INotifyPropertyChanged
 	{
+		override public string TranslationKeyName() { return dataName; }
+		override public string TranslationKeyPrefix() { return String.Format("event.{1}.{0}.", TranslationKeyName(), translationKeyParents); }
+
+		override protected void DefineTranslationAccessors()
+		{
+			List<TranslationAccessor> list = new List<TranslationAccessor>()
+			{
+				new TranslationAccessor("event.{1}.{0}.tokenText", () => this.isTokenInteraction ? this.tokenInteractionText : ""),
+				new TranslationAccessor("event.{1}.{0}.flavorText", () => this.textBookData.pages[0].StartsWith("Default Flavor Text") ? "" : this.textBookData.pages[0]),
+				new TranslationAccessor("event.{1}.{0}.eventText", () => this.eventBookData.pages[0].StartsWith("Default Event Text") ? "" : this.eventBookData.pages[0])
+			};
+			translationAccessors = list;
+		}
+
 		string _dataName, _triggerName, _triggerAfterName, _tokenInteractionText;
 		bool _isTokenInteraction, _isReusable;
 		int _loreReward, _xpReward, _threatReward;

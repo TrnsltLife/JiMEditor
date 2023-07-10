@@ -5,6 +5,12 @@ namespace JiME
 {
 	public class NoneInteraction : InteractionBase, INotifyPropertyChanged, ICommonData
 	{
+		override protected void DefineTranslationAccessors()
+		{
+			translationKeyParents = "none";
+			base.DefineTranslationAccessors();
+		}
+
 		public NoneInteraction( string name ) : base( name ) { }
 
 		public static NoneInteraction EmptyInteraction()

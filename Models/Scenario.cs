@@ -11,8 +11,22 @@ namespace JiME
 	/// <summary>
 	/// A standalone mission, or a single mission in a campaign
 	/// </summary>
-	public class Scenario : INotifyPropertyChanged
+	public class Scenario : Translatable, INotifyPropertyChanged
 	{
+		override public string TranslationKeyName() { return "scenario"; }
+		override public string TranslationKeyPrefix() { return "scenario."; }
+
+		override protected void DefineTranslationAccessors()
+		{
+			List<TranslationAccessor> list = new List<TranslationAccessor>()
+			{
+				new TranslationAccessor("scenario.scenarioName", () => this.scenarioName),
+				new TranslationAccessor("scenario.instructions", () => this.specialInstructions),
+				new TranslationAccessor("scenario.introduction", () => this.introBookData.pages[0])
+			};
+			translationAccessors = list;
+		}
+
 		string _scenarioName, _fileName, _objectiveName, _fileVersion, _specialInstructions, _coverImage;
 		bool _isDirty, _scenarioTypeJourney, _useTileGraphics;
 		int _threatMax, _loreReward, _xpReward, _shadowFear, _loreStartValue, _xpStartValue;
@@ -211,6 +225,7 @@ namespace JiME
 		public ObservableCollection<Objective> objectiveObserver { get; set; }
 		public ObservableCollection<MonsterActivations> activationsObserver { get; set; }
 		//public List<MonsterActivations> filteredActivationsObserver => activationsObserver.Where(a => collectionObserver.Contains(a.collection)).ToList();
+		public ObservableCollection<Translation> translationObserver { get; set; }
 		public ObservableCollection<TextBookData> resolutionObserver { get; set; }
 		public ObservableCollection<Threat> threatObserver { get; set; }
 		public ObservableCollection<Chapter> chapterObserver { get; set; }
@@ -324,6 +339,7 @@ namespace JiME
 			triggersObserver = new ObservableCollection<Trigger>();
 			objectiveObserver = new ObservableCollection<Objective>();
 			activationsObserver = new ObservableCollection<MonsterActivations>();
+			translationObserver = new ObservableCollection<Translation>();
 			resolutionObserver = new ObservableCollection<TextBookData>();
 			threatObserver = new ObservableCollection<Threat>();
 			chapterObserver = new ObservableCollection<Chapter>();
@@ -355,6 +371,10 @@ namespace JiME
 			if (fm.activations != null)
 			{
 				s.activationsObserver = new ObservableCollection<MonsterActivations>(fm.activations);
+			}
+			if (fm.translations != null)
+			{
+				s.translationObserver = new ObservableCollection<Translation>(fm.translations);
 			}
 			s.resolutionObserver = new ObservableCollection<TextBookData>( fm.resolutions );
 			s.threatObserver = new ObservableCollection<Threat>( fm.threats );
@@ -465,7 +485,7 @@ namespace JiME
 			//Remove default activations if they exist
 			for(int i = activationsObserver.Count - 1; i >= 0; i-- )
             {
-                if (activationsObserver[i].id < 1000)
+                if (activationsObserver[i].id < MonsterActivations.START_OF_CUSTOM_ACTIVATIONS)
                 {
 					activationsObserver.RemoveAt(i);
                 }
@@ -639,6 +659,94 @@ namespace JiME
 			activationsObserver.Add(activations);
 		}
 
+		public void AddTranslation(Translation translation)
+        {
+			translationObserver.Add(translation);
+        }
+
+		public Dictionary<string, TranslationItem> CollectTranslationItemsAsDictionary()
+        {
+			List<TranslationItem> defaultTranslationList = CollectAllTranslationItems();
+			defaultTranslationList.Sort();
+			Dictionary<string, TranslationItem> defaultTranslation = new Dictionary<string, TranslationItem>();
+			foreach (var item in defaultTranslationList)
+			{
+				Console.WriteLine(item.key + " => " + item.text);
+				defaultTranslation.Add(item.key, item);
+			}
+			return defaultTranslation;
+		}
+
+		//Collect translations from all the various game objects that can have translatable text
+		public List<TranslationItem> CollectAllTranslationItems()
+        {
+			List<TranslationItem> defaultTranslations = new List<TranslationItem>();
+
+			defaultTranslations.AddRange(this.CollectTranslationItems());
+
+			foreach(var objective in objectiveObserver)
+            {
+				defaultTranslations.AddRange(objective.CollectTranslationItems());
+			}
+
+			foreach(var chapter in chapterObserver)
+            {
+				defaultTranslations.AddRange(chapter.CollectTranslationItems());
+				//grab lists of TranslationItems from all the chapters tiles and flatten them into one big list
+				defaultTranslations.AddRange(chapter.tileObserver.ToList().ConvertAll(tile => ((BaseTile)tile).CollectTranslationItems()).SelectMany(list => list));
+            }
+
+			foreach(var resolution in resolutionObserver)
+            {
+				defaultTranslations.AddRange(resolution.CollectTranslationItems());
+            }
+
+			foreach (var activation in activationsObserver)
+			{
+				if (activation.id >= MonsterActivations.START_OF_CUSTOM_ACTIVATIONS)
+				{
+					defaultTranslations.AddRange(activation.CollectTranslationItems());
+					//grab lists of TranslationItems from all the chapters tiles and flatten them into one big list
+					defaultTranslations.AddRange(activation.activations.ToList().ConvertAll(item =>
+					{
+						item.translationKeyParents = activation.dataName;
+						return item.CollectTranslationItems();
+					}).SelectMany(list => list));
+				}
+			}
+
+			foreach (var interaction in interactionObserver)
+            {
+				defaultTranslations.AddRange(((InteractionBase)interaction).CollectTranslationItems());
+
+				if(interaction is ThreatInteraction)
+                {
+					ThreatInteraction threat = (ThreatInteraction)interaction;
+					threat.CheckMonsterNumbering(this.translationObserver);
+					//Collect the monster translations
+					defaultTranslations.AddRange(threat.monsterCollection.ToList().ConvertAll(item =>
+					{
+						item.translationKeyParents = threat.dataName;
+						return item.CollectTranslationItems();
+					}).SelectMany(list => list));
+
+					/*
+					List<TranslationAccessor> list = new List<TranslationAccessor>();
+					foreach (var monster in threat.monsterCollection)
+					{
+						list.Add(new TranslationAccessor("event.{1}.{0}.monster." + monster.index + ".name", () => monster.dataName));
+					}
+					translationAccessors.AddRange(list);
+					*/
+				}
+			}
+
+			//remove default translations with empty value
+			defaultTranslations = defaultTranslations.FindAll(it => !String.IsNullOrWhiteSpace(it.text)).ToList();
+
+			return defaultTranslations;
+        }
+
 
 		/// <summary>
 		/// adds a Resolution to Scenario AND adds EndStatus bool for it
@@ -672,6 +780,14 @@ namespace JiME
 
 		public void RemoveData<T>( T item )
 		{
+			if (item is Translation)
+			{
+				translationObserver.Remove(item as Translation);
+				return;
+			}
+
+
+
 			if ( ( (ICommonData)item ).isEmpty )
 				return;
 
@@ -720,6 +836,21 @@ namespace JiME
 			//finally rename the trigger object itself
 			triggersObserver.Where( t => t.dataName == oldName ).First().isMultiTrigger = isMulti;
 			triggersObserver.Where( t => t.dataName == oldName ).First().dataName = newName;
+
+			return true;
+		}
+
+		/// <summary>
+		/// Renames the Translation to a new langCode (if new langCode doesn't already exist)
+		/// </summary>
+		public bool RenameTranslation(string oldLangCode, string newLangCode)
+		{
+			//bail out if new name already exists
+			if (translationObserver.Count(t => t.dataName == newLangCode) > 0)
+				return false;
+
+			//finally rename the translation object itself
+			translationObserver.Where(t => t.dataName == oldLangCode).First().dataName = newLangCode;
 
 			return true;
 		}

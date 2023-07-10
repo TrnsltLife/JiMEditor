@@ -5,6 +5,12 @@ namespace JiME
 {
 	public class ReplaceTokenInteraction : InteractionBase, INotifyPropertyChanged, ICommonData
 	{
+		override protected void DefineTranslationAccessors()
+		{
+			translationKeyParents = "replace-token";
+			base.DefineTranslationAccessors();
+		}
+
 		//replace event
 		string _eventToReplace, _replaceWithEvent;
 		bool _noText;
