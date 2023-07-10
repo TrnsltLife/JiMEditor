@@ -39,7 +39,13 @@
 									<ComboBoxItem>cz</ComboBoxItem>
 									<ComboBoxItem>de</ComboBoxItem>
 									<ComboBoxItem>en</ComboBoxItem>
+									<ComboBoxItem>es</ComboBoxItem>
 									<ComboBoxItem>fr</ComboBoxItem>
+									<ComboBoxItem>hu</ComboBoxItem>
+									<ComboBoxItem>it</ComboBoxItem>
+									<ComboBoxItem>pl</ComboBoxItem>
+									<ComboBoxItem>pt</ComboBoxItem>
+									<ComboBoxItem>ru</ComboBoxItem>
 								</ComboBox>
 								<TextBlock Style="{StaticResource SubText}" Margin="5,5"><Bold><Italic>Required</Italic></Bold></TextBlock>
 							</StackPanel>
