@@ -88,7 +88,7 @@
 							<ColumnDefinition Width=".33*"/>
 							<ColumnDefinition Width=".33*"/>
 						</Grid.ColumnDefinitions>
-						<TextBlock Grid.Column="0" Text="Translation OK" Foreground="White"/>
+						<TextBlock Grid.Column="0" Text="Translation OK" Foreground="White" Background="Green"/>
 						<TextBlock Grid.Column="1" Text="No longer needed. Do you want to copy the text?" Foreground="White" Background="Gray"/>
 						<TextBlock Grid.Column="2" Text="Needs translation or approval." Foreground="White" Background="DarkOrange"/>
 					</Grid>

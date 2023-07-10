@@ -32,8 +32,9 @@ namespace JiME
 			get {
 				return new SolidColorBrush(
 					superfluous ? Colors.Gray :
-					translationOK ? Color.FromRgb(0x46, 0x46, 0x4a) : Colors.DarkOrange); }
-        }
+					translationOK ? Colors.Green : Colors.DarkOrange); }
+			//original gray background that matches ui: Color.FromRgb(0x46, 0x46, 0x4a)
+		}
 
 		public Guid GUID { get; set; }
 
