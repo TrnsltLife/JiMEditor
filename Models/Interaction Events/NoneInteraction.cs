@@ -5,18 +5,25 @@ namespace JiME
 {
 	public class NoneInteraction : InteractionBase, INotifyPropertyChanged, ICommonData
 	{
+		override protected void DefineTranslationAccessors()
+		{
+			translationKeyParents = "none";
+			base.DefineTranslationAccessors();
+		}
+
 		public NoneInteraction( string name ) : base( name ) { }
 
 		public static NoneInteraction EmptyInteraction()
 		{
-			NoneInteraction empty = new NoneInteraction( "None" )
+			NoneInteraction empty = new NoneInteraction("None")
 			{
 				dataName = "None",
 				isEmpty = true,
 				tokenType = TokenType.None,
 				personType = PersonType.None,
 				terrainType = TerrainType.None,
-				isTokenInteraction = false
+				isTokenInteraction = false,
+				isReusable = false
 			};
 			return empty;
 		}

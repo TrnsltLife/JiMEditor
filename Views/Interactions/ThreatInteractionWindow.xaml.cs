@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using JiME.Models;
+using System;
 
 namespace JiME.Views
 {
@@ -20,11 +21,11 @@ namespace JiME.Views
 		bool closing = false;
 
 		List<CheckBox> coreSetList;
-		List<CheckBox> villainsOfEriadorList;
-		List<CheckBox> shadowedPathsList;
-		List<CheckBox> dwellersInDarknessList;
-		List<CheckBox> spreadingWarList;
-		List<CheckBox> scourgesOfTheWastesList;
+		List<CheckBox> villainsOfEriajarList;
+		List<CheckBox> shadedPathsList;
+		List<CheckBox> denizensInDarknessList;
+		List<CheckBox> unfurlingWarList;
+		List<CheckBox> scorchersOfTheWildsList;
 		List<CheckBox> allMonsterList;
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -48,6 +49,7 @@ namespace JiME.Views
 			DataContext = this;
 
 			cancelButton.Visibility = (inter == null || showCancelButton) ? Visibility.Visible : Visibility.Collapsed;
+			updateUIForEventGroup();
 
 			isThreatTriggered = scenario.threatObserver.Any( x => x.triggerName == interaction.dataName );
 			if ( isThreatTriggered )
@@ -64,36 +66,36 @@ namespace JiME.Views
 
 			//The order of the monsters in these lists is important to maintain unchanged because the order (0-26) tells the companion app which monster to use.
 			//The order also corresponds to the order in the MonsterType enum.
-			coreSetList = new List<CheckBox>() { ruffianCB, goblinScoutCB, orcHunterCB, orcMarauderCB, hungryWargCB, hillTrollCB, wightCB };
-			villainsOfEriadorList = new List<CheckBox>() { atarinCB, gulgotarCB, coalfangCB };
-			shadowedPathsList = new List<CheckBox>() { giantSpiderCB, pitGoblinCB, orcTaskmasterCB, shadowmanCB, namelessThingCB, caveTrollCB, balrogCB, spawnOfUngoliantCB };
-			dwellersInDarknessList = new List<CheckBox>() { supplicantOfMorgothCB, ursaCB, ollieCB };
-			spreadingWarList = new List<CheckBox>() { fellBeastCB, wargRiderCB, siegeEngineCB, warOliphauntCB, soldierCB, urukWarriorCB };
-			scourgesOfTheWastesList = new List<CheckBox>() { lordAngonCB, witchKingOfAngmarCB, eadrisCB };
+			coreSetList = new List<CheckBox>() { ruffianCB, goblinScoutCB, orcHunterCB, orcMarauderCB, hungryVargCB, hillTrollCB, wightCB };
+			villainsOfEriajarList = new List<CheckBox>() { atariCB, gargletargCB, chartoothCB };
+			shadedPathsList = new List<CheckBox>() { giantSpiderCB, pitGoblinCB, orcTaskmasterCB, shadowmanCB, anonymousThingCB, caveTrollCB, balerockCB, spawnOfUglygiantCB };
+			denizensInDarknessList = new List<CheckBox>() { supplicantOfMoreGothCB, ursulaCB, oliverCB };
+			unfurlingWarList = new List<CheckBox>() { foulBeastCB, vargRiderCB, siegeEngineCB, warElephantCB, soldierCB, highOrcWarriorCB };
+			scorchersOfTheWildsList = new List<CheckBox>() { lordJavelinCB, lichKingCB, endrisCB };
 
 			allMonsterList = new List<CheckBox>();
 			allMonsterList.AddRange(coreSetList);
-			allMonsterList.AddRange(villainsOfEriadorList);
-			allMonsterList.AddRange(shadowedPathsList);
-			allMonsterList.AddRange(dwellersInDarknessList);
-			allMonsterList.AddRange(spreadingWarList);
-			allMonsterList.AddRange(scourgesOfTheWastesList);
+			allMonsterList.AddRange(villainsOfEriajarList);
+			allMonsterList.AddRange(shadedPathsList);
+			allMonsterList.AddRange(denizensInDarknessList);
+			allMonsterList.AddRange(unfurlingWarList);
+			allMonsterList.AddRange(scorchersOfTheWildsList);
 
 			Dictionary<List<CheckBox>, Collection> checkboxCollectionMap =
 				new Dictionary<List<CheckBox>, Collection>() {
 					{coreSetList, Collection.CORE_SET},
-					{villainsOfEriadorList, Collection.VILLAINS_OF_ERIADOR},
-					{shadowedPathsList, Collection.SHADOWED_PATHS},
-					{dwellersInDarknessList, Collection.DWELLERS_IN_DARKNESS},
-					{spreadingWarList, Collection.SPREADING_WAR},
-					{scourgesOfTheWastesList, Collection.SCOURGES_OF_THE_WASTES},
+					{villainsOfEriajarList, Collection.VILLAINS_OF_ERIAJAR},
+					{shadedPathsList, Collection.SHADED_PATHS},
+					{denizensInDarknessList, Collection.DENIZENS_IN_DARKNESS},
+					{unfurlingWarList, Collection.UNFURLING_WAR},
+					{scorchersOfTheWildsList, Collection.SCORCHERS_OF_THE_WILDS},
 
 					{new List<CheckBox>(){coreSetCB}, Collection.CORE_SET },
-					{new List<CheckBox>(){villainsOfEriadorCB}, Collection.VILLAINS_OF_ERIADOR },
-					{new List<CheckBox>(){shadowedPathsCB}, Collection.SHADOWED_PATHS },
-					{new List<CheckBox>(){dwellersInDarknessCB}, Collection.DWELLERS_IN_DARKNESS },
-					{new List<CheckBox>(){spreadingWarCB}, Collection.SPREADING_WAR },
-					{new List<CheckBox>(){scourgesOfTheWastesCB}, Collection.SCOURGES_OF_THE_WASTES },
+					{new List<CheckBox>(){villainsOfEriajarCB}, Collection.VILLAINS_OF_ERIAJAR },
+					{new List<CheckBox>(){shadedPathsCB}, Collection.SHADED_PATHS },
+					{new List<CheckBox>(){denizensOfDarknessCB}, Collection.DENIZENS_IN_DARKNESS },
+					{new List<CheckBox>(){unfurlingWarCB}, Collection.UNFURLING_WAR },
+					{new List<CheckBox>(){scorchersOfTheWildsCB}, Collection.SCORCHERS_OF_THE_WILDS },
 				};
 
 			//Help handle a situation where an old file type had less enemies available than we do now.
@@ -231,6 +233,7 @@ namespace JiME.Views
 			MonsterEditorWindow me = new MonsterEditorWindow(scenario);
 			if ( me.ShowDialog() == true )
 			{
+				me.monster.index = (interaction.monsterCollection.Count + 1);
 				interaction.AddMonster( me.monster );
 			}
 		}
@@ -248,7 +251,10 @@ namespace JiME.Views
 			if (ret == MessageBoxResult.Yes)
 			{
 				Monster m = ((Button)sender).DataContext as Monster;
+				if(m.GUID == Guid.Empty) { m.GUID = Guid.NewGuid(); }
+				interaction.UpdateKeysStartingWith(scenario.translationObserver, interaction.TranslationKeyPrefix() + "monster." + m.index.ToString() + ".", interaction.TranslationKeyPrefix() + "monster.deleted." + m.GUID + "."); //update translation key of deleted item to use its GUID
 				interaction.monsterCollection.Remove(m);
+				interaction.RenumberMonsters(scenario.translationObserver);
 			}
 		}
 
@@ -266,12 +272,23 @@ namespace JiME.Views
 		private void nameTB_TextChanged( object sender, TextChangedEventArgs e )
 		{
 			interaction.dataName = ( (TextBox)sender ).Text;
-			Regex rx = new Regex( @"\sGRP\d+$" );
-			MatchCollection matches = rx.Matches( interaction.dataName );
-			if ( matches.Count > 0 )
+			updateUIForEventGroup();
+		}
+
+		private void updateUIForEventGroup()
+		{
+			Regex rx = new Regex(@"\sGRP\d+$");
+			MatchCollection matches = rx.Matches(interaction.dataName);
+			if (matches.Count > 0)
+			{
 				groupInfo.Text = "This Event is in the following group: " + matches[0].Value.Trim();
+				isReusableCB.Visibility = Visibility.Visible;
+			}
 			else
+			{
 				groupInfo.Text = "This Event is in the following group: None";
+				isReusableCB.Visibility = Visibility.Collapsed;
+			}
 		}
 
 		private void addDefeatedTriggerButton_Click( object sender, RoutedEventArgs e )
@@ -300,25 +317,25 @@ namespace JiME.Views
             {
 				monsterList = coreSetList;
             }
-			else if(collection.StartsWith("villainsOfEriador"))
+			else if(collection.StartsWith("villainsOfEriajar"))
             {
-				monsterList = villainsOfEriadorList;
+				monsterList = villainsOfEriajarList;
             }
-			else if(collection.StartsWith("shadowedPaths"))
+			else if(collection.StartsWith("shadedPaths"))
             {
-				monsterList = shadowedPathsList;
+				monsterList = shadedPathsList;
             }
-			else if(collection.StartsWith("dwellersInDarkness"))
+			else if(collection.StartsWith("denizensInDarkness"))
             {
-				monsterList = dwellersInDarknessList;
+				monsterList = denizensInDarknessList;
             }
-			else if(collection.StartsWith("spreadingWar"))
+			else if(collection.StartsWith("unfurlingWar"))
             {
-				monsterList = spreadingWarList;
+				monsterList = unfurlingWarList;
             }
-			else if(collection.StartsWith("scourgesOfTheWastes"))
+			else if(collection.StartsWith("scorchersOfTheWilds"))
             {
-				monsterList = scourgesOfTheWastesList;
+				monsterList = scorchersOfTheWildsList;
             }
 			monsterList.ForEach(it => it.IsChecked = check);
 		}

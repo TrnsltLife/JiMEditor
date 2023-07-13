@@ -60,6 +60,11 @@ namespace JiME
 			activationsUC.onSettingsEvent += OnSettingsActivations;
 			activationsUC.onDuplicateEvent += OnDuplicateActivations;
 
+			translationsUC.onAddEvent += OnAddTranslation;
+			translationsUC.onRemoveEvent += OnRemoveTranslation;
+			translationsUC.onSettingsEvent += OnSettingsTranslation;
+			//translationsUC.onDuplicateEvent += OnDuplicationTranslation;
+
 			//Debug.Log( this.FindResource( "mylist" ).GetType() );
 
 			//setup source of UI lists (scenario has to be created first!)
@@ -67,6 +72,7 @@ namespace JiME
 			triggersUC.dataListView.ItemsSource = scenario.triggersObserver;
 			objectivesUC.dataListView.ItemsSource = scenario.objectiveObserver;
 			activationsUC.dataListView.ItemsSource = scenario.activationsObserver;
+			translationsUC.dataListView.ItemsSource = scenario.translationObserver;
 
             // Initiate visualization defer timer so it won't be done multiple times
             WpfUtils.MainThreadDispatcher = this.Dispatcher;
@@ -282,58 +288,72 @@ namespace JiME
         { 
 			if (interactionItem is TextInteraction )
 			{
-				TextInteractionWindow tw = new TextInteractionWindow( scenario, (TextInteraction)interactionItem);
-				tw.ShowDialog();
+				TextInteraction castInteraction = (TextInteraction)interactionItem;
+				TextInteractionWindow w = new TextInteractionWindow( scenario, castInteraction);
+				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if (interactionItem is BranchInteraction )
 			{
-				BranchInteractionWindow bw = new BranchInteractionWindow( scenario, (BranchInteraction)interactionItem);
-				bw.ShowDialog();
+				BranchInteraction castInteraction = (BranchInteraction)interactionItem;
+				BranchInteractionWindow w = new BranchInteractionWindow( scenario, castInteraction);
+				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if (interactionItem is TestInteraction )
 			{
-				TestInteractionWindow bw = new TestInteractionWindow( scenario, (TestInteraction)interactionItem);
-				bw.ShowDialog();
+				TestInteraction castInteraction = (TestInteraction)interactionItem;
+				TestInteractionWindow w = new TestInteractionWindow( scenario, castInteraction);
+				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if (interactionItem is DecisionInteraction )
 			{
-				DecisionInteractionWindow bw = new DecisionInteractionWindow( scenario, (DecisionInteraction)interactionItem);
-				bw.ShowDialog();
+				DecisionInteraction castInteraction = (DecisionInteraction)interactionItem;
+				DecisionInteractionWindow w = new DecisionInteractionWindow( scenario, castInteraction);
+				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if ( interactionItem is ThreatInteraction )
 			{
-				ThreatInteractionWindow bw = new ThreatInteractionWindow( scenario, (ThreatInteraction)interactionItem );
-				bw.ShowDialog();
+				ThreatInteraction castInteraction = (ThreatInteraction)interactionItem;
+				ThreatInteractionWindow w = new ThreatInteractionWindow( scenario, castInteraction);
+				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if ( interactionItem is MultiEventInteraction )
 			{
-				MultiEventWindow bw = new MultiEventWindow( scenario, (MultiEventInteraction)interactionItem );
-				bw.ShowDialog();
+				MultiEventInteraction castInteraction = (MultiEventInteraction)interactionItem;
+				MultiEventWindow w = new MultiEventWindow( scenario, castInteraction);
+				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if ( interactionItem is PersistentTokenInteraction )
 			{
-				PersistentInteractionWindow bw = new PersistentInteractionWindow( scenario, (PersistentTokenInteraction)interactionItem );
-				bw.ShowDialog();
+				PersistentTokenInteraction castInteraction = (PersistentTokenInteraction)interactionItem;
+				PersistentInteractionWindow w = new PersistentInteractionWindow( scenario, castInteraction);
+				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if ( interactionItem is ConditionalInteraction )
 			{
-				ConditionalInteractionWindow bw = new ConditionalInteractionWindow( scenario, (ConditionalInteraction)interactionItem );
-				bw.ShowDialog();
+				ConditionalInteraction castInteraction = (ConditionalInteraction)interactionItem;
+				ConditionalInteractionWindow w = new ConditionalInteractionWindow( scenario, castInteraction);
+				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if ( interactionItem is DialogInteraction )
 			{
-				DialogInteractionWindow bw = new DialogInteractionWindow( scenario, (DialogInteraction)interactionItem );
-				bw.ShowDialog();
+				DialogInteraction castInteraction = (DialogInteraction)interactionItem;
+				DialogInteractionWindow w = new DialogInteractionWindow( scenario, castInteraction);
+				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if ( interactionItem is ReplaceTokenInteraction )
 			{
-				ReplaceTokenInteractionWindow bw = new ReplaceTokenInteractionWindow( scenario, (ReplaceTokenInteraction)interactionItem );
-				bw.ShowDialog();
+				ReplaceTokenInteraction castInteraction = (ReplaceTokenInteraction)interactionItem;
+				ReplaceTokenInteractionWindow w = new ReplaceTokenInteractionWindow( scenario, castInteraction);
+				w.ShowDialog();
+				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if ( interactionItem is RewardInteraction )
 			{
-				RewardInteractionWindow bw = new RewardInteractionWindow( scenario, (RewardInteraction)interactionItem );
-				bw.ShowDialog();
+				RewardInteraction castInteraction = (RewardInteraction)interactionItem;
+				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
+				string originalPrefix = castInteraction.TranslationKeyPrefix();
+				RewardInteractionWindow w = new RewardInteractionWindow( scenario, castInteraction);
+				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 		}
 
@@ -356,7 +376,7 @@ namespace JiME
         private void OpenObjectiveEditor(Objective o)
 		{
 			ObjectiveEditorWindow ow = new ObjectiveEditorWindow( scenario, o, false );
-			ow.ShowDialog();
+			o.HandleWindow(ow, scenario.translationObserver);
 		}
 
 
@@ -370,7 +390,7 @@ namespace JiME
 		{
 			int idx = activationsUC.dataListView.SelectedIndex;
 			MonsterActivations act = (MonsterActivations)activationsUC.dataListView.Items[idx];
-			if (idx != -1 && act.id >= 1000) //Don't allow removing the basic enemy activations. Only allow removing built-in custom activations and user custom activations.
+			if (idx != -1 && act.id >= MonsterActivations.START_OF_CUSTOM_ACTIVATIONS) //Don't allow removing the basic enemy activations. Only allow removing built-in custom activations and user custom activations.
 			{
 				var ret = MessageBox.Show("Are you sure you want to delete this Enemy Attack Group?\n\nALL DESCRIPTIONS AND DAMAGE WILL BE DELETED.", "Delete Enemy Attack Group", MessageBoxButton.YesNo, MessageBoxImage.Question);
 				if (ret == MessageBoxResult.Yes)
@@ -381,7 +401,7 @@ namespace JiME
 			}
 			else
             {
-				MessageBox.Show("You can't delete the default Enemy Attack Groups, but you can modify them.", "Cannot Delete Enemy Attack Group", MessageBoxButton.OK, MessageBoxImage.Information);
+				MessageBox.Show("You can't delete the default Enemy Attack Groups, but you can copy them and modify the copy.", "Cannot Delete Enemy Attack Group", MessageBoxButton.OK, MessageBoxImage.Information);
 			}
 		}
 
@@ -389,8 +409,15 @@ namespace JiME
 		{
 			int idx = activationsUC.dataListView.SelectedIndex;
 			MonsterActivations act = (MonsterActivations)activationsUC.dataListView.Items[idx];
-			ActivationsEditorWindow ow = new ActivationsEditorWindow(scenario, ((MonsterActivations)activationsUC.dataListView.SelectedItem), false);
-			ow.ShowDialog();
+			if (idx != -1 && act.id >= MonsterActivations.START_OF_CUSTOM_ACTIVATIONS) //Don't allow modifying the basic enemy activations. Only allow modifying built-in custom activations and user custom activations.
+			{
+				ActivationsEditorWindow ow = new ActivationsEditorWindow(scenario, ((MonsterActivations)activationsUC.dataListView.SelectedItem), false);
+				ow.ShowDialog();
+			}
+			else
+			{
+				MessageBox.Show("You can't modify the default Enemy Attack Groups, but you can copy them and modify the copy.", "Cannot Modify Enemy Attack Group", MessageBoxButton.OK, MessageBoxImage.Information);
+			}
 		}
 
 		void OnDuplicateInteraction(object sender, EventArgs e)
@@ -466,9 +493,9 @@ namespace JiME
 
 		void OnDuplicateActivations(object sender, EventArgs e)
 		{
-			//Get next id starting at 2000 to create the new item
+			//Get next id starting at 1000 to create the new item
 			int maxId = scenario.activationsObserver.Max(a => a.id);
-			int newId = Math.Max(maxId+1, 2000); //Get the next id over 2000
+			int newId = Math.Max(maxId+1, MonsterActivations.START_OF_CUSTOM_ACTIVATIONS); //Get the next id over 1000
 			//Get the selected item and clone it
 			int idx = activationsUC.dataListView.SelectedIndex;
 			MonsterActivations act = ((MonsterActivations)activationsUC.dataListView.Items[idx]).Clone(newId);
@@ -478,6 +505,35 @@ namespace JiME
             {
 				scenario.activationsObserver.Add(act);
 			}
+		}
+
+		void OnAddTranslation(object sender, EventArgs e)
+		{
+			AddTranslation();
+		}
+
+		void OnRemoveTranslation(object sender, EventArgs e)
+		{
+			int idx = translationsUC.dataListView.SelectedIndex;
+			Translation translation = (Translation)translationsUC.dataListView.Items[idx];
+			var ret = MessageBox.Show("Are you sure you want to delete this Translation?\n\n" + translation.langName + " / " + translation.dataName + "\n\nALL TRANSLATION TEXT FOR THIS LANGUAGE WILL BE DELETED.\n\nThis cannot be undone.", "Delete Translation: " + translation.langName + " / " + translation.dataName, MessageBoxButton.YesNo, MessageBoxImage.Question);
+			if (ret == MessageBoxResult.Yes)
+			{
+				var ret2 = MessageBox.Show("Please Reconfirm:\n\nAre you REALLY, REALLY sure you want to delete this Translation?\n\n" + translation.langName + " / " + translation.dataName + "\n\nALL TRANSLATION TEXT FOR THIS LANGUAGE WILL BE DELETED.\n\nThis cannot be undone.", "Delete Translation: " + translation.langName + " / " + translation.dataName, MessageBoxButton.YesNo, MessageBoxImage.Question);
+				if (ret2 == MessageBoxResult.Yes)
+				{
+					scenario.RemoveData(translationsUC.dataListView.Items[idx]);
+					translationsUC.dataListView.SelectedIndex = Math.Max(idx - 1, 0);
+				}
+			}
+		}
+
+		void OnSettingsTranslation(object sender, EventArgs e)
+		{
+			Dictionary<string, TranslationItem> defaultTranslation = scenario.CollectTranslationItemsAsDictionary();
+
+			TranslationEditorWindow tw = new TranslationEditorWindow(scenario, defaultTranslation, ((Translation)translationsUC.dataListView.SelectedItem), false);
+			tw.ShowDialog();
 		}
 		#endregion
 
@@ -533,12 +589,15 @@ namespace JiME
 
         private void OpenScenarioEditor()
 		{
+			Dictionary<string, string> originalValues = scenario.CaptureStartingValues();
+			string originalKeyName = scenario.TranslationKeyName();
 			ScenarioWindow sw = new ScenarioWindow( scenario );
 			sw.Owner = this;
 			if ( sw.ShowDialog() == true )
 			{
 				scenario.scenarioName = sw.scenarioName;
 			}
+			scenario.DecertifyChangedValues(scenario.translationObserver, originalValues, originalKeyName);
 		}   
 
         private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e )
@@ -563,15 +622,26 @@ namespace JiME
 		void AddActivations()
 		{
 			Console.WriteLine("Add Enemy Activations...");
-			//Get next id starting at 2000 to create the new item
+			//Get next id starting at 1000 to create the new item
 			int maxId = scenario.activationsObserver.Max(a => a.id);
-			int newId = Math.Max(maxId + 1, 2000); //Get the next id over 2000
+			int newId = Math.Max(maxId + 1, MonsterActivations.START_OF_CUSTOM_ACTIVATIONS); //Get the next id over 1000
 			ActivationsEditorWindow aew = new ActivationsEditorWindow(scenario, new MonsterActivations(newId), false);
 			if (aew.ShowDialog() == true)
 			{
 				scenario.AddActivations(aew.activations);
 			}
 		}
+		
+		void AddTranslation()
+        {
+			Dictionary<string, TranslationItem> defaultTranslation = scenario.CollectTranslationItemsAsDictionary();
+
+			TranslationEditorWindow tw = new TranslationEditorWindow(scenario, defaultTranslation, new Translation());
+			if(tw.ShowDialog() == true)
+            {
+				scenario.AddTranslation(tw.translation);
+            }
+        }
 
 
 		void AddTrigger()

@@ -71,31 +71,31 @@
                             <Rectangle Grid.Row="1" Fill="SaddleBrown" />
                             <StackPanel Orientation="Horizontal" Grid.Row="1">
                                 <TextBlock Text="v" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-                                <CheckBox x:Name="villainsOfEriadorCB" Content="Villains of Eriador" IsChecked="{Binding Has_VILLAINS_OF_ERIADOR}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"   VerticalAlignment="Center"/>
+                                <CheckBox x:Name="villainsOfEriajarCB" Content="Villains of Eriajar" IsChecked="{Binding Has_VILLAINS_OF_ERIAJAR}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"   VerticalAlignment="Center"/>
                             </StackPanel>
 
                             <Rectangle Grid.Row="2" Fill="Black" />
                             <StackPanel Orientation="Horizontal" Grid.Row="2">
                                 <TextBlock Text="p" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-                                <CheckBox x:Name="shadowedPathsCB" Content="Shadowed Paths" IsChecked="{Binding Has_SHADOWED_PATHS}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"  VerticalAlignment="Center"/>
+                                <CheckBox x:Name="shadedPathsCB" Content="Shaded Paths" IsChecked="{Binding Has_SHADED_PATHS}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"  VerticalAlignment="Center"/>
                             </StackPanel>
 
                             <Rectangle Grid.Row="3" Fill="Purple" />
                             <StackPanel Orientation="Horizontal" Grid.Row="3" >
                                 <TextBlock Text="d" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-                                <CheckBox x:Name="dwellersInDarknessCB" Content="Dwellers in Darkness" IsChecked="{Binding Has_DWELLERS_IN_DARKNESS}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"  VerticalAlignment="Center"/>
+                                <CheckBox x:Name="denizensInDarknessCB" Content="Denizens in Darkness" IsChecked="{Binding Has_DENIZENS_IN_DARKNESS}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"  VerticalAlignment="Center"/>
                             </StackPanel>
 
                             <Rectangle Grid.Row="4" Fill="DarkRed" />
                             <StackPanel Orientation="Horizontal" Grid.Row="4" >
                                 <TextBlock Text="w" Foreground="White" FontSize="20" Margin="4,0,0,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-                                <CheckBox x:Name="spreadingWarCB" Content="Spreading War" IsChecked="{Binding Has_SPREADING_WAR}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"  VerticalAlignment="Center"/>
+                                <CheckBox x:Name="unfurlingWarCB" Content="Unfurling War" IsChecked="{Binding Has_UNFURLING_WAR}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"  VerticalAlignment="Center"/>
                             </StackPanel>
                             
                             <Rectangle Grid.Row="5" Fill="YellowGreen" />
                             <StackPanel Orientation="Horizontal" Grid.Row="5" >
                                 <TextBlock Text="c" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="/Assets/#LoTR JiME Icons"/>
-                                <CheckBox x:Name="scourgesOfTheWastesCB" Content="Scourges of the Wastes" IsChecked="{Binding Has_SCOURGES_OF_THE_WASTES}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"  VerticalAlignment="Center">
+                                <CheckBox x:Name="scorchersOfTheWildsCB" Content="Scorchers of the Wilds" IsChecked="{Binding Has_SCORCHERS_OF_THE_WILDS}" FontWeight="Bold" Foreground="White" Padding="0,0,5,0"  VerticalAlignment="Center">
                                 </CheckBox>
                             </StackPanel>
                         </Grid>

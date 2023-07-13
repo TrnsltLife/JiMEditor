@@ -1,9 +1,23 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace JiME
 {
 	public class DecisionInteraction : InteractionBase, INotifyPropertyChanged, ICommonData
 	{
+		override protected void DefineTranslationAccessors()
+		{
+			translationKeyParents = "decision";
+			base.DefineTranslationAccessors();
+			List<TranslationAccessor> list = new List<TranslationAccessor>()
+			{
+				new TranslationAccessor("event.{1}.{0}.choice1", () => this.choice1),
+				new TranslationAccessor("event.{1}.{0}.choice2", () => this.choice2),
+				new TranslationAccessor("event.{1}.{0}.choice3", () => this.isThreeChoices ? this.choice3 : "")
+			};
+			translationAccessors.AddRange(list);
+		}
+
 		//Decision
 		string _c1t, _c2t, _c3t;
 		public string choice1 { get; set; }

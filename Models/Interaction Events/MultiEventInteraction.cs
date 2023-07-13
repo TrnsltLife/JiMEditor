@@ -5,6 +5,12 @@ namespace JiME
 {
 	public class MultiEventInteraction : InteractionBase, INotifyPropertyChanged, ICommonData
 	{
+		override protected void DefineTranslationAccessors()
+		{
+			translationKeyParents = "multi-event";
+			base.DefineTranslationAccessors();
+		}
+
 		bool _usingTriggers, _isSilent;
 		public ObservableCollection<string> eventList { get; set; }
 		public ObservableCollection<string> triggerList { get; set; }

@@ -4,6 +4,12 @@ namespace JiME
 {
 	public class TextInteraction : PersistentInteractionBase, INotifyPropertyChanged, ICommonData
 	{
+		override protected void DefineTranslationAccessors()
+		{
+			translationKeyParents = "text";
+			base.DefineTranslationAccessors();
+		}
+
 		public TextInteraction( string name ) : base( name )
 		{
 		}

@@ -1,5 +1,6 @@
 ﻿using JiME.UserControls;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Documents;
 
@@ -7,6 +8,17 @@ namespace JiME
 {
 	public class PersistentTokenInteraction : InteractionBase, INotifyPropertyChanged, ICommonData
 	{
+		override protected void DefineTranslationAccessors()
+		{
+			translationKeyParents = "persistent-token";
+			base.DefineTranslationAccessors();
+			List<TranslationAccessor> list = new List<TranslationAccessor>()
+			{
+				new TranslationAccessor("event.{1}.{0}.altText", () => this.alternativeBookData.pages[0].StartsWith("This text will be shown") ? "" : this.alternativeBookData.pages[0])
+			};
+			translationAccessors.AddRange(list);
+		}
+
 		string _eventToActivate, _alternativeTextTrigger;
 		public TextBookData alternativeBookData { get; set; }
 		public string eventToActivate
@@ -29,6 +41,7 @@ namespace JiME
 			alternativeTextTrigger = "None";
 			eventToActivate = "None";
 			isTokenInteraction = true;
+			isReusable = false;
 		}
 
 		public PersistentTokenInteraction Clone()

@@ -26,29 +26,29 @@ namespace JiME.Procedural
         public string StoryTemplate { get; set; } = null;
 
         /// <summary>
-        /// Include the VILLAINS_OF_ERIADOR expansion
+        /// Include the VILLAINS_OF_ERIAJAR expansion
         /// </summary>
-        public bool Has_VILLAINS_OF_ERIADOR { get; set; } = false;
+        public bool Has_VILLAINS_OF_ERIAJAR { get; set; } = false;
 
         /// <summary>
-        /// Include the SHADOWED_PATHS expansion
+        /// Include the SHADED_PATHS expansion
         /// </summary>
-        public bool Has_SHADOWED_PATHS { get; set; } = false;
+        public bool Has_SHADED_PATHS { get; set; } = false;
 
         /// <summary>
-        /// Include the DWELLERS_IN_DARKNESS expansion
+        /// Include the DENIZENS_IN_DARKNESS expansion
         /// </summary>
-        public bool Has_DWELLERS_IN_DARKNESS { get; set; } = false;
+        public bool Has_DENIZENS_IN_DARKNESS { get; set; } = false;
 
         /// <summary>
-        /// Include the SPREADING_WAR expansion
+        /// Include the UNFURLING_WAR expansion
         /// </summary>
-        public bool Has_SPREADING_WAR { get; set; } = false;
+        public bool Has_UNFURLING_WAR { get; set; } = false;
 
         /// <summary>
-        /// Include the SCOURGES_OF_THE_WASTES expansion
+        /// Include the SCORCHERS_OF_THE_WILDS expansion
         /// </summary>
-        public bool Has_SCOURGES_OF_THE_WASTES { get; set; } = false;
+        public bool Has_SCORCHERS_OF_THE_WILDS { get; set; } = false;
 
         // TODO: Story length or e.g. StoryPoint count as enumerated parameter, SHORT/MEDIUM/LONG?
 

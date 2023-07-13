@@ -70,11 +70,11 @@ namespace JiME.Views
 
         //int[] MonsterCost = new int[7] { 3, 3, 6, 6, 7, 9, 7 };
         int[] MonsterCost = (Collection.CORE_SET.Monsters.Select(m => m.cost[0]))
-			.Concat(Collection.VILLAINS_OF_ERIADOR.Monsters.Select(m => m.cost[0])).ToArray()
-			.Concat(Collection.SHADOWED_PATHS.Monsters.Select(m => m.cost[0])).ToArray()
-			.Concat(Collection.DWELLERS_IN_DARKNESS.Monsters.Select(m => m.cost[0])).ToArray()
-			.Concat(Collection.SPREADING_WAR.Monsters.Select(m => m.cost[0])).ToArray()
-			.Concat(Collection.SCOURGES_OF_THE_WASTES.Monsters.Select(m => m.cost[0])).ToArray();
+			.Concat(Collection.VILLAINS_OF_ERIAJAR.Monsters.Select(m => m.cost[0])).ToArray()
+			.Concat(Collection.SHADED_PATHS.Monsters.Select(m => m.cost[0])).ToArray()
+			.Concat(Collection.DENIZENS_IN_DARKNESS.Monsters.Select(m => m.cost[0])).ToArray()
+			.Concat(Collection.UNFURLING_WAR.Monsters.Select(m => m.cost[0])).ToArray()
+			.Concat(Collection.SCORCHERS_OF_THE_WILDS.Monsters.Select(m => m.cost[0])).ToArray();
 
 		//int[] ModCost = new int[3] { 1, 2, 1 };
 		//string[] modNames = new string[3] { "Large", "Bloodthirsty", "Armored" };
@@ -373,7 +373,7 @@ namespace JiME.Views
 					//mSpeed = 1;
 					armor = 2;
 					break;
-				case MonsterType.Warg:
+				case MonsterType.Varg:
 					mHealth = 8;
 					//mDamage = 3;
 					//mSpeed = 3;

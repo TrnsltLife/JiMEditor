@@ -29,8 +29,8 @@ namespace JiME.Views
 
 			scenario = s;
 			cancelButton.Visibility = activ == null ? Visibility.Visible : Visibility.Collapsed;
-			lockIcon.Visibility = activ == null ? Visibility.Collapsed : activ.id < 1000 ? Visibility.Visible : Visibility.Collapsed;
-			nameTB.IsEnabled = activ == null ? true : activ.id < 2000 ? false : true;
+			lockIcon.Visibility = activ == null ? Visibility.Collapsed : activ.id < MonsterActivations.START_OF_CUSTOM_ACTIVATIONS ? Visibility.Visible : Visibility.Collapsed;
+			nameTB.IsEnabled = activ == null ? true : activ.id < MonsterActivations.START_OF_CUSTOM_ACTIVATIONS ? false : true;
 			activations = activ ?? new MonsterActivations();
 
 			oldName = activations.dataName;
@@ -95,7 +95,7 @@ namespace JiME.Views
 		{
 			MonsterActivationItem mai = ( (Button)sender ).DataContext as MonsterActivationItem;
 			MonsterActivationItemEditorWindow maie = new MonsterActivationItemEditorWindow(scenario, activations, mai, false);
-			maie.ShowDialog();
+			mai.HandleWindow(maie, scenario.translationObserver);
 			NotifyItemChanged(mai);
 		}
 
@@ -112,8 +112,9 @@ namespace JiME.Views
 			if (ret == MessageBoxResult.Yes)
 			{
 				MonsterActivationItem mai = ((Button)sender).DataContext as MonsterActivationItem;
+				mai.UpdateKeysStartingWith(scenario.translationObserver, activations.TranslationKeyPrefix() + mai.id.ToString() + ".", activations.TranslationKeyPrefix() + "deleted." + mai.GUID + "."); //update translation key of deleted item to use its GUID
 				activations.activations.Remove(mai);
-				activations.RenumberActivations();
+				activations.RenumberActivations(scenario.translationObserver);
 			}
 		}
 

@@ -1,9 +1,27 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace JiME
 {
 	public class DialogInteraction : PersistentInteractionBase, INotifyPropertyChanged, ICommonData
 	{
+		override protected void DefineTranslationAccessors()
+		{
+			translationKeyParents = "dialog";
+			base.DefineTranslationAccessors();
+			List<TranslationAccessor> list = new List<TranslationAccessor>()
+			{
+				new TranslationAccessor("event.{1}.{0}.choice1", () => this.choice1),
+				new TranslationAccessor("event.{1}.{0}.text1", () => this.c1Text),
+				new TranslationAccessor("event.{1}.{0}.choice2", () => this.choice2),
+				new TranslationAccessor("event.{1}.{0}.text2", () => this.c2Text),
+				new TranslationAccessor("event.{1}.{0}.choice3", () => this.choice3),
+				new TranslationAccessor("event.{1}.{0}.text3", () => this.c3Text),
+				new TranslationAccessor("event.{1}.{0}.persistentText", () => this.isPersistent ? this.persistentText : "")
+			};
+			translationAccessors.AddRange(list);
+		}
+
 		//dialog
 		string _choice1, _choice2, _choice3, _c1Trigger, _c2Trigger, _c3Trigger, _c1Text, _c2Text, _c3Text;
 

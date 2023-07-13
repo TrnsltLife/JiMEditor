@@ -22,12 +22,12 @@ namespace JiME
 	/// The order for the first 7 (core set) was set by GlowPuff and is kept for backwards compatibility.
 	/// The order for the other sets is kept in the same order as the order in the original JiME engine, although not sharing the same enum int values.
 	/// </summary>
-	public enum MonsterType { Ruffian, GoblinScout, OrcHunter, OrcMarauder, Warg, HillTroll, Wight, //0 - 6
-							  Atarin, Gulgotar, Coalfang, //7-9
-							  GiantSpider, PitGoblin, OrcTaskmaster, Shadowman, NamelessThing, CaveTroll, Balrog, SpawnOfUngoliant, //10-17
-							  SupplicantOfMorgoth, Ursa, Ollie, //18-20
-							  FellBeast, WargRider, SiegeEngine, WarOliphaunt, Soldier, UrukWarrior, //21-26
-							  LordAngon, WitchKingOfAngmar, Eadris //27-29
+	public enum MonsterType { Ruffian, GoblinScout, OrcHunter, OrcMarauder, Varg, HillTroll, Wight, //0 - 6
+							  Atari, Gargletarg, Chartooth, //7-9
+							  GiantSpider, PitGoblin, OrcTaskmaster, Shadowman, AnonymousThing, CaveTroll, Balerock, SpawnOfUglygiant, //10-17
+							  SupplicantOfMoreGoth, Ursula, Oliver, //18-20
+							  FoulBeast, VargRider, SiegeEngine, WarElephant, Soldier, HighOrcWarrior, //21-26
+							  LordJavelin, LichKing, Endris //27-29
 	}
 	public enum TileType { Hex, Battle, Square }
 	public enum ThreatAttributes { }//armor, elite, etc
@@ -43,8 +43,8 @@ namespace JiME
 	/// The order of the terrain in this enum is important to maintain unchanged and the order correlates with the data in Collection.cs and in the companion app.
 	/// </summary>
 	public enum TerrainType { None, Barrels, Boulder, Bush, FirePit, Mist, Pit, Statue, Stream, Table, Wall, //Core Set
-							  Elevation, Log, Rubble, Web, //Shadowed Paths
-							  Barricade, Chest, Fence, Fountain, Pond, Trench //Spreading War
+							  Elevation, Log, Rubble, Web, //Shaded Paths
+							  Barricade, Chest, Fence, Fountain, Pond, Trench //Unfurling War
 							}
 	public enum HelpType { Token, Grouping, Enemies, Triggers }
 	public enum DifficultyBias { Light, Medium, Heavy }
@@ -77,11 +77,161 @@ namespace JiME
 		int threatReward { get; set; }
 		bool isTokenInteraction { get; set; }
 		string triggerName { get; set; }
+		string tokenInteractionText { get; set; }
 		TokenType tokenType { get; set; }
 		PersonType personType { get; set; }
 
 		TerrainType terrainType { get; set; }
+		bool isReusable { get; set; }
 	}
+
+	public class Translatable
+    {
+        [JsonIgnore]
+		private List<TranslationAccessor> _translationAccessors;
+		[JsonIgnore]
+		private string _translationKeyParents;
+
+		[JsonIgnore]
+		public List<TranslationAccessor> translationAccessors
+		{
+			get { return _translationAccessors; }
+			set { _translationAccessors = value; }
+		}
+
+        [JsonIgnore]
+		public string translationKeyParents
+        {
+			get { return _translationKeyParents; }
+			set { _translationKeyParents = value; }
+        }
+
+		public Translatable()
+        {
+			DefineTranslationAccessors();
+        }
+
+		virtual protected void DefineTranslationAccessors()
+        {
+			translationAccessors = new List<TranslationAccessor>();
+        }
+
+		public List<TranslationItem> CollectTranslationItems()
+        {
+			List<TranslationItem> items = new List<TranslationItem>();
+			foreach(TranslationAccessor accessor in translationAccessors)
+            {
+				string key = accessor.FormatKey(TranslationKeyName(), translationKeyParents);
+				string val = accessor.RetrieveVal();
+				items.Add(new TranslationItem(key, val));
+			}
+			return items;
+        }
+
+		public string DefaultStringForTranslationKey(string findKey)
+        {
+			foreach (TranslationAccessor accessor in translationAccessors)
+			{
+				string key = accessor.FormatKey(TranslationKeyName(), translationKeyParents);
+				if(key == findKey)
+                {
+					return accessor.RetrieveVal();
+				}
+			}
+			return "";
+		}
+
+		virtual public string TranslationKeyName() { return "currentName"; }
+		virtual public string TranslationKeyPrefix() { return "currentName."; }
+
+		public Dictionary<string, string> CaptureStartingValues()
+        {
+			Dictionary<string, string> result = new Dictionary<string, string>();
+			foreach (TranslationAccessor accessor in translationAccessors)
+			{
+				string key = accessor.keyPattern; //just the bare keyPattern without having its {0} placeholders replaced
+				string val = accessor.RetrieveVal();
+				Console.WriteLine("CaptureStartingValues: " + key + " => " + val);
+				result.Add(key, val);
+			}
+			return result;
+        }
+
+		public void DecertifyChangedValues(ObservableCollection<Translation> translations, Dictionary<string, string> originals, string originalKeyName)
+        {
+			foreach (TranslationAccessor accessor in translationAccessors)
+			{
+				string key = accessor.keyPattern; //just the bare keyPattern without having its {0} placeholders replaced
+				string formattedKey = accessor.FormatKey(originalKeyName, translationKeyParents);
+				string val = accessor.RetrieveVal();
+
+                //See if the value changed
+                if (originals[key] != val)
+                {
+					//Dercertify the translation in all the languages
+					foreach(var translation in translations)
+                    {
+						translation.DecertifyKey(formattedKey);
+					}
+                }
+			}
+		}
+
+		public void UpdateKeysStartingWith(ObservableCollection<Translation> translations, string originalPrefix)
+		{
+			UpdateKeysStartingWith(translations, originalPrefix, TranslationKeyPrefix());
+		}
+
+		public void UpdateKeysStartingWith(ObservableCollection<Translation> translations, string originalPrefix, string newPrefix)
+		{
+			Console.WriteLine("UpdateKeysStartingWith -> originalPrefix: " + originalPrefix + " newPrefix: " + newPrefix + ")");
+			if(originalPrefix != newPrefix)
+            {
+				foreach(var translation in translations)
+                {
+					Console.WriteLine(translation.dataName + " ->  UpdateKeysStaringWith(" + originalPrefix + ", " + newPrefix + ")");
+					translation.UpdateKeysStartingWith(originalPrefix, newPrefix);
+                }
+            }
+        }
+
+		public bool? HandleWindow(Window w, ObservableCollection<Translation> translations)
+        {
+			Dictionary<string, string> originalValues = CaptureStartingValues();
+			string originalPrefix = TranslationKeyPrefix();
+			string originalKeyName = TranslationKeyName();
+			bool? result =  w.ShowDialog();
+			UpdateKeysStartingWith(translations, originalPrefix);
+			DecertifyChangedValues(translations, originalValues, originalKeyName); //decertify changed values under the originalKeyName
+			if (TranslationKeyName() != originalKeyName)
+			{
+				DecertifyChangedValues(translations, originalValues, TranslationKeyName()); //decertify changed values under the current key name
+			}
+			return result;
+		}
+	}
+
+	public class TranslationAccessor
+    {
+		public string keyPattern;
+		public Func<string> valFunc;
+
+		public TranslationAccessor(string keyPattern, Func<string> valFunc)
+        {
+			this.keyPattern = keyPattern;
+			this.valFunc = valFunc;
+        }
+
+		public string FormatKey(string name, string parentHierarchy)
+        {
+			return String.Format(keyPattern, name, parentHierarchy);
+        }
+
+		public string RetrieveVal()
+        {
+			return valFunc();
+        }
+    }
 
 	class Debug
 	{
@@ -246,8 +396,8 @@ namespace JiME
 		/// AKA "Engine Version" in the companion app
 		/// Update this number every time the file format changes with new features
 		/// </summary>
-		public static string formatVersion = "1.11";
-		public static string appVersion = "0.21";
+		public static string formatVersion = "1.14";
+		public static string appVersion = "0.25";
 		public static Dictionary<int, BaseTileData> tileDictionary { get; set; } = new Dictionary<int, BaseTileData>();
 		public static Dictionary<int, BaseTileData> tileDictionaryB { get; set; } = new Dictionary<int, BaseTileData>();
 		public static int tolerance = 25;

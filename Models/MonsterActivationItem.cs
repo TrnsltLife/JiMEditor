@@ -5,14 +5,27 @@ using System.Text.RegularExpressions;
 using System.ComponentModel;
 using Newtonsoft.Json;
 using JiME.UserControls;
+using System.Collections.Generic;
 
 namespace JiME
 {
 	/// <summary>
 	/// cf. https://boardgamegeek.com/thread/2469108/demystifying-enemies-project-documenting-enemy-sta
 	/// </summary>
-	public class MonsterActivationItem : INotifyPropertyChanged, ICommonData
+	public class MonsterActivationItem : Translatable, INotifyPropertyChanged, ICommonData
 	{
+		override public string TranslationKeyName() { return dataName; }
+		override public string TranslationKeyPrefix() { return String.Format("activation.{1}.{0}.", TranslationKeyName(), translationKeyParents); }
+
+		override protected void DefineTranslationAccessors()
+		{
+			List<TranslationAccessor> list = new List<TranslationAccessor>()
+			{
+				new TranslationAccessor("activation.{1}.{0}.text", () => this.text),
+				new TranslationAccessor("activation.{1}.{0}.effect", () => this.effect),
+			};
+			translationAccessors = list;
+		}
 
 		string _dataName;
 		int _id;

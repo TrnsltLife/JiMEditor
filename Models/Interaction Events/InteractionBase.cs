@@ -1,12 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace JiME
 {
-	public abstract class InteractionBase : IInteraction, INotifyPropertyChanged
+	public abstract class InteractionBase : Translatable, IInteraction, INotifyPropertyChanged
 	{
-		string _dataName, _triggerName, _triggerAfterName;
-		bool _isTokenInteraction;
+		override public string TranslationKeyName() { return dataName; }
+		override public string TranslationKeyPrefix() { return String.Format("event.{1}.{0}.", TranslationKeyName(), translationKeyParents); }
+
+		override protected void DefineTranslationAccessors()
+		{
+			List<TranslationAccessor> list = new List<TranslationAccessor>()
+			{
+				new TranslationAccessor("event.{1}.{0}.tokenText", () => this.isTokenInteraction ? this.tokenInteractionText : ""),
+				new TranslationAccessor("event.{1}.{0}.flavorText", () => this.textBookData.pages[0].StartsWith("Default Flavor Text") ? "" : this.textBookData.pages[0]),
+				new TranslationAccessor("event.{1}.{0}.eventText", () => this.eventBookData.pages[0].StartsWith("Default Event Text") ? "" : this.eventBookData.pages[0])
+			};
+			translationAccessors = list;
+		}
+
+		string _dataName, _triggerName, _triggerAfterName, _tokenInteractionText;
+		bool _isTokenInteraction, _isReusable;
 		int _loreReward, _xpReward, _threatReward;
 		TokenType _tokenType;
 		PersonType _personType;
@@ -29,6 +44,8 @@ namespace JiME
 			interact.textBookData = this.textBookData.Clone();
 			interact.eventBookData = this.eventBookData.Clone();
 			interact.interactionType = this.interactionType;
+			interact.tokenInteractionText = this.tokenInteractionText;
+			interact.isReusable = this.isReusable;
 		}
 
 		public string dataName
@@ -61,6 +78,15 @@ namespace JiME
 			{
 				_triggerAfterName = value;
 				NotifyPropertyChanged( "triggerAfterName" );
+			}
+		}
+		public string tokenInteractionText
+		{
+			get => _tokenInteractionText;
+			set
+			{
+				_tokenInteractionText = value;
+				NotifyPropertyChanged("tokenInteractionText");
 			}
 		}
 		public bool isTokenInteraction
@@ -122,6 +148,16 @@ namespace JiME
 				NotifyPropertyChanged( "threatReward" );
 			}
 		}
+		public bool isReusable
+		{
+			get => _isReusable;
+			set
+			{
+				_isReusable = value;
+				NotifyPropertyChanged("isReusable");
+			}
+		}
+
 
 		public InteractionType interactionType { get; set; }
 
@@ -143,6 +179,8 @@ namespace JiME
 			eventBookData = new TextBookData();
 			eventBookData.pages.Add( "Default Event Text.\n\nThis text is shown after the Event is triggered. Use it to tell about the actual event that has been triggered Example: Describe an Enemy Threat, present a Test, describe a Decision, etc." );
 			loreReward = xpReward = threatReward = 0;
+			tokenInteractionText = "";
+			isReusable = false;
 		}
 
 		public void NotifyPropertyChanged( string propName )

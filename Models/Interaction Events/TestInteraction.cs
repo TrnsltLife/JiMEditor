@@ -1,10 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace JiME
 {
 	public class TestInteraction : InteractionBase, INotifyPropertyChanged, ICommonData
 	{
+		override protected void DefineTranslationAccessors()
+		{
+			translationKeyParents = "stat-test";
+			base.DefineTranslationAccessors();
+			List<TranslationAccessor> list = new List<TranslationAccessor>()
+			{
+				new TranslationAccessor("event.{1}.{0}.passText", () => this.passBookData.pages[0].StartsWith("Default Pass Text") ? "" : passBookData.pages[0]),
+				new TranslationAccessor("event.{1}.{0}.failText", () => this.failBookData.pages[0].StartsWith("Default Fail Text") ? "" : failBookData.pages[0]),
+				new TranslationAccessor("event.{1}.{0}.progressText", () => this.progressBookData.pages[0].StartsWith("Default Progress Text") ? "" : progressBookData.pages[0])
+			};
+			translationAccessors.AddRange(list);
+		}
+
 		//Attribute Test
 		string _failTrigger, _successTrigger;
 		bool _noAlternate, _passFail;

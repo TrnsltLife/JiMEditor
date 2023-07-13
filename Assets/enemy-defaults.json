@@ -82,8 +82,8 @@
 		},
 		{
 			"id": 4,
-			"enumName": "HungryWarg",
-			"dataName": "Hungry Warg",
+			"enumName": "HungryVarg",
+			"dataName": "Hungry Varg",
 			"health": 8,
 			"armor": 1,
 			"sorcery": 0,
@@ -146,8 +146,8 @@
 
 		{
 			"id": 7,
-			"enumName": "Atarin",
-			"dataName": "Atarin",
+			"enumName": "Atari",
+			"dataName": "Atari",
 			"health": 8,
 			"armor": 1,
 			"sorcery": 1,
@@ -166,8 +166,8 @@
 		},
 		{
 			"id": 8,
-			"enumName": "Gulgotar",
-			"dataName": "Gulgotar",
+			"enumName": "Gargletarg",
+			"dataName": "Gargletarg",
 			"health": 8,
 			"armor": 2,
 			"sorcery": 0,
@@ -186,8 +186,8 @@
 		},
 		{
 			"id": 9,
-			"enumName": "Coalfang",
-			"dataName": "Coalfang",
+			"enumName": "Chartooth",
+			"dataName": "Chartooth",
 			"health": 8,
 			"armor": 1,
 			"sorcery": 0,
@@ -290,8 +290,8 @@
 		},
 		{
 			"id": 14,
-			"enumName": "NamelessThing",
-			"dataName": "Nameless Thing",
+			"enumName": "AnonymousThing",
+			"dataName": "Anonymous Thing",
 			"health": 20,
 			"armor": 0,
 			"sorcery": 0,
@@ -330,8 +330,8 @@
 		},
 		{
 			"id": 16,
-			"enumName": "Balrog",
-			"dataName": "Balrog",
+			"enumName": "Balerock",
+			"dataName": "Balerock",
 			"health": 18,
 			"armor": 2,
 			"sorcery": 2,
@@ -350,8 +350,8 @@
 		},
 		{
 			"id": 17,
-			"enumName": "SpawnOfUngoliant",
-			"dataName": "Spawn of Ungoliant",
+			"enumName": "SpawnOfUglygiant",
+			"dataName": "Spawn of Uglygiant",
 			"health": 18,
 			"armor": 2,
 			"sorcery": 0,
@@ -374,8 +374,8 @@
 
 		{
 			"id": 18,
-			"enumName": "SupplicantOfMorgoth",
-			"dataName": "Supplicant of Morgoth",
+			"enumName": "SupplicantOfMoreGoth",
+			"dataName": "Supplicant of More-Goth",
 			"health": 9,
 			"armor": 2,
 			"sorcery": 0,
@@ -394,8 +394,8 @@
 		},
 		{
 			"id": 19,
-			"enumName": "Ursa",
-			"dataName": "Ursa",
+			"enumName": "Ursula",
+			"dataName": "Ursula",
 			"health": 16,
 			"armor": 2,
 			"sorcery": 4,
@@ -414,8 +414,8 @@
 		},
 		{
 			"id": 20,
-			"enumName": "Ollie",
-			"dataName": "Ollie",
+			"enumName": "Oliver",
+			"dataName": "Oliver",
 			"health": 11,
 			"armor": 0,
 			"sorcery": 1,
@@ -438,8 +438,8 @@
 
 		{
 			"id": 21,
-			"enumName": "FellBeast",
-			"dataName": "Fell Beast",
+			"enumName": "FoulBeast",
+			"dataName": "Foul Beast",
 			"health": 8,
 			"armor": 0,
 			"sorcery": 2,
@@ -458,8 +458,8 @@
 		},
 		{
 			"id": 22,
-			"enumName": "WargRider",
-			"dataName": "Warg Rider",
+			"enumName": "VargRider",
+			"dataName": "Varg Rider",
 			"health": 10,
 			"armor": 1,
 			"sorcery": 0,
@@ -498,8 +498,8 @@
 		},
 		{
 			"id": 24,
-			"enumName": "WarOliphaunt",
-			"dataName": "War Oliphaunt",
+			"enumName": "WarElephant",
+			"dataName": "War Elephant",
 			"health": 10,
 			"armor": 4,
 			"sorcery": 0,
@@ -538,8 +538,8 @@
 		},
 		{
 			"id": 26,
-			"enumName": "UrukWarrior",
-			"dataName": "Uruk Warrior",
+			"enumName": "HighOrcWarrior",
+			"dataName": "High-Orc Warrior",
 			"health": 7,
 			"armor": 2,
 			"sorcery": 0,
@@ -559,8 +559,8 @@
 
 		{
 			"id": 27,
-			"enumName": "LordAngon",
-			"dataName": "Lord Angon",
+			"enumName": "LordJavelin",
+			"dataName": "Lord Javelin",
 			"health": 12,
 			"armor": 2,
 			"sorcery": 2,
@@ -571,7 +571,7 @@
 			"groupLimit": 1,
 			"figureLimit": 1,
 			"cost": [ 1000, 0, 0 ],
-			"tag": [ "Humanoid", "Poweful" ],
+			"tag": [ "Humanoid", "Powerful" ],
 			"speed": "medium",
 			"damage": "medium",
 			"fearsome": false,
@@ -579,8 +579,8 @@
 		},
 		{
 			"id": 28,
-			"enumName": "WitchKingOfAngmar",
-			"dataName": "Witch-king of Angmar",
+			"enumName": "LichKing",
+			"dataName": "Lich-King",
 			"health": 20,
 			"armor": 4,
 			"sorcery": 4,
@@ -599,8 +599,8 @@
 		},
 		{
 			"id": 29,
-			"enumName": "Eadris",
-			"dataName": "Eadris",
+			"enumName": "Endris",
+			"dataName": "Endris",
 			"health": 10,
 			"armor": 1,
 			"sorcery": 0,

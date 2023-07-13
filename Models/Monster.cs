@@ -1,5 +1,6 @@
 ﻿using JiME.Models;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
@@ -8,21 +9,46 @@ namespace JiME
 	/// <summary>
 	/// cf. https://boardgamegeek.com/thread/2469108/demystifying-enemies-project-documenting-enemy-sta
 	/// </summary>
-	public class Monster : INotifyPropertyChanged, ICommonData
+	public class Monster : Translatable, INotifyPropertyChanged, ICommonData
 	{
+		override public string TranslationKeyName() { return index.ToString(); }
+		override public string TranslationKeyPrefix() { return String.Format("event.enemy.{1}.monster.{0}.", TranslationKeyName(), translationKeyParents); }
+
+		override protected void DefineTranslationAccessors()
+		{
+			List<TranslationAccessor> list = new List<TranslationAccessor>()
+			{
+				new TranslationAccessor("event.enemy.{1}.monster.{0}.name", () => this.dataName),
+			};
+			translationAccessors = list;
+		}
+
 		int Light { get { return 2; } }
 		int Medium { get { return 3; } }
 		int Heavy { get { return 4; } }
 
 		string _dataName, /*_name,*/ _bonuses;
-		int _id, _activationsId, _count, _health, _shieldValue, _sorceryValue, _moveA, _moveB, _groupLimit, _figureLimit, _damage, _loreReward, _movementValue, _maxMovementValue;
+		int _index, _id, _activationsId, _count, _health, _shieldValue, _sorceryValue, _moveA, _moveB, _groupLimit, _figureLimit, _damage, _loreReward, _movementValue, _maxMovementValue;
 		bool _isRanged, _isFearsome, _isLarge, _isBloodThirsty, _isArmored, _isElite, _defaultStats, _isEasy, _isNormal, _isHard;
 		int[] _cost;
 		string[] _moveSpecial, _tag, _special;
 
 		public Guid GUID { get; set; }
 
-		public int id
+		public int index //used to keep track of the order in the list in a ThreatEvent, as a key for the translation string
+		{
+			get => _index;
+			set
+			{
+				if (value != _index)
+				{
+					_index = value;
+					NotifyPropertyChanged("index");
+				}
+			}
+		}
+
+		public int id //refers to the monsterId that identifies the monster as a Ruffian, Orc, Varg, etc.
 		{
 			get => _id;
 			set
@@ -419,14 +445,13 @@ namespace JiME
 			}
 		}
 
-		//public static string[] monsterNames = { "Ruffian", "Goblin Scout", "Orc Hunter", "Orc Marauder", "Warg", "Hill Troll", "Wight" };
-
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		public Monster() { }
+		public Monster() { GUID = Guid.NewGuid(); }
 
 		public Monster(int id)
 		{
+			GUID = Guid.NewGuid();
 			//Console.WriteLine("Monster(" + id + ")");
 
 			DefaultStats defaultStats;
@@ -487,6 +512,7 @@ namespace JiME
 			m.dataName = this.dataName;
 			m.GUID = Guid.NewGuid();
 			m.bonuses = this.bonuses;
+			m.index = -1;
 			m.id = this.id;
 			m.activationsId = this.activationsId;
 			m.count = this.count;

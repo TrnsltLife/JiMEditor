@@ -140,25 +140,25 @@ namespace JiME.Views
                 {
 					coreSetCB.IsChecked = true;
                 }
-				else if(collection == Collection.VILLAINS_OF_ERIADOR)
+				else if(collection == Collection.VILLAINS_OF_ERIAJAR)
                 {
-					villainsOfEriadorCB.IsChecked = true;
+					villainsOfEriajarCB.IsChecked = true;
                 }
-				else if(collection == Collection.SHADOWED_PATHS)
+				else if(collection == Collection.SHADED_PATHS)
                 {
-					shadowedPathsCB.IsChecked = true;
+					shadedPathsCB.IsChecked = true;
                 }
-				else if(collection == Collection.DWELLERS_IN_DARKNESS)
+				else if(collection == Collection.DENIZENS_IN_DARKNESS)
                 {
-					dwellersInDarknessCB.IsChecked = true;
+					denizensInDarknessCB.IsChecked = true;
                 }
-				else if(collection == Collection.SPREADING_WAR)
+				else if(collection == Collection.UNFURLING_WAR)
                 {
-					spreadingWarCB.IsChecked = true;
+					unfurlingWarCB.IsChecked = true;
                 }
-				else if (collection == Collection.SCOURGES_OF_THE_WASTES)
+				else if (collection == Collection.SCORCHERS_OF_THE_WILDS)
 				{
-					scourgesOfTheWastesCB.IsChecked = true;
+					scorchersOfTheWildsCB.IsChecked = true;
 				}
 			}
 		}
@@ -233,9 +233,13 @@ namespace JiME.Views
 			if ( resolutionCB.SelectedIndex < 0 )
 				return;
 
-			TextEditorWindow te = new TextEditorWindow( scenario, EditMode.Resolution, scenario.resolutionObserver[resolutionCB.SelectedIndex] );
+			TextBookData text = scenario.resolutionObserver[resolutionCB.SelectedIndex];
+			Dictionary<string, string> originals = scenario.resolutionObserver[resolutionCB.SelectedIndex].CaptureStartingValues();
+			string originalKeyName = text.dataName;
+			string originalPrefix = text.TranslationKeyPrefix();
+			TextEditorWindow te = new TextEditorWindow( scenario, EditMode.Resolution, text );
 			bool chk = true;//default to true
-			if ( scenario.scenarioEndStatus.TryGetValue( scenario.resolutionObserver[resolutionCB.SelectedIndex].dataName, out chk ) )
+			if ( scenario.scenarioEndStatus.TryGetValue( text.dataName, out chk ) )
 			{
 				te.successCB.IsChecked = chk;
 				te.failCB.IsChecked = !chk;
@@ -250,15 +254,19 @@ namespace JiME.Views
 
 			if ( te.ShowDialog() == true )
 			{
-				scenario.resolutionObserver[resolutionCB.SelectedIndex].dataName = te.shortName;
-				scenario.resolutionObserver[resolutionCB.SelectedIndex].pages = te.textBookController.pages;
-				scenario.resolutionObserver[resolutionCB.SelectedIndex].triggerName = te.triggerLB.Text;
+				text.dataName = te.shortName;
+				text.pages = te.textBookController.pages;
+				text.triggerName = te.triggerLB.Text;
 				//if a success/fail bool doesn't exist, add it now
 				if ( !scenario.scenarioEndStatus.ContainsKey( te.shortName ) )
 					scenario.scenarioEndStatus.Add( te.shortName, te.successChecked );
 				//otherwise update value
 				else
 					scenario.scenarioEndStatus[te.shortName] = te.successChecked;
+
+				//TODO 
+				text.UpdateKeysStartingWith(scenario.translationObserver, originalPrefix);
+				text.DecertifyChangedValues(scenario.translationObserver, originals, originalKeyName);
 			}
 
 			scenario.PruneScenarioEnd();

@@ -78,6 +78,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Common\CollectionConverter.cs" />
+    <Compile Include="Common\ActivationsListConverter.cs" />
     <Compile Include="Common\Commands.cs" />
     <Compile Include="Common\Converters.cs" />
     <Compile Include="Common\ErrorChecker.cs" />
@@ -93,6 +94,8 @@
     <Compile Include="Models\Collection.cs" />
     <Compile Include="Models\BaseTile.cs" />
     <Compile Include="Models\Interaction Events\PersistentInteractionBase.cs" />
+    <Compile Include="Models\TranslationItem.cs" />
+    <Compile Include="Models\Translation.cs" />
     <Compile Include="Models\SquareTile.cs" />
     <Compile Include="Models\HexTile.cs" />
     <Compile Include="Models\Chapter.cs" />
@@ -144,6 +147,12 @@
     </Compile>
     <Compile Include="UserControls\SidebarListView.xaml.cs">
       <DependentUpon>SidebarListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TranslationItemEditorWindow.xaml.cs">
+      <DependentUpon>TranslationItemEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TranslationEditorWindow.xaml.cs">
+      <DependentUpon>TranslationEditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CampaignTriggerEditor.xaml.cs">
       <DependentUpon>CampaignTriggerEditor.xaml</DependentUpon>
@@ -281,6 +290,14 @@
     <Page Include="UserControls\SidebarListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TranslationItemEditorWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\TranslationEditorWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\CampaignTriggerEditor.xaml">
       <SubType>Designer</SubType>

@@ -84,7 +84,7 @@ namespace JiME.Views
 			else
             {
 				//Just the battle tiles
-				indexOffset = 42; //TODO Change this after adding the new tiles for Spreading War
+				indexOffset = 42;
 				indexLimit = 0;
 				tileCount = 2;
 				galleryTiles = new GalleryTile[2];
