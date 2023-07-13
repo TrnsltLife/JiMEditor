@@ -3,6 +3,11 @@
  - Ideas from actual gameplay
    - Threat track sometimes starts darkness at some point --> threat should have different progressions that are controlled by the template
    - Boss level enemies may need to be killed multiple times
+ - Ideas from others
+   - Craig Glaser's ideas from here https://boardgamegeek.com/thread/2488415/custom-scenario-editor-and-companion-app-create-yo/page/11
+     - Hiding node subtrees in visualization
+	 - Notes (post-it?) in the visualization
+	 - Some case where labels overlap in visualization
  - Implement more StoryArchetypes (that can use the same templates than the old ones, perhaps with some archetype specific details)
    - Some fragments can be duplicates --> there should be at least 2-3 options for each objective in the StoryTemplate
    - Also need to mark certain interactions somehow to be part of the "main goal" of the scenario and have different texts, upate Threat-style as well
