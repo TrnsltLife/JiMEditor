@@ -133,7 +133,6 @@ namespace JiME.Views
 			if ( tw.ShowDialog() == true )
 			{
 				interaction.triggerAfterName = tw.triggerName;
-				tw.DataContext = null;
 			}
 		}
 
@@ -143,7 +142,6 @@ namespace JiME.Views
 			if ( tw.ShowDialog() == true )
 			{
 				interaction.triggerName = tw.triggerName;
-				tw.DataContext = null;
 			}
 		}
 

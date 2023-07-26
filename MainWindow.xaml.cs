@@ -298,7 +298,6 @@ namespace JiME
 				TextInteraction castInteraction = (TextInteraction)interactionItem;
 				TextInteractionWindow w = new TextInteractionWindow( scenario, castInteraction);
 				castInteraction.HandleWindow(w, scenario.translationObserver);
-				//w.DataContext = null;
 			}
 			else if (interactionItem is BranchInteraction )
 			{
