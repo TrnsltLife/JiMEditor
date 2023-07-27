@@ -200,7 +200,15 @@ namespace JiME
 			Dictionary<string, string> originalValues = CaptureStartingValues();
 			string originalPrefix = TranslationKeyPrefix();
 			string originalKeyName = TranslationKeyName();
-			bool? result =  w.ShowDialog();
+			bool? result = null;
+			try
+			{
+				result = w.ShowDialog();
+			}
+			catch(Exception e)
+            {
+				Console.WriteLine("Error with HandleWindow for " + w.Title + ". Error: " + e.Message);
+            }
 			UpdateKeysStartingWith(translations, originalPrefix);
 			DecertifyChangedValues(translations, originalValues, originalKeyName); //decertify changed values under the originalKeyName
 			if (TranslationKeyName() != originalKeyName)

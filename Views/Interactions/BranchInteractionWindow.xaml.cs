@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Linq;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using System;
 
 namespace JiME.Views
 {
@@ -58,22 +59,28 @@ namespace JiME.Views
 		private void AddTriggerButton_Click( object sender, RoutedEventArgs e )
 		{
 			TriggerEditorWindow tw = new TriggerEditorWindow( scenario );
-			if ( tw.ShowDialog() == true )
+			if (tw.ShowDialog() == true)
+			{
 				interaction.triggerTest = tw.triggerName;
+			}
 		}
 
 		private void AddTriggerButton2_Click( object sender, RoutedEventArgs e )
 		{
 			TriggerEditorWindow tw = new TriggerEditorWindow( scenario );
-			if ( tw.ShowDialog() == true )
+			if (tw.ShowDialog() == true)
+			{
 				interaction.triggerIsSetTrigger = tw.triggerName;
+			}
 		}
 
 		private void AddTriggerButton3_Click( object sender, RoutedEventArgs e )
 		{
 			TriggerEditorWindow tw = new TriggerEditorWindow( scenario );
-			if ( tw.ShowDialog() == true )
+			if (tw.ShowDialog() == true)
+			{
 				interaction.triggerNotSetTrigger = tw.triggerName;
+			}
 		}
 
 		private void triggerCB_SelectionChanged( object sender, SelectionChangedEventArgs e )

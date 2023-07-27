@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:local="clr-namespace:JiME"
 		xmlns:uc="clr-namespace:JiME.UserControls"
         mc:Ignorable="d"
@@ -17,6 +18,44 @@
 			<Setter Property="Margin" Value="0,5"/>
 			<Setter Property="VerticalAlignment" Value="Center"/>
 		</Style>
+		<CollectionViewSource x:Key="cvsTriggeredBy" Source="{Binding scenario.triggersObserver}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="dataName"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
+		<CollectionViewSource x:Key="cvsTriggerAfter" Source="{Binding scenario.triggersObserver}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="dataName"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
+
+		<CollectionViewSource x:Key="cvsTriggerCondition" Source="{Binding scenario.triggersObserver}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="dataName"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
+
+		<CollectionViewSource x:Key="cvsEventTrueTrigger" Source="{Binding scenario.triggersObserver}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="dataName"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
+		<CollectionViewSource x:Key="cvsEventFalseTrigger" Source="{Binding scenario.triggersObserver}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="dataName"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
+
+		<CollectionViewSource x:Key="cvsEventTrueEvent" Source="{Binding scenario.interactionObserver}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="dataName"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
+		<CollectionViewSource x:Key="cvsEventFalseEvent" Source="{Binding scenario.interactionObserver}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="dataName"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
 	</Window.Resources>
 
 	<StackPanel>
@@ -85,7 +124,7 @@
 								<StackPanel HorizontalAlignment="Left">
 									<TextBlock Text="Triggered By (Optional):" Style="{StaticResource Heading}"/>
 									<StackPanel Orientation="Horizontal">
-										<ComboBox VerticalAlignment="Center" Name="triggeredByCB" Width="250" ItemsSource="{Binding scenario.triggersObserver}" DisplayMemberPath="dataName" SelectedValue="{Binding interaction.triggerName}" SelectedValuePath="dataName" Margin="0" HorizontalAlignment="Left" IsEnabled="{Binding interaction.isTokenInteraction, Converter={StaticResource binv}}"/>
+										<ComboBox VerticalAlignment="Center" Name="triggeredByCB" Width="250" ItemsSource="{Binding Source={StaticResource cvsTriggeredBy}}" DisplayMemberPath="dataName" SelectedValue="{Binding interaction.triggerName}" SelectedValuePath="dataName" Margin="0" HorizontalAlignment="Left" IsEnabled="{Binding interaction.isTokenInteraction, Converter={StaticResource binv}}"/>
 										<Button x:Name="addMainTriggerButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="addMainTriggerButton_Click" IsEnabled="{Binding interaction.isTokenInteraction, Converter={StaticResource binv}}">
 											<Image Source="/JiME;component/Assets/add2.png"/>
 										</Button>
@@ -95,7 +134,7 @@
 								<StackPanel HorizontalAlignment="Left" Margin="10,0,0,0">
 									<TextBlock Text="Set Trigger After Event Is Resolved (Optional):" Style="{StaticResource Heading}"/>
 									<StackPanel Orientation="Horizontal">
-										<ComboBox VerticalAlignment="Center" HorizontalAlignment="Left" Width="250" ItemsSource="{Binding scenario.triggersObserver}" DisplayMemberPath="dataName" SelectedValue="{Binding interaction.triggerAfterName}" SelectedValuePath="dataName" Margin="0"/>
+										<ComboBox VerticalAlignment="Center" HorizontalAlignment="Left" Width="250" ItemsSource="{Binding Source={StaticResource cvsTriggerAfter}}" DisplayMemberPath="dataName" SelectedValue="{Binding interaction.triggerAfterName}" SelectedValuePath="dataName" Margin="0"/>
 										<Button x:Name="addMainTriggerAfterButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="addMainTriggerAfterButton_Click">
 											<Image Source="/JiME;component/Assets/add2.png"/>
 										</Button>
@@ -163,7 +202,7 @@
 						<StackPanel Orientation="Horizontal">
 							<TextBlock Style="{StaticResource Heading}" Text="If this Trigger has been set..." Margin="0,0,10,0"/>
 
-							<ComboBox x:Name="triggerCB" HorizontalAlignment="Left" VerticalAlignment="Center" ItemsSource="{Binding scenario.triggersObserver}" SelectedValuePath="dataName" SelectedValue="{Binding interaction.triggerTest}" DisplayMemberPath="dataName" MinWidth="200" SelectionChanged="triggerCB_SelectionChanged"/>
+							<ComboBox x:Name="triggerCB" HorizontalAlignment="Left" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource cvsTriggerCondition}}" SelectedValuePath="dataName" SelectedValue="{Binding interaction.triggerTest}" DisplayMemberPath="dataName" MinWidth="200" SelectionChanged="triggerCB_SelectionChanged"/>
 
 							<Button x:Name="addTriggerButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="AddTriggerButton_Click">
 								<Image Source="/JiME;component/Assets/add2.png"/>
@@ -179,13 +218,13 @@
 								<UniformGrid Columns="2">
 									<GroupBox Style="{StaticResource DefaultGroupBox}" Header="If It's Set (True)..." FontWeight="Normal">
 										<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-											<ComboBox x:Name="eventTrue" HorizontalAlignment="Stretch" VerticalAlignment="Center" DisplayMemberPath="dataName" ItemsSource="{Binding scenario.interactionObserver}" SelectedValue="{Binding interaction.triggerIsSet}" SelectedValuePath="dataName" FontSize="12" MinWidth="260"/>
+											<ComboBox x:Name="eventTrue" HorizontalAlignment="Stretch" VerticalAlignment="Center" DisplayMemberPath="dataName" ItemsSource="{Binding Source={StaticResource cvsEventTrueEvent}}" SelectedValue="{Binding interaction.triggerIsSet}" SelectedValuePath="dataName" FontSize="12" MinWidth="260"/>
 											<uc:AddEventPopup Scenario="{Binding scenario}" HorizontalAlignment="Right" />
 										</StackPanel>
 									</GroupBox>
 									<GroupBox Style="{StaticResource DefaultGroupBox}" Header="If It's Not Set (False)..." FontWeight="Normal">
 										<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-											<ComboBox x:Name="eventNotTrue" HorizontalAlignment="Stretch" VerticalAlignment="Center" DisplayMemberPath="dataName" ItemsSource="{Binding scenario.interactionObserver}" SelectedValue="{Binding interaction.triggerNotSet}" SelectedValuePath="dataName" FontSize="12" MinWidth="260"/>
+											<ComboBox x:Name="eventNotTrue" HorizontalAlignment="Stretch" VerticalAlignment="Center" DisplayMemberPath="dataName" ItemsSource="{Binding Source={StaticResource cvsEventFalseEvent}}" SelectedValue="{Binding interaction.triggerNotSet}" SelectedValuePath="dataName" FontSize="12" MinWidth="260"/>
 											<uc:AddEventPopup Scenario="{Binding scenario}" HorizontalAlignment="Right" />
 										</StackPanel>
 									</GroupBox>
@@ -204,7 +243,7 @@
 								<UniformGrid Columns="2">
 									<GroupBox Style="{StaticResource DefaultGroupBox}" Header="If It's Set (True)..." FontWeight="Normal">
 										<StackPanel Orientation="Horizontal">
-											<ComboBox x:Name="eventTrueTrigger" HorizontalAlignment="Stretch" VerticalAlignment="Center" DisplayMemberPath="dataName" ItemsSource="{Binding scenario.triggersObserver}" SelectedValue="{Binding interaction.triggerIsSetTrigger}" SelectedValuePath="dataName" FontSize="12" MinWidth="260"/>
+											<ComboBox x:Name="eventTrueTrigger" HorizontalAlignment="Stretch" VerticalAlignment="Center" DisplayMemberPath="dataName" ItemsSource="{Binding Source={StaticResource cvsEventTrueTrigger}}" SelectedValue="{Binding interaction.triggerIsSetTrigger}" SelectedValuePath="dataName" FontSize="12" MinWidth="260"/>
 
 											<Button x:Name="addTriggerButton2" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="AddTriggerButton2_Click">
 												<Image Source="/JiME;component/Assets/add2.png"/>
@@ -214,7 +253,7 @@
 									</GroupBox>
 									<GroupBox Style="{StaticResource DefaultGroupBox}" Header="If It's Not Set (False)..." FontWeight="Normal">
 										<StackPanel Orientation="Horizontal">
-											<ComboBox x:Name="eventNotTrueTrigger" VerticalAlignment="Center" DisplayMemberPath="dataName" ItemsSource="{Binding scenario.triggersObserver}" SelectedValue="{Binding interaction.triggerNotSetTrigger}" SelectedValuePath="dataName" FontSize="12" MinWidth="260"/>
+											<ComboBox x:Name="eventNotTrueTrigger" VerticalAlignment="Center" DisplayMemberPath="dataName" ItemsSource="{Binding Source={StaticResource cvsEventFalseTrigger}}" SelectedValue="{Binding interaction.triggerNotSetTrigger}" SelectedValuePath="dataName" FontSize="12" MinWidth="260"/>
 
 											<Button x:Name="addTriggerButton3" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="AddTriggerButton3_Click">
 												<Image Source="/JiME;component/Assets/add2.png"/>

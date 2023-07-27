@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
 		xmlns:uc="clr-namespace:JiME.UserControls"
         xmlns:local="clr-namespace:JiME"
 				xmlns:core="clr-namespace:System;assembly=mscorlib"
@@ -31,6 +32,16 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
+		<CollectionViewSource x:Key="cvsTrigger" Source="{Binding scenario.triggersObserver}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="dataName"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
+		<CollectionViewSource x:Key="cvsTokenInteractionEvent" Source="{Binding tokenInteractions}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="dataName"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
 	</Window.Resources>
 
 	<Grid>
@@ -96,7 +107,7 @@
 											<ColumnDefinition Width="auto"/>
 										</Grid.ColumnDefinitions>
 
-										<ComboBox Name="interactionCB" ItemsSource="{Binding tokenInteractions}" DisplayMemberPath="dataName" SelectedValue="{Binding selected.triggerName}" SelectedValuePath="dataName" VerticalAlignment="Center" SelectionChanged="interactionCB_SelectionChanged" Margin="0,5,0,0"/>
+										<ComboBox Name="interactionCB" ItemsSource="{Binding Source={StaticResource cvsTokenInteractionEvent}}" DisplayMemberPath="dataName" SelectedValue="{Binding selected.triggerName}" SelectedValuePath="dataName" VerticalAlignment="Bottom" SelectionChanged="interactionCB_SelectionChanged" Margin="0,0,0,3"/>
 										<uc:AddEventPopup Grid.Column="1" Scenario="{Binding scenario}" />
 									</Grid>
 									<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Text="This is the Event this Token activates when Players click on it. Only Events marked as Token Interactions will appear in this dropdown." Margin="0,5,0,0"/>
@@ -108,7 +119,7 @@
 											<ColumnDefinition Width="auto"/>
 										</Grid.ColumnDefinitions>
 
-										<ComboBox ItemsSource="{Binding scenario.triggersObserver}" DisplayMemberPath="dataName" SelectedValue="{Binding selected.triggeredByName}" SelectedValuePath="dataName" VerticalAlignment="Center"/>
+										<ComboBox ItemsSource="{Binding Source={StaticResource cvsTrigger}}" DisplayMemberPath="dataName" SelectedValue="{Binding selected.triggeredByName}" SelectedValuePath="dataName" VerticalAlignment="Center"/>
 										<Button Grid.Column="1" x:Name="addTrigger" Width="32" Background="MediumSeaGreen" Margin="5,0,0,0" Click="addTrigger_Click">
 											<Image Source="/JiME;component/Assets/add2.png"/>
 										</Button>
