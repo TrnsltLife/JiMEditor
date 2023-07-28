@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System;
 
 namespace JiME.Views
 {
@@ -87,7 +88,7 @@ namespace JiME.Views
 		bool TryClosing()
 		{
 			//check for dupe name
-			if ( interaction.dataName == "New Text Event" || scenario.interactionObserver.Count( x => x.dataName == interaction.dataName ) > 1 )
+			if ( interaction.dataName == "New Text Event" || scenario.interactionObserver.Count( x => x.dataName == interaction.dataName && x.GUID != interaction.GUID ) > 0 )
 			{
 				MessageBox.Show( "Give this Event a unique name.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
 				return false;

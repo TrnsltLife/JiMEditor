@@ -219,13 +219,13 @@
 									<GroupBox Style="{StaticResource DefaultGroupBox}" Header="If It's Set (True)..." FontWeight="Normal">
 										<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
 											<ComboBox x:Name="eventTrue" HorizontalAlignment="Stretch" VerticalAlignment="Center" DisplayMemberPath="dataName" ItemsSource="{Binding Source={StaticResource cvsEventTrueEvent}}" SelectedValue="{Binding interaction.triggerIsSet}" SelectedValuePath="dataName" FontSize="12" MinWidth="260"/>
-											<uc:AddEventPopup Scenario="{Binding scenario}" HorizontalAlignment="Right" />
+											<uc:AddEventPopup Scenario="{Binding scenario}" HorizontalAlignment="Right" ActionToHandleCreatedEvent="CreatedTrueEvent"/>
 										</StackPanel>
 									</GroupBox>
 									<GroupBox Style="{StaticResource DefaultGroupBox}" Header="If It's Not Set (False)..." FontWeight="Normal">
 										<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
 											<ComboBox x:Name="eventNotTrue" HorizontalAlignment="Stretch" VerticalAlignment="Center" DisplayMemberPath="dataName" ItemsSource="{Binding Source={StaticResource cvsEventFalseEvent}}" SelectedValue="{Binding interaction.triggerNotSet}" SelectedValuePath="dataName" FontSize="12" MinWidth="260"/>
-											<uc:AddEventPopup Scenario="{Binding scenario}" HorizontalAlignment="Right" />
+											<uc:AddEventPopup Scenario="{Binding scenario}" HorizontalAlignment="Right" ActionToHandleCreatedEvent="CreatedFalseEvent" />
 										</StackPanel>
 									</GroupBox>
 								</UniformGrid>

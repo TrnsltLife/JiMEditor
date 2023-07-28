@@ -41,7 +41,7 @@ namespace JiME.Views
 		bool TryClosing()
 		{
 			//check for dupe name
-			if ( activations.dataName == "New Enemy Attack Group" || scenario.activationsObserver.Count( x => x.dataName == activations.dataName ) > 1 )
+			if ( activations.dataName == "New Enemy Attack Group" || scenario.activationsObserver.Count( x => x.dataName == activations.dataName && x.GUID != activations.GUID) > 0)
 			{
 				MessageBox.Show( "Give this Enemy Attack Group a unique name.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
 				return false;

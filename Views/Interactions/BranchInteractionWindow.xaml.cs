@@ -83,6 +83,16 @@ namespace JiME.Views
 			}
 		}
 
+		public void CreatedTrueEvent(InteractionBase ib)
+        {
+			interaction.triggerIsSet = ib.dataName;
+        }
+
+		public void CreatedFalseEvent(InteractionBase ib)
+		{
+			interaction.triggerNotSet = ib.dataName;
+		}
+
 		private void triggerCB_SelectionChanged( object sender, SelectionChangedEventArgs e )
 		{
 			//don't let "Random Event" be selected
@@ -125,7 +135,7 @@ namespace JiME.Views
 		bool TryClosing()
 		{
 			//check for dupe name
-			if ( interaction.dataName == "New Branch Event" || scenario.interactionObserver.Count( x => x.dataName == interaction.dataName ) > 1 )
+			if ( interaction.dataName == "New Branch Event" || scenario.interactionObserver.Count(x => x.dataName == interaction.dataName && x.GUID != interaction.GUID) > 0)
 			{
 				MessageBox.Show( "Give this Event a unique name.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
 				return false;
