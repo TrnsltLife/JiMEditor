@@ -14,11 +14,47 @@ namespace JiME
 		bool _branchTestEvent;
 
 		//Story branch
-		string _triggerNotSetTrigger;
-		public string triggerTest { get; set; }
-		public string triggerIsSet { get; set; }//event name
-		public string triggerNotSet { get; set; }//event name
-		public string triggerIsSetTrigger { get; set; }
+		string _triggerTest; //a trigger name
+		string _triggerIsSetTrigger; //a trigger name
+		string _triggerNotSetTrigger; //a trigger name
+		string _triggerIsSet; //an event name
+		string _triggerNotSet; //an event name
+		public string triggerIsSet
+		{
+			get => _triggerIsSet;
+			set
+			{
+				_triggerIsSet = value;
+				NotifyPropertyChanged("triggerIsSet");
+			}
+		}
+		public string triggerNotSet
+		{
+			get => _triggerNotSet;
+			set
+			{
+				_triggerNotSet = value;
+				NotifyPropertyChanged("triggerNotSet");
+			}
+		}
+		public string triggerTest
+		{
+			get => _triggerTest;
+			set
+			{
+				_triggerTest = value;
+				NotifyPropertyChanged("triggerTest");
+			}
+		}
+		public string triggerIsSetTrigger 
+		{ 
+			get => _triggerIsSetTrigger; 
+			set
+            {
+				_triggerIsSetTrigger = value;
+				NotifyPropertyChanged("triggerIsSetTrigger");
+            } 
+		}
 		public string triggerNotSetTrigger
 		{
 			get => _triggerNotSetTrigger;
@@ -54,7 +90,6 @@ namespace JiME
 			BranchInteraction interact = new BranchInteraction("");
 			base.CloneInto(interact);
 			interact.branchTestEvent = this.branchTestEvent;
-			interact.triggerNotSetTrigger = this.triggerNotSetTrigger;
 			interact.triggerTest = this.triggerTest;
 			interact.triggerIsSet = this.triggerIsSet;
 			interact.triggerNotSet = this.triggerNotSet;

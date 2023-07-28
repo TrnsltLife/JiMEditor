@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using JiME.Views;
 
 namespace JiME
@@ -68,14 +69,20 @@ namespace JiME
 			//Debug.Log( this.FindResource( "mylist" ).GetType() );
 
 			//setup source of UI lists (scenario has to be created first!)
-			interactionsUC.dataListView.ItemsSource = scenario.interactionObserver;
-			triggersUC.dataListView.ItemsSource = scenario.triggersObserver;
-			objectivesUC.dataListView.ItemsSource = scenario.objectiveObserver;
-			activationsUC.dataListView.ItemsSource = scenario.activationsObserver;
-			translationsUC.dataListView.ItemsSource = scenario.translationObserver;
+			((CollectionViewSource)interactionsUC.Resources["cvsListSort"]).Source = scenario.interactionObserver;
+			((CollectionViewSource)triggersUC.Resources["cvsListSort"]).Source = scenario.triggersObserver;
+			((CollectionViewSource)objectivesUC.Resources["cvsListSort"]).Source = scenario.objectiveObserver;
+			((CollectionViewSource)activationsUC.Resources["cvsListSort"]).Source = scenario.activationsObserver;
+			((CollectionViewSource)translationsUC.Resources["cvsListSort"]).Source = scenario.translationObserver;
 
-            // Initiate visualization defer timer so it won't be done multiple times
-            WpfUtils.MainThreadDispatcher = this.Dispatcher;
+			//interactionsUC.dataListView.ItemsSource = scenario.interactionObserver;
+			//triggersUC.dataListView.ItemsSource = scenario.triggersObserver;
+			//objectivesUC.dataListView.ItemsSource = scenario.objectiveObserver;
+			//activationsUC.dataListView.ItemsSource = scenario.activationsObserver;
+			//translationsUC.dataListView.ItemsSource = scenario.translationObserver;
+
+			// Initiate visualization defer timer so it won't be done multiple times
+			WpfUtils.MainThreadDispatcher = this.Dispatcher;
 
             // Initialize visualization
             GraphX.Controls.ZoomControl.SetViewFinderVisibility(visualizationZoomCtrl, Visibility.Visible); //Set minimap (overview) window to be visible by default

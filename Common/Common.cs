@@ -200,7 +200,15 @@ namespace JiME
 			Dictionary<string, string> originalValues = CaptureStartingValues();
 			string originalPrefix = TranslationKeyPrefix();
 			string originalKeyName = TranslationKeyName();
-			bool? result =  w.ShowDialog();
+			bool? result = null;
+			try
+			{
+				result = w.ShowDialog();
+			}
+			catch(Exception e)
+            {
+				Console.WriteLine("Error with HandleWindow for " + w.Title + ". Error: " + e.Message);
+            }
 			UpdateKeysStartingWith(translations, originalPrefix);
 			DecertifyChangedValues(translations, originalValues, originalKeyName); //decertify changed values under the originalKeyName
 			if (TranslationKeyName() != originalKeyName)
@@ -397,7 +405,7 @@ namespace JiME
 		/// Update this number every time the file format changes with new features
 		/// </summary>
 		public static string formatVersion = "1.14";
-		public static string appVersion = "0.25";
+		public static string appVersion = "0.26";
 		public static Dictionary<int, BaseTileData> tileDictionary { get; set; } = new Dictionary<int, BaseTileData>();
 		public static Dictionary<int, BaseTileData> tileDictionaryB { get; set; } = new Dictionary<int, BaseTileData>();
 		public static int tolerance = 25;

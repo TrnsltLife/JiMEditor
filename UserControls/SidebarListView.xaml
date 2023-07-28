@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:local="clr-namespace:JiME"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="400">
@@ -35,12 +36,18 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
+
+		<CollectionViewSource x:Key="cvsListSort" x:Name="cvsListSort" Source="{Binding ListData}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="dataName"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
 	</UserControl.Resources>
 
 	<ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="0">
 		<StackPanel>
 			<TextBlock HorizontalAlignment="Center" FontWeight="Bold" Text="{Binding Title}"></TextBlock>
-			<ComboBox x:Name="dataListView" ItemsSource="{Binding ListData}" SelectedValuePath="dataName" Margin="3" DisplayMemberPath="dataName" SelectedIndex="0"/>
+			<ComboBox x:Name="dataListView" ItemsSource="{Binding Source={StaticResource cvsListSort}}" SelectedValuePath="dataName" Margin="3" DisplayMemberPath="dataName" SelectedIndex="0"/>
 			<StackPanel Orientation="Horizontal" Margin="5">
 
 				<StackPanel.Resources>

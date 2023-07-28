@@ -619,9 +619,11 @@ namespace JiME
 			}
 
 			//sort by name
+			/*
 			List<IInteraction> sorted = interactionObserver.OrderBy( key => key.dataName != "None" ).ThenBy( key => key.dataName ).ToList();
 			for ( int i = 0; i < sorted.Count; i++ )
 				interactionObserver[i] = sorted[i];
+			*/
 		}
 
 		public bool AddTrigger( string name, bool isMulti = false )
@@ -635,9 +637,11 @@ namespace JiME
 				triggersObserver.Add( t );
 
 				//sort by name
+				/*
 				List<Trigger> trigsorted = triggersObserver.OrderBy( key => key.dataName != "None" ).ThenBy( key => key.dataName ).ToList();
 				for ( int i = 0; i < trigsorted.Count; i++ )
 					triggersObserver[i] = trigsorted[i];
+				*/
 
 				return true;
 			}
@@ -649,9 +653,11 @@ namespace JiME
 			objectiveObserver.Add( objective );
 
 			//sort by name
+			/*
 			List<Objective> objsorted = objectiveObserver.OrderBy( key => key.dataName != "None" ).ThenBy( key => key.dataName ).ToList();
 			for ( int i = 0; i < objsorted.Count; i++ )
 				objectiveObserver[i] = objsorted[i];
+			*/
 		}
 
 		public void AddActivations(MonsterActivations activations)

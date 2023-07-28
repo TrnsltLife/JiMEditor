@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:local="clr-namespace:JiME"
 		xmlns:uc="clr-namespace:JiME.UserControls"
         mc:Ignorable="d"
@@ -17,6 +18,16 @@
 			<Setter Property="Margin" Value="0,5"/>
 			<Setter Property="VerticalAlignment" Value="Center"/>
 		</Style>
+		<CollectionViewSource x:Key="cvsTrigger" Source="{Binding scenario.triggersObserver}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="dataName"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
+		<CollectionViewSource x:Key="cvsEvent" Source="{Binding interactionObserver}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="dataName"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
 	</Window.Resources>
 
 	<StackPanel>
@@ -129,8 +140,8 @@
 								This is the Event that this Persistent Event delegates its Action to. Only Events that <Bold>are Token Interactions</Bold> can be selected below. The Event you select here will be activated as if it was the one players clicked on and Explored.
 							</TextBlock>
 							<StackPanel Orientation="Horizontal">
-								<ComboBox x:Name="eventCB" HorizontalAlignment="Left" VerticalAlignment="Center" ItemsSource="{Binding interactionObserver}" SelectedValue="{Binding interaction.eventToActivate}" MinWidth="200" Margin="0,5,0,0" SelectionChanged="eventCB_SelectionChanged"/>
-								<uc:AddEventPopup Scenario="{Binding scenario}"  />
+								<ComboBox x:Name="eventCB" HorizontalAlignment="Left" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource cvsEvent}}" SelectedValue="{Binding interaction.eventToActivate}" MinWidth="200" Margin="0,5,0,0" SelectionChanged="eventCB_SelectionChanged"/>
+								<uc:AddEventPopup Scenario="{Binding scenario}" ActionToHandleCreatedEvent="CreatedNewEvent" />
 								<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Text="The Delegated Event must be a Token Interaction" VerticalAlignment="Center" Margin="10,0" FontWeight="Bold"/>
 							</StackPanel>
 						</StackPanel>
@@ -143,7 +154,7 @@
 								When the Trigger below is fired, the Alternative Flavor Text will be shown when players interact with this Event's Token instead of the Flavor Text of the Delegated Event.
 							</TextBlock>
 							<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-								<ComboBox x:Name="triggerCB" HorizontalAlignment="Left" VerticalAlignment="Center" ItemsSource="{Binding scenario.triggersObserver}" SelectedValue="{Binding interaction.alternativeTextTrigger}" SelectedValuePath="dataName" DisplayMemberPath="dataName" MinWidth="200"/>
+								<ComboBox x:Name="triggerCB" HorizontalAlignment="Left" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource cvsTrigger}}" SelectedValue="{Binding interaction.alternativeTextTrigger}" SelectedValuePath="dataName" DisplayMemberPath="dataName" MinWidth="200"/>
 								<Button x:Name="addAltTrigger" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="addAltTrigger_Click">
 									<Image Source="/JiME;component/Assets/add2.png"/>
 								</Button>

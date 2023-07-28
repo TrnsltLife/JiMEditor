@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         mc:Ignorable="d"
 				xmlns:local="clr-namespace:JiME"
 				xmlns:core="clr-namespace:System;assembly=mscorlib" xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
@@ -61,7 +62,11 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
-
+		<CollectionViewSource x:Key="cvsTrigger" Source="{Binding scenario.triggersObserver}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="dataName"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
 	</Window.Resources>
 
 	<Grid>
@@ -166,7 +171,7 @@
 										<ColumnDefinition Width="auto"/>
 									</Grid.ColumnDefinitions>
 
-									<ComboBox VerticalAlignment="Center" ItemsSource="{Binding scenario.triggersObserver}" DisplayMemberPath="dataName" SelectedValue="{Binding selected.triggerName}" SelectedValuePath="dataName"/>
+									<ComboBox VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource cvsTrigger}}" DisplayMemberPath="dataName" SelectedValue="{Binding selected.triggerName}" SelectedValuePath="dataName"/>
 									<Button Grid.Column="1" x:Name="addExploredTriggerButton" Background="MediumSeaGreen" Margin="5,0,0,0" Height="32" Width="32" Click="addExploredTriggerButton_Click">
 										<Image Source="/JiME;component/Assets/add2.png"/>
 									</Button>

@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Linq;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using System;
 
 namespace JiME.Views
 {
@@ -58,22 +59,38 @@ namespace JiME.Views
 		private void AddTriggerButton_Click( object sender, RoutedEventArgs e )
 		{
 			TriggerEditorWindow tw = new TriggerEditorWindow( scenario );
-			if ( tw.ShowDialog() == true )
+			if (tw.ShowDialog() == true)
+			{
 				interaction.triggerTest = tw.triggerName;
+			}
 		}
 
 		private void AddTriggerButton2_Click( object sender, RoutedEventArgs e )
 		{
 			TriggerEditorWindow tw = new TriggerEditorWindow( scenario );
-			if ( tw.ShowDialog() == true )
+			if (tw.ShowDialog() == true)
+			{
 				interaction.triggerIsSetTrigger = tw.triggerName;
+			}
 		}
 
 		private void AddTriggerButton3_Click( object sender, RoutedEventArgs e )
 		{
 			TriggerEditorWindow tw = new TriggerEditorWindow( scenario );
-			if ( tw.ShowDialog() == true )
+			if (tw.ShowDialog() == true)
+			{
 				interaction.triggerNotSetTrigger = tw.triggerName;
+			}
+		}
+
+		public void CreatedTrueEvent(InteractionBase ib)
+        {
+			interaction.triggerIsSet = ib.dataName;
+        }
+
+		public void CreatedFalseEvent(InteractionBase ib)
+		{
+			interaction.triggerNotSet = ib.dataName;
 		}
 
 		private void triggerCB_SelectionChanged( object sender, SelectionChangedEventArgs e )
@@ -118,7 +135,7 @@ namespace JiME.Views
 		bool TryClosing()
 		{
 			//check for dupe name
-			if ( interaction.dataName == "New Branch Event" || scenario.interactionObserver.Count( x => x.dataName == interaction.dataName ) > 1 )
+			if ( interaction.dataName == "New Branch Event" || scenario.interactionObserver.Count(x => x.dataName == interaction.dataName && x.GUID != interaction.GUID) > 0)
 			{
 				MessageBox.Show( "Give this Event a unique name.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
 				return false;

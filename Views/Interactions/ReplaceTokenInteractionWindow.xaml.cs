@@ -125,10 +125,21 @@ namespace JiME.Views
 			}
 		}
 
+		public void CreatedEventToReplace(InteractionBase ib)
+		{
+			interaction.eventToReplace = ib.dataName;
+		}
+
+		public void CreatedEventToReplaceWith(InteractionBase ib)
+		{
+			interaction.replaceWithEvent = ib.dataName;
+		}
+
+
 		bool TryClosing()
 		{
 			//check for dupe name
-			if ( interaction.dataName == "New Replace Token Event" || scenario.interactionObserver.Count( x => x.dataName == interaction.dataName ) > 1 )
+			if ( interaction.dataName == "New Replace Token Event" || scenario.interactionObserver.Count(x => x.dataName == interaction.dataName && x.GUID != interaction.GUID) > 0)
 			{
 				MessageBox.Show( "Give this Event a unique name.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
 				return false;

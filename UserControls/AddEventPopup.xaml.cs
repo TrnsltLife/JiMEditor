@@ -17,7 +17,61 @@ namespace JiME.UserControls
 			typeof(AddEventPopup), new FrameworkPropertyMetadata
 			(null, new PropertyChangedCallback(OnScenarioChanged)));
 
+
 		Scenario scenario;
+		public Scenario Scenario
+		{
+			get => scenario;
+			set
+			{
+				if (scenario != value)
+				{
+					scenario = value;
+					PropChanged("Scenario");
+				}
+			}
+		}
+
+		public static void OnScenarioChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+		{
+			AddEventPopup aep = (AddEventPopup)obj;
+			aep.Scenario = (Scenario)args.NewValue;
+		}
+
+
+
+		Action<InteractionBase> actionToHandleCreatedEvent;
+		public Action<InteractionBase> ActionToHandleCreatedEvent
+		{
+			get => actionToHandleCreatedEvent;
+			set
+			{
+				if (actionToHandleCreatedEvent != value)
+				{
+					actionToHandleCreatedEvent = value;
+					PropChanged("actionToHandleCreatedEvent");
+				}
+			}
+		}
+		public static void OnActionToHandleCreatedEventChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+		{
+			AddEventPopup aep = (AddEventPopup)obj;
+			aep.ActionToHandleCreatedEvent = (Action<InteractionBase>)args.NewValue;
+		}       
+		
+		public static readonly DependencyProperty ActionToHandleCreatedEventProperty =
+			DependencyProperty.Register("ActionToHandleCreatedEvent", typeof(Action<InteractionBase>),
+			typeof(AddEventPopup), new FrameworkPropertyMetadata
+			(null, new PropertyChangedCallback(OnActionToHandleCreatedEventChanged)));
+
+
+		public void HandleCreatedEvent(InteractionBase ib)
+		{
+			if (ActionToHandleCreatedEvent != null)
+			{
+				ActionToHandleCreatedEvent.Invoke(ib);
+			}
+		}
 
 		public AddEventPopup()
 		{
@@ -30,25 +84,6 @@ namespace JiME.UserControls
 		protected override void OnInitialized(EventArgs e)
         {
 			base.OnInitialized(e);
-		}
-
-		public Scenario Scenario
-        {
-			get => scenario;
-			set
-            {
-				if (scenario != value)
-				{
-					scenario = value;
-					PropChanged("Scenario");
-				}
-			}
-        }
-
-		public static void OnScenarioChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
-		{
-			AddEventPopup aep = (AddEventPopup)obj;
-			aep.Scenario = (Scenario)args.NewValue;
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -73,6 +108,7 @@ namespace JiME.UserControls
 			{
 				Debug.Log("Adding new event: " + ew.interaction.dataName);
 				scenario.AddInteraction(ew.interaction);
+				HandleCreatedEvent(ew.interaction);
 			}
 		}
 		private void CommandNewTextInteraction_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -85,6 +121,7 @@ namespace JiME.UserControls
 			if (ew.ShowDialog() == true)
 			{
 				scenario.AddInteraction(ew.interaction);
+				HandleCreatedEvent(ew.interaction);
 			}
 		}
 		private void CommandNewBranchInteraction_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -97,6 +134,7 @@ namespace JiME.UserControls
 			if (ew.ShowDialog() == true)
 			{
 				scenario.AddInteraction(ew.interaction);
+				HandleCreatedEvent(ew.interaction);
 			}
 		}
 		private void CommandNewThreatInteraction_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -109,6 +147,7 @@ namespace JiME.UserControls
 			if (ew.ShowDialog() == true)
 			{
 				scenario.AddInteraction(ew.interaction);
+				HandleCreatedEvent(ew.interaction);
 			}
 		}
 		private void CommandNewTestInteraction_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -121,6 +160,7 @@ namespace JiME.UserControls
 			if (ew.ShowDialog() == true)
 			{
 				scenario.AddInteraction(ew.interaction);
+				HandleCreatedEvent(ew.interaction);
 			}
 		}
 		private void CommandNewDecisionInteraction_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -133,6 +173,7 @@ namespace JiME.UserControls
 			if (ew.ShowDialog() == true)
 			{
 				scenario.AddInteraction(ew.interaction);
+				HandleCreatedEvent(ew.interaction);
 			}
 		}
 		private void CommandNewMultiInteraction_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -145,6 +186,7 @@ namespace JiME.UserControls
 			if (ew.ShowDialog() == true)
 			{
 				scenario.AddInteraction(ew.interaction);
+				HandleCreatedEvent(ew.interaction);
 			}
 		}
 		private void CommandNewPersistentInteraction_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -157,6 +199,7 @@ namespace JiME.UserControls
 			if (ew.ShowDialog() == true)
 			{
 				scenario.AddInteraction(ew.interaction);
+				HandleCreatedEvent(ew.interaction);
 			}
 		}
 		private void CommandNewConditionalInteraction_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -169,6 +212,7 @@ namespace JiME.UserControls
 			if (ew.ShowDialog() == true)
 			{
 				scenario.AddInteraction(ew.interaction);
+				HandleCreatedEvent(ew.interaction);
 			}
 		}
 		private void CommandNewDialogInteraction_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -181,6 +225,7 @@ namespace JiME.UserControls
 			if (ew.ShowDialog() == true)
 			{
 				scenario.AddInteraction(ew.interaction);
+				HandleCreatedEvent(ew.interaction);
 			}
 		}
 		private void CommandNewReplaceTokenInteraction_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -193,6 +238,7 @@ namespace JiME.UserControls
 			if (ew.ShowDialog() == true)
 			{
 				scenario.AddInteraction(ew.interaction);
+				HandleCreatedEvent(ew.interaction);
 			}
 		}
 		private void CommandNewRewardInteraction_CanExecute(object sender, CanExecuteRoutedEventArgs e)
