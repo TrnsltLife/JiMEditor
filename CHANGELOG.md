@@ -10,6 +10,17 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 
+## [v0.26]
+
+### Added
+- Callback on the AddEventPopup allows the originating screen to use a method to, e.g., select the created event in a Combo box
+
+### Changed
+- Use a CollectionViewSource to sort the Events, Trigges, Activations instead of running a sort on the underlying collection. This fixes a but with Triggers being unset by the next created Trigger.
+- Fixed some duplicate name detection for Events and Activations
+
+### Removed
+
 ## [v0.25]
 
 ### Added
