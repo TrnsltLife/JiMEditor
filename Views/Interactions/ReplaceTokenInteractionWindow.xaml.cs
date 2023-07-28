@@ -125,6 +125,17 @@ namespace JiME.Views
 			}
 		}
 
+		public void CreatedEventToReplace(InteractionBase ib)
+		{
+			interaction.eventToReplace = ib.dataName;
+		}
+
+		public void CreatedEventToReplaceWith(InteractionBase ib)
+		{
+			interaction.replaceWithEvent = ib.dataName;
+		}
+
+
 		bool TryClosing()
 		{
 			//check for dupe name

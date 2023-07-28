@@ -141,7 +141,7 @@
 							</TextBlock>
 							<StackPanel Orientation="Horizontal">
 								<ComboBox x:Name="eventCB" HorizontalAlignment="Left" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource cvsEvent}}" SelectedValue="{Binding interaction.eventToActivate}" MinWidth="200" Margin="0,5,0,0" SelectionChanged="eventCB_SelectionChanged"/>
-								<uc:AddEventPopup Scenario="{Binding scenario}"  />
+								<uc:AddEventPopup Scenario="{Binding scenario}" ActionToHandleCreatedEvent="CreatedNewEvent" />
 								<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Text="The Delegated Event must be a Token Interaction" VerticalAlignment="Center" Margin="10,0" FontWeight="Bold"/>
 							</StackPanel>
 						</StackPanel>

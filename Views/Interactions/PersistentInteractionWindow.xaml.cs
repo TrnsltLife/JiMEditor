@@ -120,6 +120,11 @@ namespace JiME.Views
 			}
 		}
 
+		public void CreatedNewEvent(InteractionBase ib)
+		{
+			interaction.eventToActivate = ib.dataName;
+		}
+
 		bool TryClosing()
 		{
 			//check for dupe name

@@ -78,6 +78,11 @@ namespace JiME.Views
 			}
 		}
 
+		public void CreatedNewEvent(InteractionBase ib)
+		{
+			eventCB.SelectedValue = ib.dataName;
+		}
+
 		private void OkButton_Click( object sender, RoutedEventArgs e )
 		{
 			if ( !TryClosing() )

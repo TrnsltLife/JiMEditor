@@ -211,12 +211,12 @@
 							<UniformGrid Columns="2">
 								<StackPanel Orientation="Horizontal">
 									<ComboBox Name="eventToReplaceList" Margin="10,0,0,0" MinWidth="300" SelectedValue="{Binding interaction.eventToReplace}" SelectedValuePath="dataName" DisplayMemberPath="dataName" ItemsSource="{Binding Source={StaticResource cvsEventToReplace}}"/>
-									<uc:AddEventPopup Scenario="{Binding scenario}" HorizontalAlignment="Right" />
+									<uc:AddEventPopup Scenario="{Binding scenario}" HorizontalAlignment="Right" ActionToHandleCreatedEvent="CreatedEventToReplace" />
 								</StackPanel>
 
 								<StackPanel Orientation="Horizontal">
 									<ComboBox Name="replaceWithList" Margin="10,0,0,0" MinWidth="300" SelectedValue="{Binding interaction.replaceWithEvent}" SelectedValuePath="dataName" DisplayMemberPath="dataName" ItemsSource="{Binding Source={StaticResource cvsReplaceWithEvent}}"/>
-									<uc:AddEventPopup Scenario="{Binding scenario}" HorizontalAlignment="Right" />
+									<uc:AddEventPopup Scenario="{Binding scenario}" HorizontalAlignment="Right" ActionToHandleCreatedEvent="CreatedEventToReplaceWith" />
 								</StackPanel>
 							</UniformGrid>
 

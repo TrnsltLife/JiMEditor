@@ -108,7 +108,7 @@
 										</Grid.ColumnDefinitions>
 
 										<ComboBox Name="interactionCB" ItemsSource="{Binding Source={StaticResource cvsTokenInteractionEvent}}" DisplayMemberPath="dataName" SelectedValue="{Binding selected.triggerName}" SelectedValuePath="dataName" VerticalAlignment="Bottom" SelectionChanged="interactionCB_SelectionChanged" Margin="0,0,0,3"/>
-										<uc:AddEventPopup Grid.Column="1" Scenario="{Binding scenario}" />
+										<uc:AddEventPopup Grid.Column="1" Scenario="{Binding scenario}" ActionToHandleCreatedEvent="CreatedNewEvent" />
 									</Grid>
 									<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Text="This is the Event this Token activates when Players click on it. Only Events marked as Token Interactions will appear in this dropdown." Margin="0,5,0,0"/>
 
