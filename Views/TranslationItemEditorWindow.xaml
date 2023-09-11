@@ -26,12 +26,13 @@
 					</StackPanel>
 
 					<StackPanel Orientation="Horizontal">
-						<TextBlock Style="{StaticResource Heading}" Margin="0,10,0,0">Original Text:</TextBlock>
+						<TextBlock Style="{StaticResource Heading}" Margin="0,10,10,0">Original Text:</TextBlock>
+						<TextBlock Style="{StaticResource SubText}" Margin="0,10,0,0" VerticalAlignment="Bottom"><Bold><Italic>For reference only. Edits to the text in this box will not be saved.</Italic></Bold></TextBlock>
 					</StackPanel>
 					<uc:RichTextBoxIconEditor x:Name="textRTB" Text="{Binding defaultTranslation.text, UpdateSourceTrigger=PropertyChanged}"/>
 
 					<StackPanel Orientation="Horizontal">
-						<TextBlock Style="{StaticResource Heading}" Margin="0,10,0,0">Translation: </TextBlock>
+						<TextBlock Style="{StaticResource Heading}" Margin="0,10,10,0">Translation: </TextBlock>
 						<TextBlock Style="{StaticResource SubText}" Margin="0,10,0,0" VerticalAlignment="Bottom"><Bold><Italic>Required</Italic></Bold></TextBlock>
 					</StackPanel>
 					<TextBlock Style="{StaticResource SubText}">Write your translation here.</TextBlock>

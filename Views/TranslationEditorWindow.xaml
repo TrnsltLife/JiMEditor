@@ -153,7 +153,8 @@
 		<!--footer-->
 		<Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Silver" HorizontalAlignment="Stretch" Background="#FF46464A">
 			<WrapPanel HorizontalAlignment="Right" >
-
+				<TextBlock Foreground="White" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 0 25 0">Known Issue: Translation text and row colors will not update until you click the green checkmark to save, and then re-open this window.</TextBlock>
+				
 				<Button x:Name="okButton" Margin="10" Background="MediumSeaGreen" Click="OkButton_Click" IsDefault="True">
 					<Image Source="/JiME;component/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
 				</Button>
