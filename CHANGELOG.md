@@ -10,6 +10,13 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 
+
+## [v0,27]
+
+### Added
+- Notes to explain parts of UI that don't work as well as one would prefer - Translation Editor Window, Translation Item Editor Window, Enemy Activations Editor Window
+- Changes to a scripted enemy's name decertifies the translation for that enemy name
+
 ## [v0.26]
 
 ### Added

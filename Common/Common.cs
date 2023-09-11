@@ -405,7 +405,7 @@ namespace JiME
 		/// Update this number every time the file format changes with new features
 		/// </summary>
 		public static string formatVersion = "1.14";
-		public static string appVersion = "0.26";
+		public static string appVersion = "0.27";
 		public static Dictionary<int, BaseTileData> tileDictionary { get; set; } = new Dictionary<int, BaseTileData>();
 		public static Dictionary<int, BaseTileData> tileDictionaryB { get; set; } = new Dictionary<int, BaseTileData>();
 		public static int tolerance = 25;
