@@ -41,7 +41,7 @@ namespace JiME.Views
 				//MessageBox.Show( "The translation text cannot be empty.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
 				//return;
 			}
-			Console.WriteLine("OKButton_Click " + translationItem.text);
+			//Console.WriteLine("OKButton_Click " + translationItem.text);
 
 			//If the text has changed during editing, set the flat to true.
 			//TODO Figure out a way to update the item in the TranslationEditorWindow's list

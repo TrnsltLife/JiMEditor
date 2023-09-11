@@ -327,14 +327,14 @@ namespace JiME
 					Scenario scenario = FileManager.LoadProjectFromPath(basePath, item.fileName);
 					if (scenarios[i] != null)
 					{
-						Console.WriteLine(scenarios[i].scenarioName);
+						//Console.WriteLine(scenarios[i].scenarioName);
 						c.scenarioCollection[i].scenarioName = scenarios[i].scenarioName;
 
 						//Determine Collections used in all Scenarios in this Campaign
 						c.scenarioCollection[i].collectionList = scenarios[i].collectionObserver.ToList();
 						foreach (Collection collection in scenarios[i].collectionObserver.ToList())
 						{
-							Console.WriteLine(collection);
+							//Console.WriteLine(collection);
 							if (!c.collectionCollection.Contains(collection))
 							{
 								c.collectionCollection.Add(collection);

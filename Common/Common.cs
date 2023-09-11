@@ -151,7 +151,7 @@ namespace JiME
 			{
 				string key = accessor.keyPattern; //just the bare keyPattern without having its {0} placeholders replaced
 				string val = accessor.RetrieveVal();
-				Console.WriteLine("CaptureStartingValues: " + key + " => " + val);
+				//Console.WriteLine("CaptureStartingValues: " + key + " => " + val);
 				result.Add(key, val);
 			}
 			return result;
@@ -184,12 +184,12 @@ namespace JiME
 
 		public void UpdateKeysStartingWith(ObservableCollection<Translation> translations, string originalPrefix, string newPrefix)
 		{
-			Console.WriteLine("UpdateKeysStartingWith -> originalPrefix: " + originalPrefix + " newPrefix: " + newPrefix + ")");
+			//Console.WriteLine("UpdateKeysStartingWith -> originalPrefix: " + originalPrefix + " newPrefix: " + newPrefix + ")");
 			if(originalPrefix != newPrefix)
             {
 				foreach(var translation in translations)
                 {
-					Console.WriteLine(translation.dataName + " ->  UpdateKeysStaringWith(" + originalPrefix + ", " + newPrefix + ")");
+					//Console.WriteLine(translation.dataName + " ->  UpdateKeysStaringWith(" + originalPrefix + ", " + newPrefix + ")");
 					translation.UpdateKeysStartingWith(originalPrefix, newPrefix);
                 }
             }
@@ -546,7 +546,7 @@ namespace JiME
 				var list = JObject.Parse( json );
 				JToken token = list.SelectToken( "defaults" );
 				List<DefaultStats> ret = token.ToObject( typeof( List<DefaultStats> ) ) as List<DefaultStats>;
-				Console.WriteLine("DefaultStats Loaded:");
+				//Console.WriteLine("DefaultStats Loaded:");
 				//foreach( DefaultStats item in ret )
                 //{
 				//	Console.WriteLine(item.id + " " + item.enumName + " " + item.dataName );
@@ -567,7 +567,7 @@ namespace JiME
 				var list = JObject.Parse(json);
 				JToken token = list.SelectToken("activations");
 				List<DefaultActivations> ret = token.ToObject(typeof(List<DefaultActivations>)) as List<DefaultActivations>;
-				Console.WriteLine("Default Activations Loaded:");
+				//Console.WriteLine("Default Activations Loaded:");
 				return ret;
 			}
 		}
@@ -586,7 +586,7 @@ namespace JiME
 				JToken token = list.SelectToken("interactions");
 				var defTerInt = list.ToObject(typeof(DefaultTerrainInteractions)) as DefaultTerrainInteractions;
 				List<IInteraction> ret = defTerInt.interactions.ToList<IInteraction>();
-				Console.WriteLine("Default Terrain Interactions Loaded:");
+				//Console.WriteLine("Default Terrain Interactions Loaded:");
 				return ret;
 			}
 		}

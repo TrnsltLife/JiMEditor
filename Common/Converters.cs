@@ -254,7 +254,7 @@ namespace JiME
 		{
 			if(value == null) { return ""; }
 
-			Console.WriteLine(value + " " + value.GetType());
+			//Console.WriteLine(value + " " + value.GetType());
 			int tileNumber = 0;
 
 			//string tileString = value.ToString();

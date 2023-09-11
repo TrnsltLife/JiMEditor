@@ -85,7 +85,7 @@ namespace JiME.Views
 
 		bool TryClosing()
 		{
-			Console.WriteLine("TranslationEditorWindow TryClosing with translation.dataName " + translation.dataName + " matching count: " + scenario.translationObserver.Count(it => it.dataName == translation.dataName));
+			//Console.WriteLine("TranslationEditorWindow TryClosing with translation.dataName " + translation.dataName + " matching count: " + scenario.translationObserver.Count(it => it.dataName == translation.dataName));
 			//check for dupe name
 			if ( translation.dataName == "" || scenario.translationObserver.Count( it => it.dataName == translation.dataName ) > (isNew ? 0 : 1) )
 			{

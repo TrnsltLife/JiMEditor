@@ -108,7 +108,7 @@ namespace JiME
 			foreach (var monster in monsterCollection)
 			{
 				//TODO What to do with the key that gets deleted when it has
-				Console.WriteLine("Renumber " + TranslationKeyPrefix() + "monster." + monster.index.ToString() + "." + " => " + TranslationKeyPrefix() + "monster." + i.ToString() + ".");
+				//Console.WriteLine("Renumber " + TranslationKeyPrefix() + "monster." + monster.index.ToString() + "." + " => " + TranslationKeyPrefix() + "monster." + i.ToString() + ".");
 				this.UpdateKeysStartingWith(translations, TranslationKeyPrefix() + "monster." + monster.index.ToString() + ".", TranslationKeyPrefix() + "monster." + i.ToString() + "."); //update translation keys with the renumbering
 				monster.index = i;
 				i++;

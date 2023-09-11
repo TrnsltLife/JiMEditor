@@ -677,7 +677,7 @@ namespace JiME
 			Dictionary<string, TranslationItem> defaultTranslation = new Dictionary<string, TranslationItem>();
 			foreach (var item in defaultTranslationList)
 			{
-				Console.WriteLine(item.key + " => " + item.text);
+				//Console.WriteLine(item.key + " => " + item.text);
 				defaultTranslation.Add(item.key, item);
 			}
 			return defaultTranslation;

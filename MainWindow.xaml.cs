@@ -628,7 +628,7 @@ namespace JiME
 
 		void AddActivations()
 		{
-			Console.WriteLine("Add Enemy Activations...");
+			//Console.WriteLine("Add Enemy Activations...");
 			//Get next id starting at 1000 to create the new item
 			int maxId = scenario.activationsObserver.Max(a => a.id);
 			int newId = Math.Max(maxId + 1, MonsterActivations.START_OF_CUSTOM_ACTIVATIONS); //Get the next id over 1000
