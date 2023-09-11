@@ -2,14 +2,14 @@
 
 ## [Your Journey Patreon](http://www.patreon.com/YourJourneyRPG)
 
-# JiMEditor - v0.26
+# JiMEditor - v0.27
 A Scenario editor for the Journeys in Middle Earth board game. The scenarios are playable in the companion playback app, [Your Journey](https://github.com/TrnsltLife/your-journey), forked from [GlowPuff's original project](https://github.com/GlowPuff/JiMEditor) with new tiles from [Celstra](https://github.com/Celstra/JiMEditor).
 
 
 ## Download the latest release
 If you just want to download and run the app, grab it here: 
 
-[Download the Newest Release!](https://github.com/TrnsltLife/JiMEditor/releases/tag/v0.26)! Featuring tiles from Spreading War, Battle Maps with Terrain Tokens, enemies from all the expansions, enemy attack descriptions, text boxes that allow you to edit with special icons, bold and italic, and more! Now with a Random Scenario Generator, Graph View of the scenario, and ability to package translations of the scenario in a single file.
+[Download the Newest Release!](https://github.com/TrnsltLife/JiMEditor/releases/tag/v0.27)! Featuring tiles from Spreading War, Battle Maps with Terrain Tokens, enemies from all the expansions, enemy attack descriptions, text boxes that allow you to edit with special icons, bold and italic, and more! Now with a Random Scenario Generator, Graph View of the scenario, and ability to package translations of the scenario in a single file.
 
 [Download GlowPuff's original releases](https://github.com/GlowPuff/JiMEditor/releases)
 
