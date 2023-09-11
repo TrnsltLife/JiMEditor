@@ -242,7 +242,9 @@ namespace JiME.Views
 		{
 			Monster m = ( (Button)sender ).DataContext as Monster;
 			MonsterEditorWindow me = new MonsterEditorWindow(scenario, m);
-			me.ShowDialog();
+			//me.ShowDialog();
+			m.translationKeyParents = interaction.dataName;
+			m.HandleWindow(me, scenario.translationObserver);
 		}
 
 		private void DeleteButton_Click( object sender, RoutedEventArgs e )
