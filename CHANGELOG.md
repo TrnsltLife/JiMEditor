@@ -10,8 +10,12 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 
+## [v0.28]
 
-## [v0,27]
+### Added
+- Added exploration trigger to random tile block editor
+
+## [v0.27]
 
 ### Added
 - Notes to explain parts of UI that don't work as well as one would prefer - Translation Editor Window, Translation Item Editor Window, Enemy Activations Editor Window

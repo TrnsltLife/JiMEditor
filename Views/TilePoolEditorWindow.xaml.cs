@@ -212,6 +212,15 @@ namespace JiME.Views
 			}
 		}
 
+		private void addExploredTriggerButton_Click(object sender, RoutedEventArgs e)
+		{
+			TriggerEditorWindow tw = new TriggerEditorWindow(scenario);
+			if (tw.ShowDialog() == true)
+			{
+				selected.triggerName = tw.triggerName;
+			}
+		}
+
 		private void Window_Loaded( object sender, RoutedEventArgs e )
 		{
 		}
