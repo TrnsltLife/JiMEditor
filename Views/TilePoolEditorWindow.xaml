@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:local="clr-namespace:JiME"
         mc:Ignorable="d"
         Title="Random Tile Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" Closing="Window_Closing" Loaded="Window_Loaded">
@@ -10,6 +11,11 @@
 	<Window.Resources>
 		<local:SelectedToBoolConverter x:Key="sb"/>
 		<local:TileCollectionConverter x:Key="tileCollection"/>
+		<CollectionViewSource x:Key="cvsTrigger" Source="{Binding scenario.triggersObserver}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="dataName"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
 	</Window.Resources>
 
 	<StackPanel>
@@ -97,6 +103,19 @@
 								<RadioButton x:Name="sideB" Content="B" Foreground="White" VerticalAlignment="Bottom" Margin="20,0" GroupName="side" Click="sideB_Click" IsEnabled="False"/>
 								<RadioButton x:Name="sideRandom" Content="Random" Foreground="White" VerticalAlignment="Bottom" GroupName="side" Click="sideRandom_Click" IsEnabled="False"/>
 							</StackPanel>
+
+							<TextBlock Text="Fire This Trigger When Explored (Optional):" Style="{StaticResource Heading}" Margin="0,15,0,0" TextWrapping="Wrap"/>
+							<Grid Margin="0,0,0,15">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*"/>
+									<ColumnDefinition Width="auto"/>
+								</Grid.ColumnDefinitions>
+
+								<ComboBox VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource cvsTrigger}}" DisplayMemberPath="dataName" SelectedValue="{Binding selected.triggerName}" SelectedValuePath="dataName"/>
+								<Button Grid.Column="1" x:Name="addExploredTriggerButton" Background="MediumSeaGreen" Margin="5,0,0,0" Height="32" Width="32" Click="addExploredTriggerButton_Click">
+									<Image Source="/JiME;component/Assets/add2.png"/>
+								</Button>
+							</Grid>
 
 							<Grid Margin="0,5">
 								<Grid.ColumnDefinitions>
