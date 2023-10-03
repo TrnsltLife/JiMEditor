@@ -209,6 +209,7 @@
 								</StackPanel>
 							</StackPanel>
 						</StackPanel>
+						<CheckBox x:Name="isRangedCB" Content="Ranged" Foreground="White" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="{Binding monster.isRanged}"/>
 					</StackPanel>
 
 					<StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
