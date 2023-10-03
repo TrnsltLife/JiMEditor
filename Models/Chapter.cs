@@ -46,7 +46,7 @@ namespace JiME
 
 		//vars
 		bool _noFlavorText, _isRandomTiles, _isPreExplored, _usesRandomGroups, _isDynamic;
-		string _triggeredBy, _exploreTrigger, _randomInteractionGroup, _attachHint;
+		string _triggeredBy, _exploreTrigger, _exploredAllTilesTrigger, _randomInteractionGroup, _attachHint;
 		int _randomInteractionGroupCount;
 
 		public bool noFlavorText
@@ -75,6 +75,15 @@ namespace JiME
 			{
 				_exploreTrigger = value;
 				PropChanged( "exploreTrigger" );
+			}
+		}
+		public string exploredAllTilesTrigger
+		{
+			get => _exploredAllTilesTrigger;
+			set
+			{
+				_exploredAllTilesTrigger = value;
+				PropChanged("exploredAllTilesTrigger");
 			}
 		}
 		public bool isRandomTiles

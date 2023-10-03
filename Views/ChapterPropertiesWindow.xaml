@@ -154,17 +154,35 @@
 				</StackPanel>
 			</Border>
 
-			<!--trigger when explored-->
+			<!--trigger when first explored-->
 			<Border x:Name="exploreBox" Style="{StaticResource callout}" Margin="0,0,0,10" IsEnabled="{Binding chapter.isEmpty, Converter={StaticResource binv}}">
 				<Grid>
 					<StackPanel>
-						<TextBlock Text="Trigger On Exploration (Optional):" Style="{StaticResource Heading}"/>
+						<TextBlock Text="Trigger On First Exploration (Optional):" Style="{StaticResource Heading}"/>
 						<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Text="This Trigger is set when any Tile in this Block is first explored. It is only triggered once."/>
 
-						<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+						<StackPanel Orientation="Horizontal" Margin="0,5,0,5">
 							<ComboBox x:Name="nextTriggerCB" ItemsSource="{Binding scenario.triggersObserver}" HorizontalAlignment="Left" VerticalAlignment="Center" DisplayMemberPath="dataName" MinWidth="250" SelectedValuePath="dataName" SelectedValue="{Binding chapter.exploreTrigger}"/>
 
 							<Button x:Name="addExploreTriggerButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="AddExploreTriggerButton_Click">
+								<Image Source="/JiME;component/Assets/add2.png"/>
+							</Button>
+						</StackPanel>
+					</StackPanel>
+				</Grid>
+			</Border>
+
+			<!--trigger when all tiles have been explored-->
+			<Border x:Name="exploredAllTilesBox" Style="{StaticResource callout}" Margin="0,0,0,10">
+				<Grid>
+					<StackPanel>
+						<TextBlock Text="Trigger After Exploring All Tiles (Optional):" Style="{StaticResource Heading}"/>
+						<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Text="This Trigger is set when all Tiles in this Block have been explored. It is only triggered once."/>
+
+						<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+							<ComboBox x:Name="exploredAllTilesTriggerCB" ItemsSource="{Binding scenario.triggersObserver}" HorizontalAlignment="Left" VerticalAlignment="Center" DisplayMemberPath="dataName" MinWidth="250" SelectedValuePath="dataName" SelectedValue="{Binding chapter.exploredAllTilesTrigger}"/>
+
+							<Button x:Name="addExploredAllTilesTriggerButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="AddExploredAllTilesTriggerButton_Click">
 								<Image Source="/JiME;component/Assets/add2.png"/>
 							</Button>
 						</StackPanel>
@@ -182,6 +200,7 @@
 					</StackPanel>
 				</Grid>
 			</Border>
+
 
 		</StackPanel>
 

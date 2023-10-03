@@ -143,6 +143,15 @@ namespace JiME.Views
 			}
 		}
 
+		private void AddExploredAllTilesTriggerButton_Click( object sender, RoutedEventArgs e)
+        {
+			TriggerEditorWindow tw = new TriggerEditorWindow(scenario);
+			if (tw.ShowDialog() == true)
+			{
+				chapter.exploredAllTilesTrigger = tw.triggerName;
+			}
+		}
+
 		private void AddTriggerByButton_Click( object sender, RoutedEventArgs e )
 		{
 			TriggerEditorWindow tw = new TriggerEditorWindow( scenario );
