@@ -108,9 +108,11 @@ namespace JiME
                 TriggerDeferredVisualizeScenario();
             });
 
-            //debug
-            //debug();
-        }
+			App.OpenMagWizWindow();
+
+			//debug
+			//debug();
+		}
 
         private void TriggerDeferredVisualizeScenario()
         {
@@ -120,7 +122,7 @@ namespace JiME
             WpfUtils.DeferExecution("VisualizeScenario", 100, VisualizeScenario);
         }
 
-        private void VisualizeScenario()
+		private void VisualizeScenario()
         {
             //Console.WriteLine("VISUALIZE SCENARIO");
             if (scenario != null)
@@ -351,7 +353,7 @@ namespace JiME
 			{
 				ReplaceTokenInteraction castInteraction = (ReplaceTokenInteraction)interactionItem;
 				ReplaceTokenInteractionWindow w = new ReplaceTokenInteractionWindow( scenario, castInteraction);
-				w.ShowDialog();
+				//w.ShowDialog();
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if ( interactionItem is RewardInteraction )
@@ -605,15 +607,16 @@ namespace JiME
 				scenario.scenarioName = sw.scenarioName;
 			}
 			scenario.DecertifyChangedValues(scenario.translationObserver, originalValues, originalKeyName);
-		}   
+		}
 
-        private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e )
+		private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e )
 		{
 			if ( scenario.isDirty )
 			{
 				if ( MessageBox.Show( "The Project has changes that haven't been saved.  Are you sure you want to exit without saving?", "Project Changes Not Saved", MessageBoxButton.YesNo, MessageBoxImage.Question ) == MessageBoxResult.No )
 					e.Cancel = true;
 			}
+			App.CloseMagWizWindow();
 		}
 
 		#region COMMANDS

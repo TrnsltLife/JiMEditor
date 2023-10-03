@@ -23,6 +23,8 @@ namespace JiME
 
 		public ProjectWindow()
 		{
+			App.CloseMagWizWindow();
+
 			InitializeComponent();
 
 			//initialize utilities

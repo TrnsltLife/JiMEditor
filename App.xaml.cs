@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using JiME.Views;
+using System.Threading;
+using System.Windows;
 
 namespace JiME
 {
@@ -7,6 +9,9 @@ namespace JiME
 	/// </summary>
 	public partial class App : Application
 	{
+		public static MagWizWindow magWizWindow;
+		public static Thread magWizWindowThread;
+
 		private void Application_Startup( object sender, StartupEventArgs e )
 		{
 			//PresentationTraceSources.Refresh();
@@ -17,6 +22,37 @@ namespace JiME
 #if !DEBUG
 			Application.Current.Dispatcher.UnhandledException += Dispatcher_UnhandledException;
 #endif
+		}
+
+		public static void OpenMagWizWindow()
+        {
+			// https://stackoverflow.com/questions/1111369/how-do-i-create-and-show-wpf-windows-on-separate-threads
+			if(magWizWindowThread != null)
+            {
+				CloseMagWizWindow();
+            }
+
+			magWizWindowThread = new Thread(new ThreadStart(MagWizThreadStartingPoint));
+			magWizWindowThread.SetApartmentState(ApartmentState.STA);
+			magWizWindowThread.IsBackground = true;
+			magWizWindowThread.Start();
+		}
+
+		public static void CloseMagWizWindow()
+        {
+			if (magWizWindowThread != null)
+			{
+				magWizWindowThread.Abort();
+				magWizWindow = null;
+				magWizWindowThread = null;
+			}
+        }
+
+		private static void MagWizThreadStartingPoint()
+		{
+			magWizWindow = new MagWizWindow();
+			magWizWindow.Show();
+			System.Windows.Threading.Dispatcher.Run();
 		}
 
 		//generic, app-wide error handler to catch any unhandled exceptions

@@ -89,6 +89,7 @@
     <Compile Include="Common\InteractionConverter.cs" />
     <Compile Include="Common\TextBook.cs" />
     <Compile Include="Common\TileConverter.cs" />
+    <Compile Include="Common\WindowExtension.cs" />
     <Compile Include="Models\BattleTile.cs" />
     <Compile Include="Models\Campaign.cs" />
     <Compile Include="Models\Collection.cs" />
@@ -146,6 +147,9 @@
     </Compile>
     <Compile Include="UserControls\SidebarListView.xaml.cs">
       <DependentUpon>SidebarListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MagWizWindow.xaml.cs">
+      <DependentUpon>MagWizWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TranslationItemEditorWindow.xaml.cs">
       <DependentUpon>TranslationItemEditorWindow.xaml</DependentUpon>
@@ -287,6 +291,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="UserControls\SidebarListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MagWizWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
