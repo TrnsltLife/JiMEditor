@@ -93,7 +93,7 @@ namespace JiME.Views
 					{new List<CheckBox>(){coreSetCB}, Collection.CORE_SET },
 					{new List<CheckBox>(){villainsOfEriajarCB}, Collection.VILLAINS_OF_ERIAJAR },
 					{new List<CheckBox>(){shadedPathsCB}, Collection.SHADED_PATHS },
-					{new List<CheckBox>(){denizensOfDarknessCB}, Collection.DENIZENS_IN_DARKNESS },
+					{new List<CheckBox>(){denizensInDarknessCB}, Collection.DENIZENS_IN_DARKNESS },
 					{new List<CheckBox>(){unfurlingWarCB}, Collection.UNFURLING_WAR },
 					{new List<CheckBox>(){scorchersOfTheWildsCB}, Collection.SCORCHERS_OF_THE_WILDS },
 				};
