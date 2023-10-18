@@ -242,12 +242,14 @@ namespace JiME.Views
 
 		private void eventCB_SelectionChanged( object sender, SelectionChangedEventArgs e )
 		{
-			addSelectedEventButton.IsEnabled = eventCB.SelectedIndex != 0;
+			//addSelectedEventButton.IsEnabled = eventCB.SelectedIndex != 0;
+			addSelectedEventButton.IsEnabled = eventCB.SelectedValue as string != "None";
 		}
 
 		private void triggerCB_SelectionChanged( object sender, SelectionChangedEventArgs e )
 		{
-			addSelectedTriggerButton.IsEnabled = triggerCB.SelectedIndex != 0;
+			//addSelectedTriggerButton.IsEnabled = triggerCB.SelectedIndex != 0;
+			addSelectedTriggerButton.IsEnabled = triggerCB.SelectedValue as string != "None";
 		}
 	}
 }

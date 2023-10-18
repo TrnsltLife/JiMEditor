@@ -167,13 +167,14 @@ namespace JiME.Views
 
 		private void triggerCB_SelectionChanged( object sender, SelectionChangedEventArgs e )
 		{
-			addSelectedTriggerButton.IsEnabled = triggerCB.SelectedIndex != 0;
+			//addSelectedTriggerButton.IsEnabled = triggerCB.SelectedIndex != 0;
+			addSelectedTriggerButton.IsEnabled = triggerCB.SelectedValue as string != "None";
 		}
 
 		private void addSelectedTriggerButton_Click( object sender, RoutedEventArgs e )
 		{
 			string t = triggerCB.SelectedValue as string;
-			if ( !interaction.triggerList.Contains( t ) )
+			if ( !interaction.triggerList.Contains( t ) && t != "None")
 			{
 				interaction.triggerList.Add( t );
 			}
