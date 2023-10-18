@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- Conditional Event Slider: Conditional event can require all triggers or a certain number of triggers in order to fire.
 
 ### Changed
 
