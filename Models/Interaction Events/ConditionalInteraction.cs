@@ -12,6 +12,7 @@ namespace JiME
 		}
 
 		string _finishedTrigger;
+		int _triggersRequiredCount;
 
 		public ObservableCollection<string> triggerList { get; set; }
 		public string finishedTrigger
@@ -24,12 +25,23 @@ namespace JiME
 			}
 		}
 
+		public int triggersRequiredCount
+        {
+			get { return _triggersRequiredCount; }
+			set
+            {
+				_triggersRequiredCount = value;
+				NotifyPropertyChanged("triggersRequiredCount");
+            }
+        }
+
 		public ConditionalInteraction( string name ) : base( name )
 		{
 			interactionType = InteractionType.Conditional;
 
 			triggerList = new ObservableCollection<string>();
 			finishedTrigger = "None";
+			triggersRequiredCount = 0;
 		}
 
 		public ConditionalInteraction Clone()
@@ -42,6 +54,7 @@ namespace JiME
             {
 				interact.triggerList.Add(trigger);
             }
+			interact.triggersRequiredCount = this.triggersRequiredCount;
 			return interact;
 		}
 
