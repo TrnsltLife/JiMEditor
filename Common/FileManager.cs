@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows;
 using Microsoft.Win32;
 using Newtonsoft.Json;
-using JiME.Models;
 
 namespace JiME
 {

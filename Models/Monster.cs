@@ -1,6 +1,7 @@
-﻿using JiME.Models;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 
@@ -32,6 +33,10 @@ namespace JiME
 		bool _isRanged, _isFearsome, _isLarge, _isBloodThirsty, _isArmored, _isElite, _defaultStats, _isEasy, _isNormal, _isHard;
 		int[] _cost;
 		string[] _moveSpecial, _tag, _special;
+		List<int> _modifierList = new List<int>();
+
+		[JsonIgnore]
+		public ObservableCollection<MonsterModifier> uiModifierList { get; set; } = new ObservableCollection<MonsterModifier>();
 
 		public Guid GUID { get; set; }
 
@@ -445,6 +450,36 @@ namespace JiME
 			}
 		}
 
+		public List<int> modifierList
+        {
+			get => _modifierList;
+            set
+			{
+				if(value != _modifierList)
+                {
+					_modifierList = value;
+					NotifyPropertyChanged("modifierList");
+                }
+			}
+        }
+
+		/*
+        [JsonIgnore]
+		public List<MonsterModifier> uiModifierList
+		{
+			get => _uiModifierList;
+			set
+			{
+				if (value != _uiModifierList)
+				{
+					_uiModifierList = value;
+					NotifyPropertyChanged("uiModifierList");
+				}
+			}
+		}
+		*/
+
+
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		public Monster() { GUID = Guid.NewGuid(); }
@@ -545,12 +580,81 @@ namespace JiME
 			m.triggerName = this.triggerName;
 			m.negatedBy = this.negatedBy;
 			m.monsterType = this.monsterType;
+			m.modifierList = new List<int>(this.modifierList);
+			m.uiModifierList = new ObservableCollection<MonsterModifier>(this.uiModifierList);
 			return m;
 		}
 
 		public void NotifyPropertyChanged( string propName )
 		{
 			PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( propName ) );
+		}
+
+
+
+		public static List<MonsterType> Goblins()
+		{
+			return new List<MonsterType> { MonsterType.GoblinScout, MonsterType.GoblinScout, MonsterType.VargRider };
+		}
+
+		public static List<MonsterType> Orcs()
+		{
+			return new List<MonsterType> { MonsterType.OrcHunter, MonsterType.OrcMarauder, MonsterType.OrcTaskmaster, MonsterType.HighOrcWarrior, MonsterType.Gargletarg, MonsterType.SupplicantOfMoreGoth, MonsterType.LordJavelin };
+		}
+
+		public static List<MonsterType> Humans()
+		{
+			return new List<MonsterType> { MonsterType.Ruffian, MonsterType.Soldier, MonsterType.Atari, MonsterType.Endris };
+		}
+
+		public static List<MonsterType> Spirits()
+		{
+			return new List<MonsterType> { MonsterType.Wight, MonsterType.Shadowman, MonsterType.Ursula, MonsterType.LichKing };
+		}
+
+		public static List<MonsterType> Trolls()
+		{
+			return new List<MonsterType> { MonsterType.CaveTroll, MonsterType.HillTroll, MonsterType.Oliver };
+		}
+
+		public static List<MonsterType> Vargs()
+		{
+			return new List<MonsterType> { MonsterType.Varg, MonsterType.VargRider, MonsterType.Chartooth };
+		}
+
+		public static List<MonsterType> Spiders()
+		{
+			return new List<MonsterType> { MonsterType.GiantSpider, MonsterType.SpawnOfUglygiant };
+		}
+
+		public static List<MonsterType> Flying()
+		{
+			return new List<MonsterType> { MonsterType.Balerock, MonsterType.FoulBeast, MonsterType.LichKing };
+		}
+
+		public static List<MonsterType> OtherBeasts()
+		{
+			return new List<MonsterType> { MonsterType.WarElephant, MonsterType.AnonymousThing };
+		}
+
+		public static List<MonsterType> AllBeasts()
+		{
+			List<MonsterType> monsterList = new List<MonsterType>();
+			monsterList.AddRange(Trolls());
+			monsterList.AddRange(Vargs());
+			monsterList.AddRange(Spiders());
+			monsterList.AddRange(Flying());
+			monsterList.AddRange(OtherBeasts());
+			return monsterList;
+		}
+
+		public static List<MonsterType> Humanoid()
+		{
+			List<MonsterType> monsterList = new List<MonsterType>();
+			monsterList.AddRange(Goblins());
+			monsterList.AddRange(Orcs());
+			monsterList.AddRange(Humans());
+			return monsterList;
 		}
 	}
 }

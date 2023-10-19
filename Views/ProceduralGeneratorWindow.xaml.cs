@@ -5,7 +5,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System;
-using JiME.Models;
 using JiME.Procedural.StoryElements;
 using JiME.Procedural;
 using System.Windows.Media;

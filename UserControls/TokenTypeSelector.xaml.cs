@@ -11,7 +11,6 @@ using System.Text.RegularExpressions;
 using System.ComponentModel;
 using System.Windows.Input;
 using System.Collections.Generic;
-using JiME.Models;
 using JiME.Views;
 using System.Linq;
 

@@ -94,6 +94,7 @@
     <Compile Include="Models\Collection.cs" />
     <Compile Include="Models\BaseTile.cs" />
     <Compile Include="Models\Interaction Events\PersistentInteractionBase.cs" />
+    <Compile Include="Models\MonsterModifier.cs" />
     <Compile Include="Models\TranslationItem.cs" />
     <Compile Include="Models\Translation.cs" />
     <Compile Include="Models\SquareTile.cs" />

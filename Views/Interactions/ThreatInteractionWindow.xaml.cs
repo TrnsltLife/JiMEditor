@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
-using JiME.Models;
 using System;
 
 namespace JiME.Views

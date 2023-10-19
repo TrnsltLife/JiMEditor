@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:local="clr-namespace:JiME"
         mc:Ignorable="d"
         Title="Enemy Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" Width="750" Closing="Window_Closing">
@@ -13,6 +14,11 @@
 			<Setter Property="Margin" Value="0,5"/>
 			<Setter Property="VerticalAlignment" Value="Center"/>
 		</Style>
+		<CollectionViewSource x:Key="cvsModifier" Source="{Binding monsterModifiers}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="id"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
 	</Window.Resources>
 
 	<Grid>
@@ -263,13 +269,50 @@
 					-->
 
 				<StackPanel Grid.Column="1" VerticalAlignment="Center">
-					<TextBlock Style="{StaticResource Heading}" Text="Elite Bonuses:"/>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Style="{StaticResource Heading}" Text="Elite Bonuses (7 max):"/>
+						<ComboBox x:Name="modifierCB" Margin="20,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource cvsModifier}}" SelectedValuePath="id" DisplayMemberPath="name" MinWidth="200" SelectionChanged="modifierCB_SelectionChanged"/>
+						<Button x:Name="addSelectedModifierButton" Click="addSelectedModifierButton_Click" Content="Add Selected Bonus" Background="DodgerBlue" Foreground="White" Margin="10,0,0,0" IsEnabled="False"/>
+						<!--
+						<Button x:Name="addModifierButton" Background="MediumSeaGreen" Margin="10,0,0,0" Height="32" Width="32" Click="addModifierButton_Click">
+							<Image Source="/JiME;component/Assets/add2.png"/>
+						</Button>
+						-->
+					</StackPanel>
+					<!--
 					<TextBlock Text="Checking any of these makes the enemy Elite." Style="{StaticResource SubText}" Margin="0,0,0,5"/>
 					<StackPanel Orientation="Horizontal">
 						<CheckBox Content="Large" Foreground="White" IsChecked="{Binding monster.isLarge}" VerticalAlignment="Center"/>
 						<CheckBox Content="Bloodthirsty" Margin="15,0" Foreground="White" IsChecked="{Binding monster.isBloodThirsty}" VerticalAlignment="Center"/>
 						<CheckBox Content="Armored" Margin="5,0" Foreground="White" IsChecked="{Binding monster.isArmored}" VerticalAlignment="Center"/>
 					</StackPanel>
+					-->
+					<ItemsControl Padding="5" ItemsSource="{Binding monster.uiModifierList}" MinHeight="30">
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<WrapPanel IsItemsHost="True" />
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Border Style="{StaticResource callout}" Background="{StaticResource bgButtonColor}" Margin="0,0,5,5"
+										MouseEnter="modifierItem_MouseEnter"
+										MouseLeave="modifierItem_MouseLeave"
+										DataContext="{Binding}"
+									>
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Text="{Binding name}" Style="{StaticResource SubText}" Foreground="White" VerticalAlignment="Center"/>
+										<Button x:Name="removeModifierButton" Click="removeModifierButton_Click" Background="{StaticResource bgCancelDelete}" Foreground="White" Margin="10,0,0,0" Height="32" Width="32" DataContext="{Binding id}">
+											<Image Source="/JiME;component/Assets/cancel.png"/>
+										</Button>
+									</StackPanel>
+								</Border>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+
+					<TextBlock x:Name="modifierDescription" Style="{StaticResource Heading}" Text=""/>
 				</StackPanel>
 				<!--
 				</Grid>

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JiME.Models;
 using JiME.Procedural.StoryElements;
 
 namespace JiME.Procedural.GenerationLogic

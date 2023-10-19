@@ -10,7 +10,6 @@ using Newtonsoft.Json.Linq;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.ComponentModel;
-using JiME.Models;
 using Newtonsoft.Json;
 
 namespace JiME
