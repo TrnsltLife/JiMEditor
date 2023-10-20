@@ -33,10 +33,8 @@ namespace JiME
 		bool _isRanged, _isFearsome, _isLarge, _isBloodThirsty, _isArmored, _isElite, _defaultStats, _isEasy, _isNormal, _isHard;
 		int[] _cost;
 		string[] _moveSpecial, _tag, _special;
-		List<int> _modifierList = new List<int>();
 
-		[JsonIgnore]
-		public ObservableCollection<MonsterModifier> uiModifierList { get; set; } = new ObservableCollection<MonsterModifier>();
+		ObservableCollection<MonsterModifier> _modifierList = new ObservableCollection<MonsterModifier>();
 
 		public Guid GUID { get; set; }
 
@@ -115,16 +113,19 @@ namespace JiME
 			get
 			{
 				string b = string.Empty;
+				/*
 				if ( isLarge )
 					b += "Large, ";
 				if ( isBloodThirsty )
 					b += "BloodThirsty, ";
 				if ( isArmored )
 					b += "Armored, ";
+				*/
+				b = string.Join(", ", modifierList.ToList().ConvertAll(it => it.name));
 				if ( string.IsNullOrEmpty( b ) )
 					return "No Bonuses";
 				else
-					return b.Substring( 0, b.Length - 2 );
+					return b;
 			}
 			set
 			{
@@ -324,10 +325,12 @@ namespace JiME
 				_isLarge = value;
 				NotifyPropertyChanged( "isLarge" );
 				bonuses = bonuses;
+				/*
 				if ( _isArmored || _isBloodThirsty || _isLarge )
 					isElite = true;
 				else
 					isElite = false;
+				*/
 			}
 		}
 		public bool isBloodThirsty
@@ -370,6 +373,14 @@ namespace JiME
 				}
 			}
 		}
+
+		public void updateElite()
+        {
+			if (modifierList.Count > 0) { isElite = true; }
+			else { isElite = false; }
+        }
+
+
 		public int maxMovementValue
 		{
 			get => _maxMovementValue;
@@ -450,7 +461,8 @@ namespace JiME
 			}
 		}
 
-		public List<int> modifierList
+		[JsonConverter(typeof(MonsterModifierListConverter))]
+		public ObservableCollection<MonsterModifier> modifierList
         {
 			get => _modifierList;
             set
@@ -462,22 +474,6 @@ namespace JiME
                 }
 			}
         }
-
-		/*
-        [JsonIgnore]
-		public List<MonsterModifier> uiModifierList
-		{
-			get => _uiModifierList;
-			set
-			{
-				if (value != _uiModifierList)
-				{
-					_uiModifierList = value;
-					NotifyPropertyChanged("uiModifierList");
-				}
-			}
-		}
-		*/
 
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -580,8 +576,7 @@ namespace JiME
 			m.triggerName = this.triggerName;
 			m.negatedBy = this.negatedBy;
 			m.monsterType = this.monsterType;
-			m.modifierList = new List<int>(this.modifierList);
-			m.uiModifierList = new ObservableCollection<MonsterModifier>(this.uiModifierList);
+			m.modifierList = new ObservableCollection<MonsterModifier>(this.modifierList);
 			return m;
 		}
 

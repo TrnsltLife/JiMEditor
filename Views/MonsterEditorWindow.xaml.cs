@@ -132,6 +132,15 @@ namespace JiME.Views
 			//Migrate movement
 			if(monster.moveA == 0) { monster.moveA = monster.movementValue; }
 
+            //Migrate isArmored, isBloodthirsty, isLarge from bool/checkboxes to MonsterModifiers in the modifierList/ItemControl
+            if (monster.isArmored && !monster.modifierList.Contains(MonsterModifier.ARMORED)) { monster.modifierList.Add(MonsterModifier.ARMORED); }
+			if (monster.isBloodThirsty && !monster.modifierList.Contains(MonsterModifier.BLOODTHIRSTY)) { monster.modifierList.Add(MonsterModifier.BLOODTHIRSTY); }
+			if (monster.isLarge && !monster.modifierList.Contains(MonsterModifier.LARGE)) { monster.modifierList.Add(MonsterModifier.LARGE); }
+			monster.isArmored = false;
+			monster.isBloodThirsty = false;
+			monster.isLarge = false;
+			monster.updateElite();
+
 			//negated radio buttons
 			/*
 			mightRB.IsChecked = monster.negatedBy == Ability.Might;
@@ -324,13 +333,11 @@ namespace JiME.Views
 				return; 
 			}
 			int modId = modifierCB.SelectedValue as int? ?? default(int);
-			if (!monster.modifierList.Contains(modId) && modId != 0)
+			MonsterModifier mod = MonsterModifier.FromID(modId);
+			if (!monster.modifierList.Contains(mod) && mod.id != 0)
 			{
-				monster.modifierList.Add(modId);
-				monster.uiModifierList.Add(MonsterModifier.FromID(modId));
-				Debug.Log("Add modifier " + modId + " " + MonsterModifier.FromID(modId).name);
-				Debug.Log("Modifiers: " + string.Join(", ", monster.modifierList));
-				Debug.Log("UiModifiers: " + string.Join(", ", monster.uiModifierList.ToList().ConvertAll(it => it.name)));
+				monster.modifierList.Add(mod);
+				monster.updateElite();
 			}
 		}
 
@@ -350,11 +357,11 @@ namespace JiME.Views
 		{
 			if (modifierCB.SelectedValue == null) { return; }
 			int modId = ((Button)sender).DataContext as int? ?? default(int);
-
-			if (monster.modifierList.Contains(modId))
+			MonsterModifier mod = MonsterModifier.FromID(modId);
+			if (monster.modifierList.Contains(mod))
 			{
-				monster.modifierList.Remove(modId);
-				monster.uiModifierList.Remove(MonsterModifier.FromID(modId));
+				monster.modifierList.Remove(mod);
+				monster.updateElite();
 			}
 		}
 

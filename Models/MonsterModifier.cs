@@ -32,6 +32,8 @@ namespace JiME
         public bool fakeSunder { get; set; } = false;
         public List<MonsterType> applicableTo { get; set; } = new List<MonsterType>();
 
+        public MonsterModifier() { }
+
         public MonsterModifier(int id, string name, int cost, int additionalCost, int health, int armor, int sorcery, int damage, int fear,
             bool immuneCleave, bool immuneLethal, bool immunePierce, bool immuneSmite, bool immuneStun, bool immuneSunder,
             bool fakeCleave, bool fakeLethal, bool fakePierce, bool fakeSmite, bool fakeStun, bool fakeSunder)

@@ -287,7 +287,7 @@
 						<CheckBox Content="Armored" Margin="5,0" Foreground="White" IsChecked="{Binding monster.isArmored}" VerticalAlignment="Center"/>
 					</StackPanel>
 					-->
-					<ItemsControl Padding="5" ItemsSource="{Binding monster.uiModifierList}" MinHeight="30">
+					<ItemsControl Padding="5" ItemsSource="{Binding monster.modifierList}" MinHeight="30">
 						<ItemsControl.ItemsPanel>
 							<ItemsPanelTemplate>
 								<WrapPanel IsItemsHost="True" />

@@ -79,6 +79,7 @@
     </ApplicationDefinition>
     <Compile Include="Common\CollectionConverter.cs" />
     <Compile Include="Common\ActivationsListConverter.cs" />
+    <Compile Include="Common\MonsterModifierListConverter.cs" />
     <Compile Include="Common\Commands.cs" />
     <Compile Include="Common\Converters.cs" />
     <Compile Include="Common\ErrorChecker.cs" />
