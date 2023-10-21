@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:local="clr-namespace:JiME"
 		xmlns:uc="clr-namespace:JiME.UserControls"
         mc:Ignorable="d"
@@ -17,6 +18,24 @@
 			<Setter Property="Margin" Value="0,5"/>
 			<Setter Property="VerticalAlignment" Value="Center"/>
 		</Style>
+		<CollectionViewSource x:Key="cvsTriggeredBy" Source="{Binding scenario.triggersObserver}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="isEmpty" Direction="Descending"/>
+				<scm:SortDescription PropertyName="dataName"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
+		<CollectionViewSource x:Key="cvsTriggerAfter" Source="{Binding scenario.triggersObserver}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="isEmpty" Direction="Descending"/>
+				<scm:SortDescription PropertyName="dataName"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
+		<CollectionViewSource x:Key="cvsTriggerWhenAllDefeated" Source="{Binding scenario.triggersObserver}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="isEmpty" Direction="Descending"/>
+				<scm:SortDescription PropertyName="dataName"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
 	</Window.Resources>
 
 	<StackPanel>
@@ -84,7 +103,7 @@
 								<StackPanel HorizontalAlignment="Left">
 									<TextBlock Text="Triggered By (Optional):" Style="{StaticResource Heading}"/>
 									<StackPanel Orientation="Horizontal">
-										<ComboBox VerticalAlignment="Center" Name="triggeredByCB" Width="250" ItemsSource="{Binding scenario.triggersObserver}" DisplayMemberPath="dataName" SelectedValue="{Binding interaction.triggerName}" SelectedValuePath="dataName" HorizontalAlignment="Left" IsEnabled="{Binding interaction.isTokenInteraction, Converter={StaticResource binv}}"/>
+										<ComboBox VerticalAlignment="Center" Name="triggeredByCB" Width="250" ItemsSource="{Binding Source={StaticResource cvsTriggeredBy}}" DisplayMemberPath="dataName" SelectedValue="{Binding interaction.triggerName}" SelectedValuePath="dataName" HorizontalAlignment="Left" IsEnabled="{Binding interaction.isTokenInteraction, Converter={StaticResource binv}}"/>
 										<Button x:Name="addMainTriggerButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="addMainTriggerButton_Click" IsEnabled="{Binding ElementName=isTokenCB, Path=IsChecked, Converter={StaticResource binv}}">
 											<Image Source="/JiME;component/Assets/add2.png"/>
 										</Button>
@@ -94,7 +113,7 @@
 								<StackPanel HorizontalAlignment="Left" Margin="10,0,0,0">
 									<TextBlock Text="Set Trigger After Event Is Resolved (Optional):" Style="{StaticResource Heading}"/>
 									<StackPanel Orientation="Horizontal">
-										<ComboBox VerticalAlignment="Center" HorizontalAlignment="Left" Width="250" ItemsSource="{Binding scenario.triggersObserver}" DisplayMemberPath="dataName" SelectedValue="{Binding interaction.triggerAfterName}" SelectedValuePath="dataName"/>
+										<ComboBox VerticalAlignment="Center" HorizontalAlignment="Left" Width="250" ItemsSource="{Binding Source={StaticResource cvsTriggerAfter}}" DisplayMemberPath="dataName" SelectedValue="{Binding interaction.triggerAfterName}" SelectedValuePath="dataName"/>
 										<Button x:Name="addMainTriggerAfterButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="addMainTriggerAfterButton_Click">
 											<Image Source="/JiME;component/Assets/add2.png"/>
 										</Button>
@@ -424,7 +443,7 @@
 					<StackPanel>
 						<TextBlock Text="When All Enemies (Scripted and Pool) Have Been Defeated, Fire This Trigger (Optional):" Style="{StaticResource Heading}"/>
 						<StackPanel Orientation="Horizontal">
-							<ComboBox VerticalAlignment="Center" HorizontalAlignment="Left" Width="250" ItemsSource="{Binding scenario.triggersObserver}" DisplayMemberPath="dataName" SelectedValue="{Binding interaction.triggerDefeatedName}" SelectedValuePath="dataName"/>
+								<ComboBox VerticalAlignment="Center" HorizontalAlignment="Left" Width="250" ItemsSource="{Binding Source={StaticResource cvsTriggerWhenAllDefeated}}" DisplayMemberPath="dataName" SelectedValue="{Binding interaction.triggerDefeatedName}" SelectedValuePath="dataName"/>
 							<Button x:Name="addDefeatedTriggerButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="addDefeatedTriggerButton_Click">
 								<Image Source="/JiME;component/Assets/add2.png"/>
 							</Button>
