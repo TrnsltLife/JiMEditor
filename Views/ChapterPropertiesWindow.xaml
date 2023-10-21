@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
 				xmlns:local="clr-namespace:JiME"
         mc:Ignorable="d"
         Title="Tile Block Properties" Style="{StaticResource DefaultWindow}" Width="750" WindowStartupLocation="CenterScreen" ContentRendered="Window_ContentRendered" Closing="Window_Closing">
@@ -10,6 +11,24 @@
 	<Window.Resources>
 		<local:BoolInvertVisibility x:Key="b2vis"/>
 		<local:BoolInvertConverter x:Key="binv"/>
+		<CollectionViewSource x:Key="cvsTriggeredBy" Source="{Binding scenario.triggersObserver}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="isEmpty" Direction="Descending"/>
+				<scm:SortDescription PropertyName="dataName"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
+		<CollectionViewSource x:Key="cvsTriggerAfterFirst" Source="{Binding scenario.triggersObserver}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="isEmpty" Direction="Descending"/>
+				<scm:SortDescription PropertyName="dataName"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
+		<CollectionViewSource x:Key="cvsTriggerAfterAll" Source="{Binding scenario.triggersObserver}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="isEmpty" Direction="Descending"/>
+				<scm:SortDescription PropertyName="dataName"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
 	</Window.Resources>
 
 	<Grid>
@@ -36,7 +55,7 @@
 						<StackPanel>
 							<TextBlock Text="Triggered By (Required):" Style="{StaticResource Heading}" Margin="0,5"/>
 							<StackPanel Orientation="Horizontal">
-								<ComboBox ItemsSource="{Binding scenario.triggersObserver}" DisplayMemberPath="dataName" SelectedValue="{Binding chapter.triggeredBy}" SelectedValuePath="dataName" HorizontalAlignment="Left" Width="200" IsEnabled="{Binding chapter.isEmpty, Converter={StaticResource binv}}" VerticalAlignment="Center"/>
+								<ComboBox ItemsSource="{Binding Source={StaticResource cvsTriggeredBy}}" DisplayMemberPath="dataName" SelectedValue="{Binding chapter.triggeredBy}" SelectedValuePath="dataName" HorizontalAlignment="Left" Width="200" IsEnabled="{Binding chapter.isEmpty, Converter={StaticResource binv}}" VerticalAlignment="Center"/>
 
 								<Button x:Name="addTriggerByButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="AddTriggerByButton_Click" IsEnabled="{Binding chapter.isEmpty, Converter={StaticResource binv}}">
 									<Image Source="/JiME;component/Assets/add2.png"/>
@@ -162,7 +181,7 @@
 						<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Text="This Trigger is set when any Tile in this Block is first explored. It is only triggered once."/>
 
 						<StackPanel Orientation="Horizontal" Margin="0,5,0,5">
-							<ComboBox x:Name="nextTriggerCB" ItemsSource="{Binding scenario.triggersObserver}" HorizontalAlignment="Left" VerticalAlignment="Center" DisplayMemberPath="dataName" MinWidth="250" SelectedValuePath="dataName" SelectedValue="{Binding chapter.exploreTrigger}"/>
+							<ComboBox x:Name="nextTriggerCB" ItemsSource="{Binding Source={StaticResource cvsTriggerAfterFirst}}" HorizontalAlignment="Left" VerticalAlignment="Center" DisplayMemberPath="dataName" MinWidth="250" SelectedValuePath="dataName" SelectedValue="{Binding chapter.exploreTrigger}"/>
 
 							<Button x:Name="addExploreTriggerButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="AddExploreTriggerButton_Click">
 								<Image Source="/JiME;component/Assets/add2.png"/>
@@ -180,7 +199,7 @@
 						<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Text="This Trigger is set when all Tiles in this Block have been explored. It is only triggered once."/>
 
 						<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-							<ComboBox x:Name="exploredAllTilesTriggerCB" ItemsSource="{Binding scenario.triggersObserver}" HorizontalAlignment="Left" VerticalAlignment="Center" DisplayMemberPath="dataName" MinWidth="250" SelectedValuePath="dataName" SelectedValue="{Binding chapter.exploredAllTilesTrigger}"/>
+							<ComboBox x:Name="exploredAllTilesTriggerCB" ItemsSource="{Binding Source={StaticResource cvsTriggerAfterAll}}" HorizontalAlignment="Left" VerticalAlignment="Center" DisplayMemberPath="dataName" MinWidth="250" SelectedValuePath="dataName" SelectedValue="{Binding chapter.exploredAllTilesTrigger}"/>
 
 							<Button x:Name="addExploredAllTilesTriggerButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="AddExploredAllTilesTriggerButton_Click">
 								<Image Source="/JiME;component/Assets/add2.png"/>

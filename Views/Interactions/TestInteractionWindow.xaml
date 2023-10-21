@@ -20,21 +20,25 @@
 		</Style>
 		<CollectionViewSource x:Key="cvsTriggeredBy" Source="{Binding scenario.triggersObserver}">
 			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="isEmpty" Direction="Descending"/>
 				<scm:SortDescription PropertyName="dataName"/>
 			</CollectionViewSource.SortDescriptions>
 		</CollectionViewSource>
 		<CollectionViewSource x:Key="cvsTriggerAfter" Source="{Binding scenario.triggersObserver}">
 			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="isEmpty" Direction="Descending"/>
 				<scm:SortDescription PropertyName="dataName"/>
 			</CollectionViewSource.SortDescriptions>
 		</CollectionViewSource>
 		<CollectionViewSource x:Key="cvsSuccessTrigger" Source="{Binding scenario.triggersObserver}">
 			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="isEmpty" Direction="Descending"/>
 				<scm:SortDescription PropertyName="dataName"/>
 			</CollectionViewSource.SortDescriptions>
 		</CollectionViewSource>
 		<CollectionViewSource x:Key="cvsFailTrigger" Source="{Binding scenario.triggersObserver}">
 			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="isEmpty" Direction="Descending"/>
 				<scm:SortDescription PropertyName="dataName"/>
 			</CollectionViewSource.SortDescriptions>
 		</CollectionViewSource>

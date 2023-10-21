@@ -19,11 +19,13 @@
 		</Style>
 		<CollectionViewSource x:Key="cvsTrigger" Source="{Binding scenario.triggersObserver}">
 			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="isEmpty" Direction="Descending"/>
 				<scm:SortDescription PropertyName="dataName"/>
 			</CollectionViewSource.SortDescriptions>
 		</CollectionViewSource>
 		<CollectionViewSource x:Key="cvsFinishedTrigger" Source="{Binding scenario.triggersObserver}">
 			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="isEmpty" Direction="Descending"/>
 				<scm:SortDescription PropertyName="dataName"/>
 			</CollectionViewSource.SortDescriptions>
 		</CollectionViewSource>
