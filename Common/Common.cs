@@ -376,6 +376,7 @@ namespace JiME
     {
 		public string name { get; set; }
 		public int id { get; set; }
+		public bool isEmpty { get; set; }
 		[JsonConverter(typeof(CollectionConverter))]
 		public Collection collection { get; set; }
 		public DefaultActivationItem[] activations { get; set; }
