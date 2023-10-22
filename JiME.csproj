@@ -149,6 +149,9 @@
     <Compile Include="UserControls\SidebarListView.xaml.cs">
       <DependentUpon>SidebarListView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\MonsterModifierEditorWindow.xaml.cs">
+      <DependentUpon>MonsterModifierEditorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TranslationItemEditorWindow.xaml.cs">
       <DependentUpon>TranslationItemEditorWindow.xaml</DependentUpon>
     </Compile>
@@ -291,6 +294,10 @@
     <Page Include="UserControls\SidebarListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MonsterModifierEditorWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\TranslationItemEditorWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

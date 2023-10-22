@@ -10,6 +10,7 @@ namespace JiME
     {
         public int id { get; set; }
         public string name { get; set; } = "";
+        public string editorName { get; set; } = "";
         public MonsterModifierGroup group { get; set; }
         public int cost { get; set; } = 0;
         int additionalCost { get; set; } = 0;
@@ -41,6 +42,7 @@ namespace JiME
         {
             this.id = id;
             this.name = name;
+            this.editorName = editorName ?? name;
             this.group = group;
             this.cost = cost;
             this.additionalCost = additionalCost;
@@ -61,6 +63,7 @@ namespace JiME
         {
             this.id = id;
             this.name = name;
+            this.editorName = name;
             this.group = group;
         }
 
@@ -68,6 +71,7 @@ namespace JiME
         {
             this.id = id;
             this.name = name;
+            this.editorName = name;
             this.group = group;
             this.cost = cost;
             this.additionalCost = additionalCost;
@@ -211,9 +215,9 @@ namespace JiME
 
         public static readonly MonsterModifier BLIND_RAGE = new MonsterModifier(14, "Blind Rage", MonsterModifierGroup.Extended) { armor = 2, immunePierce = true, immuneSunder = true }.AddToList();
         public static readonly MonsterModifier BURNING_HATRED = new MonsterModifier(15, "Burning Hatred", MonsterModifierGroup.Extended) { armor = 1, health = 4 }.AddToList();
-        public static readonly MonsterModifier ELDEST_WORM_1 = new MonsterModifier(16, "Eldest Worm 1", MonsterModifierGroup.Extended) { health = -4, armor = 1, immunePierce = true, immuneSunder = true }.Add(MonsterType.FoulBeast).Add(MonsterType.AnonymousThing).Add(MonsterType.LichKing).AddToList();
-        public static readonly MonsterModifier ELDEST_WORM_2 = new MonsterModifier(17, "Eldest Worm 2", MonsterModifierGroup.Extended) { armor = 1, immunePierce = true, immuneSunder = true }.Add(MonsterType.FoulBeast).Add(MonsterType.AnonymousThing).Add(MonsterType.LichKing).AddToList();
-        public static readonly MonsterModifier ELDEST_WORM_3 = new MonsterModifier(18, "Eldest Worm 3", MonsterModifierGroup.Extended) { health = 4, armor = 1, immunePierce = true, immuneSunder = true }.Add(MonsterType.FoulBeast).Add(MonsterType.AnonymousThing).Add(MonsterType.LichKing).AddToList();
+        public static readonly MonsterModifier ELDEST_WORM_1 = new MonsterModifier(16, "Eldest Worm", MonsterModifierGroup.Extended) { editorName="Eldest Worm 1", health = -4, armor = 1, immunePierce = true, immuneSunder = true }.Add(MonsterType.FoulBeast).Add(MonsterType.AnonymousThing).Add(MonsterType.LichKing).AddToList();
+        public static readonly MonsterModifier ELDEST_WORM_2 = new MonsterModifier(17, "Eldest Worm", MonsterModifierGroup.Extended) { editorName = "Eldest Worm 2", armor = 1, immunePierce = true, immuneSunder = true }.Add(MonsterType.FoulBeast).Add(MonsterType.AnonymousThing).Add(MonsterType.LichKing).AddToList();
+        public static readonly MonsterModifier ELDEST_WORM_3 = new MonsterModifier(18, "Eldest Worm", MonsterModifierGroup.Extended) { editorName = "Eldest Worm 3", health = 4, armor = 1, immunePierce = true, immuneSunder = true }.Add(MonsterType.FoulBeast).Add(MonsterType.AnonymousThing).Add(MonsterType.LichKing).AddToList();
         public static readonly MonsterModifier ETERNAL_FLAME = new MonsterModifier(19, "Eternal Flame", MonsterModifierGroup.Extended) { sorcery = 1, health = 15 }.AddSpirits().Add(MonsterType.Balerock).Add(MonsterType.FoulBeast).AddToList();
         public static readonly MonsterModifier ETERNAL_LORD = new MonsterModifier(20, "Eternal Lord", MonsterModifierGroup.Extended) { armor = 2, health = 2, fear = 1, damage = 1 }.AddSpirits().Add(MonsterType.Balerock).AddToList();
         public static readonly MonsterModifier HATCHLING = new MonsterModifier(21, "Hatchling", MonsterModifierGroup.Extended) { health = -5 }.Add(MonsterType.GiantSpider).Add(MonsterType.FoulBeast).Add(MonsterType.AnonymousThing).AddToList();
@@ -223,7 +227,7 @@ namespace JiME
         public static readonly MonsterModifier ORC_CAPTAIN = new MonsterModifier(25, "Orc Captain", MonsterModifierGroup.Extended) { armor = 1, health = 2, fear = 1, immuneStun = true }.AddOrcs().AddToList();
         public static readonly MonsterModifier ORC_CHAMPION = new MonsterModifier(26, "Orc Champion", MonsterModifierGroup.Extended) { damage = 1, fear = 1 }.AddOrcs().AddToList();
         public static readonly MonsterModifier PACKS_VENGEANCE_1 = new MonsterModifier(27, "Pack's Vengeance", MonsterModifierGroup.Extended) { health = 2, immuneStun = true, immuneLethal = true }.AddVargs().AddToList();
-        public static readonly MonsterModifier PACKS_VENGEANCE_2 = new MonsterModifier(28, "Pack's Vengeance (Decoy)", MonsterModifierGroup.Extended) { health = 2, immuneStun = true, fakeLethal = true }.AddVargs().AddToList();
+        public static readonly MonsterModifier PACKS_VENGEANCE_2 = new MonsterModifier(28, "Pack's Vengeance", MonsterModifierGroup.Extended) { editorName= "Pack's Vengeance (Decoy)", health = 2, immuneStun = true, fakeLethal = true }.AddVargs().AddToList();
         public static readonly MonsterModifier POSSESSED = new MonsterModifier(29, "Possessed", MonsterModifierGroup.Extended) { fear = 1, immuneSmite = true }.AddHumanoids().AddAllBeasts().AddToList();
         public static readonly MonsterModifier SHADOWMAN_CAPTAIN = new MonsterModifier(30, "Shadowman Captain", MonsterModifierGroup.Extended) { health = 4, sorcery = 1, immuneStun = true }.Add(MonsterType.Shadowman).AddToList();
         public static readonly MonsterModifier SPECTRAL = new MonsterModifier(31, "Spectral", MonsterModifierGroup.Extended) { sorcery = 2, immuneLethal = true }.AddSpirits().AddToList();
@@ -235,13 +239,13 @@ namespace JiME
         public static readonly MonsterModifier WARBAND_LEADER = new MonsterModifier(37, "Warband Leader", MonsterModifierGroup.Extended) { armor = 2, health = 2, damage = 2 }.AddHumanoids().AddToList();
         public static readonly MonsterModifier WISP = new MonsterModifier(38, "Wisp", MonsterModifierGroup.Extended) { health = -1, sorcery = -1 }.AddSpirits().AddToList();
 
-        public static readonly MonsterModifier DWARVEN_BANE_1 = new MonsterModifier(39, "Dwarven Bane 1", MonsterModifierGroup.Named) { armor = -2, fear = -1 }.Add(MonsterType.Balerock).AddToList();
-        public static readonly MonsterModifier DWARVEN_BANE_2 = new MonsterModifier(40, "Dwarven Bane 2", MonsterModifierGroup.Named) { armor = 1, immuneLethal = true, immuneStun = true }.Add(MonsterType.Balerock).AddToList();
-        public static readonly MonsterModifier DWARVEN_BANE_3 = new MonsterModifier(41, "Dwarven Bane 3", MonsterModifierGroup.Named) { armor = 1, sorcery = 1, health = 4, fear = 1, immuneLethal = true, immuneSunder = true }.Add(MonsterType.Balerock).AddToList();
-        public static readonly MonsterModifier DWARVEN_BANE_4 = new MonsterModifier(42, "Dwarven Bane 4", MonsterModifierGroup.Named) { armor = 2, sorcery = 2, health = 5, fear = 2, damage = 2, immuneLethal = true, immuneSunder = true, immuneStun = true }.Add(MonsterType.Balerock).AddToList();
-        public static readonly MonsterModifier MASTER_OF_THE_PIT_1 = new MonsterModifier(43, "Master of the Pit 1", MonsterModifierGroup.Named) { sorcery = 1, immuneStun = true }.AddToList();
-        public static readonly MonsterModifier MASTER_OF_THE_PIT_2 = new MonsterModifier(44, "Master of the Pit 2", MonsterModifierGroup.Named) { sorcery = 2, immuneStun = true }.AddToList();
-        public static readonly MonsterModifier MASTER_OF_THE_PIT_3 = new MonsterModifier(45, "Master of the Pit 3", MonsterModifierGroup.Named) { sorcery = 3, immuneStun = true }.AddToList();
+        public static readonly MonsterModifier DWARVEN_BANE_1 = new MonsterModifier(39, "Dwarven Bane", MonsterModifierGroup.Named) { editorName="Dwarven Bane 1", armor = -2, fear = -1 }.Add(MonsterType.Balerock).AddToList();
+        public static readonly MonsterModifier DWARVEN_BANE_2 = new MonsterModifier(40, "Dwarven Bane", MonsterModifierGroup.Named) { editorName = "Dwarven Bane 2", armor = 1, immuneLethal = true, immuneStun = true }.Add(MonsterType.Balerock).AddToList();
+        public static readonly MonsterModifier DWARVEN_BANE_3 = new MonsterModifier(41, "Dwarven Bane", MonsterModifierGroup.Named) { editorName = "Dwarven Bane 3", armor = 1, sorcery = 1, health = 4, fear = 1, immuneLethal = true, immuneSunder = true }.Add(MonsterType.Balerock).AddToList();
+        public static readonly MonsterModifier DWARVEN_BANE_4 = new MonsterModifier(42, "Dwarven Bane", MonsterModifierGroup.Named) { editorName = "Dwarven Bane 4", armor = 2, sorcery = 2, health = 5, fear = 2, damage = 2, immuneLethal = true, immuneSunder = true, immuneStun = true }.Add(MonsterType.Balerock).AddToList();
+        public static readonly MonsterModifier MASTER_OF_THE_PIT_1 = new MonsterModifier(43, "Master of the Pit", MonsterModifierGroup.Named) {editorName="Master of the Pit 1", sorcery = 1, immuneStun = true }.AddToList();
+        public static readonly MonsterModifier MASTER_OF_THE_PIT_2 = new MonsterModifier(44, "Master of the Pit", MonsterModifierGroup.Named) { editorName = "Master of the Pit 2", sorcery = 2, immuneStun = true }.AddToList();
+        public static readonly MonsterModifier MASTER_OF_THE_PIT_3 = new MonsterModifier(45, "Master of the Pit", MonsterModifierGroup.Named) { editorName = "Master of the Pit 3", sorcery = 3, immuneStun = true }.AddToList();
         public static readonly MonsterModifier HERALD_OF_THE_BALEROCK = new MonsterModifier(46, "Herald of the Balerock", MonsterModifierGroup.Named) { health = 2, sorcery = 3, immuneSmite = true, immuneStun = true }.AddToList();
         public static readonly MonsterModifier URSULAS_VENGEANCE = new MonsterModifier(47, "Ursula's Vengeance", MonsterModifierGroup.Named) { health = 4, armor = 1, sorcery = 2, immuneLethal = true, immuneStun = true }.Add(MonsterType.Oliver).AddToList();
         public static readonly MonsterModifier LICH_KING = new MonsterModifier(48, "Lich-king", MonsterModifierGroup.Named) { immuneStun = true }.Add(MonsterType.LichKing).AddToList();
