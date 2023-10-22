@@ -39,6 +39,7 @@
 
 		<CollectionViewSource x:Key="cvsListSort" x:Name="cvsListSort" Source="{Binding ListData}">
 			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="isEmpty" Direction="Descending"/>
 				<scm:SortDescription PropertyName="dataName"/>
 			</CollectionViewSource.SortDescriptions>
 		</CollectionViewSource>
@@ -68,7 +69,7 @@
 					<Image Source="/JiME;component/Assets/duplicate.png" />
 				</Button>
 				<Button x:Name="settings" Margin="5,0,0,0" Click="Settings_Click" Background="Silver" IsEnabled="{Binding ElementName=dataListView, Path=SelectedValue, Converter={StaticResource sc}}">
-					<Image Source="/JiME;component/Assets/settings.png" />
+					<Image Source="/JiME;component/Assets/edit.png" />
 				</Button>
 			</StackPanel>
 		</StackPanel>

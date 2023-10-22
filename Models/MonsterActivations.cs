@@ -109,6 +109,7 @@ namespace JiME
 			GUID = Guid.NewGuid(); 
 			id = act.id;
 			dataName = act.name;
+			isEmpty = act.isEmpty;
 			collection = act.collection;
 			activations = new ObservableCollection<MonsterActivationItem>();
 			for(int i=0; i<act.activations.Length; i++)

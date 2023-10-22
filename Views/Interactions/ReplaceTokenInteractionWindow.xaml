@@ -21,21 +21,25 @@
 		</Style>
 		<CollectionViewSource x:Key="cvsTriggeredBy" Source="{Binding scenario.triggersObserver}">
 			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="isEmpty" Direction="Descending"/>
 				<scm:SortDescription PropertyName="dataName"/>
 			</CollectionViewSource.SortDescriptions>
 		</CollectionViewSource>
 		<CollectionViewSource x:Key="cvsTriggerAfter" Source="{Binding scenario.triggersObserver}">
 			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="isEmpty" Direction="Descending"/>
 				<scm:SortDescription PropertyName="dataName"/>
 			</CollectionViewSource.SortDescriptions>
 		</CollectionViewSource>
 		<CollectionViewSource x:Key="cvsEventToReplace" Source="{Binding eventToReplace}">
 			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="isEmpty" Direction="Descending"/>
 				<scm:SortDescription PropertyName="dataName"/>
 			</CollectionViewSource.SortDescriptions>
 		</CollectionViewSource>
 		<CollectionViewSource x:Key="cvsReplaceWithEvent" Source="{Binding replaceWith}">
 			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="isEmpty" Direction="Descending"/>
 				<scm:SortDescription PropertyName="dataName"/>
 			</CollectionViewSource.SortDescriptions>
 		</CollectionViewSource>

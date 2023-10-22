@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - Conditional Event Slider: Conditional event can require all triggers or a certain number of triggers in order to fire.
 
 ### Changed
+- ComboBoxes with lists (Events, Triggers, Objectives) are sorted with "None" at the top and then alphabetically
 
 ### Removed
 

@@ -2,6 +2,7 @@
 	{
 		"name": "None",
 		"id": -1,
+		"isEmpty": true,
 		"collection": 0,
 		"activations": [
 		]
