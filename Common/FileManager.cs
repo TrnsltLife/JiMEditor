@@ -44,6 +44,8 @@ namespace JiME
 		public List<IInteraction> interactions { get; set; }
 		public List<Trigger> triggers { get; set; }
 		public List<Objective> objectives { get; set; }
+        [JsonConverter(typeof(CustomMonsterModifierListConverter))]
+		public List<MonsterModifier> monsterModifiers { get; set; }
 		[JsonConverter(typeof(ActivationsListConverter))]
 		public List<MonsterActivations> activations { get; set; }
 		public List<Translation> translations { get; set; }
@@ -81,6 +83,7 @@ namespace JiME
 			//skip saving campaign triggers
 			triggers = source.triggersObserver.Where( x => !x.isCampaignTrigger ).ToList();//source.triggersObserver.ToList();
 			objectives = source.objectiveObserver.ToList();
+			monsterModifiers = source.monsterModifierObserver.ToList();
 			activations = source.activationsObserver.ToList();
 			translations = source.translationObserver.ToList();
 			resolutions = source.resolutionObserver.ToList();

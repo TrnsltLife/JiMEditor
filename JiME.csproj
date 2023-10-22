@@ -77,6 +77,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\CustomMonsterModifierListConverter.cs" />
     <Compile Include="Common\CollectionConverter.cs" />
     <Compile Include="Common\ActivationsListConverter.cs" />
     <Compile Include="Common\MonsterModifierListConverter.cs" />

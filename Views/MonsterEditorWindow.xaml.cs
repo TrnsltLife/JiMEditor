@@ -53,6 +53,9 @@ namespace JiME.Views
             {
 				//If a monster is already set, use it
 				monster = m;
+
+				//The default JSON converter for MonsterModifier can't look at the scenario's list of custom MonsterModifiers. So we need to hydrate it when we load the Monster in the MonsterEditorWindow.
+				monster.LoadCustomModifiers(s.monsterModifierObserver);
             }
 			else
             {
@@ -320,7 +323,8 @@ namespace JiME.Views
 
 			if (modifierCB.SelectedValue == null) { return; }
 			int modId = modifierCB.SelectedValue as int? ?? default(int);
-			MonsterModifier mod = MonsterModifier.FromID(modId);
+			//MonsterModifier mod = MonsterModifier.FromID(modId);
+			MonsterModifier mod = scenario.monsterModifierObserver.First(it => it.id == modId);
 			UpdateModifierDescription(mod);
 		}
 
@@ -333,7 +337,8 @@ namespace JiME.Views
 				return; 
 			}
 			int modId = modifierCB.SelectedValue as int? ?? default(int);
-			MonsterModifier mod = MonsterModifier.FromID(modId);
+			//MonsterModifier mod = MonsterModifier.FromID(modId);
+			MonsterModifier mod = scenario.monsterModifierObserver.First(it => it.id == modId);
 			if (!monster.modifierList.Contains(mod) && mod.id != 0)
 			{
 				monster.modifierList.Add(mod);
@@ -343,21 +348,23 @@ namespace JiME.Views
 
 		private void addModifierButton_Click(object sender, RoutedEventArgs e)
 		{
-			/*
 			MonsterModifierEditorWindow mmew = new MonsterModifierEditorWindow(scenario);
 			if (mmew.ShowDialog() == true)
 			{
-				if (!monster.modifierList.Contains(MonsterModifier.FromID(mmew.id)))
-					monster.modifierList.Add(MonsterModifier.FromID(mmew.id));
+				scenario.AddMonsterModifier(mmew.modifier);
+				if (!monster.modifierList.Contains(mmew.modifier))
+				{
+					monster.modifierList.Add(mmew.modifier);
+				}
 			}
-			*/
 		}
 
 		private void removeModifierButton_Click(object sender, RoutedEventArgs e)
 		{
 			if (modifierCB.SelectedValue == null) { return; }
 			int modId = ((Button)sender).DataContext as int? ?? default(int);
-			MonsterModifier mod = MonsterModifier.FromID(modId);
+			//MonsterModifier mod = MonsterModifier.FromID(modId);
+			MonsterModifier mod = scenario.monsterModifierObserver.First(it => it.id == modId);
 			if (monster.modifierList.Contains(mod))
 			{
 				monster.modifierList.Remove(mod);

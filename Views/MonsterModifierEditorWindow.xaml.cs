@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Linq;
+using System.Windows;
 
 namespace JiME.Views
 {
@@ -8,21 +10,23 @@ namespace JiME.Views
 	public partial class MonsterModifierEditorWindow : Window
 	{
 		public Scenario scenario { get; set; }
-		public Objective objective { get; set; }
+		public MonsterModifier modifier { get; set; }
 		public string shortName { get; set; }
 
-		public MonsterModifierEditorWindow( Scenario s, Objective obj, bool isNew = true )
+		public MonsterModifierEditorWindow( Scenario s, MonsterModifier mod = null, bool isNew = true )
 		{
 			InitializeComponent();
 			DataContext = this;
 
 			scenario = s;
-			objective = obj;
 
-			shortName = obj.dataName;
+			//Get next id starting at 1000 to create the new item
+			int maxId = scenario.monsterModifierObserver.Max(a => a.id);
+			int newId = Math.Max(maxId + 1, MonsterModifier.START_OF_CUSTOM_MODIFIERS); //Get the next id over 1000
 
-			//triggerCB.ItemsSource = scenario.triggersObserver;
-			//triggerCB.SelectedItem = (Trigger)scenario.GetData<Trigger>( obj.triggerName );
+			modifier = mod ?? new MonsterModifier(newId);
+
+			shortName = modifier.name;
 
 			if ( !isNew )
 				cancelButton.Visibility = Visibility.Collapsed;
@@ -30,32 +34,27 @@ namespace JiME.Views
 
 		private void OkButton_Click( object sender, RoutedEventArgs e )
 		{
-			objective.dataName = shortName.Trim();
+			modifier.name = shortName.Trim();
 
 			//check empty string
-			if ( string.IsNullOrEmpty( objective.dataName ) || string.IsNullOrEmpty( objective.objectiveReminder ) )
+			if ( string.IsNullOrEmpty(modifier.name) )
 			{
-				MessageBox.Show( "The Objective Name and Objective Reminder cannot be empty.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
+				MessageBox.Show( "The Monster Bonus Name.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
 				return;
 			}
 
-			//check if name duplicated
-			//string ret = scenario.IsDuplicate( objective );
-			if ( scenario.IsDuplicate( objective ) )//ret != null )
+			if (string.IsNullOrEmpty(modifier.dataName))
+            {
+				modifier.dataName = modifier.name;
+            }
+
+			//check if dataName is duplicated
+			if ( scenario.IsDuplicate( modifier ) )//ret != null )
 			{
-				MessageBox.Show( $"An Objective with name [{objective.dataName}] already exists.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
+				MessageBox.Show( $"A Monster Bonus with In-Editor Name [{modifier.dataName}] already exists.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
 				return;
 			}
 
-			//check if trigger isn't set
-			//if ( ( (Trigger)triggerCB.SelectedItem ).dataName == "None"
-			//	|| ( (Trigger)triggerCB.SelectedItem ).dataName.Contains( "Random" ) )
-			//{
-			//	MessageBox.Show( "You must select a Trigger.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
-			//	return;
-			//}
-
-			//objective.triggerName = ( (Trigger)triggerCB.SelectedItem ).dataName;
 			DialogResult = true;
 		}
 

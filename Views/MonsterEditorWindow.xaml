@@ -271,13 +271,13 @@
 				<StackPanel Grid.Column="1" VerticalAlignment="Center">
 					<StackPanel Orientation="Horizontal">
 						<TextBlock Style="{StaticResource Heading}" Text="Elite Bonuses (7 max):"/>
-						<ComboBox x:Name="modifierCB" Margin="20,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource cvsModifier}}" SelectedValuePath="id" DisplayMemberPath="editorName" MinWidth="200" SelectionChanged="modifierCB_SelectionChanged"/>
+						<ComboBox x:Name="modifierCB" Margin="20,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource cvsModifier}}" SelectedValuePath="id" DisplayMemberPath="dataName" MinWidth="200" SelectionChanged="modifierCB_SelectionChanged"/>
 						<Button x:Name="addSelectedModifierButton" Click="addSelectedModifierButton_Click" Content="Add Selected Bonus" Background="DodgerBlue" Foreground="White" Margin="10,0,0,0" IsEnabled="False"/>
-						<!--
+						
 						<Button x:Name="addModifierButton" Background="MediumSeaGreen" Margin="10,0,0,0" Height="32" Width="32" Click="addModifierButton_Click">
 							<Image Source="/JiME;component/Assets/add2.png"/>
 						</Button>
-						-->
+						
 					</StackPanel>
 					<!--
 					<TextBlock Text="Checking any of these makes the enemy Elite." Style="{StaticResource SubText}" Margin="0,0,0,5"/>
@@ -302,7 +302,7 @@
 										DataContext="{Binding}"
 									>
 									<StackPanel Orientation="Horizontal">
-										<TextBlock Text="{Binding editorName}" Style="{StaticResource SubText}" Foreground="White" VerticalAlignment="Center"/>
+										<TextBlock Text="{Binding dataName}" Style="{StaticResource SubText}" Foreground="White" VerticalAlignment="Center"/>
 										<Button x:Name="removeModifierButton" Click="removeModifierButton_Click" Background="{StaticResource bgCancelDelete}" Foreground="White" Margin="10,0,0,0" Height="32" Width="32" DataContext="{Binding id}">
 											<Image Source="/JiME;component/Assets/cancel.png"/>
 										</Button>

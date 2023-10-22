@@ -12,20 +12,16 @@ namespace JiME
 		public override bool CanRead => true;
 		public override bool CanConvert( Type objectType )
 		{
-			Debug.Log("MonsterModifierListConverter CanConvert " + objectType);
-			//return objectType == typeof( MonsterModifier ) || objectType == typeof( int ) || objectType == typeof( string );
-			return true;
+			return objectType == typeof( MonsterModifier );
 		}
 
 		public override void WriteJson( JsonWriter writer, object value, JsonSerializer serializer )
 		{
-			Debug.Log("MonsterModifierListConverter WriteJson");
 			ObservableCollection<MonsterModifier> modifierList = (ObservableCollection<MonsterModifier>)value;
 			List<int> idList = new List<int>();
 			foreach (MonsterModifier modifier in modifierList)
             {
 				idList.Add(modifier.id);
-				Debug.Log("MonsterModifierListConverter: " + modifier.id + " " + modifier.name);
 			}
 			JToken t = JToken.FromObject(idList);
 			t.WriteTo(writer);
@@ -33,8 +29,6 @@ namespace JiME
 
 		public override object ReadJson( JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer )
 		{
-			Debug.Log("MonsterModifierListConverter ReadJson");
-
 			var jsonObject = JArray.Load( reader );
 			MonsterModifier modifier = null;
 			List<int> idList = new List<int>();
