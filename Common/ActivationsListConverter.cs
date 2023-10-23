@@ -29,7 +29,6 @@ namespace JiME
 			MonsterActivations activations = null;
 
 			List<MonsterActivations> convertedList = new List<MonsterActivations>();
-			List<MonsterActivations> activationsList = new List<MonsterActivations>();
 
 			foreach (var item in jsonObject)
 			{

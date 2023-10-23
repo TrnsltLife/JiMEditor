@@ -719,7 +719,10 @@ namespace JiME
 
 			foreach(var modifier in monsterModifierObserver)
             {
-				defaultTranslations.AddRange(modifier.CollectTranslationItems());
+				if (modifier.id >= MonsterModifier.START_OF_CUSTOM_MODIFIERS)
+				{
+					defaultTranslations.AddRange(modifier.CollectTranslationItems());
+				}
             }
 
 			foreach(var chapter in chapterObserver)
@@ -831,9 +834,15 @@ namespace JiME
 			else if (item is Objective)
 				objectiveObserver.Remove(item as Objective);
 			else if (item is MonsterModifier)
+			{
+				RemoveMonsterModifiersInUse(item as MonsterModifier);
 				monsterModifierObserver.Remove(item as MonsterModifier);
+			}
 			else if (item is MonsterActivations)
+			{
+				RemoveActivationsInUse((item as MonsterActivations).id);
 				activationsObserver.Remove(item as MonsterActivations);
+			}
 			else if (item is TextBookData)
 				resolutionObserver.Remove(item as TextBookData);
 			else if (item is Threat)
@@ -920,6 +929,31 @@ namespace JiME
 					return used;
 			}
 			return null;
+		}
+
+		public void RemoveActivationsInUse(int activationId)
+        {
+			foreach(ThreatInteraction threat in interactionObserver.Where(it => it.interactionType == InteractionType.Threat))
+            {
+				foreach(Monster monster in threat.monsterCollection)
+                {
+					if(monster.activationsId == activationId)
+                    {
+						monster.activationsId = monster.id; //reset to using the default activation for this mosnter type. We could also reset to None, which is -1
+                    }
+                }
+            }
+        }
+
+		public void RemoveMonsterModifiersInUse(MonsterModifier mod)
+		{
+			foreach (ThreatInteraction threat in interactionObserver.Where(it => it.interactionType == InteractionType.Threat))
+			{
+				foreach (Monster monster in threat.monsterCollection)
+				{
+					monster.modifierList.Remove(mod);
+				}
+			}
 		}
 
 		/// <summary>

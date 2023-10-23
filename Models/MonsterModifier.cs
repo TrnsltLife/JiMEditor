@@ -8,14 +8,14 @@ namespace JiME
 {
     public class MonsterModifier: Translatable, ICommonData
     {
-        override public string TranslationKeyName() { return name; }
-        override public string TranslationKeyPrefix() { return String.Format("monsterModifier.{0}.", TranslationKeyName()); }
+        override public string TranslationKeyName() { return dataName; }
+        override public string TranslationKeyPrefix() { return String.Format("enemyBonus.{0}.", TranslationKeyName()); }
 
         override protected void DefineTranslationAccessors()
         {
             List<TranslationAccessor> list = new List<TranslationAccessor>()
             {
-                new TranslationAccessor("objective.{0}.name", () => this.name)
+                new TranslationAccessor("enemyBonus.{0}.name", () => name)
             };
             translationAccessors = list;
         }
@@ -63,7 +63,7 @@ namespace JiME
             this.name = "New Enemy Bonus";
         }
 
-        public MonsterModifier(int id, string name, MonsterModifierGroup group, int cost, int additionalCost, int health, int armor, int sorcery, int damage, int fear,
+        public MonsterModifier(int id, string name, MonsterModifierGroup group, int cost, int additionalCost, bool isEmpty, int health, int armor, int sorcery, int damage, int fear,
             bool immuneCleave, bool immuneLethal, bool immunePierce, bool immuneSmite, bool immuneStun, bool immuneSunder,
             bool fakeCleave, bool fakeLethal, bool fakePierce, bool fakeSmite, bool fakeStun, bool fakeSunder)
         {
@@ -75,6 +75,7 @@ namespace JiME
             this.group = group;
             this.cost = cost;
             this.additionalCost = additionalCost;
+            this.isEmpty = isEmpty;
             this.health = health;
             this.armor = armor;
             this.sorcery = sorcery;
@@ -236,15 +237,6 @@ namespace JiME
 
         public void CopyData(MonsterModifier from)
         {
-            this.GUID = from.GUID;
-            this.isEmpty = from.isEmpty;
-
-            this.id = from.id;
-            this.name = from.name;
-            this.dataName = from.dataName;
-            this.group = from.group;
-            this.cost = from.cost;
-            this.additionalCost = from.additionalCost;
             this.health = from.health;
             this.armor = from.armor;
             this.sorcery = from.sorcery;
@@ -258,7 +250,14 @@ namespace JiME
             this.fakeSunder = from.fakeSunder;
         }
 
-        public static readonly MonsterModifier NONE = new MonsterModifier(0, "None", MonsterModifierGroup.None, 0, 0) { }.AddToList();
+        public MonsterModifier Clone(int newId)
+        {
+            MonsterModifier newMonsterModifier = new MonsterModifier(newId, "Copy of " + name, MonsterModifierGroup.Custom) {dataName = "Copy of " + this.dataName};
+            newMonsterModifier.CopyData(this);
+            return newMonsterModifier;
+        }
+
+        public static readonly MonsterModifier NONE = new MonsterModifier(0, "None", MonsterModifierGroup.None, 0, 0) { isEmpty = true }.AddToList();
         public static readonly MonsterModifier ALERT = new MonsterModifier(1, "Alert", MonsterModifierGroup.Basic, 10, 5) { immuneStun = true }.AddToList();
         public static readonly MonsterModifier ARMORED = new MonsterModifier(2, "Armored", MonsterModifierGroup.Basic, 4, 3) { armor = 1 }.AddToList();
         public static readonly MonsterModifier BLOODTHIRSTY = new MonsterModifier(3, "Bloodthirsty", MonsterModifierGroup.Basic, 3, 1) { damage = 1 }.AddToList();

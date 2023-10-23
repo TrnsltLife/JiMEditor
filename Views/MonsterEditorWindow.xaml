@@ -14,9 +14,10 @@
 			<Setter Property="Margin" Value="0,5"/>
 			<Setter Property="VerticalAlignment" Value="Center"/>
 		</Style>
-		<CollectionViewSource x:Key="cvsModifier" Source="{Binding monsterModifiers}">
+		<CollectionViewSource x:Key="cvsModifier" Source="{Binding scenario.monsterModifierObserver}">
 			<CollectionViewSource.SortDescriptions>
-				<scm:SortDescription PropertyName="id"/>
+				<scm:SortDescription PropertyName="isEmpty" Direction="Descending"/>
+				<scm:SortDescription PropertyName="dataName"/>
 			</CollectionViewSource.SortDescriptions>
 		</CollectionViewSource>
 	</Window.Resources>

@@ -29,7 +29,6 @@ namespace JiME
 			MonsterModifier modifier = null;
 
 			List<MonsterModifier> convertedList = new List<MonsterModifier>();
-			List<MonsterModifier> modifierList = new List<MonsterModifier>();
 
 			foreach (var item in jsonObject)
 			{

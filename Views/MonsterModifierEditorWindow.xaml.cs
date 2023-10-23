@@ -39,7 +39,7 @@ namespace JiME.Views
 			//check empty string
 			if ( string.IsNullOrEmpty(modifier.name) )
 			{
-				MessageBox.Show( "The Monster Bonus Name.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
+				MessageBox.Show( "The Monster Bonus Name cannot be empty.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
 				return;
 			}
 

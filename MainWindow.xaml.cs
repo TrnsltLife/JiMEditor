@@ -61,6 +61,11 @@ namespace JiME
 			activationsUC.onSettingsEvent += OnSettingsActivations;
 			activationsUC.onDuplicateEvent += OnDuplicateActivations;
 
+			monsterModifiersUC.onAddEvent += OnAddMonsterModifier;
+			monsterModifiersUC.onRemoveEvent += OnRemoveMonsterModifier;
+			monsterModifiersUC.onSettingsEvent += OnSettingsMonsterModifier;
+			monsterModifiersUC.onDuplicateEvent += OnDuplicateMonsterModifier;
+
 			translationsUC.onAddEvent += OnAddTranslation;
 			translationsUC.onRemoveEvent += OnRemoveTranslation;
 			translationsUC.onSettingsEvent += OnSettingsTranslation;
@@ -73,13 +78,8 @@ namespace JiME
 			((CollectionViewSource)triggersUC.Resources["cvsListSort"]).Source = scenario.triggersObserver;
 			((CollectionViewSource)objectivesUC.Resources["cvsListSort"]).Source = scenario.objectiveObserver;
 			((CollectionViewSource)activationsUC.Resources["cvsListSort"]).Source = scenario.activationsObserver;
+			((CollectionViewSource)monsterModifiersUC.Resources["cvsListSort"]).Source = scenario.monsterModifierObserver;
 			((CollectionViewSource)translationsUC.Resources["cvsListSort"]).Source = scenario.translationObserver;
-
-			//interactionsUC.dataListView.ItemsSource = scenario.interactionObserver;
-			//triggersUC.dataListView.ItemsSource = scenario.triggersObserver;
-			//objectivesUC.dataListView.ItemsSource = scenario.objectiveObserver;
-			//activationsUC.dataListView.ItemsSource = scenario.activationsObserver;
-			//translationsUC.dataListView.ItemsSource = scenario.translationObserver;
 
 			// Initiate visualization defer timer so it won't be done multiple times
 			WpfUtils.MainThreadDispatcher = this.Dispatcher;
@@ -514,6 +514,61 @@ namespace JiME
 			}
 		}
 
+		void OnAddMonsterModifier(object sender, EventArgs e)
+		{
+			AddMonsterModifier();
+		}
+
+		void OnRemoveMonsterModifier(object sender, EventArgs e)
+		{
+			int idx = monsterModifiersUC.dataListView.SelectedIndex;
+			MonsterModifier mod = (MonsterModifier)monsterModifiersUC.dataListView.Items[idx];
+			if (idx != -1 && mod.id >= MonsterModifier.START_OF_CUSTOM_MODIFIERS) //Don't allow removing the built-in enemy bonuses. Only allow removing custom enemy bonuses
+			{
+				var ret = MessageBox.Show("Are you sure you want to delete this Enemy Bonus?", "Delete Enemy Bonus", MessageBoxButton.YesNo, MessageBoxImage.Question);
+				if (ret == MessageBoxResult.Yes)
+				{
+					scenario.RemoveData(monsterModifiersUC.dataListView.Items[idx]);
+					monsterModifiersUC.dataListView.SelectedIndex = Math.Max(idx - 1, 0);
+				}
+			}
+			else
+			{
+				MessageBox.Show("You can't delete the default Enemy Bonuses, but you can copy them and modify the copy.", "Cannot Delete Enemy Bonus", MessageBoxButton.OK, MessageBoxImage.Information);
+			}
+		}
+
+		void OnSettingsMonsterModifier(object sender, EventArgs e)
+		{
+			int idx = monsterModifiersUC.dataListView.SelectedIndex;
+			MonsterModifier mod = (MonsterModifier)monsterModifiersUC.dataListView.Items[idx];
+			if (idx != -1 && mod.id >= MonsterModifier.START_OF_CUSTOM_MODIFIERS) //Don't allow modifying the built-in enemy bonuses. Only allow modifying custom enemy bonuses.
+			{
+				MonsterModifierEditorWindow ow = new MonsterModifierEditorWindow(scenario, ((MonsterModifier)monsterModifiersUC.dataListView.SelectedItem), false);
+				ow.ShowDialog();
+			}
+			else
+			{
+				MessageBox.Show("You can't modify the default Enemy Bonuses, but you can copy them and modify the copy.", "Cannot Modify Enemy Bonus", MessageBoxButton.OK, MessageBoxImage.Information);
+			}
+		}
+
+		void OnDuplicateMonsterModifier(object sender, EventArgs e)
+		{
+			//Get next id starting at 1000 to create the new item
+			int maxId = scenario.monsterModifierObserver.Max(a => a.id);
+			int newId = Math.Max(maxId + 1, MonsterModifier.START_OF_CUSTOM_MODIFIERS); //Get the next id over 1000
+			//Get the selected item and clone it
+			int idx = monsterModifiersUC.dataListView.SelectedIndex;
+			MonsterModifier mod = ((MonsterModifier)monsterModifiersUC.dataListView.Items[idx]).Clone(newId);
+
+			MonsterModifierEditorWindow mmew = new MonsterModifierEditorWindow(scenario, mod, true);
+			if (mmew.ShowDialog() == true)
+			{
+				scenario.monsterModifierObserver.Add(mod);
+			}
+		}
+
 		void OnAddTranslation(object sender, EventArgs e)
 		{
 			AddTranslation();
@@ -638,7 +693,19 @@ namespace JiME
 				scenario.AddActivations(aew.activations);
 			}
 		}
-		
+
+		void AddMonsterModifier()
+		{
+			//Get next id starting at 1000 to create the new item
+			int maxId = scenario.monsterModifierObserver.Max(a => a.id);
+			int newId = Math.Max(maxId + 1, MonsterModifier.START_OF_CUSTOM_MODIFIERS); //Get the next id over 1000
+			MonsterModifierEditorWindow mmew = new MonsterModifierEditorWindow(scenario, new MonsterModifier(newId), false);
+			if (mmew.ShowDialog() == true)
+			{
+				scenario.AddMonsterModifier(mmew.modifier);
+			}
+		}
+
 		void AddTranslation()
         {
 			Dictionary<string, TranslationItem> defaultTranslation = scenario.CollectTranslationItemsAsDictionary();
