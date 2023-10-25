@@ -35,6 +35,7 @@ namespace JiME
 		string[] _moveSpecial, _tag, _special;
 
 		ObservableCollection<MonsterModifier> _modifierList = new ObservableCollection<MonsterModifier>();
+		int _randomizedModifiersCount;
 
 		public Guid GUID { get; set; }
 
@@ -475,6 +476,15 @@ namespace JiME
 			}
         }
 
+		public int randomizedModifiersCount
+		{
+			get { return _randomizedModifiersCount; }
+			set
+			{
+				_randomizedModifiersCount = value;
+				NotifyPropertyChanged("randomizedModifiersCount");
+			}
+		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
