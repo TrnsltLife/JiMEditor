@@ -133,7 +133,7 @@ namespace JiME
 
         public MonsterModifier AddTrolls()
         {
-            applicableTo.AddRange(Monster.Trolls());
+            applicableTo.AddRange(Monster.Humanoid());
             return this;
         }
 
@@ -282,7 +282,7 @@ namespace JiME
         public static readonly MonsterModifier HATCHLING = new MonsterModifier(21, "Hatchling", MonsterModifierGroup.Extended) { health = -5 }.Add(MonsterType.GiantSpider).Add(MonsterType.FoulBeast).Add(MonsterType.AnonymousThing).AddToList();
         public static readonly MonsterModifier KINGS_ARMOR = new MonsterModifier(22, "King's Armor", MonsterModifierGroup.Extended) { armor = 2, health = 5 }.AddHumanoids().AddSpirits().AddToList();
         public static readonly MonsterModifier LAST_GASP = new MonsterModifier(23, "Last Gasp", MonsterModifierGroup.Extended) { armor = -2, damage = 1, fear = 1 }.AddHumanoids().AddTrolls().AddAllBeasts().AddToList();
-        public static readonly MonsterModifier NUMENOREAN_BLOOD = new MonsterModifier(24, "Númenórean Blood", MonsterModifierGroup.Extended) { health = 4 }.AddHumans().AddToList();
+        public static readonly MonsterModifier NOMENMOREAN_BLOOD = new MonsterModifier(24, "NoMenMorean Blood", MonsterModifierGroup.Extended) { health = 4 }.AddHumans().AddToList();
         public static readonly MonsterModifier ORC_CAPTAIN = new MonsterModifier(25, "Orc Captain", MonsterModifierGroup.Extended) { armor = 1, health = 2, fear = 1, immuneStun = true }.AddOrcs().AddToList();
         public static readonly MonsterModifier ORC_CHAMPION = new MonsterModifier(26, "Orc Champion", MonsterModifierGroup.Extended) { damage = 1, fear = 1 }.AddOrcs().AddToList();
         public static readonly MonsterModifier PACKS_VENGEANCE_1 = new MonsterModifier(27, "Pack's Vengeance", MonsterModifierGroup.Extended) { health = 2, immuneStun = true, immuneLethal = true }.AddVargs().AddToList();
@@ -311,6 +311,7 @@ namespace JiME
         public static readonly MonsterModifier CHIEF_OF_THE_NINE = new MonsterModifier(49, "Chief of the Nine", MonsterModifierGroup.Named) { armor = 1, immuneStun = true }.Add(MonsterType.LichKing).AddToList();
         public static readonly MonsterModifier LORD_OF_CORRUPTION = new MonsterModifier(50, "Lord of Corruption", MonsterModifierGroup.Named) { health = 5, damage = 1, fear = 1, immuneLethal = true, immuneSunder = true, immuneStun = true }.Add(MonsterType.LichKing).AddToList();
 
+        public static readonly MonsterModifier DUELIST = new MonsterModifier(51, "Duelist", MonsterModifierGroup.Basic) { immuneLethal = true, immunePierce = true }.AddHumanoids().AddToList().AddSpirits();
 
         /*
         Golden Mask	+1 armor, +2 health, +2 sorcery, +1 fear
@@ -352,7 +353,7 @@ namespace JiME
                 yield return HATCHLING;
                 yield return KINGS_ARMOR;
                 yield return LAST_GASP;
-                yield return NUMENOREAN_BLOOD;
+                yield return NOMENMOREAN_BLOOD;
                 yield return ORC_CAPTAIN;
                 yield return ORC_CHAMPION;
                 yield return PACKS_VENGEANCE_1;
@@ -367,6 +368,8 @@ namespace JiME
                 yield return UNDYING_HATE;
                 yield return WARBAND_LEADER;
                 yield return WISP;
+
+                yield return DUELIST;
             }
         }
 
@@ -419,7 +422,7 @@ namespace JiME
                 yield return HATCHLING;
                 yield return KINGS_ARMOR;
                 yield return LAST_GASP;
-                yield return NUMENOREAN_BLOOD;
+                yield return NOMENMOREAN_BLOOD;
                 yield return ORC_CAPTAIN;
                 yield return ORC_CHAMPION;
                 yield return PACKS_VENGEANCE_1;
@@ -447,6 +450,8 @@ namespace JiME
                 yield return LICH_KING;
                 yield return CHIEF_OF_THE_NINE;
                 yield return LORD_OF_CORRUPTION;
+
+                yield return DUELIST;
             }
         }
     }
