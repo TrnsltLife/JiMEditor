@@ -6,11 +6,13 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Conditional Event Slider: Conditional event can require all triggers or a certain number of triggers in order to fire.
+- Enemy Bonuses on scripted monsters (up to 7). Slider to select using a random number, or all of them. Add, modify, duplicate, delete, and translate.
 
 ### Changed
 - ComboBoxes with lists (Events, Triggers, Objectives) are sorted with "None" at the top and then alphabetically
 
 ### Removed
+- Checkboxes for Armored, Bloodthirsty, and Large. These can be added from the enemy bonuses list in scripted monsters.
 
 ## [v0.28]
 
