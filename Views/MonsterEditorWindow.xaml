@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:local="clr-namespace:JiME"
         mc:Ignorable="d"
         Title="Enemy Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" Width="750" Closing="Window_Closing">
@@ -13,6 +14,12 @@
 			<Setter Property="Margin" Value="0,5"/>
 			<Setter Property="VerticalAlignment" Value="Center"/>
 		</Style>
+		<CollectionViewSource x:Key="cvsModifier" Source="{Binding scenario.monsterModifierObserver}">
+			<CollectionViewSource.SortDescriptions>
+				<scm:SortDescription PropertyName="isEmpty" Direction="Descending"/>
+				<scm:SortDescription PropertyName="dataName"/>
+			</CollectionViewSource.SortDescriptions>
+		</CollectionViewSource>
 	</Window.Resources>
 
 	<Grid>
@@ -263,13 +270,67 @@
 					-->
 
 				<StackPanel Grid.Column="1" VerticalAlignment="Center">
-					<TextBlock Style="{StaticResource Heading}" Text="Elite Bonuses:"/>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Style="{StaticResource Heading}" Text="Elite Bonuses (7 max):"/>
+						<ComboBox x:Name="modifierCB" Margin="20,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource cvsModifier}}" SelectedValuePath="id" DisplayMemberPath="dataName" MinWidth="200" SelectionChanged="modifierCB_SelectionChanged"/>
+						<Button x:Name="addSelectedModifierButton" Click="addSelectedModifierButton_Click" Content="Add Selected Bonus" Background="DodgerBlue" Foreground="White" Margin="10,0,0,0" IsEnabled="False"/>
+						
+						<Button x:Name="addModifierButton" Background="MediumSeaGreen" Margin="10,0,0,0" Height="32" Width="32" Click="addModifierButton_Click">
+							<Image Source="/JiME;component/Assets/add2.png"/>
+						</Button>
+						
+					</StackPanel>
+					<!--
 					<TextBlock Text="Checking any of these makes the enemy Elite." Style="{StaticResource SubText}" Margin="0,0,0,5"/>
 					<StackPanel Orientation="Horizontal">
 						<CheckBox Content="Large" Foreground="White" IsChecked="{Binding monster.isLarge}" VerticalAlignment="Center"/>
 						<CheckBox Content="Bloodthirsty" Margin="15,0" Foreground="White" IsChecked="{Binding monster.isBloodThirsty}" VerticalAlignment="Center"/>
 						<CheckBox Content="Armored" Margin="5,0" Foreground="White" IsChecked="{Binding monster.isArmored}" VerticalAlignment="Center"/>
 					</StackPanel>
+					-->
+					<ItemsControl Padding="5" ItemsSource="{Binding monster.modifierList}" MinHeight="30">
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<WrapPanel IsItemsHost="True" />
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Border Style="{StaticResource callout}" Background="{StaticResource bgButtonColor}" Margin="0,0,5,5"
+										MouseEnter="modifierItem_MouseEnter"
+										MouseLeave="modifierItem_MouseLeave"
+										DataContext="{Binding}"
+									>
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Text="{Binding dataName}" Style="{StaticResource SubText}" Foreground="White" VerticalAlignment="Center"/>
+										<Button x:Name="removeModifierButton" Click="removeModifierButton_Click" Background="{StaticResource bgCancelDelete}" Foreground="White" Margin="10,0,0,0" Height="32" Width="32" DataContext="{Binding id}">
+											<Image Source="/JiME;component/Assets/cancel.png"/>
+										</Button>
+									</StackPanel>
+								</Border>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+
+					<TextBlock x:Name="modifierDescription" TextWrapping="Wrap" Style="{StaticResource Heading}" Text=""/>
+
+					
+					<StackPanel Orientation="Horizontal" Width="720">
+						<TextBlock Text="Randomize number of bonuses or use them all:" Style="{StaticResource Heading}"/>
+						<TextBlock Text="{Binding monster.randomizedModifiersCount}" Style="{StaticResource Heading}" Margin="10,0,0,0"/>
+						<WrapPanel Orientation="Horizontal" HorizontalAlignment="Right">
+							<TextBlock Text="One" Margin="30,0,0,0" Style="{StaticResource Heading}"/>
+							<Slider x:Name="randomizedModifiersSlider" HorizontalAlignment="Left" Margin="10,7,10,0" VerticalAlignment="Top" Width="280"
+												Minimum="1" Maximum="{Binding monster.modifierList.Count}"
+												SmallChange="1" LargeChange="1"
+												TickPlacement="Both" TickFrequency="1"
+												IsSnapToTickEnabled="True"
+												Value="{Binding monster.randomizedModifiersCount}"/>
+							<TextBlock Text="All" Style="{StaticResource Heading}"/>
+						</WrapPanel>
+					</StackPanel>
+
 				</StackPanel>
 				<!--
 				</Grid>
@@ -277,21 +338,41 @@
 			</Border>
 
 			<!--difficulty-->
-			<Border Style="{StaticResource callout}" Margin="0,5,0,0">
-				<StackPanel>
-					<TextBlock Text="Custom Difficulty Setting:" Style="{StaticResource Heading}"/>
-					<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-						<TextBlock Text="This Group appears in the following Difficulties:" Style="{StaticResource SubText}"/>
-						<CheckBox Content="Easy" Foreground="Green" Margin="10,0,0,0" IsChecked="{Binding monster.isEasy}" FontWeight="Bold"/>
-						<CheckBox Content="Normal" Foreground="Yellow" Margin="10,0,0,0" IsChecked="{Binding monster.isNormal}" FontWeight="Bold"/>
-						<CheckBox Content="Hard" Foreground="Red" Margin="10,0,0,0" IsChecked="{Binding monster.isHard}" FontWeight="Bold"/>
-					</StackPanel>
-					<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Text="This setting allows the design of flexible encounters with the creation of Groups that only appear in specific Difficulty modes. No matter which Difficulties you select, always design the Group for Normal Difficulty with 2 Players. The Companion App will modify the Group automatically." Margin="0,5,0,0"/>
-				</StackPanel>
-			</Border>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="auto"/>
+					</Grid.ColumnDefinitions>
+
+					<Border  Grid.Column="0" Style="{StaticResource callout}" Margin="0,5,5,0">
+						<StackPanel Margin="0,0,0,0">
+							<TextBlock Text="Custom Difficulty Setting:" Style="{StaticResource Heading}"/>
+							<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+								<TextBlock Text="This Group appears in the following Difficulties:" Style="{StaticResource SubText}"/>
+								<CheckBox Content="Easy" Foreground="Green" Margin="10,0,0,0" IsChecked="{Binding monster.isEasy}" FontWeight="Bold"/>
+								<CheckBox Content="Normal" Foreground="Yellow" Margin="10,0,0,0" IsChecked="{Binding monster.isNormal}" FontWeight="Bold"/>
+								<CheckBox Content="Hard" Foreground="Red" Margin="10,0,0,0" IsChecked="{Binding monster.isHard}" FontWeight="Bold"/>
+							</StackPanel>
+							<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Text="This setting allows the design of flexible encounters with the creation of Groups that only appear in specific Difficulty modes. No matter which Difficulties you select, always design the Group for Normal Difficulty with 2 Players. The Companion App will modify the Group automatically." Margin="0,5,0,0"/>
+						</StackPanel>
+					</Border>
+
+					<Border  Grid.Column="1" Style="{StaticResource callout}" Margin="0,5,0,0">
+						<WrapPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" >
+							<Button x:Name="okButton" Margin="10" Background="MediumSeaGreen" Click="OkButton_Click" IsDefault="True">
+								<Image Source="/JiME;component/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
+							</Button>
+
+							<Button x:Name="cancelButton" Margin="0,10,10,10" Background="{StaticResource bgCancelDelete}" Click="CancelButton_Click" IsCancel="True">
+								<Image Source="/JiME;component/Assets/cancel.png" Stretch="Uniform" Width="32" Margin="5"/>
+							</Button>
+						</WrapPanel>
+					</Border>
+				</Grid>
 		</StackPanel>
 
 		<!--footer-->
+		<!--
 		<Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Silver" HorizontalAlignment="Stretch" Background="#FF46464A">
 			<WrapPanel HorizontalAlignment="Right" >
 
@@ -304,5 +385,6 @@
 				</Button>
 			</WrapPanel>
 		</Border>
+		-->
 	</Grid>
 </Window>

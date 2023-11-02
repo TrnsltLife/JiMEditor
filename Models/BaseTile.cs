@@ -8,7 +8,6 @@ using System.Windows.Shapes;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
-using JiME.Models;
 using System.Collections.Generic;
 
 namespace JiME

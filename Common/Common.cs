@@ -10,7 +10,6 @@ using Newtonsoft.Json.Linq;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.ComponentModel;
-using JiME.Models;
 using Newtonsoft.Json;
 
 namespace JiME
@@ -29,6 +28,7 @@ namespace JiME
 							  FoulBeast, VargRider, SiegeEngine, WarElephant, Soldier, HighOrcWarrior, //21-26
 							  LordJavelin, LichKing, Endris //27-29
 	}
+	public enum MonsterModifierGroup { None, Basic, Extended, Named, Custom }
 	public enum TileType { Hex, Battle, Square }
 	public enum ThreatAttributes { }//armor, elite, etc
 	public enum ProjectType { Standalone, Campaign }

@@ -1,6 +1,7 @@
-﻿using JiME.Models;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 
@@ -32,6 +33,9 @@ namespace JiME
 		bool _isRanged, _isFearsome, _isLarge, _isBloodThirsty, _isArmored, _isElite, _defaultStats, _isEasy, _isNormal, _isHard;
 		int[] _cost;
 		string[] _moveSpecial, _tag, _special;
+
+		ObservableCollection<MonsterModifier> _modifierList = new ObservableCollection<MonsterModifier>();
+		int _randomizedModifiersCount;
 
 		public Guid GUID { get; set; }
 
@@ -110,16 +114,19 @@ namespace JiME
 			get
 			{
 				string b = string.Empty;
+				/*
 				if ( isLarge )
 					b += "Large, ";
 				if ( isBloodThirsty )
 					b += "BloodThirsty, ";
 				if ( isArmored )
 					b += "Armored, ";
+				*/
+				b = string.Join(", ", modifierList.ToList().ConvertAll(it => it.name));
 				if ( string.IsNullOrEmpty( b ) )
 					return "No Bonuses";
 				else
-					return b.Substring( 0, b.Length - 2 );
+					return b;
 			}
 			set
 			{
@@ -319,10 +326,12 @@ namespace JiME
 				_isLarge = value;
 				NotifyPropertyChanged( "isLarge" );
 				bonuses = bonuses;
+				/*
 				if ( _isArmored || _isBloodThirsty || _isLarge )
 					isElite = true;
 				else
 					isElite = false;
+				*/
 			}
 		}
 		public bool isBloodThirsty
@@ -365,6 +374,14 @@ namespace JiME
 				}
 			}
 		}
+
+		public void updateElite()
+        {
+			if (modifierList.Count > 0) { isElite = true; }
+			else { isElite = false; }
+        }
+
+
 		public int maxMovementValue
 		{
 			get => _maxMovementValue;
@@ -442,6 +459,30 @@ namespace JiME
 					_count = value;
 					NotifyPropertyChanged( "count" );
 				}
+			}
+		}
+
+		[JsonConverter(typeof(MonsterModifierListConverter))]
+		public ObservableCollection<MonsterModifier> modifierList
+        {
+			get => _modifierList;
+            set
+			{
+				if(value != _modifierList)
+                {
+					_modifierList = value;
+					NotifyPropertyChanged("modifierList");
+                }
+			}
+        }
+
+		public int randomizedModifiersCount
+		{
+			get { return _randomizedModifiersCount; }
+			set
+			{
+				_randomizedModifiersCount = value;
+				NotifyPropertyChanged("randomizedModifiersCount");
 			}
 		}
 
@@ -545,12 +586,95 @@ namespace JiME
 			m.triggerName = this.triggerName;
 			m.negatedBy = this.negatedBy;
 			m.monsterType = this.monsterType;
+			m.modifierList = new ObservableCollection<MonsterModifier>(this.modifierList);
 			return m;
 		}
 
 		public void NotifyPropertyChanged( string propName )
 		{
 			PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( propName ) );
+		}
+
+		public void LoadCustomModifiers(ObservableCollection<MonsterModifier> customModifiers)
+        {
+			//The default JSON converter for MonsterModifier can't look at the scenario's list of custom MonsterModifiers. So we need to hydrate it when we load the Monster in the MonsterEditorWindow.
+			for(int i=0; i<modifierList.Count; i++)
+            {
+				if (modifierList[i].id >= MonsterModifier.START_OF_CUSTOM_MODIFIERS)
+				{
+					MonsterModifier modData = customModifiers.First(it => it.id == modifierList[i].id);
+					if (modData != null)
+					{
+                        modifierList[i] = modData;
+					}
+				}
+            }
+        }
+
+
+		public static List<MonsterType> Goblins()
+		{
+			return new List<MonsterType> { MonsterType.GoblinScout, MonsterType.GoblinScout, MonsterType.VargRider };
+		}
+
+		public static List<MonsterType> Orcs()
+		{
+			return new List<MonsterType> { MonsterType.OrcHunter, MonsterType.OrcMarauder, MonsterType.OrcTaskmaster, MonsterType.HighOrcWarrior, MonsterType.Gargletarg, MonsterType.SupplicantOfMoreGoth, MonsterType.LordJavelin };
+		}
+
+		public static List<MonsterType> Humans()
+		{
+			return new List<MonsterType> { MonsterType.Ruffian, MonsterType.Soldier, MonsterType.Atari, MonsterType.Endris };
+		}
+
+		public static List<MonsterType> Spirits()
+		{
+			return new List<MonsterType> { MonsterType.Wight, MonsterType.Shadowman, MonsterType.Ursula, MonsterType.LichKing };
+		}
+
+		public static List<MonsterType> Trolls()
+		{
+			return new List<MonsterType> { MonsterType.CaveTroll, MonsterType.HillTroll, MonsterType.Oliver };
+		}
+
+		public static List<MonsterType> Vargs()
+		{
+			return new List<MonsterType> { MonsterType.Varg, MonsterType.VargRider, MonsterType.Chartooth };
+		}
+
+		public static List<MonsterType> Spiders()
+		{
+			return new List<MonsterType> { MonsterType.GiantSpider, MonsterType.SpawnOfUglygiant };
+		}
+
+		public static List<MonsterType> Flying()
+		{
+			return new List<MonsterType> { MonsterType.Balerock, MonsterType.FoulBeast, MonsterType.LichKing };
+		}
+
+		public static List<MonsterType> OtherBeasts()
+		{
+			return new List<MonsterType> { MonsterType.WarElephant, MonsterType.AnonymousThing };
+		}
+
+		public static List<MonsterType> AllBeasts()
+		{
+			List<MonsterType> monsterList = new List<MonsterType>();
+			monsterList.AddRange(Trolls());
+			monsterList.AddRange(Vargs());
+			monsterList.AddRange(Spiders());
+			monsterList.AddRange(Flying());
+			monsterList.AddRange(OtherBeasts());
+			return monsterList;
+		}
+
+		public static List<MonsterType> Humanoid()
+		{
+			List<MonsterType> monsterList = new List<MonsterType>();
+			monsterList.AddRange(Goblins());
+			monsterList.AddRange(Orcs());
+			monsterList.AddRange(Humans());
+			return monsterList;
 		}
 	}
 }

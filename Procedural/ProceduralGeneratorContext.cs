@@ -62,23 +62,23 @@ namespace JiME.Procedural
             // Setup additional Collections based on parameters? CORE_SET is there by default
             if (Parameters.Has_VILLAINS_OF_ERIAJAR)
             {
-                Scenario.collectionObserver.Add(Models.Collection.VILLAINS_OF_ERIAJAR);
+                Scenario.collectionObserver.Add(Collection.VILLAINS_OF_ERIAJAR);
             }
             if (Parameters.Has_SHADED_PATHS)
             {
-                Scenario.collectionObserver.Add(Models.Collection.SHADED_PATHS);
+                Scenario.collectionObserver.Add(Collection.SHADED_PATHS);
             }
             if (Parameters.Has_DENIZENS_IN_DARKNESS)
             {
-                Scenario.collectionObserver.Add(Models.Collection.DENIZENS_IN_DARKNESS);
+                Scenario.collectionObserver.Add(Collection.DENIZENS_IN_DARKNESS);
             }
             if (Parameters.Has_UNFURLING_WAR)
             {
-                Scenario.collectionObserver.Add(Models.Collection.UNFURLING_WAR);
+                Scenario.collectionObserver.Add(Collection.UNFURLING_WAR);
             }
             if (Parameters.Has_SCORCHERS_OF_THE_WILDS)
             {
-                Scenario.collectionObserver.Add(Models.Collection.SCORCHERS_OF_THE_WILDS);
+                Scenario.collectionObserver.Add(Collection.SCORCHERS_OF_THE_WILDS);
             }
             Scenario.RefilterGlobalTilePool();
 

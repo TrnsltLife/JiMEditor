@@ -1,5 +1,4 @@
-﻿using JiME.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -13,6 +12,12 @@ namespace JiME.Views
 	/// </summary>
 	public partial class MonsterEditorWindow : Window
 	{
+		private static List<MonsterModifier> _monsterModifiers = MonsterModifier.Values.ToList();
+		public static List<MonsterModifier> monsterModifiers 
+		{
+			get => _monsterModifiers;
+		}
+
 		public Scenario scenario { get; set; }
 		public Monster monster { get; set; }
 		public DefaultStats defaultStats { get; set; }
@@ -48,6 +53,9 @@ namespace JiME.Views
             {
 				//If a monster is already set, use it
 				monster = m;
+
+				//The default JSON converter for MonsterModifier can't look at the scenario's list of custom MonsterModifiers. So we need to hydrate it when we load the Monster in the MonsterEditorWindow.
+				monster.LoadCustomModifiers(s.monsterModifierObserver);
             }
 			else
             {
@@ -126,6 +134,15 @@ namespace JiME.Views
 
 			//Migrate movement
 			if(monster.moveA == 0) { monster.moveA = monster.movementValue; }
+
+            //Migrate isArmored, isBloodthirsty, isLarge from bool/checkboxes to MonsterModifiers in the modifierList/ItemControl
+            if (monster.isArmored && !monster.modifierList.Contains(MonsterModifier.ARMORED)) { monster.modifierList.Add(MonsterModifier.ARMORED); }
+			if (monster.isBloodThirsty && !monster.modifierList.Contains(MonsterModifier.BLOODTHIRSTY)) { monster.modifierList.Add(MonsterModifier.BLOODTHIRSTY); }
+			if (monster.isLarge && !monster.modifierList.Contains(MonsterModifier.LARGE)) { monster.modifierList.Add(MonsterModifier.LARGE); }
+			monster.isArmored = false;
+			monster.isBloodThirsty = false;
+			monster.isLarge = false;
+			monster.updateElite();
 
 			//negated radio buttons
 			/*
@@ -296,5 +313,111 @@ namespace JiME.Views
 			enemy = enemy.Replace(" ", ""); //replace spaces
 			FillDefaultStats( enemy );
 		}
+
+
+		//MonsterModifier ComboBox, ItemList, and buttons
+		private void modifierCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			if (modifierCB.SelectedValue == null) { return; }
+			addSelectedModifierButton.IsEnabled = modifierCB.SelectedValue as int? != 0;
+
+			if (modifierCB.SelectedValue == null) { return; }
+			int modId = modifierCB.SelectedValue as int? ?? default(int);
+			//MonsterModifier mod = MonsterModifier.FromID(modId);
+			MonsterModifier mod = scenario.monsterModifierObserver.First(it => it.id == modId);
+			UpdateModifierDescription(mod);
+		}
+
+		private void addSelectedModifierButton_Click(object sender, RoutedEventArgs e)
+		{
+			if (modifierCB.SelectedValue == null) { return; }
+			if (monster.modifierList.Count >= 7) 
+			{
+				modifierDescription.Text = "Maximum of 7 modifiers allowed.";
+				return; 
+			}
+			int modId = modifierCB.SelectedValue as int? ?? default(int);
+			//MonsterModifier mod = MonsterModifier.FromID(modId);
+			MonsterModifier mod = scenario.monsterModifierObserver.First(it => it.id == modId);
+			if (!monster.modifierList.Contains(mod) && mod.id != 0)
+			{
+				monster.modifierList.Add(mod);
+				monster.updateElite();
+			}
+		}
+
+		private void addModifierButton_Click(object sender, RoutedEventArgs e)
+		{
+			MonsterModifierEditorWindow mmew = new MonsterModifierEditorWindow(scenario);
+			if (mmew.ShowDialog() == true)
+			{
+				scenario.AddMonsterModifier(mmew.modifier);
+				if (!monster.modifierList.Contains(mmew.modifier))
+				{
+					monster.modifierList.Add(mmew.modifier);
+					monster.updateElite();
+				}
+			}
+		}
+
+		private void removeModifierButton_Click(object sender, RoutedEventArgs e)
+		{
+			if (modifierCB.SelectedValue == null) { return; }
+			int modId = ((Button)sender).DataContext as int? ?? default(int);
+			//MonsterModifier mod = MonsterModifier.FromID(modId);
+			MonsterModifier mod = scenario.monsterModifierObserver.First(it => it.id == modId);
+			if (monster.modifierList.Contains(mod))
+			{
+				monster.modifierList.Remove(mod);
+				monster.updateElite();
+			}
+		}
+
+		private void modifierItem_MouseEnter(object sender, RoutedEventArgs e)
+        {
+			MonsterModifier mod = ((Border)sender).DataContext as MonsterModifier;
+
+			UpdateModifierDescription(mod);
+        }
+
+		private void UpdateModifierDescription(MonsterModifier mod)
+        {
+			List<string> mods = new List<string>();
+			if (mod.health != 0) { mods.Add((mod.health > 0 ? "+" : "") + mod.health + " Health"); }
+			if (mod.armor != 0) { mods.Add((mod.armor > 0 ? "+" : "") + mod.armor + " Armor"); }
+			if (mod.sorcery != 0) { mods.Add((mod.sorcery > 0 ? "+" : "") + mod.sorcery + " Sorcery"); }
+			if (mod.damage != 0) { mods.Add((mod.damage > 0 ? "+" : "") + mod.damage + " Damage"); }
+			if (mod.fear != 0) { mods.Add((mod.fear > 0 ? "+" : "") + mod.fear + " Fear"); }
+
+			//Real immunities
+			List<string> immunities = new List<string>();
+			if (mod.immuneCleave) { immunities.Add("Cleave"); }
+			if (mod.immuneLethal) { immunities.Add("Lethal"); }
+			if (mod.immunePierce) { immunities.Add("Pierce"); }
+			if (mod.immuneSmite) { immunities.Add("Smite"); }
+			if (mod.immuneStun) { immunities.Add("Stun"); }
+			if (mod.immuneSunder) { immunities.Add("Sunder"); }
+
+			if (immunities.Count > 0) { mods.Add("Immune to " + string.Join(", ", immunities)); }
+
+			//Fake immunities
+			List<string> fakeImmunities = new List<string>();
+			if (mod.fakeCleave) { fakeImmunities.Add("Cleave"); }
+			if (mod.fakeLethal) { fakeImmunities.Add("Lethal"); }
+			if (mod.fakePierce) { fakeImmunities.Add("Pierce"); }
+			if (mod.fakeSmite) { fakeImmunities.Add("Smite"); }
+			if (mod.fakeStun) { fakeImmunities.Add("Stun"); }
+			if (mod.fakeSunder) { fakeImmunities.Add("Sunder"); }
+
+			if (fakeImmunities.Count > 0) { mods.Add("Fake immunity to " + string.Join(", ", fakeImmunities)); }
+
+			modifierDescription.Text = mod.name + ": " + string.Join("; ", mods);
+		}
+
+		private void modifierItem_MouseLeave(object sender, RoutedEventArgs e)
+		{
+			modifierDescription.Text = "";
+		}
+
 	}
 }

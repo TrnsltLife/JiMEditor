@@ -1,5 +1,4 @@
-﻿using JiME.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -223,6 +222,7 @@ namespace JiME
 		public ObservableCollection<IInteraction> interactionObserver { get; set; }
 		public ObservableCollection<Trigger> triggersObserver { get; set; }
 		public ObservableCollection<Objective> objectiveObserver { get; set; }
+		public ObservableCollection<MonsterModifier> monsterModifierObserver { get; set; }
 		public ObservableCollection<MonsterActivations> activationsObserver { get; set; }
 		//public List<MonsterActivations> filteredActivationsObserver => activationsObserver.Where(a => collectionObserver.Contains(a.collection)).ToList();
 		public ObservableCollection<Translation> translationObserver { get; set; }
@@ -240,6 +240,7 @@ namespace JiME
             interactionObserver.CollectionChanged += handler;
             triggersObserver.CollectionChanged += handler;
             objectiveObserver.CollectionChanged += handler;
+			monsterModifierObserver.CollectionChanged += handler;
             activationsObserver.CollectionChanged += handler;
             resolutionObserver.CollectionChanged += handler;
             threatObserver.CollectionChanged += handler;
@@ -338,6 +339,7 @@ namespace JiME
 			interactionObserver = new ObservableCollection<IInteraction>();
 			triggersObserver = new ObservableCollection<Trigger>();
 			objectiveObserver = new ObservableCollection<Objective>();
+			monsterModifierObserver = new ObservableCollection<MonsterModifier>();
 			activationsObserver = new ObservableCollection<MonsterActivations>();
 			translationObserver = new ObservableCollection<Translation>();
 			resolutionObserver = new ObservableCollection<TextBookData>();
@@ -368,6 +370,10 @@ namespace JiME
 			s.interactionObserver = new ObservableCollection<IInteraction>( fm.interactions );
 			s.triggersObserver = new ObservableCollection<Trigger>( fm.triggers );
 			s.objectiveObserver = new ObservableCollection<Objective>( fm.objectives );
+			if(fm.monsterModifiers != null)
+            {
+				s.monsterModifierObserver = new ObservableCollection<MonsterModifier>(fm.monsterModifiers);
+            }
 			if (fm.activations != null)
 			{
 				s.activationsObserver = new ObservableCollection<MonsterActivations>(fm.activations);
@@ -407,19 +413,7 @@ namespace JiME
 				s.scenarioGUID = Guid.NewGuid();
 
 			s.AddDefaultActivations();
-
-			//sort the observer lists by name
-			//List<IInteraction> sorted = s.interactionObserver.OrderBy( key => key.dataName != "None" ).ThenBy( key => key.dataName ).ToList();
-			//for ( int i = 0; i < sorted.Count; i++ )
-			//	s.interactionObserver[i] = sorted[i];
-
-			//List<Trigger> trigsorted = s.triggersObserver.OrderBy( key => key.dataName != "None" ).ThenBy( key => key.dataName ).ToList();
-			//for ( int i = 0; i < trigsorted.Count; i++ )
-			//	s.triggersObserver[i] = trigsorted[i];
-
-			//List<Objective> objsorted = s.objectiveObserver.OrderBy( key => key.dataName != "None" ).ThenBy( key => key.dataName ).ToList();
-			//for ( int i = 0; i < objsorted.Count; i++ )
-			//	s.objectiveObserver[i] = objsorted[i];
+			s.AddDefaultMonsterModifiers();
 
 			return s;
 		}
@@ -471,6 +465,9 @@ namespace JiME
 			//Add the default enemy activations
 			AddDefaultActivations();
 
+			//Add the default monster modifiers
+			AddDefaultMonsterModifiers();
+
 			//starting chapter - always at least one in the scenario
 			Chapter chapter = new Chapter( "Start" ) { isEmpty = true };
 			chapterObserver.Add( chapter );
@@ -478,6 +475,26 @@ namespace JiME
 			wallTypes = new int[22];
 			for ( int i = 0; i < 22; i++ )
 				wallTypes[i] = 0;//0=none, 1=wall, 2=river
+		}
+
+		public void AddDefaultMonsterModifiers()
+		{
+			//Remove default monster modifiers if they exist
+			for (int i = monsterModifierObserver.Count - 1; i >= 0; i--)
+			{
+				if (monsterModifierObserver[i].id < MonsterModifier.START_OF_CUSTOM_MODIFIERS)
+				{
+					monsterModifierObserver.RemoveAt(i);
+				}
+			}
+
+			//Add the default monster modifiers
+			int j = 0;
+			foreach (MonsterModifier modifier in MonsterModifier.Values)
+			{
+				monsterModifierObserver.Insert(j, modifier);
+				j++;
+			}
 		}
 
 		public void AddDefaultActivations()
@@ -660,6 +677,11 @@ namespace JiME
 			*/
 		}
 
+		public void AddMonsterModifier(MonsterModifier modifier)
+		{
+			monsterModifierObserver.Add(modifier);
+		}
+
 		public void AddActivations(MonsterActivations activations)
 		{
 			activationsObserver.Add(activations);
@@ -694,6 +716,14 @@ namespace JiME
             {
 				defaultTranslations.AddRange(objective.CollectTranslationItems());
 			}
+
+			foreach(var modifier in monsterModifierObserver)
+            {
+				if (modifier.id >= MonsterModifier.START_OF_CUSTOM_MODIFIERS)
+				{
+					defaultTranslations.AddRange(modifier.CollectTranslationItems());
+				}
+            }
 
 			foreach(var chapter in chapterObserver)
             {
@@ -803,8 +833,16 @@ namespace JiME
 				triggersObserver.Remove(item as Trigger);
 			else if (item is Objective)
 				objectiveObserver.Remove(item as Objective);
+			else if (item is MonsterModifier)
+			{
+				RemoveMonsterModifiersInUse(item as MonsterModifier);
+				monsterModifierObserver.Remove(item as MonsterModifier);
+			}
 			else if (item is MonsterActivations)
+			{
+				RemoveActivationsInUse((item as MonsterActivations).id);
 				activationsObserver.Remove(item as MonsterActivations);
+			}
 			else if (item is TextBookData)
 				resolutionObserver.Remove(item as TextBookData);
 			else if (item is Threat)
@@ -893,6 +931,31 @@ namespace JiME
 			return null;
 		}
 
+		public void RemoveActivationsInUse(int activationId)
+        {
+			foreach(ThreatInteraction threat in interactionObserver.Where(it => it.interactionType == InteractionType.Threat))
+            {
+				foreach(Monster monster in threat.monsterCollection)
+                {
+					if(monster.activationsId == activationId)
+                    {
+						monster.activationsId = monster.id; //reset to using the default activation for this mosnter type. We could also reset to None, which is -1
+                    }
+                }
+            }
+        }
+
+		public void RemoveMonsterModifiersInUse(MonsterModifier mod)
+		{
+			foreach (ThreatInteraction threat in interactionObserver.Where(it => it.interactionType == InteractionType.Threat))
+			{
+				foreach (Monster monster in threat.monsterCollection)
+				{
+					monster.modifierList.Remove(mod);
+				}
+			}
+		}
+
 		/// <summary>
 		/// Checks for duplicate name usage within same object type
 		/// </summary>
@@ -922,6 +985,15 @@ namespace JiME
 				{
 					if ( objectiveObserver[i].dataName == data.dataName
 					&& objectiveObserver[i].GUID != data.GUID )
+						return true;
+				}
+			}
+			else if (data is MonsterModifier)
+			{
+				for (int i = 0; i < monsterModifierObserver.Count; i++)
+				{
+					if (monsterModifierObserver[i].dataName == data.dataName
+					&& monsterModifierObserver[i].GUID != data.GUID)
 						return true;
 				}
 			}

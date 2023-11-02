@@ -5,7 +5,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System;
-using JiME.Models;
 
 namespace JiME.Views
 {
