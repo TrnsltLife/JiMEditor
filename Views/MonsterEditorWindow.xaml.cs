@@ -355,6 +355,7 @@ namespace JiME.Views
 				if (!monster.modifierList.Contains(mmew.modifier))
 				{
 					monster.modifierList.Add(mmew.modifier);
+					monster.updateElite();
 				}
 			}
 		}
