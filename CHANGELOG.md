@@ -5,8 +5,15 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+### Changed
+### Removed
+
+## [v0.29]
+
+### Added
 - Conditional Event Slider: Conditional event can require all triggers or a certain number of triggers in order to fire.
 - Enemy Bonuses on scripted monsters (up to 7). Slider to select using a random number, or all of them. Add, modify, duplicate, delete, and translate.
+- Campaign settings to allow players to freely select a trinket and/or mount at the start of the campaign
 
 ### Changed
 - ComboBoxes with lists (Events, Triggers, Objectives) are sorted with "None" at the top and then alphabetically
