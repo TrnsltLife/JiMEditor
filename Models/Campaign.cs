@@ -41,6 +41,9 @@ namespace JiME
 		public string storyText { get; set; }
 		public string description { get; set; }
 
+		public bool startWithTrinkets { get; set; }
+		public bool startWithMounts { get; set; }
+
 		public ObservableCollection<CampaignItem> scenarioCollection { get; set; }
 		public ObservableCollection<Trigger> triggerCollection { get; set; }
         [JsonIgnore]
@@ -59,6 +62,8 @@ namespace JiME
 			description = "";
 			fileVersion = Utils.formatVersion;
 			coverImage = null;
+			startWithTrinkets = false;
+			startWithMounts = false;
 		}
 
 		void PropChanged( string name )
