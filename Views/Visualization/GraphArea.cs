@@ -41,8 +41,9 @@ namespace JiME.Views
             logicCore.DefaultLayoutAlgorithmParams = logicCore.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.Tree);
             //Unfortunately to change algo parameters you need to specify params type which is different for every algorithm.
             //((KKLayoutParameters)logicCore.DefaultLayoutAlgorithmParams).MaxIterations = 100;
-            ((SimpleTreeLayoutParameters)logicCore.DefaultLayoutAlgorithmParams).LayerGap = 100;
-            ((SimpleTreeLayoutParameters)logicCore.DefaultLayoutAlgorithmParams).VertexGap = 100;
+            var layoutParams = (SimpleTreeLayoutParameters)logicCore.DefaultLayoutAlgorithmParams;
+            layoutParams.LayerGap = 100;
+            layoutParams.VertexGap = 200;
 
             //This property sets vertex overlap removal algorithm.
             //Such algorithms help to arrange vertices in the layout so no one overlaps each other.
