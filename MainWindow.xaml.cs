@@ -362,6 +362,14 @@ namespace JiME
 				RewardInteractionWindow w = new RewardInteractionWindow( scenario, castInteraction);
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
+			else if (interactionItem is ItemInteraction)
+			{
+				ItemInteraction castInteraction = (ItemInteraction)interactionItem;
+				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
+				string originalPrefix = castInteraction.TranslationKeyPrefix();
+				ItemInteractionWindow w = new ItemInteractionWindow(scenario, castInteraction);
+				castInteraction.HandleWindow(w, scenario.translationObserver);
+			}
 		}
 
         void OnSettingsTrigger(object sender, EventArgs e)
@@ -994,6 +1002,19 @@ namespace JiME
 			}
 		}
 		private void CommandNewRewardInteraction_CanExecute( object sender, System.Windows.Input.CanExecuteRoutedEventArgs e )
+		{
+			e.CanExecute = true;
+		}
+
+		private void CommandNewItemInteraction_Executed(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+		{
+			ItemInteractionWindow ew = new ItemInteractionWindow(scenario);
+			if (ew.ShowDialog() == true)
+			{
+				scenario.AddInteraction(ew.interaction);
+			}
+		}
+		private void CommandNewItemInteraction_CanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
 		{
 			e.CanExecute = true;
 		}

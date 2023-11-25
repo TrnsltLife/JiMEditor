@@ -96,6 +96,9 @@
     <Compile Include="Models\Collection.cs" />
     <Compile Include="Models\BaseTile.cs" />
     <Compile Include="Models\Interaction Events\PersistentInteractionBase.cs" />
+    <Compile Include="Models\Interaction Events\ItemInteraction.cs" />
+    <Compile Include="Models\Item.cs" />
+    <Compile Include="Models\Items.cs" />
     <Compile Include="Models\MonsterModifier.cs" />
     <Compile Include="Models\TranslationItem.cs" />
     <Compile Include="Models\Translation.cs" />
@@ -149,6 +152,9 @@
     </Compile>
     <Compile Include="UserControls\SidebarListView.xaml.cs">
       <DependentUpon>SidebarListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Interactions\ItemInteractionWindow.xaml.cs">
+      <DependentUpon>ItemInteractionWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MonsterModifierEditorWindow.xaml.cs">
       <DependentUpon>MonsterModifierEditorWindow.xaml</DependentUpon>
@@ -295,6 +301,10 @@
     <Page Include="UserControls\SidebarListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Interactions\ItemInteractionWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\MonsterModifierEditorWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

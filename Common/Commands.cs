@@ -219,7 +219,17 @@ namespace JiME
 			(
 				"New Reward Event",
 				"NewRewardInteraction",
-				typeof( MyCommands ),
+				typeof(MyCommands),
+				new InputGestureCollection()
+				{
+					//new KeyGesture(Key.C, ModifierKeys.Alt)
+				}
+			);
+		public static readonly RoutedUICommand NewItemInteraction = new RoutedUICommand
+			(
+				"New Item Event",
+				"NewItemInteraction",
+				typeof(MyCommands),
 				new InputGestureCollection()
 				{
 					//new KeyGesture(Key.C, ModifierKeys.Alt)
