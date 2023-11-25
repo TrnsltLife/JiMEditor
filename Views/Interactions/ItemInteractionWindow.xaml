@@ -219,7 +219,7 @@
 										<DataTemplate>
 											<Border Style="{StaticResource callout}" Background="{StaticResource bgButtonColor}" Margin="0,0,5,5">
 												<StackPanel Orientation="Horizontal">
-													<TextBlock Text="{Binding dataName}" Style="{StaticResource SubText}" Foreground="White" VerticalAlignment="Center"/>
+													<TextBlock Text="{Binding Path=dataName}" Style="{StaticResource SubText}" Foreground="White" VerticalAlignment="Center"/>
 													<Button x:Name="removeItemButton" Click="removeItemButton_Click" Background="{StaticResource bgCancelDelete}" Foreground="White" Margin="10,0,0,0" Height="32" Width="32" DataContext="{Binding}">
 														<Image Source="/JiME;component/Assets/cancel.png"/>
 													</Button>

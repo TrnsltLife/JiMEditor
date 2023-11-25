@@ -201,18 +201,20 @@ namespace JiME.Views
 		private void addSelectedItemButton_Click(object sender, RoutedEventArgs e)
 		{
 			int id = (int)itemCB.SelectedValue;
-			if (!interaction.itemList.Contains(id))
+			Item item = itemList.FirstOrDefault(it => it.id == id);
+			if (!interaction.itemList.Contains(item))
 			{
-				interaction.itemList.Add(id);
+				interaction.itemList.Add(item);
 			}
 		}
 
 		private void removeItemButton_Click(object sender, RoutedEventArgs e)
 		{
-			string sel = ((Button)sender).DataContext as string;
-			int id = (int)itemList.FirstOrDefault(it => it.dataName == sel)?.id;
-			if (interaction.itemList.Contains(id))
-				interaction.itemList.Remove(id);
+			Item item = (Item)((Button)sender).DataContext;
+			//int id = (int)((Button)sender).DataContext;
+			//Item item = itemList.FirstOrDefault(it => it.id == id);
+			if (interaction.itemList.Contains(item))
+				interaction.itemList.Remove(item);
 		}
 
 		private void addFinishedTriggerButton_Click(object sender, RoutedEventArgs e)

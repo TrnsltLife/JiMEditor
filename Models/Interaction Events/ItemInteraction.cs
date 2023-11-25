@@ -8,7 +8,22 @@ namespace JiME
 		string _finishedTrigger;
 		int _randomizedItemsCount;
 
-		public ObservableCollection<int> itemList { get; set; } = new ObservableCollection<int>();
+		public ObservableCollection<Item> _itemList { get; set; } = new ObservableCollection<Item>();
+
+		//[JsonConverter(typeof(ItemListConverter))]
+		public ObservableCollection<Item> itemList
+		{
+			get => _itemList;
+			set
+			{
+				if (value != _itemList)
+				{
+					_itemList = value;
+					NotifyPropertyChanged("itemList");
+				}
+			}
+		}
+
 		public string finishedTrigger
 		{
 			get { return _finishedTrigger; }
@@ -19,7 +34,7 @@ namespace JiME
 			}
 		}
 
-		public int randomItemsCount
+		public int randomizedItemsCount
 		{
 			get { return _randomizedItemsCount; }
 			set
