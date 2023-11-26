@@ -15,7 +15,7 @@ using Newtonsoft.Json;
 namespace JiME
 {
 	public enum ScenarioType { Journey, Battle }
-	public enum InteractionType { Text, Threat, StatTest, Decision, Branch, Darkness, MultiEvent, Persistent, Conditional, Dialog, Replace, Reward }
+	public enum InteractionType { Text, Threat, StatTest, Decision, Branch, Darkness, MultiEvent, Persistent, Conditional, Dialog, Replace, Reward, Item, Title }
 	/// <summary>
 	/// The order of the monsters in this enum is important to maintain unchanged because the order (0-29) tells the companion app which monster to use.
 	/// The order for the first 7 (core set) was set by GlowPuff and is kept for backwards compatibility.

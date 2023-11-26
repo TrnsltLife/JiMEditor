@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Collections.ObjectModel;
+using Newtonsoft.Json;
 
 namespace JiME
 {
@@ -8,9 +9,9 @@ namespace JiME
 		string _finishedTrigger;
 		int _randomizedItemsCount;
 
-		public ObservableCollection<Item> _itemList { get; set; } = new ObservableCollection<Item>();
+		ObservableCollection<Item> _itemList { get; set; } = new ObservableCollection<Item>();
 
-		//[JsonConverter(typeof(ItemListConverter))]
+		[JsonConverter(typeof(ItemListConverter))]
 		public ObservableCollection<Item> itemList
 		{
 			get => _itemList;
@@ -52,12 +53,17 @@ namespace JiME
 
 		public ItemInteraction( string name ) : base( name )
 		{
+			interactionType = InteractionType.Item;
+
 		}
 
 		public ItemInteraction Clone()
 		{
 			ItemInteraction interact = new ItemInteraction("");
 			base.CloneInto(interact);
+			interact.randomizedItemsCount = this.randomizedItemsCount;
+			interact.itemList = new ObservableCollection<Item>(this.itemList);
+			interact.finishedTrigger = this.finishedTrigger;
 			return interact;
 		}
 	}
