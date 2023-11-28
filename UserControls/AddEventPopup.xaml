@@ -15,6 +15,7 @@
 		<CommandBinding Command="local:MyCommands.NewTestInteraction" Executed="CommandNewTestInteraction_Executed" CanExecute="CommandNewTestInteraction_CanExecute"/>
 		<CommandBinding Command="local:MyCommands.NewDecisionInteraction" Executed="CommandNewDecisionInteraction_Executed" CanExecute="CommandNewDecisionInteraction_CanExecute"/>
 		<CommandBinding Command="local:MyCommands.NewItemInteraction" Executed="CommandNewItemInteraction_Executed" CanExecute="CommandNewItemInteraction_CanExecute"/>
+		<CommandBinding Command="local:MyCommands.NewTitleInteraction" Executed="CommandNewTitleInteraction_Executed" CanExecute="CommandNewTitleInteraction_CanExecute"/>
 		<CommandBinding Command="local:MyCommands.NewMultiInteraction" Executed="CommandNewMultiInteraction_Executed" CanExecute="CommandNewMultiInteraction_CanExecute"/>
 		<CommandBinding Command="local:MyCommands.NewPersistentInteraction" Executed="CommandNewPersistentInteraction_Executed" CanExecute="CommandNewPersistentInteraction_CanExecute"/>
 		<CommandBinding Command="local:MyCommands.NewConditionalInteraction" Executed="CommandNewConditionalInteraction_Executed" CanExecute="CommandNewConditionalInteraction_CanExecute"/>
@@ -46,6 +47,10 @@
                }">
 			</MenuItem>
 			<MenuItem Command="local:MyCommands.NewItemInteraction" CommandTarget="{Binding Path=PlacementTarget,
+                        RelativeSource={RelativeSource AncestorType=ContextMenu}
+               }">
+			</MenuItem>
+			<MenuItem Command="local:MyCommands.NewTitleInteraction" CommandTarget="{Binding Path=PlacementTarget,
                         RelativeSource={RelativeSource AncestorType=ContextMenu}
                }">
 			</MenuItem>

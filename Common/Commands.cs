@@ -235,5 +235,15 @@ namespace JiME
 					//new KeyGesture(Key.C, ModifierKeys.Alt)
 				}
 			);
+		public static readonly RoutedUICommand NewTitleInteraction = new RoutedUICommand
+			(
+				"New Title Event",
+				"NewTitleInteraction",
+				typeof(MyCommands),
+				new InputGestureCollection()
+				{
+					//new KeyGesture(Key.C, ModifierKeys.Alt)
+				}
+			);
 	}
 }

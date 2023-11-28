@@ -370,9 +370,17 @@ namespace JiME
 				ItemInteractionWindow w = new ItemInteractionWindow(scenario, castInteraction);
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
+			else if (interactionItem is TitleInteraction)
+			{
+				TitleInteraction castInteraction = (TitleInteraction)interactionItem;
+				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
+				string originalPrefix = castInteraction.TranslationKeyPrefix();
+				TitleInteractionWindow w = new TitleInteractionWindow(scenario, castInteraction);
+				castInteraction.HandleWindow(w, scenario.translationObserver);
+			}
 		}
 
-        void OnSettingsTrigger(object sender, EventArgs e)
+		void OnSettingsTrigger(object sender, EventArgs e)
         {
             OpenTriggerEditor((Trigger)triggersUC.dataListView.SelectedItem);
         }
@@ -1015,6 +1023,19 @@ namespace JiME
 			}
 		}
 		private void CommandNewItemInteraction_CanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = true;
+		}
+
+		private void CommandNewTitleInteraction_Executed(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+		{
+			TitleInteractionWindow ew = new TitleInteractionWindow(scenario);
+			if (ew.ShowDialog() == true)
+			{
+				scenario.AddInteraction(ew.interaction);
+			}
+		}
+		private void CommandNewTitleInteraction_CanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
 		{
 			e.CanExecute = true;
 		}

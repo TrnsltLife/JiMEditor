@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace JiME
 {
-	public class ItemInteraction : PersistentInteractionBase, INotifyPropertyChanged, ICommonData
+	public class ItemInteraction : InteractionBase, INotifyPropertyChanged, ICommonData
 	{
 		string _finishedTrigger;
 		int _randomizedItemsCount;

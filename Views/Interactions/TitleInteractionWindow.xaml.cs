@@ -10,25 +10,26 @@ using System.Collections.Generic;
 namespace JiME.Views
 {
 	/// <summary>
-	/// Interaction logic for ItemInteractionWindow.xaml
+	/// Interaction logic for TitleInteractionWindow.xaml
 	/// </summary>
-	public partial class ItemInteractionWindow : Window, INotifyPropertyChanged
+	public partial class TitleInteractionWindow : Window, INotifyPropertyChanged
 	{
 		string oldName;
 
 		public Scenario scenario { get; set; }
-		public ItemInteraction interaction { get; set; }
+		public TitleInteraction interaction { get; set; }
 		bool closing = false;
 
-		private List<Item> _itemList = new List<Item>();
-		public List<Item> itemList
+		private List<Title> _titleList = new List<Title>();
+
+		public List<Title> titleList
 		{
-			get => _itemList;
+			get => _titleList;
 			set
-			{
-				_itemList = value;
-				PropChanged("itemList");
-			}
+            {
+				_titleList = value;
+				PropChanged("titleList");
+            }
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -43,14 +44,12 @@ namespace JiME.Views
 			}
 		}
 
-		public ItemInteractionWindow( Scenario s, ItemInteraction inter = null, bool showCancelButton = false )
+		public TitleInteractionWindow( Scenario s, TitleInteraction inter = null, bool showCancelButton = false )
 		{
 			scenario = s;
-			interaction = inter ?? new ItemInteraction("New Item Event");
+			interaction = inter ?? new TitleInteraction("New Title Event");
 
-			itemList = new List<Item>(Items.list.Where(it =>
-				scenario.collectionObserver.Contains(Collection.FromID(it.collection)) &&
-				((it.slotId == Slot.TRINKET && it.tier == 1) || (it.slotId == Slot.MOUNT && it.tier == 0))));
+			_titleList = Titles.list.Where(it => it.id != 0 && scenario.collectionObserver.Contains(Collection.FromID(it.collection))).ToList();
 
 			InitializeComponent();
 			DataContext = this;
@@ -69,7 +68,7 @@ namespace JiME.Views
 
 			oldName = interaction.dataName;
 
-			Debug.Log("ItemInteractionWindow: " + String.Join(", ", itemList.ConvertAll(it => it.dataName)));
+			Debug.Log("TitleInteractionWindow: " + String.Join(", ", titleList.ConvertAll(it => it.dataName)));
 		}
 
 		private void ComboBox_SelectionChanged( object sender, SelectionChangedEventArgs e )
@@ -107,7 +106,7 @@ namespace JiME.Views
 		bool TryClosing()
 		{
 			//check for dupe name
-			if ( interaction.dataName == "New Item Event" || scenario.interactionObserver.Count( x => x.dataName == interaction.dataName && x.GUID != interaction.GUID ) > 0 )
+			if ( interaction.dataName == "New Title Event" || scenario.interactionObserver.Count( x => x.dataName == interaction.dataName && x.GUID != interaction.GUID ) > 0 )
 			{
 				MessageBox.Show( "Give this Event a unique name.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
 				return false;
@@ -198,31 +197,31 @@ namespace JiME.Views
 			}
 		}
 
-		private void itemCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		private void titleCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			addSelectedItemButton.IsEnabled = true;
-			//addSelectedItemButton.IsEnabled = itemCB.SelectedIndex != 0;
-			//addSelectedItemButton.IsEnabled = itemCB.SelectedValue as string != "None";
-			Debug.Log("ItemCB SelectedValue: " + itemCB.SelectedValue);
+			addSelectedTitleButton.IsEnabled = true;
+			//addSelectedTitleButton.IsEnabled = titleCB.SelectedIndex != 0;
+			//addSelectedTitleButton.IsEnabled = titleCB.SelectedValue as string != "None";
+			Debug.Log("TitleCB SelectedValue: " + titleCB.SelectedValue);
 		}
 
-		private void addSelectedItemButton_Click(object sender, RoutedEventArgs e)
+		private void addSelectedTitleButton_Click(object sender, RoutedEventArgs e)
 		{
-			int id = (int)itemCB.SelectedValue;
-			Item item = itemList.FirstOrDefault(it => it.id == id);
-			if (!interaction.itemList.Contains(item))
+			int id = (int)titleCB.SelectedValue;
+			Title title = titleList.FirstOrDefault(it => it.id == id);
+			if (!interaction.titleList.Contains(title))
 			{
-				interaction.itemList.Add(item);
+				interaction.titleList.Add(title);
 			}
 		}
 
-		private void removeItemButton_Click(object sender, RoutedEventArgs e)
+		private void removeTitleButton_Click(object sender, RoutedEventArgs e)
 		{
-			Item item = (Item)((Button)sender).DataContext;
+			Title title = (Title)((Button)sender).DataContext;
 			//int id = (int)((Button)sender).DataContext;
-			//Item item = itemList.FirstOrDefault(it => it.id == id);
-			if (interaction.itemList.Contains(item))
-				interaction.itemList.Remove(item);
+			//Title title = titleList.FirstOrDefault(it => it.id == id);
+			if (interaction.titleList.Contains(title))
+				interaction.titleList.Remove(title);
 		}
 
 		private void addFinishedTriggerButton_Click(object sender, RoutedEventArgs e)

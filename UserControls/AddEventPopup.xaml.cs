@@ -259,5 +259,19 @@ namespace JiME.UserControls
 		{
 			e.CanExecute = true;
 		}
+
+		private void CommandNewTitleInteraction_Executed(object sender, ExecutedRoutedEventArgs e)
+		{
+			ItemInteractionWindow ew = new ItemInteractionWindow(scenario);
+			if (ew.ShowDialog() == true)
+			{
+				scenario.AddInteraction(ew.interaction);
+				HandleCreatedEvent(ew.interaction);
+			}
+		}
+		private void CommandNewTitleInteraction_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = true;
+		}
 	}
 }

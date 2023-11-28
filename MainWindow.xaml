@@ -25,14 +25,15 @@
 		<CommandBinding Command="local:MyCommands.NewConditionalInteraction" Executed="CommandNewConditionalInteraction_Executed" CanExecute="CommandNewConditionalInteraction_CanExecute"/>
 		<CommandBinding Command="local:MyCommands.NewDecisionInteraction" Executed="CommandNewDecisionInteraction_Executed" CanExecute="CommandNewDecisionInteraction_CanExecute"/>
 		<CommandBinding Command="local:MyCommands.NewDialogInteraction" Executed="CommandNewDialogInteraction_Executed" CanExecute="CommandNewDialogInteraction_CanExecute"/>
-		<CommandBinding Command="local:MyCommands.NewItemInteraction" Executed="CommandNewItemInteraction_Executed" CanExecute="CommandNewItemInteraction_CanExecute"/>
 		<CommandBinding Command="local:MyCommands.NewThreatInteraction" Executed="CommandNewThreatInteraction_Executed" CanExecute="CommandNewThreatInteraction_CanExecute"/>
+		<CommandBinding Command="local:MyCommands.NewItemInteraction" Executed="CommandNewItemInteraction_Executed" CanExecute="CommandNewItemInteraction_CanExecute"/>
 		<CommandBinding Command="local:MyCommands.NewMultiInteraction" Executed="CommandNewMultiInteraction_Executed" CanExecute="CommandNewMultiInteraction_CanExecute"/>
 		<CommandBinding Command="local:MyCommands.NewReplaceTokenInteraction" Executed="CommandNewReplaceTokenInteraction_Executed" CanExecute="CommandNewReplaceTokenInteraction_CanExecute"/>
 		<CommandBinding Command="local:MyCommands.NewRewardInteraction" Executed="CommandNewRewardInteraction_Executed" CanExecute="CommandNewRewardInteraction_CanExecute"/>
 		<CommandBinding Command="local:MyCommands.NewPersistentInteraction" Executed="CommandNewPersistentInteraction_Executed" CanExecute="CommandNewPersistentInteraction_CanExecute"/>
 		<CommandBinding Command="local:MyCommands.NewTextInteraction" Executed="CommandNewTextInteraction_Executed" CanExecute="CommandNewTextInteraction_CanExecute"/>
 		<CommandBinding Command="local:MyCommands.NewTestInteraction" Executed="CommandNewTestInteraction_Executed" CanExecute="CommandNewTestInteraction_CanExecute"/>
+		<CommandBinding Command="local:MyCommands.NewTitleInteraction" Executed="CommandNewTitleInteraction_Executed" CanExecute="CommandNewItemInteraction_CanExecute"/>
 		<CommandBinding Command="local:MyCommands.NewBranchInteraction" Executed="CommandNewBranchInteraction_Executed" CanExecute="CommandNewBranchInteraction_CanExecute"/>
 
 	</Window.CommandBindings>
@@ -84,6 +85,10 @@
                }">
 			</MenuItem>
 			<MenuItem Command="local:MyCommands.NewTextInteraction" CommandTarget="{Binding Path=PlacementTarget,
+                        RelativeSource={RelativeSource AncestorType=ContextMenu}
+               }">
+			</MenuItem>
+			<MenuItem Command="local:MyCommands.NewTitleInteraction" CommandTarget="{Binding Path=PlacementTarget,
                         RelativeSource={RelativeSource AncestorType=ContextMenu}
                }">
 			</MenuItem>
