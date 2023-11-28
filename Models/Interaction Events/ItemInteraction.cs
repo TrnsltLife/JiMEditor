@@ -6,7 +6,8 @@ namespace JiME
 {
 	public class ItemInteraction : InteractionBase, INotifyPropertyChanged, ICommonData
 	{
-		string _finishedTrigger;
+		int _loreFallback, _xpFallback, _threatFallback;
+		string _fallbackTrigger;
 		int _randomizedItemsCount;
 
 		ObservableCollection<Item> _itemList { get; set; } = new ObservableCollection<Item>();
@@ -25,13 +26,41 @@ namespace JiME
 			}
 		}
 
-		public string finishedTrigger
+		public string fallbackTrigger
 		{
-			get { return _finishedTrigger; }
+			get { return _fallbackTrigger; }
 			set
 			{
-				_finishedTrigger = value;
-				NotifyPropertyChanged("finishedTrigger");
+				_fallbackTrigger = value;
+				NotifyPropertyChanged("fallbackTrigger");
+			}
+		}
+
+		public int loreFallback
+		{
+			get => _loreFallback;
+			set
+			{
+				_loreFallback = value;
+				NotifyPropertyChanged("loreFallback");
+			}
+		}
+		public int xpFallback
+		{
+			get => _xpFallback;
+			set
+			{
+				_xpFallback = value;
+				NotifyPropertyChanged("xpFallback");
+			}
+		}
+		public int threatFallback
+		{
+			get => _threatFallback;
+			set
+			{
+				_threatFallback = value;
+				NotifyPropertyChanged("threatFallback");
 			}
 		}
 
@@ -63,7 +92,7 @@ namespace JiME
 			base.CloneInto(interact);
 			interact.randomizedItemsCount = this.randomizedItemsCount;
 			interact.itemList = new ObservableCollection<Item>(this.itemList);
-			interact.finishedTrigger = this.finishedTrigger;
+			interact.fallbackTrigger = this.fallbackTrigger;
 			return interact;
 		}
 	}

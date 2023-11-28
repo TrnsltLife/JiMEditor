@@ -201,9 +201,6 @@ namespace JiME.Views
 		private void itemCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			addSelectedItemButton.IsEnabled = true;
-			//addSelectedItemButton.IsEnabled = itemCB.SelectedIndex != 0;
-			//addSelectedItemButton.IsEnabled = itemCB.SelectedValue as string != "None";
-			Debug.Log("ItemCB SelectedValue: " + itemCB.SelectedValue);
 		}
 
 		private void addSelectedItemButton_Click(object sender, RoutedEventArgs e)
@@ -219,18 +216,16 @@ namespace JiME.Views
 		private void removeItemButton_Click(object sender, RoutedEventArgs e)
 		{
 			Item item = (Item)((Button)sender).DataContext;
-			//int id = (int)((Button)sender).DataContext;
-			//Item item = itemList.FirstOrDefault(it => it.id == id);
 			if (interaction.itemList.Contains(item))
 				interaction.itemList.Remove(item);
 		}
 
-		private void addFinishedTriggerButton_Click(object sender, RoutedEventArgs e)
+		private void addFallbackTriggerButton_Click(object sender, RoutedEventArgs e)
 		{
 			TriggerEditorWindow tw = new TriggerEditorWindow(scenario);
 			if (tw.ShowDialog() == true)
 			{
-				interaction.finishedTrigger = tw.triggerName;
+				interaction.fallbackTrigger = tw.triggerName;
 			}
 		}
 	}

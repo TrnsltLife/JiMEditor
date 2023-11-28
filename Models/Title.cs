@@ -14,7 +14,6 @@ namespace JiME
         public int collection;
         string _dataName;
         public string originalName;
-        string _titleName;
 
         public Title() { }
 

@@ -30,7 +30,7 @@
 				<scm:SortDescription PropertyName="dataName"/>
 			</CollectionViewSource.SortDescriptions>
 		</CollectionViewSource>
-		<CollectionViewSource x:Key="cvsFinishedTrigger" Source="{Binding scenario.triggersObserver}">
+		<CollectionViewSource x:Key="cvsFallbackTrigger" Source="{Binding scenario.triggersObserver}">
 			<CollectionViewSource.SortDescriptions>
 				<scm:SortDescription PropertyName="isEmpty" Direction="Descending"/>
 				<scm:SortDescription PropertyName="dataName"/>
@@ -181,9 +181,9 @@
 				<StackPanel Margin="0,5,0,0">
 					<Border Style="{StaticResource callout}">
 						<StackPanel Orientation="Vertical">
-							<TextBlock Style="{StaticResource SubText}" Text="When this event is triggered, it will try to give the players a random selection of the items you specify below. If you want to definitely assign just a single item, only add one item to the list." VerticalAlignment="Center" TextWrapping="Wrap" />
-							<TextBlock Style="{StaticResource SubText}" Text="If some of the items you want to give the players cannot be given (because the players already have them), you can assign a trigger to fire." VerticalAlignment="Center" TextWrapping="Wrap" />
-							<TextBlock Style="{StaticResource SubText}" Text="If none of the items can be given, you can assign a trigger to fire." VerticalAlignment="Center" TextWrapping="Wrap" />
+							<TextBlock Style="{StaticResource SubText}" Text="-When this event is triggered, it will try to give the players a random selection of the items you specify below. If you want to definitely assign just a single item, only add one item to the list." VerticalAlignment="Center" TextWrapping="Wrap" />
+							<TextBlock Style="{StaticResource SubText}" Text="-If some of the items you want to give the players cannot be given (because the players already have them), you can give fallback rewards of lore/xp/threat reduction instead." VerticalAlignment="Center" TextWrapping="Wrap" />
+							<TextBlock Style="{StaticResource SubText}" Text="-If none of the items can be given, you can assign a fallback trigger to fire." VerticalAlignment="Center" TextWrapping="Wrap" />
 						</StackPanel>
 					</Border>
 
@@ -249,13 +249,28 @@
 						</StackPanel>
 					</Border>
 
-					<!--completion trigger-->
+					<!--lore/xp/threat rewards-->
 					<Border Style="{StaticResource callout}">
+						<StackPanel Orientation="Vertical">
+							<TextBlock Text="Give the following rewards for each item above that cannot be given:" Style="{StaticResource Heading}" Margin="0,5,0,0"/>
+							<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+								<TextBlock Style="{StaticResource Heading}" Margin="0,0,0,0" Text="Lore:"/>
+								<TextBox Style="{StaticResource DefaultTextBox}" Width="25" Text="{Binding interaction.loreFallback}" Margin="10,0"/>
+								<TextBlock Style="{StaticResource Heading}" Margin="10,0,0,0" Text="XP:"/>
+								<TextBox Style="{StaticResource DefaultTextBox}" Width="25" Text="{Binding interaction.xpFallback}" Margin="10,0"/>
+								<TextBlock Style="{StaticResource Heading}" Margin="10,0,0,0" Text="Threat Reduction:"/>
+								<TextBox Style="{StaticResource DefaultTextBox}" Width="25" Text="{Binding interaction.threatFallback}" Margin="10,0"/>
+							</StackPanel>
+						</StackPanel>
+					</Border>
+
+					<!--fallback trigger-->
+					<Border Style="{StaticResource callout}" Margin="0,10,0,0">
 						<StackPanel>
-							<TextBlock Style="{StaticResource Heading}" Text="...Fire This Trigger (Required):"/>
+							<TextBlock Style="{StaticResource Heading}" Text="Or, if no items can be given at all, Fire This Trigger instead of lore/xp/threat rewards (optional):"/>
 							<StackPanel Orientation="Horizontal">
-								<ComboBox VerticalAlignment="Center" HorizontalAlignment="Left" Width="250" ItemsSource="{Binding  Source={StaticResource cvsFinishedTrigger}}" DisplayMemberPath="dataName" SelectedValue="{Binding interaction.finishedTrigger}" SelectedValuePath="dataName" Margin="0"/>
-								<Button x:Name="addFinishedTriggerButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="addFinishedTriggerButton_Click">
+								<ComboBox VerticalAlignment="Center" HorizontalAlignment="Left" Width="250" ItemsSource="{Binding  Source={StaticResource cvsFallbackTrigger}}" DisplayMemberPath="dataName" SelectedValue="{Binding interaction.fallbackTrigger}" SelectedValuePath="dataName" Margin="0"/>
+								<Button x:Name="addFallbackTriggerButton" Background="MediumSeaGreen" Margin="10,0" Height="32" Width="32" Click="addFallbackTriggerButton_Click">
 									<Image Source="/JiME;component/Assets/add2.png"/>
 								</Button>
 							</StackPanel>

@@ -224,12 +224,12 @@ namespace JiME.Views
 				interaction.titleList.Remove(title);
 		}
 
-		private void addFinishedTriggerButton_Click(object sender, RoutedEventArgs e)
+		private void addFallbackTriggerButton_Click(object sender, RoutedEventArgs e)
 		{
 			TriggerEditorWindow tw = new TriggerEditorWindow(scenario);
 			if (tw.ShowDialog() == true)
 			{
-				interaction.finishedTrigger = tw.triggerName;
+				interaction.fallbackTrigger = tw.triggerName;
 			}
 		}
 	}
