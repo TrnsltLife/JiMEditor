@@ -286,7 +286,7 @@
 			</Grid.Background>
 
             <!-- Draw the Graph behind the TileMap controls -->
-            <controls:ZoomControl x:Name="visualizationZoomCtrl" Grid.Column="0" Grid.ColumnSpan="2" Background="Transparent">
+            <controls:ZoomControl x:Name="visualizationZoomCtrl" Grid.Column="0" Grid.ColumnSpan="2" Background="Transparent" IsAnimationEnabled="False" ZoomStep="2" ZoomSensitivity="10">
                 <localviews:GraphArea x:Name="visualizationGraphArea" >
                     <localviews:GraphArea.Resources>
                         <Style TargetType="TextBlock"/>
