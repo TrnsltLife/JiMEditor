@@ -91,5 +91,27 @@ namespace JiME.Views
             LogicCore.Graph = dataGraph;
             GenerateGraph(true, true);
         }
+
+        public System.Windows.Rect? FindGraphNodeRect(string dataName)
+        {
+            // Try to find single vertex that matches the data name
+            var vertex = LogicCore.Graph.Vertices.Where(v => v.Text == dataName).SingleOrDefault();
+            if (vertex != null)
+            {
+                // Single vertex found -> locate it in the graph
+                if (this.VertexList.ContainsKey(vertex))
+                {
+                    var control = this.VertexList[vertex];
+                    var top = System.Windows.Controls.Canvas.GetTop(control);
+                    var left = System.Windows.Controls.Canvas.GetLeft(control);
+                    var topLeftScreen = new System.Windows.Point(left, top);
+                    var widthAndHeight = new System.Windows.Size(control.ActualWidth, control.ActualHeight);
+                    return new System.Windows.Rect(topLeftScreen, widthAndHeight);
+                }
+            }
+
+            // Not found
+            return null;
+        }
     }
 }

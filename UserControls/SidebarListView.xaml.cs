@@ -16,6 +16,8 @@ namespace JiME.UserControls
 		public bool _showDuplicateButton = false;
 		public string _duplicateButtonVisibility = "Collapsed";
 
+        public event Action<string> NewItemSelectedEvent;
+
 		public bool ShowDuplicateButton
 		{
 			get => _showDuplicateButton;
@@ -58,7 +60,23 @@ namespace JiME.UserControls
 			onRemoveEvent?.Invoke( sender, e );
 		}
 
-		private void Duplicate_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void DataListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count == 1)
+            {
+                var newSelection = e.AddedItems[0];
+                if (newSelection is IInteraction i)
+                {
+                    NewItemSelectedEvent?.Invoke(i.dataName);
+                }
+                else if (newSelection is ICommonData c)
+                {
+                    NewItemSelectedEvent?.Invoke(c.dataName);
+                }
+            }
+        }
+
+        private void Duplicate_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
 			onDuplicateEvent?.Invoke(sender, e);
 		}

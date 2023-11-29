@@ -285,7 +285,7 @@
 				<ImageBrush ImageSource="Assets/ring.png" Stretch="Uniform" Opacity="0.1"/>
 			</Grid.Background>
 
-            <!-- Draw this behind the TileMap controls -->
+            <!-- Draw the Graph behind the TileMap controls -->
             <controls:ZoomControl x:Name="visualizationZoomCtrl" Grid.Column="0" Grid.ColumnSpan="2" Background="Transparent">
                 <localviews:GraphArea x:Name="visualizationGraphArea" >
                     <localviews:GraphArea.Resources>
@@ -294,6 +294,13 @@
                     </localviews:GraphArea.Resources>
                 </localviews:GraphArea>
             </controls:ZoomControl>
+
+            <StackPanel Orientation="Vertical" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" >
+                <CheckBox Name="graphVisibleCheckbox" Content="Show Graph" IsChecked="True" Foreground="White" Checked="GraphVisibleCheckbox_Checked" Unchecked="GraphVisibleCheckbox_Unchecked" />
+                <CheckBox Name="graphAutofocusCheckbox" Content="Autofocus" IsChecked="True" Foreground="White" />
+            </StackPanel>
+      
+            <Button Name="graphLoadingIndicator" Content="Graph loading..." FontSize="16" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" IsHitTestVisible="False" Background="DarkGray" Height="50" Width="160" />
 
             <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Column="0" VerticalAlignment="Top">
 				<!--ItemsSource="{Binding chapterObserver}"-->
