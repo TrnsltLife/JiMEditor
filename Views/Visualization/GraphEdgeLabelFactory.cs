@@ -26,11 +26,11 @@ namespace JiME.Views
                 edgeLabel.AlignToEdge = true;
 
                 // Label visibility is controlled by the label text
-                var edgeText = (edgeLabel.AttachNode?.Edge as Visualization.DataEdge)?.Text;
-                if (edgeText?.Length > 0)
+                var edge = edgeLabel.AttachNode?.Edge as Visualization.DataEdge;
+                if (edge?.Text?.Length > 0)
                 {
                     edgeLabel.Visibility = Visibility.Visible;
-                    edgeLabel.ToolTip = edgeText; // <-- Also show as tooltip since the edge arrow already has the same tooltip
+                    edgeLabel.ToolTip = edge.Source.Text + "\n" + edge.Text + "\n" + edge.Target.Text; // <-- Also show as tooltip since the edge arrow already has the same tooltip
                 }
                 else
                 {
