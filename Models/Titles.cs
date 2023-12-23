@@ -46,8 +46,8 @@ namespace JiME
             new Title(28){originalName="Undying", dataName="Unfading", collection=4},
             new Title(29){originalName="Sly-Tongue", dataName="Trick-Talker", collection=4},
             new Title(30){originalName="Spirit-Bonded", dataName="Ghost-Buddy", collection=4},
-            new Title(31){originalName="Friend of Gondor", dataName="[Condor]-Buddy", collection=5},
-            new Title(32){originalName="Friend of Rohan", dataName="[Rhododend]-Buddy", collection=5},
+            new Title(31){originalName="Friend of Gondor", dataName="[Gondorf-DE]-Buddy", collection=5},
+            new Title(32){originalName="Friend of Rohan", dataName="[Rohan-FR]-Buddy", collection=5},
             new Title(33){originalName="Beast-Singer", dataName="Creature-Crooner", collection=5}
         };
     }
