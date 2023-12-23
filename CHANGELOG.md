@@ -8,6 +8,15 @@ All notable changes to this project will be documented in this file.
 ### Changed
 ### Removed
 
+## [v0.30]
+### Added
+- Item Event type that allows giving Trinkets and Mounts.
+- Title Event type that allows giving Titles.
+- Checkboxes on the Scenario Settings screen that allow a party to start with the Trinkets or Mounts of their choice.
+### Changed
+- Fixed explanatory text on Monster Bonus Editor window that was partially off-screen
+### Removed
+
 ## [v0.29]
 
 ### Added
