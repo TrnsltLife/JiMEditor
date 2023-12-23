@@ -80,6 +80,7 @@
 								<StackPanel Orientation="Vertical">
 									<TextBlock Style="{StaticResource Heading}" Margin="0,0,10,5" Text="Immunity"/>
 									<TextBlock Style="{StaticResource SubText}" Margin="0,0,10,5" >The enemy will be immune to the following effects.</TextBlock>
+									<TextBlock Style="{StaticResource SubText}" Margin="0,0,10,5" ></TextBlock>
 									<CheckBox x:Name="immuneCleaveCheck" Content="Cleave" Foreground="white" VerticalAlignment="Center" IsChecked="{Binding modifier.immuneCleave, UpdateSourceTrigger=PropertyChanged}"/>
 									<CheckBox x:Name="immuneLethalCheck" Content="Lethal" Foreground="white" VerticalAlignment="Center" IsChecked="{Binding modifier.immuneLethal, UpdateSourceTrigger=PropertyChanged}"/>
 									<CheckBox x:Name="immunePierceCheck" Content="Pierce" Foreground="white" VerticalAlignment="Center" IsChecked="{Binding modifier.immunePierce, UpdateSourceTrigger=PropertyChanged}"/>
@@ -90,7 +91,8 @@
 
 								<StackPanel Orientation="Vertical">
 									<TextBlock Style="{StaticResource Heading}" Margin="0,0,10,5" Text="Feigned Immunity"/>
-									<TextBlock Style="{StaticResource SubText}" Margin="0,0,10,5" >The game will describe the enemy as being immune, but there will be no actual effect.</TextBlock>
+									<TextBlock Style="{StaticResource SubText}" Margin="0,0,10,5" >The game will describe the enemy as being immune,</TextBlock>
+									<TextBlock Style="{StaticResource SubText}" Margin="0,0,10,5" >but there will be no actual effect.</TextBlock>
 									<CheckBox x:Name="fakeCleaveCheck" Content="Cleave" Foreground="white" VerticalAlignment="Center" IsChecked="{Binding modifier.fakeCleave, UpdateSourceTrigger=PropertyChanged}"/>
 									<CheckBox x:Name="fakeLethalCheck" Content="Lethal" Foreground="white" VerticalAlignment="Center" IsChecked="{Binding modifier.fakeLethal, UpdateSourceTrigger=PropertyChanged}"/>
 									<CheckBox x:Name="fakePierceCheck" Content="Pierce" Foreground="white" VerticalAlignment="Center" IsChecked="{Binding modifier.fakePierce, UpdateSourceTrigger=PropertyChanged}"/>
