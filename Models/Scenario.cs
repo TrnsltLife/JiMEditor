@@ -631,6 +631,12 @@ namespace JiME
 				case InteractionType.Reward:
 					interactionObserver.Add( interaction );
 					break;
+				case InteractionType.Item:
+					interactionObserver.Add(interaction);
+					break;
+				case InteractionType.Title:
+					interactionObserver.Add(interaction);
+					break;
 				default:
 					throw new Exception( "Interaction type not supported: " + interaction.interactionType );
 			}

@@ -15,7 +15,7 @@ using Newtonsoft.Json;
 namespace JiME
 {
 	public enum ScenarioType { Journey, Battle }
-	public enum InteractionType { Text, Threat, StatTest, Decision, Branch, Darkness, MultiEvent, Persistent, Conditional, Dialog, Replace, Reward }
+	public enum InteractionType { Text, Threat, StatTest, Decision, Branch, Darkness, MultiEvent, Persistent, Conditional, Dialog, Replace, Reward, Item, Title }
 	/// <summary>
 	/// The order of the monsters in this enum is important to maintain unchanged because the order (0-29) tells the companion app which monster to use.
 	/// The order for the first 7 (core set) was set by GlowPuff and is kept for backwards compatibility.
@@ -405,8 +405,8 @@ namespace JiME
 		/// AKA "Engine Version" in the companion app
 		/// Update this number every time the file format changes with new features
 		/// </summary>
-		public static string formatVersion = "1.15";
-		public static string appVersion = "0.29";
+		public static string formatVersion = "1.30";
+		public static string appVersion = "0.30";
 		public static Dictionary<int, BaseTileData> tileDictionary { get; set; } = new Dictionary<int, BaseTileData>();
 		public static Dictionary<int, BaseTileData> tileDictionaryB { get; set; } = new Dictionary<int, BaseTileData>();
 		public static int tolerance = 25;

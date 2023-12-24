@@ -301,7 +301,23 @@ namespace JiME.Visualization
                     {
                         dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "with this" });
                     });
-                }                
+                }
+                else if (x is ItemInteraction)
+                {
+                    var x2 = (ItemInteraction)x;
+                    getTriggerVertex(vertexDict, x2.fallbackTrigger, v =>
+                    {
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"fallback\"" });
+                    });
+                }
+                else if (x is TitleInteraction)
+                {
+                    var x2 = (TitleInteraction)x;
+                    getTriggerVertex(vertexDict, x2.fallbackTrigger, v =>
+                    {
+                        dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "\"fallback\"" });
+                    });
+                }
                 else // TextInteraction, NoneInteraction, RewardInteraction, DarknessInteraction
                 {
                     // These types do not have any special connections to add
@@ -392,6 +408,13 @@ namespace JiME.Visualization
                 {
                     dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "explore triggers" });
                 });
+
+
+                getTriggerVertex(vertexDict, x.exploredAllTilesTrigger, v =>
+                {
+                    dataGraph.AddEdge(new DataEdge(vertex, v) { Text = "fully explored triggers" });
+                });
+
             });
 
             // Check each threat theshold (ordered by threshold)

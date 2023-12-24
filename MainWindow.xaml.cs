@@ -378,9 +378,25 @@ namespace JiME
 				RewardInteractionWindow w = new RewardInteractionWindow( scenario, castInteraction);
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
+			else if (interactionItem is ItemInteraction)
+			{
+				ItemInteraction castInteraction = (ItemInteraction)interactionItem;
+				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
+				string originalPrefix = castInteraction.TranslationKeyPrefix();
+				ItemInteractionWindow w = new ItemInteractionWindow(scenario, castInteraction);
+				castInteraction.HandleWindow(w, scenario.translationObserver);
+			}
+			else if (interactionItem is TitleInteraction)
+			{
+				TitleInteraction castInteraction = (TitleInteraction)interactionItem;
+				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
+				string originalPrefix = castInteraction.TranslationKeyPrefix();
+				TitleInteractionWindow w = new TitleInteractionWindow(scenario, castInteraction);
+				castInteraction.HandleWindow(w, scenario.translationObserver);
+			}
 		}
 
-        void OnSettingsTrigger(object sender, EventArgs e)
+		void OnSettingsTrigger(object sender, EventArgs e)
         {
             OpenTriggerEditor((Trigger)triggersUC.dataListView.SelectedItem);
         }
@@ -511,6 +527,18 @@ namespace JiME
 				RewardInteraction interact = ((RewardInteraction)interactionsUC.dataListView.Items[idx]).Clone();
 				RewardInteractionWindow bw = new RewardInteractionWindow(scenario, (RewardInteraction)interact, true);
 				if(bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
+			}
+			else if (interactionsUC.dataListView.SelectedItem is ItemInteraction)
+			{
+				ItemInteraction interact = ((ItemInteraction)interactionsUC.dataListView.Items[idx]).Clone();
+				ItemInteractionWindow bw = new ItemInteractionWindow(scenario, interact, true);
+				if (bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
+			}
+			else if (interactionsUC.dataListView.SelectedItem is TitleInteraction)
+			{
+				TitleInteraction interact = ((TitleInteraction)interactionsUC.dataListView.Items[idx]).Clone();
+				TitleInteractionWindow bw = new TitleInteractionWindow(scenario, interact, true);
+				if (bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
 			}
 		}
 
@@ -1010,6 +1038,32 @@ namespace JiME
 			}
 		}
 		private void CommandNewRewardInteraction_CanExecute( object sender, System.Windows.Input.CanExecuteRoutedEventArgs e )
+		{
+			e.CanExecute = true;
+		}
+
+		private void CommandNewItemInteraction_Executed(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+		{
+			ItemInteractionWindow ew = new ItemInteractionWindow(scenario);
+			if (ew.ShowDialog() == true)
+			{
+				scenario.AddInteraction(ew.interaction);
+			}
+		}
+		private void CommandNewItemInteraction_CanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = true;
+		}
+
+		private void CommandNewTitleInteraction_Executed(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+		{
+			TitleInteractionWindow ew = new TitleInteractionWindow(scenario);
+			if (ew.ShowDialog() == true)
+			{
+				scenario.AddInteraction(ew.interaction);
+			}
+		}
+		private void CommandNewTitleInteraction_CanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
 		{
 			e.CanExecute = true;
 		}
