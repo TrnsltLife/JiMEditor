@@ -512,6 +512,18 @@ namespace JiME
 				RewardInteractionWindow bw = new RewardInteractionWindow(scenario, (RewardInteraction)interact, true);
 				if(bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
 			}
+			else if (interactionsUC.dataListView.SelectedItem is ItemInteraction)
+			{
+				ItemInteraction interact = ((ItemInteraction)interactionsUC.dataListView.Items[idx]).Clone();
+				ItemInteractionWindow bw = new ItemInteractionWindow(scenario, interact, true);
+				if (bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
+			}
+			else if (interactionsUC.dataListView.SelectedItem is TitleInteraction)
+			{
+				TitleInteraction interact = ((TitleInteraction)interactionsUC.dataListView.Items[idx]).Clone();
+				TitleInteractionWindow bw = new TitleInteractionWindow(scenario, interact, true);
+				if (bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
+			}
 		}
 
 		void OnDuplicateActivations(object sender, EventArgs e)
