@@ -34,6 +34,14 @@ namespace JiME.Views
             // Always use black text
             ctrl.Foreground = Brushes.Black;
 
+            // Add a very slight opacity to the control so that it more clear if they overlap for some reason
+            // NOTE: Setting Border-details do nothing to the underlying control unfortunately so used this
+            ctrl.Opacity = 0.9;
+
+            // Set max width to these controls to help with overlapping issue
+            // NOTE: This is somewhat related to what is used as SimpleTreeLayoutParameters.VertexGap in GraphArea settings 
+            ctrl.MaxWidth = 300;
+
             // Update coloring
             switch (d.VertexType)
             {
@@ -72,7 +80,7 @@ namespace JiME.Views
                     await Task.Delay(100);
                     d.ClickAction(d);
                 };
-                ctrl.ToolTip = "Click to edit " + d.Source?.GetType().Name ?? "";
+                ctrl.ToolTip = d.Text + "\nClick to edit " + d.Source?.GetType().Name ?? "";
             }
             else // No click action
             {
@@ -130,7 +138,15 @@ namespace JiME.Views
             var ctrl = base.CreateEdgeControl(source, target, edge, showArrows, visibility); // Visibility affects arrow visibility, not the balloon
             ctrl.Opacity = 0.5;
             ctrl.Foreground = Brushes.LightGray;
-            ctrl.ToolTip = e.Text;
+            if (e.Text?.Length > 0)
+            {
+                ctrl.ToolTip = e.Source.Text + "\n" + e.Text + "\n" + e.Target.Text;
+            }
+            else
+            {
+                ctrl.ToolTip = e.Source.Text + "\n-->\n" + e.Target.Text;
+            }
+            
             return ctrl;
         }
     }

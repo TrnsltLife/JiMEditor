@@ -41,8 +41,9 @@ namespace JiME.Views
             logicCore.DefaultLayoutAlgorithmParams = logicCore.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.Tree);
             //Unfortunately to change algo parameters you need to specify params type which is different for every algorithm.
             //((KKLayoutParameters)logicCore.DefaultLayoutAlgorithmParams).MaxIterations = 100;
-            ((SimpleTreeLayoutParameters)logicCore.DefaultLayoutAlgorithmParams).LayerGap = 100;
-            ((SimpleTreeLayoutParameters)logicCore.DefaultLayoutAlgorithmParams).VertexGap = 100;
+            var layoutParams = (SimpleTreeLayoutParameters)logicCore.DefaultLayoutAlgorithmParams;
+            layoutParams.LayerGap = 100;
+            layoutParams.VertexGap = 200;
 
             //This property sets vertex overlap removal algorithm.
             //Such algorithms help to arrange vertices in the layout so no one overlaps each other.
@@ -89,6 +90,28 @@ namespace JiME.Views
             // Just update the graph in the logic core
             LogicCore.Graph = dataGraph;
             GenerateGraph(true, true);
+        }
+
+        public System.Windows.Rect? FindGraphNodeRect(string dataName)
+        {
+            // Try to find single vertex that matches the data name
+            var vertex = LogicCore.Graph.Vertices.Where(v => v.Text == dataName).SingleOrDefault();
+            if (vertex != null)
+            {
+                // Single vertex found -> locate it in the graph
+                if (this.VertexList.ContainsKey(vertex))
+                {
+                    var control = this.VertexList[vertex];
+                    var top = System.Windows.Controls.Canvas.GetTop(control);
+                    var left = System.Windows.Controls.Canvas.GetLeft(control);
+                    var topLeftScreen = new System.Windows.Point(left, top);
+                    var widthAndHeight = new System.Windows.Size(control.ActualWidth, control.ActualHeight);
+                    return new System.Windows.Rect(topLeftScreen, widthAndHeight);
+                }
+            }
+
+            // Not found
+            return null;
         }
     }
 }

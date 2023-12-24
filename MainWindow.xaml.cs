@@ -45,18 +45,21 @@ namespace JiME
 			interactionsUC.onRemoveEvent += OnRemoveEvent;
 			interactionsUC.onSettingsEvent += OnSettingsInteraction;
 			interactionsUC.onDuplicateEvent += OnDuplicateInteraction;
+            interactionsUC.NewItemSelectedEvent += NewItemSelectedEvent;
 
-			triggersUC.onAddEvent += OnAddTrigger;
+            triggersUC.onAddEvent += OnAddTrigger;
 			triggersUC.onRemoveEvent += OnRemoveTrigger;
 			triggersUC.onSettingsEvent += OnSettingsTrigger;
 			triggersUC.onDuplicateEvent += OnDuplicateTrigger;
+            triggersUC.NewItemSelectedEvent += NewItemSelectedEvent;
 
-			objectivesUC.onAddEvent += OnAddObjective;
+            objectivesUC.onAddEvent += OnAddObjective;
 			objectivesUC.onRemoveEvent += OnRemoveObjective;
 			objectivesUC.onSettingsEvent += OnSettingsObjective;
 			objectivesUC.onDuplicateEvent += OnDuplicateObjective;
+            objectivesUC.NewItemSelectedEvent += NewItemSelectedEvent;
 
-			activationsUC.onAddEvent += OnAddActivations;
+            activationsUC.onAddEvent += OnAddActivations;
 			activationsUC.onRemoveEvent += OnRemoveActivations;
 			activationsUC.onSettingsEvent += OnSettingsActivations;
 			activationsUC.onDuplicateEvent += OnDuplicateActivations;
@@ -118,15 +121,28 @@ namespace JiME
             // Useful to avoid re-visualizing multiple times in short succession (e.g. due to adding a trigger also sorts it which triggers this MANY times)
             //Console.WriteLine("TRIGGER VISUALIZE SCENARIO");
             WpfUtils.DeferExecution("VisualizeScenario", 100, VisualizeScenario);
+
+            // Show the loading indicator here so it has time to appear before load starts
+            if (graphLoadingIndicator != null)
+            {
+                graphLoadingIndicator.Visibility = Visibility.Visible;
+            }
         }
 
         private void VisualizeScenario()
         {
             //Console.WriteLine("VISUALIZE SCENARIO");
-            if (scenario != null)
+            try
             {
-                var dataGraph = Visualization.Graph.Generate(scenario, VisializationItemClicked);
-                visualizationGraphArea.ShowGraph(dataGraph);
+                if (scenario != null)
+                {
+                    var dataGraph = Visualization.Graph.Generate(scenario, VisializationItemClicked);
+                    visualizationGraphArea.ShowGraph(dataGraph);
+                }
+            }
+            finally
+            {
+                graphLoadingIndicator.Visibility = Visibility.Hidden;
             }
         }
 
@@ -1135,6 +1151,47 @@ namespace JiME
         private void activationsUC_Loaded(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void GraphVisibleCheckbox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (visualizationZoomCtrl != null)
+            {
+                visualizationZoomCtrl.Visibility = Visibility.Visible;
+                TriggerDeferredVisualizeScenario();
+            }
+        }
+
+        private void GraphVisibleCheckbox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (visualizationZoomCtrl != null)
+            {
+                visualizationZoomCtrl.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void NewItemSelectedEvent(string dataName)
+        {
+            // Focus visualization if Autofocus is enabled (and if graph is even visible)
+            if (graphAutofocusCheckbox?.IsChecked == true && graphVisibleCheckbox?.IsChecked == true)
+            {
+                var rect = visualizationGraphArea.FindGraphNodeRect(dataName);
+                if (rect.HasValue)
+                {
+                    // The rectangle shows exactly the item --> we like to expand it a bit
+                    int multiplier = 7;
+                    var r = rect.Value;
+                    var largerRect = new System.Windows.Rect(
+                        x: r.X - (multiplier / 2) * r.Width,
+                        y: r.Y - (multiplier / 2) * r.Height,
+                        width: multiplier * r.Width,
+                        height: multiplier * r.Height);
+
+                    visualizationZoomCtrl.ZoomToContent(largerRect, usingContentCoordinates: true);
+                }
+                
+            }
+            
         }
     }
 }
