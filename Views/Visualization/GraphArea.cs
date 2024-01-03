@@ -92,10 +92,13 @@ namespace JiME.Views
             GenerateGraph(true, true);
         }
 
-        public System.Windows.Rect? FindGraphNodeRect(string dataName)
+        public System.Windows.Rect? FindGraphNodeRect(string dataName, IEnumerable<DataVertex.Type> preferredTypes)
         {
-            // Try to find single vertex that matches the data name
-            var vertex = LogicCore.Graph.Vertices.Where(v => v.Text == dataName).SingleOrDefault();
+            // Try to find first vertex that matches the data name and is one of the preferred types if given
+            var vertex = LogicCore.Graph.Vertices
+                .Where(v => v.Text == dataName)
+                .Where(v => preferredTypes == null || preferredTypes.Contains(v.VertexType))
+                .FirstOrDefault();
             if (vertex != null)
             {
                 // Single vertex found -> locate it in the graph

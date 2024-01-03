@@ -39,8 +39,7 @@ namespace JiME.Visualization
                 }
 
                 // Vertex for the trigger
-                var multiSuffix = x.isMultiTrigger ? "*" : "";
-                var vertex = new DataVertex(x.dataName + multiSuffix, DataVertex.Type.Trigger, x, null, clickAction);
+                var vertex = new DataVertex(x.dataName, DataVertex.Type.Trigger, x, null, clickAction);
                 vertexDict.Add(getTriggerName(x.dataName), vertex);
                 dataGraph.AddVertex(vertex);
                 return vertex;
@@ -120,7 +119,7 @@ namespace JiME.Visualization
                 vertexDict.Add(getInteractionName(x.dataName), vertex);
                 dataGraph.AddVertex(vertex);
 
-                // Create interaction group if needed
+                // Create interaction group if needed (if this Interaction is part of an random integration group)
                 var groupVertex = IntegrationGroupCheck(vertexDict, dataGraph, x.dataName, clickAction);
                 if (groupVertex != null)
                 {

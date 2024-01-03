@@ -26,8 +26,10 @@ namespace JiME
 			System.Globalization.CultureInfo.DefaultThreadCurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
 			System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
 
-			//Initialize utilities
-			Utils.Init();
+            WpfUtils.MainThreadDispatcher = this.Dispatcher;
+
+            //Initialize utilities
+            Utils.Init();
 
 			//Initialize scenario
 			scenario = s ?? new Scenario();
@@ -45,19 +47,19 @@ namespace JiME
 			interactionsUC.onRemoveEvent += OnRemoveEvent;
 			interactionsUC.onSettingsEvent += OnSettingsInteraction;
 			interactionsUC.onDuplicateEvent += OnDuplicateInteraction;
-            interactionsUC.NewItemSelectedEvent += NewItemSelectedEvent;
+            interactionsUC.NewItemSelectedEvent += (name => NewItemSelectedEvent(name, Visualization.DataVertex.Type.Interaction));
 
             triggersUC.onAddEvent += OnAddTrigger;
 			triggersUC.onRemoveEvent += OnRemoveTrigger;
 			triggersUC.onSettingsEvent += OnSettingsTrigger;
 			triggersUC.onDuplicateEvent += OnDuplicateTrigger;
-            triggersUC.NewItemSelectedEvent += NewItemSelectedEvent;
+            triggersUC.NewItemSelectedEvent += (name => NewItemSelectedEvent(name, Visualization.DataVertex.Type.Trigger)); // NOTE: interaction groups are not selected directly so no need to include here
 
             objectivesUC.onAddEvent += OnAddObjective;
 			objectivesUC.onRemoveEvent += OnRemoveObjective;
 			objectivesUC.onSettingsEvent += OnSettingsObjective;
 			objectivesUC.onDuplicateEvent += OnDuplicateObjective;
-            objectivesUC.NewItemSelectedEvent += NewItemSelectedEvent;
+            objectivesUC.NewItemSelectedEvent += (name => NewItemSelectedEvent(name, Visualization.DataVertex.Type.Objective));
 
             activationsUC.onAddEvent += OnAddActivations;
 			activationsUC.onRemoveEvent += OnRemoveActivations;
@@ -84,8 +86,7 @@ namespace JiME
 			((CollectionViewSource)monsterModifiersUC.Resources["cvsListSort"]).Source = scenario.monsterModifierObserver;
 			((CollectionViewSource)translationsUC.Resources["cvsListSort"]).Source = scenario.translationObserver;
 
-			// Initiate visualization defer timer so it won't be done multiple times
-			WpfUtils.MainThreadDispatcher = this.Dispatcher;
+
 
             // Initialize visualization
             GraphX.Controls.ZoomControl.SetViewFinderVisibility(visualizationZoomCtrl, Visibility.Visible); //Set minimap (overview) window to be visible by default
@@ -1170,12 +1171,12 @@ namespace JiME
             }
         }
 
-        private void NewItemSelectedEvent(string dataName)
+        private void NewItemSelectedEvent(string dataName, params Visualization.DataVertex.Type[] vertexTypes)
         {
             // Focus visualization if Autofocus is enabled (and if graph is even visible)
             if (graphAutofocusCheckbox?.IsChecked == true && graphVisibleCheckbox?.IsChecked == true)
             {
-                var rect = visualizationGraphArea.FindGraphNodeRect(dataName);
+                var rect = visualizationGraphArea.FindGraphNodeRect(dataName, vertexTypes.ToList());
                 if (rect.HasValue)
                 {
                     // The rectangle shows exactly the item --> we like to expand it a bit
