@@ -50,7 +50,7 @@ namespace JiME.Views
 
 			itemList = new List<Item>(Items.list.Where(it =>
 				scenario.collectionObserver.Contains(Collection.FromID(it.collection)) &&
-				((it.slotId == Slot.TRINKET && it.tier == 1) || (it.slotId == Slot.MOUNT && it.tier == 0))));
+				((it.slotId == Slot.TRINKET && it.tier <= 1) || (it.slotId == Slot.MOUNT && it.tier == 0))));
 
 			InitializeComponent();
 			DataContext = this;
