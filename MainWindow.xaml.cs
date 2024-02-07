@@ -209,6 +209,12 @@ namespace JiME
 		{
 			//TODO check if USED by a THREAT
 
+			if (interactionsUC.dataListView.SelectedItem is StartInteraction)
+			{
+				MessageBox.Show("You can't delete the Starting Position event.", "Cannot Edit Startg Position Event", MessageBoxButton.OK, MessageBoxImage.Information);
+				return;
+			}
+
 			var ret = MessageBox.Show("Are you sure you want to delete this Event?\n\nALL OF ITS DATA WILL BE DELETED.", "Delete Event", MessageBoxButton.YesNo, MessageBoxImage.Question);
 			if (ret == MessageBoxResult.Yes)
 			{
@@ -394,6 +400,10 @@ namespace JiME
 				TitleInteractionWindow w = new TitleInteractionWindow(scenario, castInteraction);
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
+			else if (interactionItem is StartInteraction)
+			{
+				MessageBox.Show("You can't edit the Starting Position event. But you can place the Start token on the Starting Tile in Tile Editor -> Token Editor.", "Cannot Edit Starting Position Event", MessageBoxButton.OK, MessageBoxImage.Information);
+			}
 		}
 
 		void OnSettingsTrigger(object sender, EventArgs e)
@@ -539,6 +549,10 @@ namespace JiME
 				TitleInteraction interact = ((TitleInteraction)interactionsUC.dataListView.Items[idx]).Clone();
 				TitleInteractionWindow bw = new TitleInteractionWindow(scenario, interact, true);
 				if (bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
+			}
+			else if (interactionsUC.dataListView.SelectedItem is StartInteraction)
+			{
+				MessageBox.Show("You can't duplicate the Starting Position interaction.", "Cannot Duplicate Starting Position Event", MessageBoxButton.OK, MessageBoxImage.Information);
 			}
 		}
 
