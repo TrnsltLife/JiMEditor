@@ -72,6 +72,9 @@ namespace JiME
 					case 13:
 						interaction = item.ToObject<TitleInteraction>();
 						break;
+					case 14:
+						interaction = item.ToObject<StartInteraction>();
+						break;
 					default:
 						throw new Exception( "IInteraction not recognized:\r\n" + item.ToString() );
 				}

@@ -143,7 +143,8 @@ namespace JiME
 			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Tokens/DifficultGround.png"))),
 			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Tokens/Fortified.png"))),
 			Brushes.Brown, //Terrain
-			Brushes.Gray //None
+			Brushes.Gray, //None
+			new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/JiME;component/Assets/Tokens/marker-start.png")))
 		};
 
 		static Brush[] terrainBrushes = {

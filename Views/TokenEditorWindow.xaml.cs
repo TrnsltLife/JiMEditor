@@ -45,7 +45,9 @@ namespace JiME.Views
 			tile = bt;
 			selected = null;
 
-			tokenInteractions = new ObservableCollection<IInteraction>( scenario.interactionObserver.Where( x => ( x.isTokenInteraction && !Regex.IsMatch( x.dataName, @"\sGRP\d+$" ) ) || x.dataName == "None" ) );
+			tokenInteractions = new ObservableCollection<IInteraction>( scenario.interactionObserver.Where( x => ( x.isTokenInteraction && !Regex.IsMatch( x.dataName, @"\sGRP\d+$" ) && x.dataName != StartInteraction.DEFAULT_NAME ) 
+			|| x.dataName == "None" 
+			|| (tile.isStartTile && x.dataName == StartInteraction.DEFAULT_NAME)) );
 			scenario.interactionObserver.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(InteractionsCollectionChangedMethod); //used to update after Add Interaction dialogs
 
             // Adjust token selection
@@ -115,7 +117,9 @@ namespace JiME.Views
 
 		private void RefreshTokenInteractions()
 		{
-			ObservableCollection<IInteraction> newEvents = new ObservableCollection<IInteraction>(scenario.interactionObserver.Where(x => (x.isTokenInteraction && !Regex.IsMatch(x.dataName, @"\sGRP\d+$")) || x.dataName == "None"));
+			ObservableCollection<IInteraction> newEvents = new ObservableCollection<IInteraction>(scenario.interactionObserver.Where(x => (x.isTokenInteraction && !Regex.IsMatch(x.dataName, @"\sGRP\d+$") && x.dataName != StartInteraction.DEFAULT_NAME) 
+			|| x.dataName == "None"
+			|| (tile.isStartTile && x.dataName == StartInteraction.DEFAULT_NAME) ));
 			foreach(var interaction in newEvents)
             {
 				if(!tokenInteractions.Contains(interaction))

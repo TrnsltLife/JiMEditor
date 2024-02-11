@@ -97,6 +97,7 @@
     <Compile Include="Models\Campaign.cs" />
     <Compile Include="Models\Collection.cs" />
     <Compile Include="Models\BaseTile.cs" />
+    <Compile Include="Models\Interaction Events\StartInteraction.cs" />
     <Compile Include="Models\Interaction Events\TitleInteraction.cs" />
     <Compile Include="Models\Interaction Events\PersistentInteractionBase.cs" />
     <Compile Include="Models\Interaction Events\ItemInteraction.cs" />
@@ -1105,6 +1106,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\dice.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Tokens\marker-start.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

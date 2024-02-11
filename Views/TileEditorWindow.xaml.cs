@@ -412,5 +412,19 @@ namespace JiME.Views
 				( (BaseTile)chapter.tileObserver[i] ).ToggleGraphic( canvas );
 			}
 		}
+
+		private void StartingTile_Unchecked(object sender, RoutedEventArgs e)
+		{
+			if (selected != null)
+			{
+				//Clear Starting Position token if it exists in the tile
+				Token t = selected.tokenList.Where(it => it.tokenType == TokenType.Start).FirstOrDefault();
+				if (t != null)
+				{
+					selected.tokenList.Remove(t);
+					selected.Rehydrate(canvas);
+				}
+			}
+		}
 	}
 }
