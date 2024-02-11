@@ -412,6 +412,7 @@ namespace JiME
 			if ( s.scenarioGUID.ToString() == "00000000-0000-0000-0000-000000000000" )
 				s.scenarioGUID = Guid.NewGuid();
 
+			s.AddDefaultEvents();
 			s.AddDefaultActivations();
 			s.AddDefaultMonsterModifiers();
 
@@ -462,6 +463,9 @@ namespace JiME
 			Objective obj = new Objective( "Default Objective" ) { triggerName = "Objective Complete" };
 			objectiveObserver.Add( obj );
 
+			//Add the default events
+			AddDefaultEvents();
+
 			//Add the default enemy activations
 			AddDefaultActivations();
 
@@ -496,6 +500,14 @@ namespace JiME
 				j++;
 			}
 		}
+
+		public void AddDefaultEvents()
+        {
+			if(interactionObserver.Where(it => it.interactionType == InteractionType.Start).ToList().Count == 0)
+            {
+				interactionObserver.Add(new StartInteraction());
+            }
+        }
 
 		public void AddDefaultActivations()
         {
