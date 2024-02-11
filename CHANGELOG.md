@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- Starting Position event has been created. It can be added as a token to the starting tile.
+- Able to give Crown of Shadows and Hammer and Tongs as trinkets
 ### Changed
 ### Removed
 
