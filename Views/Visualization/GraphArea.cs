@@ -95,7 +95,7 @@ namespace JiME.Views
         public System.Windows.Rect? FindGraphNodeRect(string dataName)
         {
             // Try to find single vertex that matches the data name
-            var vertex = LogicCore.Graph.Vertices.Where(v => v.Text == dataName).SingleOrDefault();
+            var vertex = LogicCore.Graph.Vertices.Where(v => v.Text == dataName).FirstOrDefault();
             if (vertex != null)
             {
                 // Single vertex found -> locate it in the graph
