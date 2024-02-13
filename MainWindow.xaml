@@ -8,7 +8,7 @@
         xmlns:controls="http://schemas.panthernet.ru/graphx/"
         mc:Ignorable="d"
 				xmlns:uc="clr-namespace:JiME.UserControls"
-        Title="{Binding titleChangedToken, Converter={StaticResource titleConverter}}" Height="500" Width="770" MinHeight="500" MinWidth="700" WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="#FF2D2D30" Closing="Window_Closing" ResizeMode="CanResizeWithGrip">
+        Title="{Binding titleChangedToken, Converter={StaticResource titleConverter}}" Height="800" Width="1200" MinHeight="500" MinWidth="700" WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="#FF2D2D30" Closing="Window_Closing" ResizeMode="CanResizeWithGrip">
 
 	<Window.CommandBindings>
 		<CommandBinding Command="local:MyCommands.Exit" Executed="CommandExit_Executed" CanExecute="CommandExit_CanExecute"/>
@@ -174,11 +174,11 @@
 
 			<Separator Opacity=".25"/>
 
-			<TextBlock x:Name="scenarioName" VerticalAlignment="Center" FontSize="15" FontWeight="Bold" Margin="5,0" PreviewMouseDown="scenarioName_PreviewMouseDown" Text="{Binding scenarioName, UpdateSourceTrigger=PropertyChanged}">
+			<TextBlock x:Name="scenarioName" VerticalAlignment="Center" FontSize="15" Width="200" FontWeight="Bold" Margin="5,0" PreviewMouseDown="scenarioName_PreviewMouseDown" Text="{Binding scenarioName, UpdateSourceTrigger=PropertyChanged}">
 			</TextBlock>
 
-			<TextBox x:Name="scenarioNameEdit" FontSize="15"  PreviewKeyDown="ScenarioNameEdit_PreviewKeyDown" LostKeyboardFocus="scenarioNameEdit_LostFocus" Visibility="Collapsed">
-				edit me
+			<TextBox x:Name="scenarioNameEdit" FontSize="15" Width="200" PreviewKeyDown="ScenarioNameEdit_PreviewKeyDown" LostKeyboardFocus="scenarioNameEdit_LostFocus" Visibility="Collapsed">
+				Scenario Name
 			</TextBox>
 
 			<Button x:Name="scenarioSettingsButton" ToolTip="Edit Scenario" Background="{StaticResource bgButtonColor}" Style="{StaticResource btn}"  Click="ScenarioSettingsButton_Click" >

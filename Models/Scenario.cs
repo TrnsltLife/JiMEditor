@@ -26,9 +26,9 @@ namespace JiME
 			translationAccessors = list;
 		}
 
-		string _scenarioName, _fileName, _objectiveName, _fileVersion, _specialInstructions, _coverImage;
+		string _scenarioName, _scenarioVersion, _fileName, _objectiveName, _fileVersion, _specialInstructions, _coverImage;
 		bool _isDirty, _scenarioTypeJourney, _useTileGraphics;
-		int _threatMax, _loreReward, _xpReward, _shadowFear, _loreStartValue, _xpStartValue;
+		int _initialScout, _subsequentScout, _threatMax, _loreReward, _xpReward, _shadowFear, _loreStartValue, _xpStartValue;
 		int[] _wallTypes;
 		Guid _scenarioGUID, _campaignGUID;
 		//titleChangedToken is ONLY used to trigger the window Title converter
@@ -120,6 +120,20 @@ namespace JiME
 				}
 			}
 		}
+
+		public string scenarioVersion
+		{
+			get => _scenarioVersion;
+			set
+			{
+				if (_scenarioVersion != value)
+				{
+					_scenarioVersion = value;
+					PropChanged("scenarioVersion");
+				}
+			}
+		}
+
 		public string objectiveName
 		{
 			get => _objectiveName;
@@ -129,6 +143,31 @@ namespace JiME
 				PropChanged( "objectiveName" );
 			}
 		}
+		public int initialScout
+		{
+			get => _initialScout;
+			set
+			{
+				if (value != _initialScout)
+				{
+					_initialScout = value;
+					PropChanged("initialScout");
+				}
+			}
+		}
+		public int subsequentScout
+		{
+			get => _subsequentScout;
+			set
+			{
+				if (value != _subsequentScout)
+				{
+					_subsequentScout = value;
+					PropChanged("subsequentScout");
+				}
+			}
+		}
+
 		public int threatMax
 		{
 			get => _threatMax;
@@ -331,6 +370,9 @@ namespace JiME
 		public Scenario( string name )
 		{
 			scenarioName = name;
+			scenarioVersion = "";
+			initialScout = 3;
+			subsequentScout = 2;
 			isDirty = true;
 			projectType = ProjectType.Standalone;
 			titleChangedToken = new Tuple<bool, string, Guid, ProjectType>( true, string.Empty, Guid.NewGuid(), ProjectType.Standalone );
@@ -362,6 +404,9 @@ namespace JiME
 		{
 			Scenario s = new Scenario();
 			s.scenarioName = fm.scenarioName;
+			s.scenarioVersion = fm.scenarioVersion;
+			s.initialScout = fm.initialScout;
+			s.subsequentScout = fm.subsequentScout;
 			s.fileName = fm.fileName;
 			s.fileVersion = fm.fileVersion;
 			s.saveDate = fm.saveDate;
