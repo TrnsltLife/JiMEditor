@@ -94,6 +94,7 @@ namespace JiME.Views
 		public ObservableCollection<ThreatList> threatCollection { get; set; }
 
 		public string scenarioName { get; set; }
+
 		public Scenario scenario { get; set; }
 
 		bool currentType;

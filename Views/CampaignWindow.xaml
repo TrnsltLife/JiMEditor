@@ -19,23 +19,30 @@
 					<StackPanel>
 						<Grid>
 							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="380"/>
-                                <ColumnDefinition Width="180"/>
+								<ColumnDefinition Width="320"/>
+								<ColumnDefinition Width="100"/>
+								<ColumnDefinition Width="180"/>
 								<ColumnDefinition Width="auto"/>
 							</Grid.ColumnDefinitions>
 
 							<StackPanel>
 								<TextBlock Style="{StaticResource Heading}" Text="Campaign Name:"/>
 								<TextBlock Style="{StaticResource SubText}" Text="This is the name players will see in the Companion App."/>
-								<TextBox x:Name="campaignNameTB" Text="{Binding campaign.campaignName,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DefaultTextBox}" Margin="0,5" HorizontalAlignment="Left" Width="350"/>
+								<TextBox x:Name="campaignNameTB" Text="{Binding campaign.campaignName,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DefaultTextBox}" Margin="0,5" HorizontalAlignment="Left" Width="300"/>
 							</StackPanel>
 
-                            <StackPanel Orientation="Vertical" Grid.Column="1">
+							<StackPanel Orientation="Vertical" Grid.Column="1">
+								<TextBlock Style="{StaticResource Heading}" Text="Version:"/>
+								<TextBlock Style="{StaticResource SubText}" Text="Optional"/>
+								<TextBox x:Name="campaignVersionTB" Text="{Binding campaign.campaignVersion,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DefaultTextBox}" Margin="0,5" HorizontalAlignment="Left" Width="80"/>
+							</StackPanel>
+
+                            <StackPanel Orientation="Vertical" Grid.Column="2">
                                 <TextBlock Text="Campaign Cover Image:" Style="{StaticResource Heading}" Margin="0,0,5,0" VerticalAlignment="Bottom"/>
                                 <Button x:Name="imageBtn" Content="Choose Cover Image..." Background="DodgerBlue" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Left" Click="imageBtn_Click" Height="44" FontWeight="Bold" FontSize="14" Margin="0,5,0,0"/>
                             </StackPanel>
 
-                            <Button x:Name="openExplorer" Grid.Column="2" Content="Open Project Folder..." VerticalAlignment="Bottom" Background="DodgerBlue" Foreground="White" Height="44" FontWeight="Bold" FontSize="14" Click="openExplorer_Click"/>
+                            <Button x:Name="openExplorer" Grid.Column="3" Content="Open Project Folder..." VerticalAlignment="Bottom" Background="DodgerBlue" Foreground="White" Height="44" FontWeight="Bold" FontSize="14" Click="openExplorer_Click"/>
 						</Grid>
 
 						<StackPanel Orientation="Horizontal">

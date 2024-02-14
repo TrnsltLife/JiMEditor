@@ -29,10 +29,13 @@ namespace JiME
 		public string saveDate { get; set; }
 		public ProjectType projectType { get; set; }
 		public string scenarioName { get; set; }
+		public string scenarioVersion { get; set; }
 		public string objectiveName { get; set; }
 		public int threatMax { get; set; }
 		public bool threatNotUsed { get; set; }
 		public bool scenarioTypeJourney { get; set; }
+		public int initialScout { get; set; }
+		public int subsequentScout { get; set; }
 		public int loreReward { get; set; }
 		public int loreStartValue { get; set; }
 		public int xpReward { get; set; }
@@ -72,6 +75,8 @@ namespace JiME
 			fileName = source.fileName;
 			fileVersion = Utils.formatVersion;
 			saveDate = source.saveDate;
+			initialScout = source.initialScout;
+			subsequentScout = source.subsequentScout;
 			loreReward = source.loreReward;
 			loreStartValue = source.loreStartValue;
 			xpReward = source.xpReward;
@@ -96,6 +101,7 @@ namespace JiME
 			introBookData = source.introBookData;
 			projectType = source.projectType;
 			scenarioName = source.scenarioName;
+			scenarioVersion = source.scenarioVersion;
 			objectiveName = source.objectiveName;
 			threatMax = source.threatMax;
 			threatNotUsed = source.threatNotUsed;

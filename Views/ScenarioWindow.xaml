@@ -54,6 +54,45 @@
 			</Border>
 		</Grid>
 
+		<Grid Margin="5">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="auto"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="auto"/>
+			</Grid.ColumnDefinitions>
+
+			<!--version-->
+			<Border Style="{StaticResource callout}" Margin="0,0,5,0">
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Style="{StaticResource Heading}" Text="Version:" />
+					<TextBox x:Name="versionTB" Text="{Binding scenario.scenarioVersion, UpdateSourceTrigger=PropertyChanged}" Margin="10,0" MinWidth="100" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+				</StackPanel>
+			</Border>
+
+			<!--scout values-->
+			<Border Grid.Column="2" Style="{StaticResource callout}" Margin="5,0,0,0">
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Style="{StaticResource Heading}" Text="Scout.. Initial:" />
+					<ComboBox x:Name="initialScoutCB" Margin="10,0" SelectedIndex="{Binding scenario.initialScout}">
+						<ComboBoxItem x:Name="initialScoutCB0" Content="0" Visibility="Collapsed"/>
+						<ComboBoxItem x:Name="initialScoutCB1" Content="1"/>
+						<ComboBoxItem x:Name="initialScoutCB2" Content="2"/>
+						<ComboBoxItem x:Name="initialScoutCB3" Content="3"/>
+						<ComboBoxItem x:Name="initialScoutCB4" Content="4"/>
+					</ComboBox>
+					<TextBlock Style="{StaticResource Heading}" Text="Subsequent:" />
+					<ComboBox x:Name="subsequentScoutCB" Margin="10,0" SelectedIndex="{Binding scenario.subsequentScout}">
+						<ComboBoxItem x:Name="subsequentScoutCB0" Content="0" Visibility="Collapsed"/>
+						<ComboBoxItem x:Name="subsequentScoutCB1" Content="1"/>
+						<ComboBoxItem x:Name="subsequentScoutCB2" Content="2"/>
+						<ComboBoxItem x:Name="subsequentScoutCB3" Content="3"/>
+						<ComboBoxItem x:Name="subsequentScoutCB4" Content="4"/>
+					</ComboBox>
+				</StackPanel>
+			</Border>
+		</Grid>
+
 		<!--collections-->
 		<Border  Grid.Row="1" Style="{StaticResource callout}" Margin="5">
 			<StackPanel Orientation="Horizontal">
