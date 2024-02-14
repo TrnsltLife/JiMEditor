@@ -4,9 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.31]
 ### Added
 - Starting Position event has been created. It can be added as a token to the starting tile.
 - Able to give Crown of Shadows and Hammer and Tongs as trinkets
+- You can set a Campaign Version on the Campaign Screen and a Scenario Version on the Scenario Screen
+- You can set the number of cards to Scout for the initial Scout at the start of a scenario and the subsequent Scouts at the start of each Action Phase
 ### Changed
 ### Removed
 
