@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JiME"
         mc:Ignorable="d"
-        Title="Scenario Settings" Style="{StaticResource DefaultWindow}" Width="800" SizeToContent="Height" WindowStartupLocation="CenterOwner" ContentRendered="Window_ContentRendered" Closing="Window_Closing" MaxHeight="850">
+        Title="Scenario Settings" Style="{StaticResource DefaultWindow}" Width="800" SizeToContent="Height" WindowStartupLocation="CenterOwner" ContentRendered="Window_ContentRendered" Closing="Window_Closing" MaxHeight="975">
 
 	<Window.Resources>
 		<Style TargetType="ScrollBar">
@@ -22,8 +22,8 @@
 	<StackPanel>
 		<!--campaign notice-->
 		<Border x:Name="campaignNotice" Style="{StaticResource callout}" Margin="5,5,5,0" Visibility="Collapsed">
-			<StackPanel>
-				<TextBlock Style="{StaticResource Heading}" Text="Campaign GUID" HorizontalAlignment="Center"/>
+			<StackPanel Orientation="Horizontal">
+				<TextBlock Style="{StaticResource Heading}" Text="Campaign GUID: " HorizontalAlignment="Center"/>
 				<TextBlock x:Name="campaignGUID" Style="{StaticResource Heading}" Text="" HorizontalAlignment="Center"/>
 			</StackPanel>
 		</Border>
@@ -73,7 +73,7 @@
 			<!--scout values-->
 			<Border Grid.Column="2" Style="{StaticResource callout}" Margin="5,0,0,0">
 				<StackPanel Orientation="Horizontal">
-					<TextBlock Style="{StaticResource Heading}" Text="Scout.. Initial:" />
+					<TextBlock Style="{StaticResource Heading}" Text="Scout... Initial:" />
 					<ComboBox x:Name="initialScoutCB" Margin="10,0" SelectedIndex="{Binding scenario.initialScout}">
 						<ComboBoxItem x:Name="initialScoutCB0" Content="0" Visibility="Collapsed"/>
 						<ComboBoxItem x:Name="initialScoutCB1" Content="1"/>

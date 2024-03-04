@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.32]
+### Changed
+- Scenario settings window needed to be taller to fit all the components
+
 ## [v0.31]
 ### Added
 - Starting Position event has been created. It can be added as a token to the starting tile.
