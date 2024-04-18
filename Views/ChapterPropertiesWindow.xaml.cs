@@ -42,8 +42,8 @@ namespace JiME.Views
 			}
 			else
 			{//disable some settings for Start block
-				useRandomCB.IsEnabled = false;
-				randomBlock.Visibility = Visibility.Collapsed;
+				//useRandomCB.IsEnabled = false;
+				//randomBlock.Visibility = Visibility.Collapsed;
 				//hintBlock.Visibility = Visibility.Collapsed;
 				dynamicCB.Visibility = Visibility.Collapsed;
 				dynText.Visibility = Visibility.Collapsed;

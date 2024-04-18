@@ -10,6 +10,8 @@
 		Title="Tile Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" MinWidth="1200"  MinHeight="750" Height="800" SizeToContent="Manual" PreviewKeyDown="Window_PreviewKeyDown" Closing="Window_Closing">
 
 	<Window.Resources>
+		<local:BoolToVisibility x:Key="b2vis"/>
+		<local:BoolInvertConverter x:Key="binv"/>
 		<local:NullToVisibility x:Key="n2vis"/>
 		<local:TokenEventVisibility x:Key="tokenvis"/>
 		<local:TokenEnabled x:Key="tokenen"/>
@@ -178,7 +180,7 @@
 									</Button>
 								</Grid>
 
-								<CheckBox IsChecked="{Binding selected.isStartTile}" Margin="0,10,0,0" Content="Is Starting Tile" Foreground="White" Unchecked="StartingTile_Unchecked"/>
+								<CheckBox IsChecked="{Binding selected.isStartTile}" Margin="0,10,0,0" Content="Is Starting Tile" Foreground="White" Unchecked="StartingTile_Unchecked" IsEnabled="{Binding chapter.isStart}" Visibility="{Binding chapter.isStart, Converter={StaticResource b2vis}}"/>
 
 								<Button x:Name="editTokenButton" Margin="0,10,0,0" Background="DodgerBlue" Foreground="White" Content="Token Editor..." Click="editTokenButton_Click" Height="36" FontSize="14" FontWeight="Bold">
 								</Button>

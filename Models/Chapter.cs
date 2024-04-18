@@ -45,7 +45,7 @@ namespace JiME
 		public string triggerName { get; set; }
 
 		//vars
-		bool _noFlavorText, _isRandomTiles, _isPreExplored, _usesRandomGroups, _isDynamic;
+		bool _noFlavorText, _isRandomTiles, _isPreExplored, _usesRandomGroups, _isDynamic, _isStart;
 		string _triggeredBy, _exploreTrigger, _exploredAllTilesTrigger, _randomInteractionGroup, _attachHint;
 		int _randomInteractionGroupCount;
 
@@ -115,6 +115,11 @@ namespace JiME
 				PropChanged( "randomInteractionGroupCount" );
 			}
 		}
+		public bool isStart
+		{
+			get => _isStart;
+			set { _isStart = value; PropChanged("isStart"); }
+		}
 		public bool isPreExplored
 		{
 			get => _isPreExplored;
@@ -162,10 +167,16 @@ namespace JiME
 			tileObserver = new ObservableCollection<ITile>();
 			//randomTilePool = new ObservableCollection<int>();
 			randomInteractionGroup = "None";
-			if ( name == "Start" )
+			if (name == "Start")
+			{
 				isPreExplored = true;
+				isStart = true;
+			}
 			else
+			{
 				isPreExplored = false;
+				isStart = false;
+			}
 			usesRandomGroups = false;
 			isDynamic = false;
 			attachHint = "None";

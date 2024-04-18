@@ -48,7 +48,7 @@
 							<TextBlock Style="{StaticResource SubText}">
 					A short name used within the Editor. <Bold><Italic>Required</Italic></Bold>
 							</TextBlock>
-							<TextBox x:Name="nameTB" Text="{Binding chapter.dataName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DefaultTextBox}" Margin="0,5" Width="250" HorizontalAlignment="Left" IsEnabled="{Binding chapter.isEmpty, Converter={StaticResource binv}}"/>
+							<TextBox x:Name="nameTB" Text="{Binding chapter.dataName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DefaultTextBox}" Margin="0,5" Width="250" HorizontalAlignment="Left" IsEnabled="{Binding chapter.isStart, Converter={StaticResource binv}}"/>
 						</StackPanel>
 
 						<!--triggered by-->
