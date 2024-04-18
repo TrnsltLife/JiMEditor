@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.33]
+### Changed
+- Start tile block can use random tiles.
+- Start tile block can use random token group.
+- [] Is Starting Tile checkbox only shows up for tiles in the Start tile block.
+- [] Is Starting Tile checkbox now shows up on the Random Tile Editor as well.
+- Double-clicking on a tile in the Random Tile Pool doesn't delete it (and all its tokens and triggers and text!). It instead opens it in the Token Editor.
+
 ## [v0.32]
 ### Changed
 - Scenario settings window needed to be taller to fit all the components
