@@ -48,7 +48,7 @@
 							<TextBlock Style="{StaticResource SubText}">
 					A short name used within the Editor. <Bold><Italic>Required</Italic></Bold>
 							</TextBlock>
-							<TextBox x:Name="nameTB" Text="{Binding chapter.dataName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DefaultTextBox}" Margin="0,5" Width="250" HorizontalAlignment="Left" IsEnabled="{Binding chapter.isEmpty, Converter={StaticResource binv}}"/>
+							<TextBox x:Name="nameTB" Text="{Binding chapter.dataName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DefaultTextBox}" Margin="0,5" Width="250" HorizontalAlignment="Left" IsEnabled="{Binding chapter.isStart, Converter={StaticResource binv}}"/>
 						</StackPanel>
 
 						<!--triggered by-->
@@ -93,7 +93,7 @@
 				<StackPanel>
 					<TextBlock Text="Block Tiles" Style="{StaticResource Heading}"/>
 					<StackPanel Orientation="Horizontal">
-						<CheckBox x:Name="randomToggleCB" Content="This Block uses random Tiles." Foreground="White" IsChecked="{Binding chapter.isRandomTiles}" VerticalAlignment="Center" Margin="0,0,10,0" Click="RandomToggleCB_Click" IsEnabled="{Binding chapter.isEmpty, Converter={StaticResource binv}}"/>
+						<CheckBox x:Name="randomToggleCB" Content="This Block uses random Tiles." Foreground="White" IsChecked="{Binding chapter.isRandomTiles}" VerticalAlignment="Center" Margin="0,0,10,0" Click="RandomToggleCB_Click"/>
 						<Button x:Name="TileEditButton" Click="TileEditButton_Click" Background="DodgerBlue" HorizontalAlignment="Left" Foreground="White" Height="36">
 							<StackPanel Orientation="Horizontal" Margin="5,0">
 								<TextBlock Text="Tile Editor..." Style="{StaticResource Heading}" VerticalAlignment="Center" Margin="0,0,5,0"/>

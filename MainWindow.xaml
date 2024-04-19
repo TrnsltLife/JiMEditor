@@ -337,7 +337,7 @@
 										</Button>
 									</StackPanel>
 
-									<Button x:Name="removeChapterButton" Background="{StaticResource bgCancelDelete}" HorizontalAlignment="Stretch" IsEnabled="{Binding isEmpty, Converter={StaticResource b2vis}}" DataContext="{Binding}" Click="RemoveChapterButton_Click">
+									<Button x:Name="removeChapterButton" Background="{StaticResource bgCancelDelete}" HorizontalAlignment="Stretch" IsEnabled="{Binding isStart, Converter={StaticResource b2vis}}" DataContext="{Binding}" Click="RemoveChapterButton_Click">
 										<StackPanel Orientation="Horizontal">
 											<TextBlock Foreground="White" Text="Remove Block" VerticalAlignment="Center"/>
 											<Image Source="Assets/cancel.png" Width="24" Margin="10,0,0,0"/>

@@ -9,6 +9,8 @@
         Title="Random Tile Editor" Style="{StaticResource DefaultWindow}" WindowStartupLocation="CenterScreen" Closing="Window_Closing" Loaded="Window_Loaded">
 
 	<Window.Resources>
+		<local:BoolToVisibility x:Key="b2vis"/>
+		<local:BoolInvertConverter x:Key="binv"/>
 		<local:SelectedToBoolConverter x:Key="sb"/>
 		<local:TileCollectionConverter x:Key="tileCollection"/>
 		<CollectionViewSource x:Key="cvsTrigger" Source="{Binding scenario.triggersObserver}">
@@ -117,6 +119,8 @@
 									<Image Source="/JiME;component/Assets/add2.png"/>
 								</Button>
 							</Grid>
+
+							<CheckBox IsChecked="{Binding selected.isStartTile}" Margin="0,0,0,0" Content="Is Starting Tile" Foreground="White" Checked="StartingTile_Checked" Unchecked="StartingTile_Unchecked" IsEnabled="{Binding chapter.isStart}" Visibility="{Binding chapter.isStart, Converter={StaticResource b2vis}}"/>
 
 							<Grid Margin="0,5">
 								<Grid.ColumnDefinitions>

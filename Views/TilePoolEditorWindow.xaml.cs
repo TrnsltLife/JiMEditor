@@ -146,34 +146,26 @@ namespace JiME.Views
 			RemoveTile();
 		}
 
-		private void Random_MouseDoubleClick( object sender, System.Windows.Input.MouseButtonEventArgs e )
+		private void Random_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
-			//int item = (int)random.SelectedItem;
+			//Open the double-clicked item in the Token Editor
+
+			if (selected == null)
+				return;
+
+			TokenEditorWindow tw = new TokenEditorWindow(selected, scenario, true);
+			tw.ShowDialog();
+		}
+
+		private void Random_MouseDoubleClick_Old( object sender, System.Windows.Input.MouseButtonEventArgs e )
+		{
+			//Remove the tile from the list and clear all its tokens and settings
+
 			selected = null;
 			ListBox cb = e.Source as ListBox;
 			selected = cb.SelectedItem as HexTile;
-			//if ( s != null )
-			//{
-			//	var t = ( from HexTile tile in chapter.tileObserver where s.GUID == tile.GUID select tile ).FirstOr( null );
-			//	if ( t != null )
-			//		selected = t;
-			//}
 
 			RemoveTile();
-			//if ( item > 0 )
-			//{
-			//	TileSorter sorter = new TileSorter();
-			//	chapter.randomTilePool.Remove( item );
-			//	scenario.globalTilePool.Add( item );
-			//	List<int> foo = scenario.globalTilePool.ToList();
-			//	foo.Sort( sorter );
-			//	scenario.globalTilePool.Clear();
-			//	foreach ( int s in foo )
-			//		scenario.globalTilePool.Add( s );
-			//	random.UnselectAll();
-			//}
-
-			//UpdateTexts();
 		}
 
 		private void groupHelp_Click( object sender, RoutedEventArgs e )
@@ -285,6 +277,39 @@ namespace JiME.Views
 					exploreStatus.Text = "Exploration Text is Set";
 				selected.UpdateKeysStartingWith(scenario.translationObserver, originalPrefix);
 				selected.DecertifyChangedValues(scenario.translationObserver, originals, originalKeyName);
+			}
+		}
+
+		private void StartingTile_Checked(object sender, RoutedEventArgs e)
+		{
+			if (selected != null)
+			{
+				//Clear Starting Position token and isStart for other tiles
+				foreach (BaseTile otherTile in chapter.tileObserver)
+				{
+					if (otherTile.idNumber != selected.idNumber)
+					{
+						otherTile.isStartTile = false;
+						Token t = otherTile.tokenList.Where(it => it.tokenType == TokenType.Start).FirstOrDefault();
+						if (t != null)
+						{
+							otherTile.tokenList.Remove(t);
+						}
+					}
+				}
+			}
+		}
+
+		private void StartingTile_Unchecked(object sender, RoutedEventArgs e)
+		{
+			if (selected != null)
+			{
+				//Clear Starting Position token if it exists in the tile
+				Token t = selected.tokenList.Where(it => it.tokenType == TokenType.Start).FirstOrDefault();
+				if (t != null)
+				{
+					selected.tokenList.Remove(t);
+				}
 			}
 		}
 	}

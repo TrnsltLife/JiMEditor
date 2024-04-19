@@ -518,7 +518,7 @@ namespace JiME
 			AddDefaultMonsterModifiers();
 
 			//starting chapter - always at least one in the scenario
-			Chapter chapter = new Chapter( "Start" ) { isEmpty = true };
+			Chapter chapter = new Chapter("Start"); // { isEmpty = true };
 			chapterObserver.Add( chapter );
 
 			wallTypes = new int[22];
@@ -617,7 +617,7 @@ namespace JiME
 				RemoveChapter(c);
 			}
 			chapterObserver.Clear();
-			Chapter chapter = new Chapter( "Start" ) { isEmpty = true };
+			Chapter chapter = new Chapter("Start"); // { isEmpty = true };
 			chapterObserver.Add( chapter );
 		}
 
