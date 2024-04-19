@@ -37,6 +37,11 @@ namespace JiME
 				{
 					_dataName = value;
 					PropChanged( "dataName" );
+
+					if (_dataName == "Start")
+					{
+						isStart = true;
+					}
 				}
 			}
 		}
