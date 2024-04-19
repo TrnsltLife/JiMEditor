@@ -280,6 +280,26 @@ namespace JiME.Views
 			}
 		}
 
+		private void StartingTile_Checked(object sender, RoutedEventArgs e)
+		{
+			if (selected != null)
+			{
+				//Clear Starting Position token and isStart for other tiles
+				foreach (BaseTile otherTile in chapter.tileObserver)
+				{
+					if (otherTile.idNumber != selected.idNumber)
+					{
+						otherTile.isStartTile = false;
+						Token t = otherTile.tokenList.Where(it => it.tokenType == TokenType.Start).FirstOrDefault();
+						if (t != null)
+						{
+							otherTile.tokenList.Remove(t);
+						}
+					}
+				}
+			}
+		}
+
 		private void StartingTile_Unchecked(object sender, RoutedEventArgs e)
 		{
 			if (selected != null)

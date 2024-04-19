@@ -120,7 +120,7 @@
 								</Button>
 							</Grid>
 
-							<CheckBox IsChecked="{Binding selected.isStartTile}" Margin="0,0,0,0" Content="Is Starting Tile" Foreground="White" Unchecked="StartingTile_Unchecked" IsEnabled="{Binding chapter.isStart}" Visibility="{Binding chapter.isStart, Converter={StaticResource b2vis}}"/>
+							<CheckBox IsChecked="{Binding selected.isStartTile}" Margin="0,0,0,0" Content="Is Starting Tile" Foreground="White" Checked="StartingTile_Checked" Unchecked="StartingTile_Unchecked" IsEnabled="{Binding chapter.isStart}" Visibility="{Binding chapter.isStart, Converter={StaticResource b2vis}}"/>
 
 							<Grid Margin="0,5">
 								<Grid.ColumnDefinitions>
