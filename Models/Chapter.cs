@@ -38,7 +38,7 @@ namespace JiME
 					_dataName = value;
 					PropChanged( "dataName" );
 
-					if (_dataName == "Start")
+					if (_dataName == "Start" && isEmpty)
 					{
 						isStart = true;
 					}
@@ -176,6 +176,7 @@ namespace JiME
 			{
 				isPreExplored = true;
 				isStart = true;
+				isEmpty = true;
 			}
 			else
 			{

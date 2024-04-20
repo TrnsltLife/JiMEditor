@@ -11,6 +11,11 @@ All notable changes to this project will be documented in this file.
 - [] Is Starting Tile checkbox only shows up for tiles in the Start tile block.
 - [] Is Starting Tile checkbox now shows up on the Random Tile Editor as well.
 - Double-clicking on a tile in the Random Tile Pool doesn't delete it (and all its tokens and triggers and text!). It instead opens it in the Token Editor.
+- Fixed automatic assignment of name and monster attack descriptions for Supplicant of More-Goth and High-Orc Warrior (the dashes weren't handled right).
+- Moved a lot of instructions/notes into hoverable (?) and /!\ icon tooltips.
+- Re-enabled Tile Block Attachment Hints on the Tile Block properties screen.
+- Checking for duplicate naming on the Tile Block properties screen.
+- Disallow naming a Tile Block "Start", "None", or "Random".
 
 ## [v0.32]
 ### Changed

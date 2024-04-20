@@ -16,9 +16,11 @@ namespace JiME.Views
 	{
 		public Chapter chapter { get; set; }
 		public ObservableCollection<string> randomInteractions { get; set; }
+		public ObservableCollection<Chapter> chapterAttachOptions { get; set; }
 		public Scenario scenario { get; set; }
 		bool closing = false/*, currentRandomToggle*/;
 		int numinters = 0, requestedInters = 0;
+		string oldName = "";
 
 		public ChapterPropertiesWindow( Scenario s, Chapter c = null )
 		{
@@ -32,21 +34,29 @@ namespace JiME.Views
 			DataContext = this;
 
 			cancelButton.Visibility = c == null ? Visibility.Visible : Visibility.Collapsed;
-			chapter = c ?? new Chapter( "New Block" );
+
+			if(c == null)
+            {
+				chapter = new Chapter("New Block");
+			}
+			else
+            {
+				chapter = c;
+				oldName = c.dataName;
+            }
+
 			scenario = s;
 			//currentRandomToggle = chapter.isRandomTiles;
 			if ( chapter.dataName != "Start" )
 			{
 				preExCB.Visibility = Visibility.Collapsed;
-				preExText.Visibility = Visibility.Collapsed;
 			}
 			else
 			{//disable some settings for Start block
 				//useRandomCB.IsEnabled = false;
 				//randomBlock.Visibility = Visibility.Collapsed;
 				//hintBlock.Visibility = Visibility.Collapsed;
-				dynamicCB.Visibility = Visibility.Collapsed;
-				dynText.Visibility = Visibility.Collapsed;
+				hintBlock.Visibility = Visibility.Collapsed;
 				flavorBox.Visibility = Visibility.Collapsed;
 				exploreBox.Visibility = Visibility.Collapsed;
 			}
@@ -67,6 +77,9 @@ namespace JiME.Views
 			}
 			randomInteractions = new ObservableCollection<string>( hash );
 			randInter.SelectedItem = chapter.randomInteractionGroup;
+
+			chapterAttachOptions = new ObservableCollection<Chapter>(scenario.chapterObserver.Where(it => it.dataName != chapter.dataName).ToList());
+			chapterAttachOptions.Add(new Chapter("Random"));
 
 			UpdateTexts();
 		}
@@ -95,6 +108,36 @@ namespace JiME.Views
 
 		bool TryClose()
 		{
+
+
+			if (chapter.dataName == "Start" && !chapter.isEmpty)
+			{
+				MessageBox.Show("Only the first Tile Block may be named 'Start'.", "Invalid Chapter Name", MessageBoxButton.OK, MessageBoxImage.Error);
+				return false;
+			}
+			
+			if (chapter.dataName == "Random")
+			{
+				MessageBox.Show("No Tile Block may be named 'Random'.", "Invalid Chapter Name", MessageBoxButton.OK, MessageBoxImage.Error);
+				return false;
+			}
+
+			if (chapter.dataName == "None")
+			{
+				MessageBox.Show("No Tile Block may be named 'None'.", "Invalid Chapter Name", MessageBoxButton.OK, MessageBoxImage.Error);
+				return false;
+			}
+
+			//Check if new name already exists
+			if (chapter.dataName != oldName)
+            {
+				if (scenario.chapterObserver.Count(c => c.GUID != chapter.GUID && c.dataName == chapter.dataName) > 0)
+				{
+					MessageBox.Show("A Tile Block with this name already exists. Give this Tile Block a unique name.", "Invalid Chapter Name", MessageBoxButton.OK, MessageBoxImage.Error);
+					return false;
+				}
+			}
+
 			if ( !useRandomCB.IsChecked.Value )
 			{
 				chapter.randomInteractionGroup = "None";
