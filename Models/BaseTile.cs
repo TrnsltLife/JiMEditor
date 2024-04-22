@@ -145,6 +145,8 @@ namespace JiME
 
 		virtual protected void BuildImage()
 		{
+			if(idNumber == 0) { return; }
+
 			tileImage = new Image();
 			int idx = Utils.LoadTiles().IndexOf( idNumber );
 			if ( tileSide == "A" )

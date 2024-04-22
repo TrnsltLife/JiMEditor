@@ -17,10 +17,21 @@ namespace JiME.Views
 		public Chapter chapter { get; set; }
 		public ObservableCollection<string> randomInteractions { get; set; }
 		public ObservableCollection<Chapter> chapterAttachOptions { get; set; }
+		public ObservableCollection<BaseTile> chapterTileAttachOptions { get; set; }
 		public Scenario scenario { get; set; }
 		bool closing = false/*, currentRandomToggle*/;
 		int numinters = 0, requestedInters = 0;
 		string oldName = "";
+		BaseTile emptyTile = new BaseTile(0);
+
+		public IEnumerable<DensityPreference> DensityPreferenceValues
+		{
+			get
+			{
+				return Enum.GetValues(typeof(DensityPreference))
+					.Cast<DensityPreference>();
+			}
+		}
 
 		public ChapterPropertiesWindow( Scenario s, Chapter c = null )
 		{
@@ -80,6 +91,12 @@ namespace JiME.Views
 
 			chapterAttachOptions = new ObservableCollection<Chapter>(scenario.chapterObserver.Where(it => it.dataName != chapter.dataName).ToList());
 			chapterAttachOptions.Add(new Chapter("Random"));
+
+			Debug.Log("opening TileBlock dialog with attachTileHint " + chapter.attachTileHint);
+			chapterTileAttachOptions = new ObservableCollection<BaseTile>();
+			UpdateChapterTileAttachOptions(chapter.attachHint, chapter.attachTileHint);
+			//attachToTileCB.SelectedItem = chapterTileAttachOptions.Where(x => x.idNumber == chapter.attachTileHint).FirstOrDefault();
+			Debug.Log("attachToTileCB.SelectedItem: " + attachToTileCB.SelectedItem);
 
 			UpdateTexts();
 		}
@@ -157,6 +174,13 @@ namespace JiME.Views
 			}
 
 			chapter.randomInteractionGroup = randInter.SelectedItem as string;
+			/*
+			if (attachToTileCB != null)
+			{
+				chapter.attachTileHint = ((BaseTile)attachToTileCB.SelectedItem).idNumber;
+			}
+			*/
+			Debug.Log("set attachTileHint to " + chapter.attachTileHint);
 
 			return true;
 		}
@@ -230,6 +254,41 @@ namespace JiME.Views
 		{
 			HelpWindow hw = new HelpWindow( HelpType.Grouping, 1 );
 			hw.ShowDialog();
+		}
+
+		public void attachHint_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+			ComboBox cb = e.Source as ComboBox;
+			Chapter attachTileBlock = (Chapter)cb.SelectedItem;
+			Debug.Log("Change Attach to Tile Block: " + attachTileBlock.dataName);
+			UpdateChapterTileAttachOptions(attachTileBlock.dataName, chapter.attachTileHint);
+		}
+
+		public void UpdateChapterTileAttachOptions(string attachName, int attachTile)
+        {
+			Debug.Log("UpdateChapterTileAttachOptions(" + attachName + ", " + attachTile + ")");
+			Chapter c = scenario.chapterObserver.Where(x => x.dataName == attachName).FirstOrDefault();
+
+			chapterTileAttachOptions.Clear();
+			if (c != null)
+			{
+				Debug.Log("Found Tile Block: " + c.dataName + " with " + c.tileObserver.Count + " tiles.");
+				chapterTileAttachOptions.Add(emptyTile);
+				foreach (BaseTile bt in c.tileObserver)
+				{
+					Debug.Log("Tile " + bt.idNumber);
+					chapterTileAttachOptions.Add(bt);
+					if(bt.idNumber == attachTile)
+                    {
+						attachToTileCB.SelectedItem = bt;
+						Debug.Log("set attachToTileCB.SelectedIndex to BaseTile with idNumber " + bt.idNumber);
+					}
+				}
+			}
+			else
+            {
+				Debug.Log("Couldn't find Tile Block: " + attachName);
+			}
 		}
 
 		private void randInter_SelectionChanged( object sender, SelectionChangedEventArgs e )
