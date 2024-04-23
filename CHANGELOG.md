@@ -17,6 +17,10 @@ All notable changes to this project will be documented in this file.
 - Checking for duplicate naming on the Tile Block properties screen.
 - Disallow naming a Tile Block "Start", "None", or "Random".
 
+### Added
+- Tile Attachment Hint to specify which tile on an attach hint tile block the current tile block will try to attach to.
+- Tile connection density option for how compactly tiles in a given block will try to attach to each other.
+
 ## [v0.32]
 ### Changed
 - Scenario settings window needed to be taller to fit all the components
