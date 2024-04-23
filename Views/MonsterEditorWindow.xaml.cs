@@ -307,10 +307,12 @@ namespace JiME.Views
 
 		private void monsterType_Click( object sender, RoutedEventArgs e )
 		{
+			//Convert the RadioButton's label text back into the monster's Enum value:
 			string enemy = ( (RadioButton)sender ).Content as string;
 			enemy = Regex.Replace(enemy, "x[0-9]+", ""); //replace unit count info
 			enemy = Regex.Replace(enemy, "of", "Of"); //replace lower case of
 			enemy = enemy.Replace(" ", ""); //replace spaces
+			enemy = enemy.Replace("-", ""); //replace dashes
 			FillDefaultStats( enemy );
 		}
 

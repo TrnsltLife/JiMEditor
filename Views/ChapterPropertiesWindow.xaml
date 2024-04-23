@@ -9,7 +9,8 @@
         Title="Tile Block Properties" Style="{StaticResource DefaultWindow}" Width="750" WindowStartupLocation="CenterScreen" ContentRendered="Window_ContentRendered" Closing="Window_Closing">
 
 	<Window.Resources>
-		<local:BoolInvertVisibility x:Key="b2vis"/>
+		<local:BoolInvertVisibility x:Key="b2invvis"/>
+		<local:BoolToVisibility x:Key="b2vis"/>
 		<local:BoolInvertConverter x:Key="binv"/>
 		<CollectionViewSource x:Key="cvsTriggeredBy" Source="{Binding scenario.triggersObserver}">
 			<CollectionViewSource.SortDescriptions>
@@ -46,14 +47,15 @@
 						<StackPanel>
 							<TextBlock Style="{StaticResource Heading}" Text="Tile Block Name:"/>
 							<TextBlock Style="{StaticResource SubText}">
-					A short name used within the Editor. <Bold><Italic>Required</Italic></Bold>
+								A short name used within the Editor. <Bold><Italic>Required</Italic></Bold>
 							</TextBlock>
 							<TextBox x:Name="nameTB" Text="{Binding chapter.dataName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DefaultTextBox}" Margin="0,5" Width="250" HorizontalAlignment="Left" IsEnabled="{Binding chapter.isStart, Converter={StaticResource binv}}"/>
 						</StackPanel>
 
 						<!--triggered by-->
 						<StackPanel>
-							<TextBlock Text="Triggered By (Required):" Style="{StaticResource Heading}" Margin="0,5"/>
+							<TextBlock Text="Triggered By:" Style="{StaticResource Heading}"/>
+							<TextBlock Style="{StaticResource SubText}"><Bold><Italic>Required</Italic></Bold></TextBlock>
 							<StackPanel Orientation="Horizontal">
 								<ComboBox ItemsSource="{Binding Source={StaticResource cvsTriggeredBy}}" DisplayMemberPath="dataName" SelectedValue="{Binding chapter.triggeredBy}" SelectedValuePath="dataName" HorizontalAlignment="Left" Width="200" IsEnabled="{Binding chapter.isEmpty, Converter={StaticResource binv}}" VerticalAlignment="Center"/>
 
@@ -63,33 +65,10 @@
 							</StackPanel>
 						</StackPanel>
 					</UniformGrid>
-
-					<!--dynamic setting-->
-					<CheckBox x:Name="dynamicCB" Foreground="White" Content="This Block is Dynamic" VerticalAlignment="Center" IsChecked="{Binding chapter.isDynamic}" Margin="0,5,0,0"/>
-					<TextBlock x:Name="dynText" Text="If a Tile Block MAY or MAY NOT be activated during a Scenario, mark it as Dynamic. For example, this is useful for optional side quests that may not always appear during a Scenario. This helps the Companion App build the Scenario properly. Dynamic Blocks don't have a Fog of War. The Start Block cannot be Dynamic." Margin="0,5,0,0" Style="{StaticResource SubText}" TextWrapping="Wrap"/>
 				</StackPanel>
 			</Border>
 
-			<!--<Border x:Name="hintBlock" Style="{StaticResource callout}" Margin="0,10,0,0">
-				<StackPanel>
-					<TextBlock Text="Block Hinting (Optional):" Style="{StaticResource Heading}"/>
-
-					-->
-			<!--dynamic setting-->
-			<!--<CheckBox x:Name="dynamicCB" Foreground="White" Content="This Block is Dynamic" VerticalAlignment="Center" IsChecked="{Binding chapter.isDynamic}" Margin="0,5,0,0"/>
-					<TextBlock Text="If a Tile Block MAY or MAY NOT be activated during a Scenario, mark it as Dynamic. For example, this is useful for optional side quests that may not always appear duing a Scenario. This helps the Companion App build the Scenario properly. Dynamic Blocks don't have a Fog of War." Margin="0,5,0,0" Style="{StaticResource SubText}" TextWrapping="Wrap"/>-->
-
-			<!--<TextBlock Text="Block Hinting (Optional):" Style="{StaticResource Heading}" Margin="0,10,0,0"/>-->
-			<!--
-
-					<TextBlock Text="Optionally choose the Tile Block you'd prefer this Block to attach to in the Companion App. During Scenario creation, the Companion App will attempt to make this Block attach to the one you select below. If it can't (because it doesn't fit) or you select 'None', a random Block will be used instead." Style="{StaticResource SubText}" TextWrapping="Wrap"/>
-
-					<ComboBox ItemsSource="{Binding scenario.chapterObserver}" DisplayMemberPath="dataName" SelectedValue="{Binding chapter.attachHint}" SelectedValuePath="dataName" HorizontalAlignment="Left" Width="250" IsEnabled="{Binding chapter.isEmpty, Converter={StaticResource binv}}" VerticalAlignment="Center" Margin="0,5,0,0"/>
-
-				</StackPanel>
-			</Border>-->
-
-			<Border Style="{StaticResource callout}" Margin="0,5">
+			<Border Style="{StaticResource callout}" Margin="0,5,0,0">
 				<StackPanel>
 					<TextBlock Text="Block Tiles" Style="{StaticResource Heading}"/>
 					<StackPanel Orientation="Horizontal">
@@ -100,22 +79,135 @@
 								<Image Source="/JiME;component/Assets/edit.png" Height="24"/>
 							</StackPanel>
 						</Button>
-						<StackPanel Orientation="Vertical" Width="300" Margin="10,5,0,0" >
-							<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Height="40">
-							Use the Tile Editor to define which tiles are in this Block. <Bold>The Start Block cannot use random tiles</Bold>.
-							</TextBlock>
-						</StackPanel>
+						<TextBlock Style="{StaticResource SubText}" VerticalAlignment="Center" TextWrapping="Wrap">
+							Use the Tile Editor to define which tiles are in this Block.
+						</TextBlock>
 					</StackPanel>
 
 					<!--pre-explored toggle-->
 					<!--<TextBlock Text="Pre-Exploration" Style="{StaticResource Heading}" Margin="0,10,0,0"/>-->
-					<CheckBox x:Name="preExCB" IsChecked="{Binding chapter.isPreExplored}" Content="This Block starts already Explored (Start Block only)" Foreground="White" Margin="0,5,0,0"/>
-					<TextBlock x:Name="preExText" Style="{StaticResource SubText}" Text="If this is the Start Block, you can decide whether the tiles are pre-explored. With this option CHECKED (default), the Block begins with its tiles already Explored (no Explore Token on them), and any Interactive Tokens on its tiles start revealed. With this option NOT CHECKED, all tiles in the Block except the one marked as the player start tile are unexplored, and any Interactive Tokens start unrevealed." Margin="0,5,0,0" TextWrapping="Wrap"/>
+					<StackPanel x:Name="preExCB" Orientation="Horizontal">
+						<CheckBox IsChecked="{Binding chapter.isPreExplored}" Content="This Block starts already Explored (Start Block only)" Foreground="White" Margin="0,5,0,0"/>
+						<Image Source="/JiME;component/Assets/help.png" Stretch="Uniform"  Width="24" Height="24" VerticalAlignment="Bottom" Margin="10,0,0,0" ToolTipService.InitialShowDelay="0">
+							<Image.ToolTip>
+								<TextBlock>
+									If this is the Start Block, you can decide whether the tiles are pre-explored. With this<LineBreak/>
+									option CHECKED (default), the Block begins with its tiles already Explored (no Explore Token on them),<LineBreak/>
+									and any Interactive Tokens on its tiles start revealed. With this option NOT CHECKED, all tiles in the<LineBreak/>
+									Block except the one marked as the player start tile are unexplored, and any Interactive Tokens start unrevealed.
+								</TextBlock>
+							</Image.ToolTip>
+						</Image>
+					</StackPanel>
+
+
+					<StackPanel Orientation="Horizontal" Visibility="{Binding chapter.isRandomTiles, Converter={StaticResource b2vis}}" Margin="0,5,0,0">
+						<TextBlock Text="Tile Density:" Style="{StaticResource Heading}" Margin="0,0,10,0"/>
+						<ComboBox x:Name="tileDensityPreferenceCB" 
+								  ItemsSource="{Binding DensityPreferenceValues}" 
+								  SelectedItem="{Binding chapter.tileDensityPreference}"
+								  IsEnabled="{Binding chapter.isRandomTiles}" 
+								  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,0"/>
+
+						<Image Source="/JiME;component/Assets/help.png" Stretch="Uniform"  Width="24" Height="24" VerticalAlignment="Bottom" Margin="10,0,0,0" ToolTipService.InitialShowDelay="0">
+							<Image.ToolTip>
+								<TextBlock>
+									You can choose how well one Tile will try to fit to the other Tiles in the Tile Block<LineBreak/>
+									when using random Tiles.<LineBreak/><LineBreak/>
+									"First" will take the first viable connection. This is and has been the default behavior<LineBreak/><LineBreak/>
+									All the other options will first test all available connections and then randomly choose<LineBreak/>
+									one viable placment where the number of attachments match the option you chose.<LineBreak/><LineBreak/>
+									As an example, if the Tile finds valid placemnts with 1, 2, 3, 4, 5, or 6 attachments to<LineBreak/>
+									the rest of the Tiles in the Tile Block, the various options would go like this:<LineBreak/><LineBreak/>
+									LOWEST: randomly choose an option with only 1 connection<LineBreak/>
+									LOW Range: randomly choose an option with 1 or 2 connections<LineBreak/>
+									LOW-MEDIUM Range: randomly choose an option with 1, 2, 3, or 4 connections<LineBreak/>
+									MEDIAN: randomly choose an option with 3 connections<LineBreak/>
+									MEDIUM Range: randomly choose an option with 3 or 4 connections<LineBreak/>
+									MEDIUM-HIGH Range: randomly choose an option with 3, 4, 5, or 6 connections<LineBreak/>
+									HIGH Range: randomly choose an option with 5 or 6 connections<LineBreak/>
+									HIGHEST: randomly choose an option with 6 connections<LineBreak/>
+
+								</TextBlock>
+							</Image.ToolTip>
+						</Image>
+					</StackPanel>
+				</StackPanel>
+			</Border>
+
+
+
+			<Border x:Name="hintBlock" Style="{StaticResource callout}" Margin="0,5,0,0">
+				<StackPanel>
+					<TextBlock Text="Tile Block Attachment Hinting Options:" Style="{StaticResource Heading}" Margin="0,0,0,0"/>
+
+					<!--dynamic setting-->
+					<StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+						<CheckBox Foreground="White" Content="This Block is Dynamic" VerticalAlignment="Center" IsChecked="{Binding chapter.isDynamic}" Margin="0,5,0,0"/>
+						<Image Source="/JiME;component/Assets/help.png" Stretch="Uniform"  Width="24" Height="24" VerticalAlignment="Bottom" Margin="10,0,0,0" ToolTipService.InitialShowDelay="0">
+							<Image.ToolTip>
+								<TextBlock>
+									If a Tile Block MAY or MAY NOT be activated during a Scenario, mark it as Dynamic. For example, this is<LineBreak/>
+									useful for optional side quests that may not always appear during a Scenario. This helps the Companion App<LineBreak/>
+									build the Scenario properly. Dynamic Blocks don't have a Fog of War. The Start Block cannot be Dynamic.
+								</TextBlock>
+							</Image.ToolTip>
+						</Image>
+					</StackPanel>
+
+					<!--attachHint-->
+					<StackPanel Orientation="Horizontal">
+
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Text="Attach to Tile Block:" Style="{StaticResource Heading}" Margin="0,0,10,0"/>
+							<ComboBox ItemsSource="{Binding chapterAttachOptions}" DisplayMemberPath="dataName" SelectedValue="{Binding chapter.attachHint}" SelectedValuePath="dataName" HorizontalAlignment="Left" Width="250" IsEnabled="{Binding chapter.isStart, Converter={StaticResource binv}}" VerticalAlignment="Center" Margin="0,5,0,0" SelectionChanged="attachHint_SelectionChanged"/>
+							<!-- ItemsSource="{Binding scenario.chapterObserver}" -->
+						</StackPanel>
+
+						<Image Source="/JiME;component/Assets/help.png" Stretch="Uniform"  Width="24" Height="24" VerticalAlignment="Bottom" Margin="10,0,0,0" ToolTipService.InitialShowDelay="0">
+							<Image.ToolTip>
+								<TextBlock>
+									By default, Tile Blocks will try to attach to the Start Block first and if that doesn't work<LineBreak/>
+									they will try to attach to a subsequent Block following the order they are listed in this Editor.<LineBreak/>
+									<LineBreak/>
+									You may optionally choose the Block you'd prefer this Tile Block to attach to in the Companion App.<LineBreak/>
+									During Scenario creation, the Companion App will attempt to attach this Tile Block to the selected Block.<LineBreak/> 
+									If it can't (because it doesn't fit) it will try to attach to Start or a subsequent block in order.<LineBreak/>
+									<LineBreak/>
+									If you select 'Random', this Tile Block will be attached to a Block chosen at random.
+								</TextBlock>
+							</Image.ToolTip>
+						</Image>
+					</StackPanel>
+
+
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Attach to Specific Tile:" Style="{StaticResource Heading}" Margin="0,0,10,0"/>
+						<ComboBox x:Name="attachToTileCB" 
+								  ItemsSource="{Binding chapterTileAttachOptions}" 
+								  DisplayMemberPath="idNumber" 
+								  SelectedValuePath="idNumber" 
+								  SelectedValue="{Binding chapter.attachTileHint}" HorizontalAlignment="Left" IsEnabled="{Binding chapter.isStart, Converter={StaticResource binv}}" VerticalAlignment="Center" Margin="0,5,0,0"/>
+
+						<Image Source="/JiME;component/Assets/help.png" Stretch="Uniform"  Width="24" Height="24" VerticalAlignment="Bottom" Margin="10,0,0,0" ToolTipService.InitialShowDelay="0">
+							<Image.ToolTip>
+								<TextBlock>
+									You can pick a specific tile that belongs to the 'Attach to Tile Block' above.<LineBreak/>
+									The Companion App will first try to attach this Tile Block to that exact Tile.<LineBreak/>
+									If the Tile Block can't be attached to that Tile, the Companion App will then<LineBreak/>
+									try to attach it to other Tiles from the 'Attach to Tile Block'.<LineBreak/>
+									<LineBreak/>
+									Leave the selection blank or select '0' if you don't want this Tile Block to<LineBreak/>
+									attach to a specific Tile.
+								</TextBlock>
+							</Image.ToolTip>
+						</Image>
+					</StackPanel>
 				</StackPanel>
 			</Border>
 
 			<!--random token interactions-->
-			<Border x:Name="randomBlock" Style="{StaticResource callout}" Margin="0,0,0,0">
+			<Border x:Name="randomBlock" Style="{StaticResource callout}" Margin="0,5,0,0">
 				<StackPanel>
 					<StackPanel Orientation="Horizontal">
 						<TextBlock Style="{StaticResource Heading}" Text="Random Token Interaction Group"/>
@@ -124,21 +216,32 @@
 							<Image Source="/JiME;component/Assets/help.png" Stretch="Uniform"/>
 						</Button>
 					</StackPanel>
-					<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap">
-						Select an Interaction Group below. Then designate how many of the Events in the group will be randomly used. A mix of Fixed and Random Token Interactions can be used in a Block.
-					</TextBlock>
-					<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Margin="0,5,0,0" >
-<Bold>The Start Block cannot use Token Interaction Groups. Only Events that are marked Token Interaction can be in a Group.</Bold>
-					</TextBlock>
 					<UniformGrid Columns="2" Margin="0,5,0,0">
-						<ComboBox Name="randInter" ItemsSource="{Binding randomInteractions}" VerticalAlignment="Center" SelectionChanged="randInter_SelectionChanged" IsEnabled="{Binding chapter.usesRandomGroups}"/>
+						<StackPanel Orientation="Horizontal">
+							<ComboBox Name="randInter" ItemsSource="{Binding randomInteractions}" VerticalAlignment="Center" SelectionChanged="randInter_SelectionChanged" IsEnabled="{Binding chapter.usesRandomGroups}" MinWidth="290"/>
+							<Image Source="/JiME;component/Assets/warning.png" Stretch="Uniform"  Width="24" Height="24" VerticalAlignment="Center" Margin="5,0,0,0" ToolTipService.InitialShowDelay="0">
+								<Image.ToolTip>
+									<TextBlock>
+										NOTE: If you set this Group and you later change one or more Events in the Group to no<LineBreak/>
+										longer be a Token Interaction, the Group will no longer be a valid Token Interaction Group.
+									</TextBlock>
+								</Image.ToolTip>
+							</Image>
+							<Image Source="/JiME;component/Assets/help.png" Stretch="Uniform"  Width="24" Height="24" VerticalAlignment="Center" Margin="5,0,0,0" ToolTipService.InitialShowDelay="0">
+								<Image.ToolTip>
+									<TextBlock>
+										Select an Interaction Group from the list. Then designate how many of the Events in the group<LineBreak/>
+										will be randomly used. A mix of Fixed and Random Token Interactions can be used in a Block.<LineBreak/>
+										Only Events that are marked Token Interaction can be in a Group.
+									</TextBlock>
+								</Image.ToolTip>
+							</Image>
+						</StackPanel>
 						<StackPanel Margin="10,0">
 							<TextBlock x:Name="selectedInfoText" Style="{StaticResource SubText}" TextWrapping="Wrap" Text="There are X Token Interactions in the selected group." VerticalAlignment="Center" FontWeight="Bold"/>
 							<TextBlock x:Name="fixedCountText" Style="{StaticResource SubText}" Text="There are X fixed Tokens in this Block." FontWeight="Bold"/>
 						</StackPanel>
 					</UniformGrid>
-
-					<TextBlock Text="NOTE: If you set this Group and you later change one or more Events in the Group to no longer be a Token Interaction, the Group will no longer be a valid Token Interaction Group." TextWrapping="Wrap" Style="{StaticResource Heading}" Margin="0,5,0,0"/>
 
 					<TextBlock x:Name="spaceInfoText2" Style="{StaticResource Heading}" Text="There are X spaces available on this Block's tiles to place Tokens." Margin="0,5,0,0"/>
 
@@ -150,13 +253,13 @@
 			</Border>
 
 			<!--text-->
-			<Border x:Name="flavorBox" Style="{StaticResource callout}" IsEnabled="{Binding chapter.isEmpty, Converter={StaticResource binv}}" Margin="0,5,0,5">
+			<Border x:Name="flavorBox" Style="{StaticResource callout}" IsEnabled="{Binding chapter.isEmpty, Converter={StaticResource binv}}" Margin="0,5,0,0">
 				<StackPanel>
 					<TextBlock Text="Flavor Text" Style="{StaticResource Heading}"/>
 					<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap">
 					This text is shown when the Tile Block is activated. It is only shown once. <Bold><Italic>Optional</Italic></Bold>
 					</TextBlock>
-					<Grid Visibility="{Binding ElementName=noflavor,Path=IsChecked,Converter={StaticResource b2vis}}">
+					<Grid Visibility="{Binding ElementName=noflavor,Path=IsChecked,Converter={StaticResource b2invvis}}">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="*"/>
 							<ColumnDefinition Width="auto"/>

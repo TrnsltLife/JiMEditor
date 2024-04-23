@@ -48,6 +48,7 @@ namespace JiME
 							}
 	public enum HelpType { Token, Grouping, Enemies, Triggers }
 	public enum DifficultyBias { Light, Medium, Heavy }
+	public enum DensityPreference { FIRST, LOWEST, LOW, LOW_MEDIUM, MEDIAN, MEDIUM, MEDIUM_HIGH, HIGH, HIGHEST };
 
 
 	public interface ITile

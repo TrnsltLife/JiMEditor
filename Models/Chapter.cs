@@ -38,7 +38,7 @@ namespace JiME
 					_dataName = value;
 					PropChanged( "dataName" );
 
-					if (_dataName == "Start")
+					if (_dataName == "Start" && isEmpty)
 					{
 						isStart = true;
 					}
@@ -52,7 +52,8 @@ namespace JiME
 		//vars
 		bool _noFlavorText, _isRandomTiles, _isPreExplored, _usesRandomGroups, _isDynamic, _isStart;
 		string _triggeredBy, _exploreTrigger, _exploredAllTilesTrigger, _randomInteractionGroup, _attachHint;
-		int _randomInteractionGroupCount;
+		int _randomInteractionGroupCount, _attachTileHint;
+		DensityPreference _tileDensityPreference;
 
 		public bool noFlavorText
 		{
@@ -158,6 +159,27 @@ namespace JiME
 			}
 		}
 
+		public int attachTileHint
+		{
+			get => _attachTileHint;
+			set
+			{
+				_attachTileHint = value;
+				PropChanged("attachTileHint");
+			}
+		}
+
+		public DensityPreference tileDensityPreference
+        {
+			get => _tileDensityPreference;
+            set 
+			{
+				_tileDensityPreference = value;
+				PropChanged("tileDensityPreference");
+			}
+        }
+
+
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		public Chapter( string name ) : base()
@@ -176,6 +198,7 @@ namespace JiME
 			{
 				isPreExplored = true;
 				isStart = true;
+				isEmpty = true;
 			}
 			else
 			{
@@ -185,6 +208,7 @@ namespace JiME
 			usesRandomGroups = false;
 			isDynamic = false;
 			attachHint = "None";
+			attachTileHint = 0;
 		}
 
 		//public Chapter CreateDefault()

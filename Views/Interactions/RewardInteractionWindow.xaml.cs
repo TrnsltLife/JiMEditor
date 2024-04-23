@@ -72,7 +72,7 @@ namespace JiME.Views
 			//check for dupe name
 			if ( interaction.dataName == "New Reward Event" || scenario.interactionObserver.Count(x => x.dataName == interaction.dataName && x.GUID != interaction.GUID) > 0)
 			{
-				MessageBox.Show( "Give this Event a unique name.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
+				MessageBox.Show("An Event with this name already exists. Give this Event a unique name.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
 				return false;
 			}
 
