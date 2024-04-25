@@ -27,6 +27,7 @@ namespace JiME
 		}
 
 		string _scenarioName, _scenarioVersion, _fileName, _objectiveName, _fileVersion, _specialInstructions, _coverImage;
+		string _lastStandFailedResolution; //This value should be the dataName of an item from the resolutionObserver
 		bool _isDirty, _scenarioTypeJourney, _useTileGraphics;
 		int _initialScout, _subsequentScout, _threatMax, _loreReward, _xpReward, _shadowFear, _loreStartValue, _xpStartValue;
 		int[] _wallTypes;
@@ -246,6 +247,18 @@ namespace JiME
 			}
 		}
 
+		public string lastStandFailedResolution
+		{
+			//This value should be the dataName of an item from the resolutionObserver
+			get => _lastStandFailedResolution;
+			set
+			{
+				_lastStandFailedResolution = value;
+				PropChanged("lastStandFailedResolution");
+			}
+		}
+
+
 		public bool useTileGraphics
 		{
 			get => _useTileGraphics;
@@ -455,6 +468,7 @@ namespace JiME
 			s.campaignGUID = fm.campaignGUID;
 			s.specialInstructions = fm.specialInstructions ?? "";
 			s.coverImage = fm.coverImage;
+			s.lastStandFailedResolution = fm.lastStandFailedResolution;
 			s.useTileGraphics = fm.useTileGraphics;
 			s.scenarioEndStatus = new Dictionary<string, bool>( fm.scenarioEndStatus );
 
@@ -483,6 +497,7 @@ namespace JiME
 			campaignGUID = Guid.NewGuid();
 			specialInstructions = "";
 			coverImage = null;
+			lastStandFailedResolution = null;
 			threatMax = 60;
 			scenarioTypeJourney = true;
 			objectiveName = "None";
