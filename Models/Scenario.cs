@@ -430,6 +430,10 @@ namespace JiME
 			s.resolutionObserver = new ObservableCollection<TextBookData>( fm.resolutions );
 			s.threatObserver = new ObservableCollection<Threat>( fm.threats );
 			s.chapterObserver = new ObservableCollection<Chapter>( fm.chapters );
+			foreach( var chapter in fm.chapters )
+            {
+				chapter.UpgradeChapter();
+            }
 			s.collectionObserver = new ObservableCollection<Collection>(fm.collections);
 			if(!s.collectionObserver.Contains(Collection.CORE_SET))
             {

@@ -25,6 +25,14 @@ namespace JiME
 			translationAccessors = list;
 		}
 
+		public void UpgradeChapter()
+        {
+			if (dataName == "Start" && isEmpty)
+			{
+				isStart = true;
+			}
+		}
+
 		//common
 		string _dataName;
 
