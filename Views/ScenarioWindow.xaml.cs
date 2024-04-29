@@ -358,7 +358,7 @@ namespace JiME.Views
 		private void addThreatButton_Click( object sender, RoutedEventArgs e )
 		{
 			int i = 1;
-			string name = "Default Name";
+			string name = "Threat";
 			while (true)
             {
 				if(!scenario.threatObserver.Where(x => x.dataName == name).Any())
@@ -367,7 +367,7 @@ namespace JiME.Views
 					break;
 				}
 				i++;
-				name = "Default Name " + i;
+				name = "Threat " + i;
 			}
 			UpdateThreatPanel();
 		}

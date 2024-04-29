@@ -146,5 +146,12 @@ namespace JiME.Views
 			if ( tw.ShowDialog() == true )
 				bookData.triggerName = tw.triggerName;
 		}
+
+		private void AddFinalTriggerButton_Click(object sender, RoutedEventArgs e)
+		{
+			TriggerEditorWindow tw = new TriggerEditorWindow(scenario);
+			if (tw.ShowDialog() == true)
+				bookData.finalTriggerName = tw.triggerName;
+		}
 	}
 }
