@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 
 namespace JiME.Views
@@ -17,6 +20,8 @@ namespace JiME.Views
 		public string shortName { get; set; }
 		public TextBookController textBookController;
 		public bool successChecked;
+
+		public ObservableCollection<Trigger> campaignTriggersObserver { get; set; } = new ObservableCollection<Trigger>();
 
 		public TextEditorWindow( Scenario s, EditMode mode, TextBookData textBookData )
 		{
@@ -40,11 +45,13 @@ namespace JiME.Views
 			{
 				descriptionBlock.Visibility = Visibility.Visible;
 				triggerGroup.Visibility = Visibility.Visible;
+				finalTriggerGroup.Visibility = Visibility.Visible;
 			}
 			else
 			{
 				descriptionBlock.Visibility = Visibility.Collapsed;
 				triggerGroup.Visibility = Visibility.Collapsed;
+				finalTriggerGroup.Visibility = Visibility.Collapsed;
 				resultbox.Visibility = Visibility.Collapsed;
 			}
 
@@ -56,6 +63,16 @@ namespace JiME.Views
 			UpdateInfo();
 
 			triggerLB.IsEnabled = mode == EditMode.Resolution;
+
+			if (scenario.projectType == ProjectType.Standalone)
+			{
+				finalTriggerGroup.Visibility = Visibility.Collapsed;
+			}
+			else
+            {
+				List<Trigger> campaignTriggers = s.triggersObserver.Where(x => x.isCampaignTrigger).ToList();
+				campaignTriggersObserver = new ObservableCollection<Trigger>(campaignTriggers);
+			}
 		}
 
 		/*

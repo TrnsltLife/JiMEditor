@@ -235,6 +235,13 @@ namespace JiME.Views
 				return;
 
 			TextBookData text = scenario.resolutionObserver[resolutionCB.SelectedIndex];
+
+			if(text.dataName == "None")
+            {
+				MessageBox.Show("The [None] Resolution cannot be modified.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+            }
+
 			Dictionary<string, string> originals = scenario.resolutionObserver[resolutionCB.SelectedIndex].CaptureStartingValues();
 			string originalKeyName = text.dataName;
 			string originalPrefix = text.TranslationKeyPrefix();
@@ -297,6 +304,18 @@ namespace JiME.Views
 
 		private void RemoveResolutionButton_Click( object sender, RoutedEventArgs e )
 		{
+			if (resolutionCB.SelectedIndex < 0)
+				return;
+
+			TextBookData text = scenario.resolutionObserver[resolutionCB.SelectedIndex];
+
+			if (text.dataName == "None")
+			{
+				MessageBox.Show("The [None] Resolution cannot be modified.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+
+
 			var ret = MessageBox.Show("Are you sure you want to delete this Resolution?\n\nALL ITS DATA WILL BE DELETED.", "Delete Resolution", MessageBoxButton.YesNo, MessageBoxImage.Question);
 			if (ret == MessageBoxResult.Yes)
 			{

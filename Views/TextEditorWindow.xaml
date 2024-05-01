@@ -60,7 +60,7 @@
 
 							<GroupBox x:Name="finalTriggerGroup" Header="Final Trigger:" Margin="10,10" Foreground="White">
 								<WrapPanel VerticalAlignment="Center">
-									<ComboBox x:Name="finalTriggerCB" MinWidth="180" VerticalAlignment="Center" ItemsSource="{Binding scenario.triggersObserver}" SelectedValue="{Binding bookData.finalTriggerName}" SelectedValuePath="dataName" DisplayMemberPath="dataName" Margin="5,0">
+									<ComboBox x:Name="finalTriggerCB" MinWidth="180" VerticalAlignment="Center" ItemsSource="{Binding campaignTriggersObserver}" SelectedValue="{Binding bookData.finalTriggerName}" SelectedValuePath="dataName" DisplayMemberPath="dataName" Margin="5,0">
 									</ComboBox>
 
 									<Button x:Name="addFinalTriggerButton" Background="MediumSeaGreen" Margin="5,0" Click="AddFinalTriggerButton_Click">
@@ -74,7 +74,9 @@
 												You can use the Final Trigger to set a Campaign Trigger which you can use<LineBreak/>
 												in future scenarios to determine if this scenario succeeded, failed, ended<LineBreak/>
 												because of a failed Last Stand, or which story path the heroes followed to<LineBreak/>
-												reach this ending, and so on.
+												reach this ending, and so on.<LineBreak/><LineBreak/>
+												If you don't see any Campaign Triggers in this list, you can add them in the<LineBreak/>
+												Campaign Manager under the Settings tab.
 												</TextBlock>
 											</Image.ToolTip>
 										</Image>

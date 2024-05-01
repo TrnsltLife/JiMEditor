@@ -219,6 +219,22 @@ Enemies you design yourself are Scripted Enemies. They can use either default or
 				</Border>
 			</TabItem>
 
+			<TabItem Header="Last Stand Triggers" Padding="5">
+				<Border Style="{StaticResource callout}">
+					<StackPanel>
+						<TextBlock Style="{StaticResource Heading}" Text="There are special triggers associated with a Last Stand"/>
+						<TextBlock Style="{StaticResource Heading}" Text="Last Stand Failed #" Margin="0,5,0,0"/>
+						<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" FontSize="14">
+							Triggers named "Last Stand Failed 1", "Last Stand Failed 2", "Last Stand Failed 3", "Last Stand Failed 4", and "Last Stand Failed 5" will be fired by the Companion App when the 1st, 2nd, 3rd, 4th, and 5th hero fail a Last Stand. You can trigger an event from those triggers. Of course, 3, 4, and 5 are very unlikely.
+						</TextBlock>
+						<TextBlock Style="{StaticResource Heading}" Text="Last Stand x#" Margin="0,5,0,0"/>
+						<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" FontSize="14">
+							Triggers can also be named "Last Stand x1", "Last Stand x2", "Last Stand x3", etc. The Companion App will fire these triggers for the first hero who successfully passes their 1st, 2nd, or 3rd Last Stand, (and so on).
+						</TextBlock>
+					</StackPanel>
+				</Border>
+			</TabItem>
+
 			<TabItem Header="Campaign Triggers" Padding="5">
 				<Border Style="{StaticResource callout}">
 					<StackPanel>
@@ -234,11 +250,18 @@ Enemies you design yourself are Scripted Enemies. They can use either default or
 
 						<TextBlock Style="{StaticResource Heading}" Text="What If A Scenario Is Replayed?" Margin="0,10,0,0"/>
 						<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap">
+							As of v0.34, the Companion App keeps track of the Campaign Triggers that were in effect at the end of the previous scenario. For example, if Scenario 2 is Replayed, its Campaign Triggers are reset to the values from the end of Scenario 1. Any Campaign Triggers set during the first playthrough of Scenario 2 will not be in effect at the start of the Scenario 2 Replay, although they may become set again during the Replay of Scenario 2.
+							<LineBreak/><LineBreak/>
+							If both Scenario 1 and Scenario 2 are played, and then Scenario 1 is Replayed, a Replay of Scenario 2 will start with the Campaign Triggers from the end of the Replay of Scenario 1.
+						</TextBlock>
+						<!--
+						<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap">
 							Replaying a Scenario does not "undo" any Campaign Triggers that had previously been activated by the Scenario. Previously activated Campaign Triggers are set/activated in a Scenario after the Scenario loads, regardless of whether it's being Replayed or played for the first time. If a Scenario is Replayed in the Companion App, any Campaign Triggers that had previously been activated by the Scenario <Bold>will already be activated during the Replay</Bold>, even if the players don't trigger them again during the Replay.
 						</TextBlock>
 						<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap" Margin="0,5,0,0">
 							To avoid edge cases where Replayed Scenarios need to react to a Campaign Trigger that has potentially already been activated during a previous play-through, <Bold>all Campaign Triggers are also Multi-Triggers</Bold>, allowing them to trigger again during the Replay.
 						</TextBlock>
+						-->
 
 						<TextBlock Style="{StaticResource Heading}" Text="How Do I Create A Campaign Trigger?" Margin="0,10,0,0"/>
 						<TextBlock Style="{StaticResource SubText}" TextWrapping="Wrap">
