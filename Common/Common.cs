@@ -406,8 +406,8 @@ namespace JiME
 		/// AKA "Engine Version" in the companion app
 		/// Update this number every time the file format changes with new features
 		/// </summary>
-		public static string formatVersion = "1.33";
-		public static string appVersion = "0.33";
+		public static string formatVersion = "1.34";
+		public static string appVersion = "0.34";
 		public static Dictionary<int, BaseTileData> tileDictionary { get; set; } = new Dictionary<int, BaseTileData>();
 		public static Dictionary<int, BaseTileData> tileDictionaryB { get; set; } = new Dictionary<int, BaseTileData>();
 		public static int tolerance = 25;
