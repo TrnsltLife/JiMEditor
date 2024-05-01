@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.34]
+### Added
+- Scenario screen has a way to specify what Resolution is called during the Shadow Phase after a failed Last Stand. "Last Stand Failed Resolution Text".
+- "None" is now a non-deletable, non-editable Resolution option, so the "Last Stand Failed Resolution Text" can be set to "None".
+- New "Default Failure Resolution" created with a new Scenario
+- New "Default Last Stand Failed Resolution" created with a new Scenario
+- New "Scenario Failed" trigger created by default
+- New "Scenario Succeeded" trigger created by default
+- New "Scenario Last Stand Failed" trigger created by default
+- New triggers created by default for first Hero to reach a certain level of Last Stand, e.g. "Last Stand x2" is level 2
+- New triggers created by default for the nth Hero to fail a Last Stand, e.g. "Last Stand Failed 3" is the 3rd hero to fail a Last Stand
+
 ## [v0.33]
 ### Changed
 - Start tile block can use random tiles.
