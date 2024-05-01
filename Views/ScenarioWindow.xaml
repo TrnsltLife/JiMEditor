@@ -284,6 +284,7 @@
 
 		<StackPanel Margin="5,10,5,5">
 			<UniformGrid Columns="2">
+				<StackPanel>
 				<Border Style="{StaticResource callout}" Margin="0,0,5,0" VerticalAlignment="Top">
 					<Grid>
 						<Grid.ColumnDefinitions>
@@ -291,17 +292,44 @@
 							<ColumnDefinition Width="auto"/>
 						</Grid.ColumnDefinitions>
 
-						<StackPanel>
+						<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
 							<TextBlock Text="Introduction Text" Style="{StaticResource Heading}"/>
-							<TextBlock TextWrapping="Wrap" Style="{StaticResource SubText}">
-					The Introduction Text is shown at the beginning of the Scenario to describe the mission. If it's left empty, it will not be shown.
-							</TextBlock>
+							<Image Source="/JiME;component/Assets/help.png" Stretch="Uniform"  Width="24" Height="24" VerticalAlignment="Bottom" Margin="10,0,0,0" ToolTipService.InitialShowDelay="0">
+								<Image.ToolTip>
+									<TextBlock>
+									The Introduction Text is shown at the beginning of the Scenario to describe the mission.<LineBreak/>
+									If it's left empty, it will not be shown.
+									</TextBlock>
+								</Image.ToolTip>
+							</Image>
 						</StackPanel>
 						<Button x:Name="editIntroButton" Grid.Column="1" Margin="5,0,5,0" Padding="5" Background="CornflowerBlue" Click="EditIntroButton_Click" VerticalAlignment="Center">
 							<Image Source="/JiME;component/Assets/edit.png" Width="32" />
 						</Button>
 					</Grid>
 				</Border>
+
+				<Border Style="{StaticResource callout}" Margin="0,5,5,0" VerticalAlignment="Top">
+					<StackPanel Orientation="Vertical">
+						<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+							<TextBlock Text="Last Stand Failed Resolution Text" Style="{StaticResource Heading}"/>
+							<Image Source="/JiME;component/Assets/help.png" Stretch="Uniform"  Width="24" Height="24" VerticalAlignment="Bottom" Margin="10,0,0,0" ToolTipService.InitialShowDelay="0">
+								<Image.ToolTip>
+									<TextBlock>
+									Pick one of the Scenario Resolution Texts to apply when a Hero fails his Last Stand<LineBreak/>
+									and the remaining heroes are not able to win the scenario by the start of the Shadow Phase.<LineBreak/>
+									</TextBlock>
+								</Image.ToolTip>
+							</Image>
+						</StackPanel>
+						<ComboBox x:Name="lastStandFailedResolutionCB" 
+							DisplayMemberPath="dataName" 
+							SelectedValue="{Binding scenario.lastStandFailedResolution}"
+							SelectedValuePath="dataName"
+							Margin="0,5,0,0"/>
+					</StackPanel>
+				</Border>
+				</StackPanel>
 
 				<!--Resulution text-->
 				<Border Style="{StaticResource callout}" Margin="5,0,0,0">
@@ -314,7 +342,7 @@
 						<StackPanel>
 							<TextBlock Text="Scenario Resolution Text" Style="{StaticResource Heading}"/>
 							<TextBlock TextWrapping="Wrap" Style="{StaticResource SubText}">
-					All Scenarios have at least one Resolution that is displayed at the end of the Scenario. Multiple Resolutions can be created and triggered, depending on the success, failure, or other specified conditions encountered during the Scenario.
+							All Scenarios have at least one Resolution that is displayed at the end of the Scenario. Multiple Resolutions can be created and triggered, depending on the success, failure, or other specified conditions encountered during the Scenario.
 							</TextBlock>
 							<ComboBox x:Name="resolutionCB" DisplayMemberPath="dataName" SelectedIndex="0" Margin="0,5,0,0"/>
 

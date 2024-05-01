@@ -98,12 +98,14 @@ namespace JiME.Views
 			{
 				if ( !isNew )//renaming
 				{
-					if ( triggerName != string.Empty )
-						if ( scenario.RenameTrigger( oldName, triggerName, multiCB.IsChecked.Value ) )
+					if (triggerName != string.Empty)
+					{
+						if (scenario.RenameTrigger(oldName, triggerName, multiCB.IsChecked.Value))
 						{
 							DialogResult = true;
 							return;
 						}
+					}
 				}
 
 				//if ( triggerName.Contains( "Random" ) )

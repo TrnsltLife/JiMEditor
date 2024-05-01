@@ -21,7 +21,7 @@ namespace JiME
 			translationAccessors = list;
 		}
 
-		string _dataName, _triggerName;
+		string _dataName, _triggerName, _finalTriggerName;
 
 		public string dataName
 		{
@@ -45,6 +45,18 @@ namespace JiME
 				{
 					_triggerName = value;
 					Prop( "triggerName" );
+				}
+			}
+		}
+		public string finalTriggerName
+		{
+			get { return _finalTriggerName; }
+			set
+			{
+				if (value != _finalTriggerName)
+				{
+					_finalTriggerName = value;
+					Prop("finalTriggerName");
 				}
 			}
 		}

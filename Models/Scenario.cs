@@ -27,6 +27,7 @@ namespace JiME
 		}
 
 		string _scenarioName, _scenarioVersion, _fileName, _objectiveName, _fileVersion, _specialInstructions, _coverImage;
+		string _lastStandFailedResolution; //This value should be the dataName of an item from the resolutionObserver
 		bool _isDirty, _scenarioTypeJourney, _useTileGraphics;
 		int _initialScout, _subsequentScout, _threatMax, _loreReward, _xpReward, _shadowFear, _loreStartValue, _xpStartValue;
 		int[] _wallTypes;
@@ -246,6 +247,18 @@ namespace JiME
 			}
 		}
 
+		public string lastStandFailedResolution
+		{
+			//This value should be the dataName of an item from the resolutionObserver
+			get => _lastStandFailedResolution;
+			set
+			{
+				_lastStandFailedResolution = value;
+				PropChanged("lastStandFailedResolution");
+			}
+		}
+
+
 		public bool useTileGraphics
 		{
 			get => _useTileGraphics;
@@ -455,6 +468,7 @@ namespace JiME
 			s.campaignGUID = fm.campaignGUID;
 			s.specialInstructions = fm.specialInstructions ?? "";
 			s.coverImage = fm.coverImage;
+			s.lastStandFailedResolution = fm.lastStandFailedResolution;
 			s.useTileGraphics = fm.useTileGraphics;
 			s.scenarioEndStatus = new Dictionary<string, bool>( fm.scenarioEndStatus );
 
@@ -483,6 +497,7 @@ namespace JiME
 			campaignGUID = Guid.NewGuid();
 			specialInstructions = "";
 			coverImage = null;
+			lastStandFailedResolution = null;
 			threatMax = 60;
 			scenarioTypeJourney = true;
 			objectiveName = "None";
@@ -494,19 +509,41 @@ namespace JiME
 			introBookData = new TextBookData( "Default Introduction Text" );
 			introBookData.pages.Add( "Default Introduction text.\n\nThis text is displayed at the beginning of the Scenario to describe the mission and Objectives.\n\nScenarios have one Introduction Text." );
 
-			TextBookData data = new TextBookData( "Default Resolution" );
-			data.pages.Add( "Default resolution text.  This text is displayed when the Scenario has ended.\n\nDifferent Resolutions can be shown based on a Trigger that gets set during the Scenario, depending on player actions.\n\nScenarios have at least one Resolution." );
-			data.triggerName = "Scenario Ended";
-			AddResolution( data, true );
 
 			//Always have one EMPTY Trigger / Objective / Interaction
-			triggersObserver.Add( Trigger.EmptyTrigger() );
+			triggersObserver.Add(Trigger.EmptyTrigger());
 			//triggersObserver.Add( Trigger.RandomTrigger() );
-			objectiveObserver.Add( Objective.EmptyObjective() );
-			interactionObserver.Add( NoneInteraction.EmptyInteraction() );
-			AddTrigger( "Scenario Ended" );
-			AddTrigger( "Objective Complete" );
+			objectiveObserver.Add(Objective.EmptyObjective());
+			interactionObserver.Add(NoneInteraction.EmptyInteraction());
+			AddTrigger("Scenario Succeeded");
+			AddTrigger("Scenario Failed");
+			AddTrigger("Scenario Last Stand Failed");
+			AddTrigger("Objective Complete");
 			//AddInteraction( Interaction.EmptyInteraction() );
+
+
+			//Default Resolutions: Success, Failure, Last Stand Failed
+			TextBookData noneData = new TextBookData("None");
+			noneData.pages.Add("");
+			noneData.triggerName = "";
+			noneData.isEmpty = true;
+			AddResolution(noneData, true);
+
+
+			TextBookData data = new TextBookData( "Default Success Resolution" );
+			data.pages.Add( "Default resolution text.  This text is displayed when the Scenario has ended in SUCCESS.\n\nDifferent Resolutions can be shown based on a Trigger that gets set during the Scenario, depending on player actions.\n\nScenarios have at least one Resolution." );
+			data.triggerName = "Scenario Succeeded";
+			AddResolution( data, true );
+
+			TextBookData failedData = new TextBookData("Default Failure Resolution");
+			failedData.pages.Add("Default resolution text.  This text is displayed when the Scenario has ended in FAILURE.\n\nDifferent Resolutions can be shown based on a Trigger that gets set during the Scenario, depending on player actions.\n\nScenarios have at least one Resolution.");
+			failedData.triggerName = "Scenario Failed";
+			AddResolution(failedData, false);
+
+			TextBookData lastStandFailedData = new TextBookData("Default Last Stand Failed Resolution");
+			lastStandFailedData.pages.Add("You have succumbed to the terror and trauma of battle. You stagger off, seeking desperately for a place of safety where you can tend to your wounds and calm your fears.");
+			lastStandFailedData.triggerName = "Scenario Last Stand Failed";
+			AddResolution(lastStandFailedData, false);
 
 			//default objective - always at least 1 in the scenario
 			Objective obj = new Objective( "Default Objective" ) { triggerName = "Objective Complete" };

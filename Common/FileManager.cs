@@ -24,6 +24,7 @@ namespace JiME
 		public Guid campaignGUID { get; set; }
 		public string specialInstructions { get; set; }
 		public string coverImage { get; set; }
+		public string lastStandFailedResolution { get; set; }
 		public string fileVersion { get; set; }
 		public string fileName { get; set; }
 		public string saveDate { get; set; }
@@ -72,6 +73,7 @@ namespace JiME
 			campaignGUID = source.campaignGUID;
 			specialInstructions = source.specialInstructions;
 			coverImage = source.coverImage;
+			lastStandFailedResolution = source.lastStandFailedResolution;
 			fileName = source.fileName;
 			fileVersion = Utils.formatVersion;
 			saveDate = source.saveDate;

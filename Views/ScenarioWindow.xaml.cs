@@ -118,6 +118,7 @@ namespace JiME.Views
 				threatCollection.Add( new ThreatList( t, scenario.interactionObserver.Where( x => !x.isTokenInteraction ).ToArray() ) );
 
 			resolutionCB.ItemsSource = scenario.resolutionObserver;
+			lastStandFailedResolutionCB.ItemsSource = scenario.resolutionObserver;
 			threatList.ItemsSource = threatCollection;//bind dummy
 
 			if ( scenario.campaignGUID != Guid.Empty )
@@ -234,6 +235,13 @@ namespace JiME.Views
 				return;
 
 			TextBookData text = scenario.resolutionObserver[resolutionCB.SelectedIndex];
+
+			if(text.dataName == "None")
+            {
+				MessageBox.Show("The [None] Resolution cannot be modified.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+            }
+
 			Dictionary<string, string> originals = scenario.resolutionObserver[resolutionCB.SelectedIndex].CaptureStartingValues();
 			string originalKeyName = text.dataName;
 			string originalPrefix = text.TranslationKeyPrefix();
@@ -296,6 +304,18 @@ namespace JiME.Views
 
 		private void RemoveResolutionButton_Click( object sender, RoutedEventArgs e )
 		{
+			if (resolutionCB.SelectedIndex < 0)
+				return;
+
+			TextBookData text = scenario.resolutionObserver[resolutionCB.SelectedIndex];
+
+			if (text.dataName == "None")
+			{
+				MessageBox.Show("The [None] Resolution cannot be modified.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+
+
 			var ret = MessageBox.Show("Are you sure you want to delete this Resolution?\n\nALL ITS DATA WILL BE DELETED.", "Delete Resolution", MessageBoxButton.YesNo, MessageBoxImage.Question);
 			if (ret == MessageBoxResult.Yes)
 			{
@@ -356,7 +376,18 @@ namespace JiME.Views
 
 		private void addThreatButton_Click( object sender, RoutedEventArgs e )
 		{
-			scenario.threatObserver.Add( new Threat() );
+			int i = 1;
+			string name = "Threat";
+			while (true)
+            {
+				if(!scenario.threatObserver.Where(x => x.dataName == name).Any())
+                {
+					scenario.threatObserver.Add(new Threat(name));
+					break;
+				}
+				i++;
+				name = "Threat " + i;
+			}
 			UpdateThreatPanel();
 		}
 
@@ -447,5 +478,5 @@ namespace JiME.Views
 
 			scenario.RefilterGlobalTilePool();
 		}
-	}
+    }
 }

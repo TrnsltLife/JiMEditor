@@ -30,67 +30,73 @@
 
 		<!--Footer-->
 		<Border Grid.Row="2" BorderThickness="0,1,0,0" BorderBrush="Silver" HorizontalAlignment="Stretch" Background="#FF46464A" Margin="0,10,0,0">
-			<Grid>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="auto"/>
-					<ColumnDefinition Width="*"/>
-					<ColumnDefinition Width="auto"/>
-					<ColumnDefinition Width="auto"/>
-				</Grid.ColumnDefinitions>
+			<StackPanel Orientation="Vertical">
+				<StackPanel x:Name="resultbox" Orientation="Horizontal" VerticalAlignment="Bottom">
+					<TextBlock Style="{StaticResource Heading}" Text="This Resolution Ends the Scenario in a..." Margin="0,0,0,0"/>
+					<RadioButton x:Name="successCB" Content="Success" Margin="10,3,0,0" Foreground="White" GroupName="resend"/>
+					<RadioButton x:Name="failCB" Content="Failure" Margin="20,3,0,0" Foreground="White" GroupName="resend"/>
+				</StackPanel>
 
-				<WrapPanel>
-					<!--page controls - DEPRECATED-->
-					<!--<Button Visibility="Collapsed" x:Name="addButton" Margin="10" Background="MediumSeaGreen" Click="AddButton_Click" >
-						<Image Source="/JiME;component/Assets/addpage.png" Stretch="Uniform" Width="32" Margin="5"/>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="auto"/>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="auto"/>
+						<ColumnDefinition Width="auto"/>
+					</Grid.ColumnDefinitions>
+
+					<WrapPanel>
+						<StackPanel Orientation="Horizontal">
+							<GroupBox x:Name="triggerGroup" Header="Triggered By:" Margin="10,10" Foreground="White">
+								<WrapPanel VerticalAlignment="Center">
+									<ComboBox x:Name="triggerLB" MinWidth="180" VerticalAlignment="Center" ItemsSource="{Binding scenario.triggersObserver}" SelectedValue="{Binding bookData.triggerName}" SelectedValuePath="dataName" DisplayMemberPath="dataName" Margin="5,0">
+									</ComboBox>
+
+									<Button x:Name="addTriggerButton" Background="MediumSeaGreen" Margin="5,0" Click="AddTriggerButton_Click">
+										<Image Source="/JiME;component/Assets/add.png" Width="16"/>
+									</Button>
+								</WrapPanel>
+							</GroupBox>
+
+							<GroupBox x:Name="finalTriggerGroup" Header="Final Trigger:" Margin="10,10" Foreground="White">
+								<WrapPanel VerticalAlignment="Center">
+									<ComboBox x:Name="finalTriggerCB" MinWidth="180" VerticalAlignment="Center" ItemsSource="{Binding campaignTriggersObserver}" SelectedValue="{Binding bookData.finalTriggerName}" SelectedValuePath="dataName" DisplayMemberPath="dataName" Margin="5,0">
+									</ComboBox>
+
+									<Button x:Name="addFinalTriggerButton" Background="MediumSeaGreen" Margin="5,0" Click="AddFinalTriggerButton_Click">
+										<Image Source="/JiME;component/Assets/add.png" Width="16"/>
+									</Button>
+
+									<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+										<Image Source="/JiME;component/Assets/help.png" Stretch="Uniform"  Width="24" Height="24" VerticalAlignment="Bottom" Margin="10,0,0,0" ToolTipService.InitialShowDelay="0">
+											<Image.ToolTip>
+												<TextBlock>
+												You can use the Final Trigger to set a Campaign Trigger which you can use<LineBreak/>
+												in future scenarios to determine if this scenario succeeded, failed, ended<LineBreak/>
+												because of a failed Last Stand, or which story path the heroes followed to<LineBreak/>
+												reach this ending, and so on.<LineBreak/><LineBreak/>
+												If you don't see any Campaign Triggers in this list, you can add them in the<LineBreak/>
+												Campaign Manager under the Settings tab.
+												</TextBlock>
+											</Image.ToolTip>
+										</Image>
+									</StackPanel>
+								</WrapPanel>
+							</GroupBox>
+						</StackPanel>
+					</WrapPanel>
+
+					<Button x:Name="okButton" Grid.Column="2" Margin="10" Background="MediumSeaGreen" Click="OkButton_Click" IsDefault="True">
+						<Image Source="/JiME;component/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
 					</Button>
 
-					<Button Visibility="Collapsed" x:Name="removeButton" Margin="10" Background="#ff4200" Click="RemoveButton_Click" >
-						<Image Source="/JiME;component/Assets/removepage.png" Stretch="Uniform" Width="32" Margin="5"/>
+					<Button x:Name="cancelButton" Grid.Column="3" Margin="0,10,10,10" Background="{StaticResource bgCancelDelete}" Click="CancelButton_Click" IsCancel="True" Visibility="Collapsed">
+						<Image Source="/JiME;component/Assets/cancel.png" Stretch="Uniform" Width="32" Margin="5"/>
 					</Button>
 
-					<Button Visibility="Collapsed" x:Name="leftButton" Margin="10" Background="Moccasin" Click="LeftButton_Click" >
-						<Image Source="/JiME;component/Assets/left.png" Stretch="Uniform" Width="32" Margin="5"/>
-					</Button>
-					<Button Visibility="Collapsed" x:Name="rightButton" Margin="10" Background="Moccasin" Click="RightButton_Click" >
-						<Image Source="/JiME;component/Assets/right.png" Stretch="Uniform" Width="32" Margin="5"/>
-					</Button>-->
 
-					<!--<TextBlock Text="Triggered By:" Style="{StaticResource Heading}" Margin="10,0">
-						<TextBlock.Foreground>
-							<SolidColorBrush Color="White" />
-						</TextBlock.Foreground>
-					</TextBlock>-->
-
-					<GroupBox x:Name="triggerGroup" Header="Triggered By:" Margin="10,10" Foreground="White">
-						<WrapPanel VerticalAlignment="Center">
-							<ComboBox x:Name="triggerLB" MinWidth="150" VerticalAlignment="Center" ItemsSource="{Binding scenario.triggersObserver}" SelectedValue="{Binding bookData.triggerName}" SelectedValuePath="dataName" DisplayMemberPath="dataName" Margin="5,0">
-							</ComboBox>
-
-							<Button x:Name="addTriggerButton" Background="MediumSeaGreen" Margin="5,0" Click="AddTriggerButton_Click">
-								<Image Source="/JiME;component/Assets/add.png" Width="16"/>
-							</Button>
-						</WrapPanel>
-					</GroupBox>
-
-					<StackPanel x:Name="resultbox" VerticalAlignment="Center">
-						<TextBlock Style="{StaticResource Heading}" Text="This Resolution Ends the Scenario in a..." Margin="0,0,0,0"/>
-						<UniformGrid Columns="2" Margin="0,5,0,0">
-							<RadioButton x:Name="successCB" Content="Success" Foreground="White" GroupName="resend"/>
-							<RadioButton x:Name="failCB" Content="Failure" Foreground="White" GroupName="resend"/>
-						</UniformGrid>
-					</StackPanel>
-				</WrapPanel>
-
-				<Button x:Name="okButton" Grid.Column="2" Margin="10" Background="MediumSeaGreen" Click="OkButton_Click" IsDefault="True">
-					<Image Source="/JiME;component/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
-				</Button>
-
-				<Button x:Name="cancelButton" Grid.Column="3" Margin="0,10,10,10" Background="{StaticResource bgCancelDelete}" Click="CancelButton_Click" IsCancel="True" Visibility="Collapsed">
-					<Image Source="/JiME;component/Assets/cancel.png" Stretch="Uniform" Width="32" Margin="5"/>
-				</Button>
-
-
-			</Grid>
+				</Grid>
+			</StackPanel>
 		</Border>
 	</Grid>
 </Window>
