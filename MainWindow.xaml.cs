@@ -384,6 +384,14 @@ namespace JiME
 				RewardInteractionWindow w = new RewardInteractionWindow( scenario, castInteraction);
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
+			else if (interactionItem is CorruptionInteraction)
+			{
+				CorruptionInteraction castInteraction = (CorruptionInteraction)interactionItem;
+				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
+				string originalPrefix = castInteraction.TranslationKeyPrefix();
+				CorruptionInteractionWindow w = new CorruptionInteractionWindow(scenario, castInteraction);
+				castInteraction.HandleWindow(w, scenario.translationObserver);
+			}
 			else if (interactionItem is ItemInteraction)
 			{
 				ItemInteraction castInteraction = (ItemInteraction)interactionItem;
@@ -537,6 +545,12 @@ namespace JiME
 				RewardInteraction interact = ((RewardInteraction)interactionsUC.dataListView.Items[idx]).Clone();
 				RewardInteractionWindow bw = new RewardInteractionWindow(scenario, (RewardInteraction)interact, true);
 				if(bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
+			}
+			else if (interactionsUC.dataListView.SelectedItem is CorruptionInteraction)
+			{
+				CorruptionInteraction interact = ((CorruptionInteraction)interactionsUC.dataListView.Items[idx]).Clone();
+				CorruptionInteractionWindow bw = new CorruptionInteractionWindow(scenario, interact, true);
+				if (bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
 			}
 			else if (interactionsUC.dataListView.SelectedItem is ItemInteraction)
 			{
@@ -1052,6 +1066,19 @@ namespace JiME
 			}
 		}
 		private void CommandNewRewardInteraction_CanExecute( object sender, System.Windows.Input.CanExecuteRoutedEventArgs e )
+		{
+			e.CanExecute = true;
+		}
+
+		private void CommandNewCorruptionInteraction_Executed(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+		{
+			CorruptionInteractionWindow ew = new CorruptionInteractionWindow(scenario);
+			if (ew.ShowDialog() == true)
+			{
+				scenario.AddInteraction(ew.interaction);
+			}
+		}
+		private void CommandNewCorruptionInteraction_CanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
 		{
 			e.CanExecute = true;
 		}

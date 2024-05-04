@@ -225,6 +225,16 @@ namespace JiME
 					//new KeyGesture(Key.C, ModifierKeys.Alt)
 				}
 			);
+		public static readonly RoutedUICommand NewCorruptionInteraction = new RoutedUICommand
+			(
+				"New Corruption Event",
+				"NewCorruptionInteraction",
+				typeof(MyCommands),
+				new InputGestureCollection()
+				{
+					//new KeyGesture(Key.C, ModifierKeys.Alt)
+				}
+			);
 		public static readonly RoutedUICommand NewItemInteraction = new RoutedUICommand
 			(
 				"New Item Event",
