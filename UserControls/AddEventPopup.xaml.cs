@@ -246,6 +246,20 @@ namespace JiME.UserControls
 			e.CanExecute = true;
 		}
 
+		private void CommandNewCorruptionInteraction_Executed(object sender, ExecutedRoutedEventArgs e)
+		{
+			CorruptionInteractionWindow ew = new CorruptionInteractionWindow(scenario);
+			if (ew.ShowDialog() == true)
+			{
+				scenario.AddInteraction(ew.interaction);
+				HandleCreatedEvent(ew.interaction);
+			}
+		}
+		private void CommandNewCorruptionInteraction_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = true;
+		}
+
 		private void CommandNewItemInteraction_Executed(object sender, ExecutedRoutedEventArgs e)
 		{
 			ItemInteractionWindow ew = new ItemInteractionWindow(scenario);

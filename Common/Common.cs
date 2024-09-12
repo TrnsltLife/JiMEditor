@@ -15,7 +15,7 @@ using Newtonsoft.Json;
 namespace JiME
 {
 	public enum ScenarioType { Journey, Battle }
-	public enum InteractionType { Text, Threat, StatTest, Decision, Branch, Darkness, MultiEvent, Persistent, Conditional, Dialog, Replace, Reward, Item, Title, Start }
+	public enum InteractionType { Text, Threat, StatTest, Decision, Branch, Darkness, MultiEvent, Persistent, Conditional, Dialog, Replace, Reward, Item, Title, Start, Corruption }
 	/// <summary>
 	/// The order of the monsters in this enum is important to maintain unchanged because the order (0-29) tells the companion app which monster to use.
 	/// The order for the first 7 (core set) was set by GlowPuff and is kept for backwards compatibility.
@@ -32,7 +32,7 @@ namespace JiME
 	public enum TileType { Hex, Battle, Square }
 	public enum ThreatAttributes { }//armor, elite, etc
 	public enum ProjectType { Standalone, Campaign }
-	public enum EditMode { Intro, Resolution, Objective, Flavor, Pass, Fail, Progress, Dialog, Special, Persistent, Story, Event }
+	public enum EditMode { Intro, Resolution, Objective, Flavor, Pass, Fail, Progress, Dialog, Special, Persistent, Story, Event, Corruption_Instructions }
 	public enum EditorMode { Information, Threat, Decision, Test, Branch }
 	public enum Ability { Might, Agility, Wisdom, Spirit, Wit, Wild, Random, None}
 	public enum TerrainToken { None, Pit, Mist, Barrels, Table, FirePit, Statue }
@@ -49,6 +49,7 @@ namespace JiME
 	public enum HelpType { Token, Grouping, Enemies, Triggers }
 	public enum DifficultyBias { Light, Medium, Heavy }
 	public enum DensityPreference { FIRST, LOWEST, LOW, LOW_MEDIUM, MEDIAN, MEDIUM, MEDIUM_HIGH, HIGH, HIGHEST };
+	public enum CorruptionTarget { NONE, ONE_HERO, MULTIPLE_HEROES, ALL_HEROES };
 
 
 	public interface ITile
@@ -406,8 +407,8 @@ namespace JiME
 		/// AKA "Engine Version" in the companion app
 		/// Update this number every time the file format changes with new features
 		/// </summary>
-		public static string formatVersion = "1.34";
-		public static string appVersion = "0.34";
+		public static string formatVersion = "1.35";
+		public static string appVersion = "0.35";
 		public static Dictionary<int, BaseTileData> tileDictionary { get; set; } = new Dictionary<int, BaseTileData>();
 		public static Dictionary<int, BaseTileData> tileDictionaryB { get; set; } = new Dictionary<int, BaseTileData>();
 		public static int tolerance = 25;

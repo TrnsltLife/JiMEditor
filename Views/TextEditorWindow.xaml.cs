@@ -64,7 +64,7 @@ namespace JiME.Views
 
 			triggerLB.IsEnabled = mode == EditMode.Resolution;
 
-			if (scenario == null || scenario.projectType == null || scenario.projectType == ProjectType.Standalone)
+			if (scenario == null || scenario.projectType == ProjectType.Standalone)
 			{
 				finalTriggerGroup.Visibility = Visibility.Collapsed;
 			}
