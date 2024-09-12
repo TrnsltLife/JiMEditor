@@ -931,9 +931,9 @@ namespace JiME
 
 		private void CommandNewChapter_CanExecute( object sender, System.Windows.Input.CanExecuteRoutedEventArgs e )
 		{
-			//e.CanExecute = true;
+			e.CanExecute = true;
 			//Only allow adding new tile blocks if we're on the journey map, no the battle map
-			e.CanExecute = scenario.scenarioTypeJourney;
+			//e.CanExecute = scenario.scenarioTypeJourney;
 		}
 
 		//Interaction popup commands

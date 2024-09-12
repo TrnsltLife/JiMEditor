@@ -735,6 +735,9 @@ namespace JiME
 				case InteractionType.Title:
 					interactionObserver.Add(interaction);
 					break;
+				case InteractionType.Corruption:
+					interactionObserver.Add(interaction);
+					break;
 				default:
 					throw new Exception( "Interaction type not supported: " + interaction.interactionType );
 			}

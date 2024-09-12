@@ -73,7 +73,9 @@
 									<TextBlock Style="{StaticResource Heading}" Margin="0,0,10,0" Text="to"/>
 									<ComboBox x:Name="corruptionTargetCB" Margin="10,0" 
 											  ItemsSource="{Binding CorruptionTargetValues}" 
-											  SelectedItem="{Binding interaction.corruptionTarget}">
+											  SelectedItem="{Binding interaction.corruptionTarget}"
+											  SelectionChanged="corruptionTargetCB_SelectionChanged"
+											  >
 									</ComboBox>
 								</StackPanel>
 
@@ -98,6 +100,7 @@
 									</StackPanel>
 								</StackPanel>
 								<CheckBox x:Name="isReusableCB" Margin="32,20,0,0" Content="This grouped Event can be used more than once" Foreground="White" IsChecked="{Binding interaction.isReusable}" Visibility="Visible" VerticalAlignment="Top"/>
+								<Button x:Name="editInstructionsText" Content="Edit Instruction Text" Foreground="White" Background="MediumSeaGreen" Margin="10,0,0,0" Click="editInstructionText_Click" IsEnabled="False"/>
 							</StackPanel>
 						</UniformGrid>
 					</Border>

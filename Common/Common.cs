@@ -32,7 +32,7 @@ namespace JiME
 	public enum TileType { Hex, Battle, Square }
 	public enum ThreatAttributes { }//armor, elite, etc
 	public enum ProjectType { Standalone, Campaign }
-	public enum EditMode { Intro, Resolution, Objective, Flavor, Pass, Fail, Progress, Dialog, Special, Persistent, Story, Event }
+	public enum EditMode { Intro, Resolution, Objective, Flavor, Pass, Fail, Progress, Dialog, Special, Persistent, Story, Event, Corruption_Instructions }
 	public enum EditorMode { Information, Threat, Decision, Test, Branch }
 	public enum Ability { Might, Agility, Wisdom, Spirit, Wit, Wild, Random, None}
 	public enum TerrainToken { None, Pit, Mist, Barrels, Table, FirePit, Statue }

@@ -62,6 +62,30 @@ namespace JiME.Views
 			}
 
 			oldName = interaction.dataName;
+
+			updateEditInstructionsIsEnabled();
+		}
+
+		private void corruptionTargetCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+			updateEditInstructionsIsEnabled();
+		}
+
+		private void updateEditInstructionsIsEnabled()
+        {
+			Debug.Log("corruptionTargetCB_SelectionChanged " + corruptionTargetCB.SelectedValue);
+			if (
+				corruptionTargetCB?.SelectedValue?.ToString() == "ONE_HERO" ||
+				corruptionTargetCB?.SelectedValue?.ToString() == "MULTIPLE_HEROES" ||
+				corruptionTargetCB?.SelectedValue?.ToString() == "ALL_HEROES"
+			)
+			{
+				editInstructionsText.IsEnabled = true;
+			}
+			else
+			{
+				editInstructionsText.IsEnabled = false;
+			}
 		}
 
 		private void ComboBox_SelectionChanged( object sender, SelectionChangedEventArgs e )
@@ -93,6 +117,19 @@ namespace JiME.Views
 			if ( tw.ShowDialog() == true )
 			{
 				interaction.eventBookData.pages = tw.textBookController.pages;
+			}
+		}
+
+		private void editInstructionText_Click(object sender, RoutedEventArgs e)
+        {
+			TextBookData tbd = new TextBookData("(Leave blank for default text. e.g.) Choose which heroes must gain corruption token(s).");
+			CorruptionInteraction corruption = (CorruptionInteraction)interaction;
+			tbd.pages.Add(corruption.instructionText);
+
+			TextEditorWindow te = new TextEditorWindow(scenario, EditMode.Corruption_Instructions, tbd);
+			if (te.ShowDialog() == true)
+			{
+				corruption.instructionText = te.textBookController.pages[0];
 			}
 		}
 
