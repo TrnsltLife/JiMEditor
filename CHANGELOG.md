@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.35]
+### Added
+- Corruption Event type that allows giving (or removing) Corruption.
+
 ## [v0.34]
 ### Added
 - Scenario screen has a way to specify what Resolution is called during the Shadow Phase after a failed Last Stand. "Last Stand Failed Resolution Text".
