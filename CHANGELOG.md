@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.36]
+### Added
+- The persistent text of a Text Event can be translated.
+
+
 ## [v0.35]
 ### Added
 - Corruption Event type that allows giving (or removing) Corruption.

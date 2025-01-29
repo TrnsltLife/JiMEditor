@@ -8,6 +8,8 @@ namespace JiME
 		{
 			translationKeyParents = "text";
 			base.DefineTranslationAccessors();
+			var persistentTextAccessor = new TranslationAccessor("event.{1}.{0}.persistentText", () => this.isPersistent ? this.persistentText : "");
+			translationAccessors.Add(persistentTextAccessor);
 		}
 
 		public TextInteraction( string name ) : base( name )
