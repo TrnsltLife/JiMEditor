@@ -20,6 +20,8 @@ namespace JiME.Views
 		public MonsterActivations activations { get; set; }
 		public MonsterActivationItem activationItem { get; set; }
 		public string shortName { get; set; }
+		private string originalText;
+		private string originalEffect;
 
 		public MonsterActivationItemEditorWindow( Scenario s, MonsterActivations act, MonsterActivationItem actItem, bool isNew = true )
 		{
@@ -31,6 +33,8 @@ namespace JiME.Views
 			activationItem = actItem;
 
 			cancelButton.Visibility = isNew ? Visibility.Visible : Visibility.Collapsed;
+			originalText = actItem.text; //use this to keep track if text has changed during editing
+			originalEffect = actItem.effect;
 		}
 
 		private void OkButton_Click( object sender, RoutedEventArgs e )
@@ -44,6 +48,21 @@ namespace JiME.Views
 				MessageBox.Show( "The Attack Text cannot be empty.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
 				return;
 			}
+
+			if (activationItem.text != originalText)
+			{
+				// Notify that the text property has changed
+				activationItem.NotifyPropertyChanged(nameof(activationItem.text));
+				activationItem.NotifyPropertyChanged(nameof(activationItem.TextFlowDocument));
+			}
+
+			if (activationItem.effect != originalEffect)
+			{
+				// Notify that the text property has changed
+				activationItem.NotifyPropertyChanged(nameof(activationItem.effect));
+				activationItem.NotifyPropertyChanged(nameof(activationItem.EffectFlowDocument));
+			}
+
 
 			//check if trigger isn't set
 			//if ( ( (Trigger)triggerCB.SelectedItem ).dataName == "None"

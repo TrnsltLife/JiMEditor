@@ -72,6 +72,7 @@ namespace JiME
 				{
 					_text = value;
 					NotifyPropertyChanged("text");
+					NotifyPropertyChanged("TextFlowDocument");
 				}
 			}
 		}
@@ -85,6 +86,7 @@ namespace JiME
 				{
 					_effect = value;
 					NotifyPropertyChanged("effect");
+					NotifyPropertyChanged("EffectFlowDocument");
 				}
 			}
 		}
