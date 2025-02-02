@@ -43,10 +43,13 @@ namespace JiME.Views
 			}
 			//Console.WriteLine("OKButton_Click " + translationItem.text);
 
-			//If the text has changed during editing, set the flat to true.
-			//TODO Figure out a way to update the item in the TranslationEditorWindow's list
+			//If the text has changed during editing, set the flag to true.
 			if (translationItem.text != originalText)
             {
+				    // Notify that the text property has changed
+			    translationItem.NotifyPropertyChanged(nameof(translationItem.text));
+				translationItem.NotifyPropertyChanged(nameof(translationItem.TextFlowDocument));
+				translationItem.NotifyPropertyChanged(nameof(translationItem.Background));
 				translationItem.updatedWhileEditing = true;
             }
 			DialogResult = true;

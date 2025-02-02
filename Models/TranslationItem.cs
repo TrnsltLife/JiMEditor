@@ -59,7 +59,10 @@ namespace JiME
 				if (value != _text)
 				{
 					_text = value;
+					translationOK = false; //when the text changes, change the translationOK flag to false; it needs to be revalidated by the translator
 					NotifyPropertyChanged("text");
+					NotifyPropertyChanged("TextFlowDocument");
+					NotifyPropertyChanged("Background");
 				}
 			}
 		}
@@ -73,6 +76,7 @@ namespace JiME
 				{
 					_translationOK = value;
 					NotifyPropertyChanged("translationOK");
+					NotifyPropertyChanged(nameof(Background));
 				}
 			}
 		}
