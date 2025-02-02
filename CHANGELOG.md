@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Changed
+- Items in the list of translations for a langauge will now update the text and the background color when they are edited, or when the checkbox is clicked
+- Items in the list of enemy activations will now update the text and after effect when those are edited
 
 ## [v0.36]
 ### Added
