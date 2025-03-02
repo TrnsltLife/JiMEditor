@@ -80,6 +80,7 @@
     <Compile Include="Common\CustomMonsterModifierListConverter.cs" />
     <Compile Include="Common\CollectionConverter.cs" />
     <Compile Include="Common\ActivationsListConverter.cs" />
+    <Compile Include="Common\ExportManager.cs" />
     <Compile Include="Common\TitleListConverter.cs" />
     <Compile Include="Common\ItemListConverter.cs" />
     <Compile Include="Common\MonsterModifierListConverter.cs" />
@@ -107,6 +108,8 @@
     <Compile Include="Models\Items.cs" />
     <Compile Include="Models\MonsterModifier.cs" />
     <Compile Include="Models\Titles.cs" />
+    <Compile Include="Models\TranslationForExport.cs" />
+    <Compile Include="Models\TranslationItemForExport.cs" />
     <Compile Include="Models\TranslationItem.cs" />
     <Compile Include="Models\Translation.cs" />
     <Compile Include="Models\SquareTile.cs" />
@@ -1122,6 +1125,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\export.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\import.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

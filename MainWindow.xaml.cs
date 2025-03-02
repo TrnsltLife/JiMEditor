@@ -45,6 +45,8 @@ namespace JiME
 			interactionsUC.onRemoveEvent += OnRemoveEvent;
 			interactionsUC.onSettingsEvent += OnSettingsInteraction;
 			interactionsUC.onDuplicateEvent += OnDuplicateInteraction;
+			interactionsUC.onImportEvent += OnImportInteraction;
+			interactionsUC.onExportEvent += OnExportInteraction;
             interactionsUC.NewItemSelectedEvent += NewItemSelectedEvent;
 
             triggersUC.onAddEvent += OnAddTrigger;
@@ -63,16 +65,22 @@ namespace JiME
 			activationsUC.onRemoveEvent += OnRemoveActivations;
 			activationsUC.onSettingsEvent += OnSettingsActivations;
 			activationsUC.onDuplicateEvent += OnDuplicateActivations;
+			activationsUC.onImportEvent += OnImportActivations;
+			activationsUC.onExportEvent += OnExportActivations;
 
 			monsterModifiersUC.onAddEvent += OnAddMonsterModifier;
 			monsterModifiersUC.onRemoveEvent += OnRemoveMonsterModifier;
 			monsterModifiersUC.onSettingsEvent += OnSettingsMonsterModifier;
 			monsterModifiersUC.onDuplicateEvent += OnDuplicateMonsterModifier;
+			monsterModifiersUC.onImportEvent += OnImportMonsterModifier;
+			monsterModifiersUC.onExportEvent += OnExportMonsterModifier;
 
 			translationsUC.onAddEvent += OnAddTranslation;
 			translationsUC.onRemoveEvent += OnRemoveTranslation;
 			translationsUC.onSettingsEvent += OnSettingsTranslation;
 			//translationsUC.onDuplicateEvent += OnDuplicationTranslation;
+			translationsUC.onImportEvent += OnImportTranslation;
+			translationsUC.onExportEvent += OnExportTranslation;
 
 			//Debug.Log( this.FindResource( "mylist" ).GetType() );
 
@@ -198,6 +206,8 @@ namespace JiME
 		}
 
 		#region TOOLBAR ACTIONS
+
+		// Event / Interaction
 		void OnAddEvent( object sender, EventArgs e )
 		{
 			ContextMenu cm = this.FindResource( "cmButton" ) as ContextMenu;
@@ -225,163 +235,80 @@ namespace JiME
 			}
 		}
 
-		void OnAddTrigger( object sender, EventArgs e )
+		void OnSettingsInteraction(object sender, EventArgs e)
 		{
-			AddTrigger();
+			OpenInteractionEditor(interactionsUC.dataListView.SelectedItem);
 		}
 
-		void OnRemoveTrigger( object sender, EventArgs e )
+		private void OpenInteractionEditor(object interactionItem)
 		{
-			string selected = ( (Trigger)triggersUC.dataListView.SelectedItem ).dataName;
-			var strigger = (Trigger)triggersUC.dataListView.SelectedItem;
-
-			Tuple<string, string> used = scenario.IsTriggerUsed( selected );
-
-			if ( used != null )
-			{
-				MessageBox.Show( $"The selected Trigger [{selected}] is being used by [{used.Item2}] called [{used.Item1}].", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
-				return;
-			}
-
-			if ( strigger.isCampaignTrigger )
-			{
-				MessageBox.Show( "Campaign Triggers cannot be removed.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
-				return;
-			}
-
-			var ret = MessageBox.Show("Are you sure you want to delete this Trigger?", "Delete Trigger", MessageBoxButton.YesNo, MessageBoxImage.Question);
-			if (ret == MessageBoxResult.Yes)
-			{
-				int idx = triggersUC.dataListView.SelectedIndex;
-				if (idx != -1)
-					scenario.RemoveData(triggersUC.dataListView.SelectedItem);
-				triggersUC.dataListView.SelectedIndex = 0;
-            }
-		}
-
-		void OnDuplicateTrigger(object sender, EventArgs e)
-		{
-			int idx = triggersUC.dataListView.SelectedIndex;
-			Trigger trig = ((Trigger)triggersUC.dataListView.Items[idx]).Clone();
-
-			TriggerEditorWindow tew = new TriggerEditorWindow(scenario, trig, true);
-			if (tew.ShowDialog() == true)
-			{
-				//scenario.triggersObserver.Add(trig);
-				//The TriggerEditorWindow's OK button actually handles adding the Trigger to the scenario.triggersObserver.
-			}
-		}
-
-		void OnAddObjective( object sender, EventArgs e )
-		{
-			AddObjective();
-		}
-
-		void OnRemoveObjective( object sender, EventArgs e )
-		{
-			if (scenario.objectiveObserver.Count > 1)
-			{
-				var ret = MessageBox.Show("Are you sure you want to delete this Objective?\n\nALL ITS INFORMATION WILL BE DELETED.", "Delete Objective", MessageBoxButton.YesNo, MessageBoxImage.Question);
-				if (ret == MessageBoxResult.Yes)
-				{
-					int idx = objectivesUC.dataListView.SelectedIndex;
-					if (idx != -1)
-						scenario.RemoveData(objectivesUC.dataListView.Items[idx]);
-					objectivesUC.dataListView.SelectedIndex = 0;
-                }
-			}
-			else
-			{
-				MessageBox.Show("There must be at least one Objective.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error);
-			}
-		}
-
-		void OnDuplicateObjective(object sender, EventArgs e)
-		{
-			int idx = objectivesUC.dataListView.SelectedIndex;
-			Objective obj = ((Objective)objectivesUC.dataListView.Items[idx]).Clone();
-
-			ObjectiveEditorWindow oew = new ObjectiveEditorWindow(scenario, obj, true);
-			if (oew.ShowDialog() == true)
-			{
-				scenario.objectiveObserver.Add(obj);
-            }
-		}
-
-        void OnSettingsInteraction(object sender, EventArgs e)
-        {
-            OpenInteractionEditor(interactionsUC.dataListView.SelectedItem);
-        }
-
-        private void OpenInteractionEditor(object interactionItem)
-        { 
-			if (interactionItem is TextInteraction )
+			if (interactionItem is TextInteraction)
 			{
 				TextInteraction castInteraction = (TextInteraction)interactionItem;
-				TextInteractionWindow w = new TextInteractionWindow( scenario, castInteraction);
+				TextInteractionWindow w = new TextInteractionWindow(scenario, castInteraction);
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
-			else if (interactionItem is BranchInteraction )
+			else if (interactionItem is BranchInteraction)
 			{
 				BranchInteraction castInteraction = (BranchInteraction)interactionItem;
-				BranchInteractionWindow w = new BranchInteractionWindow( scenario, castInteraction);
+				BranchInteractionWindow w = new BranchInteractionWindow(scenario, castInteraction);
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
-			else if (interactionItem is TestInteraction )
+			else if (interactionItem is TestInteraction)
 			{
 				TestInteraction castInteraction = (TestInteraction)interactionItem;
-				TestInteractionWindow w = new TestInteractionWindow( scenario, castInteraction);
+				TestInteractionWindow w = new TestInteractionWindow(scenario, castInteraction);
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
-			else if (interactionItem is DecisionInteraction )
+			else if (interactionItem is DecisionInteraction)
 			{
 				DecisionInteraction castInteraction = (DecisionInteraction)interactionItem;
-				DecisionInteractionWindow w = new DecisionInteractionWindow( scenario, castInteraction);
+				DecisionInteractionWindow w = new DecisionInteractionWindow(scenario, castInteraction);
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
-			else if ( interactionItem is ThreatInteraction )
+			else if (interactionItem is ThreatInteraction)
 			{
 				ThreatInteraction castInteraction = (ThreatInteraction)interactionItem;
-				ThreatInteractionWindow w = new ThreatInteractionWindow( scenario, castInteraction);
+				ThreatInteractionWindow w = new ThreatInteractionWindow(scenario, castInteraction);
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
-			else if ( interactionItem is MultiEventInteraction )
+			else if (interactionItem is MultiEventInteraction)
 			{
 				MultiEventInteraction castInteraction = (MultiEventInteraction)interactionItem;
-				MultiEventWindow w = new MultiEventWindow( scenario, castInteraction);
+				MultiEventWindow w = new MultiEventWindow(scenario, castInteraction);
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
-			else if ( interactionItem is PersistentTokenInteraction )
+			else if (interactionItem is PersistentTokenInteraction)
 			{
 				PersistentTokenInteraction castInteraction = (PersistentTokenInteraction)interactionItem;
-				PersistentInteractionWindow w = new PersistentInteractionWindow( scenario, castInteraction);
+				PersistentInteractionWindow w = new PersistentInteractionWindow(scenario, castInteraction);
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
-			else if ( interactionItem is ConditionalInteraction )
+			else if (interactionItem is ConditionalInteraction)
 			{
 				ConditionalInteraction castInteraction = (ConditionalInteraction)interactionItem;
-				ConditionalInteractionWindow w = new ConditionalInteractionWindow( scenario, castInteraction);
+				ConditionalInteractionWindow w = new ConditionalInteractionWindow(scenario, castInteraction);
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
-			else if ( interactionItem is DialogInteraction )
+			else if (interactionItem is DialogInteraction)
 			{
 				DialogInteraction castInteraction = (DialogInteraction)interactionItem;
-				DialogInteractionWindow w = new DialogInteractionWindow( scenario, castInteraction);
+				DialogInteractionWindow w = new DialogInteractionWindow(scenario, castInteraction);
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
-			else if ( interactionItem is ReplaceTokenInteraction )
+			else if (interactionItem is ReplaceTokenInteraction)
 			{
 				ReplaceTokenInteraction castInteraction = (ReplaceTokenInteraction)interactionItem;
-				ReplaceTokenInteractionWindow w = new ReplaceTokenInteractionWindow( scenario, castInteraction);
+				ReplaceTokenInteractionWindow w = new ReplaceTokenInteractionWindow(scenario, castInteraction);
 				w.ShowDialog();
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
-			else if ( interactionItem is RewardInteraction )
+			else if (interactionItem is RewardInteraction)
 			{
 				RewardInteraction castInteraction = (RewardInteraction)interactionItem;
 				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
 				string originalPrefix = castInteraction.TranslationKeyPrefix();
-				RewardInteractionWindow w = new RewardInteractionWindow( scenario, castInteraction);
+				RewardInteractionWindow w = new RewardInteractionWindow(scenario, castInteraction);
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if (interactionItem is CorruptionInteraction)
@@ -411,69 +338,6 @@ namespace JiME
 			else if (interactionItem is StartInteraction)
 			{
 				MessageBox.Show("You can't edit the Starting Position event. But you can place the Start token on the Starting Tile in Tile Editor -> Token Editor.", "Cannot Edit Starting Position Event", MessageBoxButton.OK, MessageBoxImage.Information);
-			}
-		}
-
-		void OnSettingsTrigger(object sender, EventArgs e)
-        {
-            OpenTriggerEditor((Trigger)triggersUC.dataListView.SelectedItem);
-        }
-    
-        private void OpenTriggerEditor(Trigger trigger)
-		{
-			TriggerEditorWindow tw = new TriggerEditorWindow( scenario, trigger.dataName);
-			tw.ShowDialog();
-		}
-
-		void OnSettingsObjective( object sender, EventArgs e )
-        {
-            OpenObjectiveEditor((Objective)objectivesUC.dataListView.SelectedItem);
-        }
-
-        private void OpenObjectiveEditor(Objective o)
-		{
-			ObjectiveEditorWindow ow = new ObjectiveEditorWindow( scenario, o, false );
-			o.HandleWindow(ow, scenario.translationObserver);
-		}
-
-
-
-		void OnAddActivations(object sender, EventArgs e)
-		{
-			AddActivations();
-		}
-
-		void OnRemoveActivations(object sender, EventArgs e)
-		{
-			int idx = activationsUC.dataListView.SelectedIndex;
-			MonsterActivations act = (MonsterActivations)activationsUC.dataListView.Items[idx];
-			if (idx != -1 && act.id >= MonsterActivations.START_OF_CUSTOM_ACTIVATIONS) //Don't allow removing the basic enemy activations. Only allow removing built-in custom activations and user custom activations.
-			{
-				var ret = MessageBox.Show("Are you sure you want to delete this Enemy Attack Group?\n\nALL DESCRIPTIONS AND DAMAGE WILL BE DELETED.", "Delete Enemy Attack Group", MessageBoxButton.YesNo, MessageBoxImage.Question);
-				if (ret == MessageBoxResult.Yes)
-				{
-					scenario.RemoveData(activationsUC.dataListView.Items[idx]);
-					activationsUC.dataListView.SelectedIndex = Math.Max(idx - 1, 0);
-				}
-			}
-			else
-            {
-				MessageBox.Show("You can't delete the default Enemy Attack Groups, but you can copy them and modify the copy.", "Cannot Delete Enemy Attack Group", MessageBoxButton.OK, MessageBoxImage.Information);
-			}
-		}
-
-		void OnSettingsActivations(object sender, EventArgs e)
-		{
-			int idx = activationsUC.dataListView.SelectedIndex;
-			MonsterActivations act = (MonsterActivations)activationsUC.dataListView.Items[idx];
-			if (idx != -1 && act.id >= MonsterActivations.START_OF_CUSTOM_ACTIVATIONS) //Don't allow modifying the basic enemy activations. Only allow modifying built-in custom activations and user custom activations.
-			{
-				ActivationsEditorWindow ow = new ActivationsEditorWindow(scenario, ((MonsterActivations)activationsUC.dataListView.SelectedItem), false);
-				ow.ShowDialog();
-			}
-			else
-			{
-				MessageBox.Show("You can't modify the default Enemy Attack Groups, but you can copy them and modify the copy.", "Cannot Modify Enemy Attack Group", MessageBoxButton.OK, MessageBoxImage.Information);
 			}
 		}
 
@@ -544,7 +408,7 @@ namespace JiME
 			{
 				RewardInteraction interact = ((RewardInteraction)interactionsUC.dataListView.Items[idx]).Clone();
 				RewardInteractionWindow bw = new RewardInteractionWindow(scenario, (RewardInteraction)interact, true);
-				if(bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
+				if (bw.ShowDialog() == true) { scenario.interactionObserver.Add(interact); }
 			}
 			else if (interactionsUC.dataListView.SelectedItem is CorruptionInteraction)
 			{
@@ -570,6 +434,166 @@ namespace JiME
 			}
 		}
 
+		void OnImportInteraction(object sender, EventArgs e)
+        {
+
+        }
+
+		void OnExportInteraction(object sender, EventArgs e)
+        {
+			bool exported = new ExportManager().Export("Event", interactionsUC.dataListView.SelectedItem);
+		}
+
+
+		// Trigger
+		void OnAddTrigger( object sender, EventArgs e )
+		{
+			AddTrigger();
+		}
+
+		void OnRemoveTrigger( object sender, EventArgs e )
+		{
+			string selected = ( (Trigger)triggersUC.dataListView.SelectedItem ).dataName;
+			var strigger = (Trigger)triggersUC.dataListView.SelectedItem;
+
+			Tuple<string, string> used = scenario.IsTriggerUsed( selected );
+
+			if ( used != null )
+			{
+				MessageBox.Show( $"The selected Trigger [{selected}] is being used by [{used.Item2}] called [{used.Item1}].", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
+				return;
+			}
+
+			if ( strigger.isCampaignTrigger )
+			{
+				MessageBox.Show( "Campaign Triggers cannot be removed.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
+				return;
+			}
+
+			var ret = MessageBox.Show("Are you sure you want to delete this Trigger?", "Delete Trigger", MessageBoxButton.YesNo, MessageBoxImage.Question);
+			if (ret == MessageBoxResult.Yes)
+			{
+				int idx = triggersUC.dataListView.SelectedIndex;
+				if (idx != -1)
+					scenario.RemoveData(triggersUC.dataListView.SelectedItem);
+				triggersUC.dataListView.SelectedIndex = 0;
+            }
+		}
+
+		void OnDuplicateTrigger(object sender, EventArgs e)
+		{
+			int idx = triggersUC.dataListView.SelectedIndex;
+			Trigger trig = ((Trigger)triggersUC.dataListView.Items[idx]).Clone();
+
+			TriggerEditorWindow tew = new TriggerEditorWindow(scenario, trig, true);
+			if (tew.ShowDialog() == true)
+			{
+				//scenario.triggersObserver.Add(trig);
+				//The TriggerEditorWindow's OK button actually handles adding the Trigger to the scenario.triggersObserver.
+			}
+		}
+
+		void OnSettingsTrigger(object sender, EventArgs e)
+		{
+			OpenTriggerEditor((Trigger)triggersUC.dataListView.SelectedItem);
+		}
+
+		private void OpenTriggerEditor(Trigger trigger)
+		{
+			TriggerEditorWindow tw = new TriggerEditorWindow(scenario, trigger.dataName);
+			tw.ShowDialog();
+		}
+
+
+		// Objective
+		void OnAddObjective( object sender, EventArgs e )
+		{
+			AddObjective();
+		}
+
+		void OnRemoveObjective( object sender, EventArgs e )
+		{
+			if (scenario.objectiveObserver.Count > 1)
+			{
+				var ret = MessageBox.Show("Are you sure you want to delete this Objective?\n\nALL ITS INFORMATION WILL BE DELETED.", "Delete Objective", MessageBoxButton.YesNo, MessageBoxImage.Question);
+				if (ret == MessageBoxResult.Yes)
+				{
+					int idx = objectivesUC.dataListView.SelectedIndex;
+					if (idx != -1)
+						scenario.RemoveData(objectivesUC.dataListView.Items[idx]);
+					objectivesUC.dataListView.SelectedIndex = 0;
+                }
+			}
+			else
+			{
+				MessageBox.Show("There must be at least one Objective.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
+		}
+
+		void OnDuplicateObjective(object sender, EventArgs e)
+		{
+			int idx = objectivesUC.dataListView.SelectedIndex;
+			Objective obj = ((Objective)objectivesUC.dataListView.Items[idx]).Clone();
+
+			ObjectiveEditorWindow oew = new ObjectiveEditorWindow(scenario, obj, true);
+			if (oew.ShowDialog() == true)
+			{
+				scenario.objectiveObserver.Add(obj);
+            }
+		}
+
+		void OnSettingsObjective( object sender, EventArgs e )
+        {
+            OpenObjectiveEditor((Objective)objectivesUC.dataListView.SelectedItem);
+        }
+
+        private void OpenObjectiveEditor(Objective o)
+		{
+			ObjectiveEditorWindow ow = new ObjectiveEditorWindow( scenario, o, false );
+			o.HandleWindow(ow, scenario.translationObserver);
+		}
+
+
+		// Monster Activations
+		void OnAddActivations(object sender, EventArgs e)
+		{
+			AddActivations();
+		}
+
+		void OnRemoveActivations(object sender, EventArgs e)
+		{
+			int idx = activationsUC.dataListView.SelectedIndex;
+			MonsterActivations act = (MonsterActivations)activationsUC.dataListView.Items[idx];
+			if (idx != -1 && act.id >= MonsterActivations.START_OF_CUSTOM_ACTIVATIONS) //Don't allow removing the basic enemy activations. Only allow removing built-in custom activations and user custom activations.
+			{
+				var ret = MessageBox.Show("Are you sure you want to delete this Enemy Attack Group?\n\nALL DESCRIPTIONS AND DAMAGE WILL BE DELETED.", "Delete Enemy Attack Group", MessageBoxButton.YesNo, MessageBoxImage.Question);
+				if (ret == MessageBoxResult.Yes)
+				{
+					scenario.RemoveData(activationsUC.dataListView.Items[idx]);
+					activationsUC.dataListView.SelectedIndex = Math.Max(idx - 1, 0);
+				}
+			}
+			else
+            {
+				MessageBox.Show("You can't delete the default Enemy Attack Groups, but you can copy them and modify the copy.", "Cannot Delete Enemy Attack Group", MessageBoxButton.OK, MessageBoxImage.Information);
+			}
+		}
+
+		void OnSettingsActivations(object sender, EventArgs e)
+		{
+			int idx = activationsUC.dataListView.SelectedIndex;
+			MonsterActivations act = (MonsterActivations)activationsUC.dataListView.Items[idx];
+			if (idx != -1 && act.id >= MonsterActivations.START_OF_CUSTOM_ACTIVATIONS) //Don't allow modifying the basic enemy activations. Only allow modifying built-in custom activations and user custom activations.
+			{
+				ActivationsEditorWindow ow = new ActivationsEditorWindow(scenario, ((MonsterActivations)activationsUC.dataListView.SelectedItem), false);
+				ow.ShowDialog();
+			}
+			else
+			{
+				MessageBox.Show("You can't modify the default Enemy Attack Groups, but you can copy them and modify the copy.", "Cannot Modify Enemy Attack Group", MessageBoxButton.OK, MessageBoxImage.Information);
+			}
+		}
+
 		void OnDuplicateActivations(object sender, EventArgs e)
 		{
 			//Get next id starting at 1000 to create the new item
@@ -586,6 +610,18 @@ namespace JiME
 			}
 		}
 
+		void OnImportActivations(object sender, EventArgs e)
+		{
+
+		}
+
+		void OnExportActivations(object sender, EventArgs e)
+		{
+			bool exported = new ExportManager().Export("Enemy", activationsUC.dataListView.SelectedItem);
+		}
+
+
+		// Monster Modifier
 		void OnAddMonsterModifier(object sender, EventArgs e)
 		{
 			AddMonsterModifier();
@@ -641,6 +677,17 @@ namespace JiME
 			}
 		}
 
+		void OnImportMonsterModifier(object sender, EventArgs e)
+		{
+
+		}
+
+		void OnExportMonsterModifier(object sender, EventArgs e)
+		{
+			bool exported = new ExportManager().Export("Bonus", monsterModifiersUC.dataListView.SelectedItem);
+		}
+
+		// Translations
 		void OnAddTranslation(object sender, EventArgs e)
 		{
 			AddTranslation();
@@ -668,6 +715,22 @@ namespace JiME
 
 			TranslationEditorWindow tw = new TranslationEditorWindow(scenario, defaultTranslation, ((Translation)translationsUC.dataListView.SelectedItem), false);
 			tw.ShowDialog();
+		}
+
+		void OnImportTranslation(object sender, EventArgs e)
+		{
+
+		}
+
+		void OnExportTranslation(object sender, EventArgs e)
+		{
+			Translation selectedTranslation = ((Translation)translationsUC.dataListView.SelectedItem);
+
+			List<TranslationItemForExport> translationItemsForExport = scenario.CollectTranslationItemsForExport(selectedTranslation);
+
+			TranslationForExport translationForExport = new TranslationForExport(selectedTranslation.dataName, selectedTranslation.langName, translationItemsForExport);
+
+			bool exported = new ExportManager().ExportTranslation(scenario.scenarioName, translationForExport);
 		}
 		#endregion
 

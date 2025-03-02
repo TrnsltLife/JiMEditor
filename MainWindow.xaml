@@ -223,7 +223,7 @@
 
 		<Border BorderBrush="Black" BorderThickness="0,0,1,0" Background="#FF46464A">
 			<ScrollViewer>
-				<Grid Width="190" >
+				<Grid Width="260" >
 					<Grid.RowDefinitions>
 						<RowDefinition Height="auto"/>
 						<RowDefinition Height="*"/>
@@ -240,11 +240,11 @@
 					</Grid.RowDefinitions>
 
 					<Border BorderThickness="0,0,0,0" BorderBrush="Gray" Grid.Row="0">
-						<uc:SidebarListView x:Name="objectivesUC" Margin="5" Title="Objectives" ShowDuplicateButton="true" />
+						<uc:SidebarListView x:Name="objectivesUC" Margin="5" Title="Objectives" ShowDuplicateButton="true" ShowImportButton="false" ShowExportButton="false" />
 					</Border>
 
 					<Border Grid.Row="2" BorderThickness="0,0,0,0" BorderBrush="Gray">
-						<uc:SidebarListView Margin="5" x:Name="interactionsUC" Title="Events" ShowDuplicateButton="true"/>
+						<uc:SidebarListView Margin="5" x:Name="interactionsUC" Title="Events" ShowDuplicateButton="true" ShowImportButton="true" ShowExportButton="true" />
 					</Border>
 
 					<!--<GridSplitter HorizontalAlignment="Stretch" 
@@ -255,20 +255,20 @@
 					</GridSplitter>-->
 
 					<Border BorderThickness="0,0,0,0" BorderBrush="Gray" Grid.Row="4">
-						<uc:SidebarListView x:Name="triggersUC" Margin="5" Title="Triggers" ShowDuplicateButton="true"/>
+						<uc:SidebarListView x:Name="triggersUC" Margin="5" Title="Triggers" ShowDuplicateButton="true" ShowImportButton="false" ShowExportButton="false" />
 					</Border>
 
 
 					<Border BorderThickness="0,0,0,0" BorderBrush="Gray" Grid.Row="6">
-						<uc:SidebarListView x:Name="activationsUC" Margin="5" Title="Enemy Attack Groups" ShowDuplicateButton="true" />
+						<uc:SidebarListView x:Name="activationsUC" Margin="5" Title="Enemy Attack Groups" ShowDuplicateButton="true" ShowImportButton="true" ShowExportButton="true" />
 					</Border>
 
 					<Border BorderThickness="0,0,0,0" BorderBrush="Gray" Grid.Row="8">
-						<uc:SidebarListView x:Name="monsterModifiersUC" Margin="5" Title="Enemy Bonuses" ShowDuplicateButton="true" />
+						<uc:SidebarListView x:Name="monsterModifiersUC" Margin="5" Title="Enemy Bonuses" ShowDuplicateButton="true" ShowImportButton="true" ShowExportButton="true" />
 					</Border>
 
 					<Border BorderThickness="0,0,0,0" BorderBrush="Gray" Grid.Row="10">
-						<uc:SidebarListView x:Name="translationsUC" Margin="5" Title="Translations" ShowDuplicateButton="false" />
+						<uc:SidebarListView x:Name="translationsUC" Margin="5" Title="Translations" ShowDuplicateButton="false" ShowImportButton="true" ShowExportButton="true" />
 					</Border>
 				</Grid>
 			</ScrollViewer>

@@ -36,8 +36,6 @@ namespace JiME
 			//original gray background that matches ui: Color.FromRgb(0x46, 0x46, 0x4a)
 		}
 
-		public Guid GUID { get; set; }
-
 		public string key
 		{
 			get => _key;

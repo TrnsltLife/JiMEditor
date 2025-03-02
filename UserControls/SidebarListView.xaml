@@ -71,6 +71,14 @@
 				<Button x:Name="settings" Margin="5,0,0,0" Click="Settings_Click" Background="Silver" IsEnabled="{Binding ElementName=dataListView, Path=SelectedValue, Converter={StaticResource sc}}">
 					<Image Source="/JiME;component/Assets/edit.png" />
 				</Button>
+				<Button x:Name="import" Margin="5,0,0,0" Click="Import_Click" Background="#099145" IsEnabled="{Binding ElementName=dataListView, Path=SelectedValue, Converter={StaticResource sc}}"
+						Visibility="{Binding ImportButtonVisibility}">
+					<Image Source="/JiME;component/Assets/import.png" Margin="-5,-5,-5,-5" Width="32" Height="32"/>
+				</Button>
+				<Button x:Name="export" Margin="5,0,0,0" Click="Export_Click" Background="#1d75be" IsEnabled="{Binding ElementName=dataListView, Path=SelectedValue, Converter={StaticResource sc}}"
+						Visibility="{Binding ExportButtonVisibility}">
+					<Image Source="/JiME;component/Assets/export.png" Margin="-5,-5,-5,-5" Width="32" Height="32"/>
+				</Button>
 			</StackPanel>
 		</StackPanel>
 	</ScrollViewer>

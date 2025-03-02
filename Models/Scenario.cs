@@ -812,6 +812,37 @@ namespace JiME
 			return defaultTranslation;
 		}
 
+		public List<TranslationItemForExport> CollectTranslationItemsForExport(Translation translation)
+		{
+			Dictionary<string, TranslationItem> translationDict = new Dictionary<string, TranslationItem>(); //hold the keys from the language translation for easy lookup as we add in keys from the default translation that are missing in the language translation
+			
+			//Copy all the TranslationItems from the language translation into the translation list
+			foreach (var item in translation.translationItems)
+			{
+				TranslationItem clonedItem = item.Clone();
+				translationDict.Add(item.key, clonedItem);
+			}
+
+			//Get list of the TranslationItems in the default langauge
+			List<TranslationItem> defaultTranslationList = CollectAllTranslationItems();
+			defaultTranslationList.Sort();
+
+			TranslationItem defaultItem = new TranslationItem("", "");
+
+			List<TranslationItemForExport> translationForExport = new List<TranslationItemForExport>();
+			foreach (var item in defaultTranslationList)
+			{
+				string text = "";
+				if(translationDict.ContainsKey(item.key))
+                {
+					TranslationItem translationItem = translationDict[item.key];
+					text = translationItem.text;
+                }
+				translationForExport.Add(new TranslationItemForExport(item.key, item.text, text));
+			}
+			return translationForExport;
+		}
+
 		//Collect translations from all the various game objects that can have translatable text
 		public List<TranslationItem> CollectAllTranslationItems()
         {
