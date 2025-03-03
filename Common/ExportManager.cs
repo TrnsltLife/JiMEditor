@@ -77,7 +77,7 @@ namespace JiME
 			Debug.Log("Export " + exportType);
 			string jsonOutput = JsonConvert.SerializeObject(objectToExport, Formatting.Indented);
 			Debug.Log(jsonOutput);
-			return new ExportManager().Save(exportType, jsonOutput, (objectToExport as ICommonData).dataName);
+			return Save(exportType, jsonOutput, (objectToExport as ICommonData).dataName);
 		}
 
 		public bool ExportTranslation(string scenarioName, TranslationForExport objectToExport)
@@ -86,7 +86,7 @@ namespace JiME
 			Debug.Log("Export " + exportType);
 			string jsonOutput = JsonConvert.SerializeObject(objectToExport, Formatting.Indented);
 			Debug.Log(jsonOutput);
-			return new ExportManager().Save(exportType, jsonOutput, scenarioName + "-" + objectToExport.dataName + "-" + objectToExport.langName);
+			return Save(exportType, jsonOutput, scenarioName + "-" + objectToExport.dataName + "-" + objectToExport.langName);
 		}
 
 	}

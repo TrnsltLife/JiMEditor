@@ -397,7 +397,7 @@ namespace JiME
 
 	public class DefaultTerrainInteractions
     {
-		[JsonConverter(typeof(InteractionConverter))]
+		[JsonConverter(typeof(InteractionListConverter))]
 		public List<IInteraction> interactions { get; set; }
 	}
 

@@ -17,7 +17,7 @@ namespace JiME.UserControls
 		public string _duplicateButtonVisibility = "Collapsed";
 
 		public bool _showImportButton = false;
-		public string _importButtonVisibility = "Collapsed";
+		public string _importButtonVisibility = "Visible";
 
 		public bool _showExportButton = false;
 		public string _exportButtonVisibility = "Collapsed";

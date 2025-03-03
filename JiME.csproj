@@ -80,7 +80,9 @@
     <Compile Include="Common\CustomMonsterModifierListConverter.cs" />
     <Compile Include="Common\CollectionConverter.cs" />
     <Compile Include="Common\ActivationsListConverter.cs" />
+    <Compile Include="Common\ImportManager.cs" />
     <Compile Include="Common\ExportManager.cs" />
+    <Compile Include="Common\InteractionConverter.cs" />
     <Compile Include="Common\TitleListConverter.cs" />
     <Compile Include="Common\ItemListConverter.cs" />
     <Compile Include="Common\MonsterModifierListConverter.cs" />
@@ -91,7 +93,7 @@
     <Compile Include="Common\BaseTileData.cs" />
     <Compile Include="Common\HexTileData.cs" />
     <Compile Include="Common\CollectionListConverter.cs" />
-    <Compile Include="Common\InteractionConverter.cs" />
+    <Compile Include="Common\InteractionListConverter.cs" />
     <Compile Include="Common\TextBook.cs" />
     <Compile Include="Common\TileConverter.cs" />
     <Compile Include="Models\BattleTile.cs" />

@@ -300,38 +300,30 @@ namespace JiME
 			{
 				ReplaceTokenInteraction castInteraction = (ReplaceTokenInteraction)interactionItem;
 				ReplaceTokenInteractionWindow w = new ReplaceTokenInteractionWindow(scenario, castInteraction);
-				w.ShowDialog();
+				//w.ShowDialog();
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if (interactionItem is RewardInteraction)
 			{
 				RewardInteraction castInteraction = (RewardInteraction)interactionItem;
-				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
-				string originalPrefix = castInteraction.TranslationKeyPrefix();
 				RewardInteractionWindow w = new RewardInteractionWindow(scenario, castInteraction);
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if (interactionItem is CorruptionInteraction)
 			{
 				CorruptionInteraction castInteraction = (CorruptionInteraction)interactionItem;
-				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
-				string originalPrefix = castInteraction.TranslationKeyPrefix();
 				CorruptionInteractionWindow w = new CorruptionInteractionWindow(scenario, castInteraction);
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if (interactionItem is ItemInteraction)
 			{
 				ItemInteraction castInteraction = (ItemInteraction)interactionItem;
-				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
-				string originalPrefix = castInteraction.TranslationKeyPrefix();
 				ItemInteractionWindow w = new ItemInteractionWindow(scenario, castInteraction);
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if (interactionItem is TitleInteraction)
 			{
 				TitleInteraction castInteraction = (TitleInteraction)interactionItem;
-				Dictionary<string, string> originalValues = castInteraction.CaptureStartingValues();
-				string originalPrefix = castInteraction.TranslationKeyPrefix();
 				TitleInteractionWindow w = new TitleInteractionWindow(scenario, castInteraction);
 				castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
@@ -436,8 +428,105 @@ namespace JiME
 
 		void OnImportInteraction(object sender, EventArgs e)
         {
+			var interactionItem = new ImportManager().ImportEvent();
+			bool? dialogSuccess = null;
+			if (interactionItem is TextInteraction)
+			{
+				TextInteraction castInteraction = (TextInteraction)interactionItem;
+				TextInteractionWindow w = new TextInteractionWindow(scenario, castInteraction);
+				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
+			}
+			else if (interactionItem is BranchInteraction)
+			{
+				BranchInteraction castInteraction = (BranchInteraction)interactionItem;
+				BranchInteractionWindow w = new BranchInteractionWindow(scenario, castInteraction);
+				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
+			}
+			else if (interactionItem is TestInteraction)
+			{
+				TestInteraction castInteraction = (TestInteraction)interactionItem;
+				TestInteractionWindow w = new TestInteractionWindow(scenario, castInteraction);
+				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
+			}
+			else if (interactionItem is DecisionInteraction)
+			{
+				DecisionInteraction castInteraction = (DecisionInteraction)interactionItem;
+				DecisionInteractionWindow w = new DecisionInteractionWindow(scenario, castInteraction);
+				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
+			}
+			else if (interactionItem is ThreatInteraction)
+			{
+				ThreatInteraction castInteraction = (ThreatInteraction)interactionItem;
+				ThreatInteractionWindow w = new ThreatInteractionWindow(scenario, castInteraction);
+				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
+			}
+			else if (interactionItem is MultiEventInteraction)
+			{
+				MultiEventInteraction castInteraction = (MultiEventInteraction)interactionItem;
+				MultiEventWindow w = new MultiEventWindow(scenario, castInteraction);
+				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
+			}
+			else if (interactionItem is PersistentTokenInteraction)
+			{
+				PersistentTokenInteraction castInteraction = (PersistentTokenInteraction)interactionItem;
+				PersistentInteractionWindow w = new PersistentInteractionWindow(scenario, castInteraction);
+				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
+			}
+			else if (interactionItem is ConditionalInteraction)
+			{
+				ConditionalInteraction castInteraction = (ConditionalInteraction)interactionItem;
+				ConditionalInteractionWindow w = new ConditionalInteractionWindow(scenario, castInteraction);
+				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
+			}
+			else if (interactionItem is DialogInteraction)
+			{
+				DialogInteraction castInteraction = (DialogInteraction)interactionItem;
+				DialogInteractionWindow w = new DialogInteractionWindow(scenario, castInteraction);
+				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
+			}
+			else if (interactionItem is ReplaceTokenInteraction)
+			{
+				ReplaceTokenInteraction castInteraction = (ReplaceTokenInteraction)interactionItem;
+				ReplaceTokenInteractionWindow w = new ReplaceTokenInteractionWindow(scenario, castInteraction);
+				//w.ShowDialog();
+				castInteraction.HandleWindow(w, scenario.translationObserver);
+			}
+			else if (interactionItem is RewardInteraction)
+			{
+				RewardInteraction castInteraction = (RewardInteraction)interactionItem;
+				RewardInteractionWindow w = new RewardInteractionWindow(scenario, castInteraction);
+				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
+			}
+			else if (interactionItem is CorruptionInteraction)
+			{
+				CorruptionInteraction castInteraction = (CorruptionInteraction)interactionItem;
+				CorruptionInteractionWindow w = new CorruptionInteractionWindow(scenario, castInteraction);
+				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
+			}
+			else if (interactionItem is ItemInteraction)
+			{
+				ItemInteraction castInteraction = (ItemInteraction)interactionItem;
+				ItemInteractionWindow w = new ItemInteractionWindow(scenario, castInteraction);
+				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
+			}
+			else if (interactionItem is TitleInteraction)
+			{
+				TitleInteraction castInteraction = (TitleInteraction)interactionItem;
+				TitleInteractionWindow w = new TitleInteractionWindow(scenario, castInteraction);
+				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
+			}
+			else if (interactionItem is StartInteraction)
+			{
+				MessageBox.Show("You can't edit the Starting Position event. But you can place the Start token on the Starting Tile in Tile Editor -> Token Editor.", "Cannot Edit Starting Position Event", MessageBoxButton.OK, MessageBoxImage.Information);
+				dialogSuccess = false;
+			}
 
-        }
+			if(dialogSuccess == true)
+            {
+				scenario.interactionObserver.Add(interactionItem);
+            }
+		}
+
 
 		void OnExportInteraction(object sender, EventArgs e)
         {
