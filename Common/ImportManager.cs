@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -88,6 +89,7 @@ namespace JiME
         {
 			string importType = "Event";
 			string json = Load(importType);
+			if(json == null) { return null; }
 			var settings = new JsonSerializerSettings
 			{
 				Converters = new List<JsonConverter> { new InteractionConverter() },
@@ -99,10 +101,63 @@ namespace JiME
 			return JsonConvert.DeserializeObject<IInteraction>(json, settings);
 		}
 
-		public Translation ImportTranslation()
+		public void ImportTranslation(ObservableCollection<Translation> translations)
 		{
 			string importType = "Translation";
-			return null;
+			string json = Load(importType);
+			if (json == null) { return; }
+
+			var settings = new JsonSerializerSettings
+			{
+				Converters = new List<JsonConverter> { new InteractionConverter() },
+				DefaultValueHandling = DefaultValueHandling.Populate,
+				MissingMemberHandling = MissingMemberHandling.Ignore,
+				NullValueHandling = NullValueHandling.Ignore
+			};
+
+			TranslationForExport translationForImport = JsonConvert.DeserializeObject<TranslationForExport>(json, settings);
+
+			//Find a matching translation object that already exists...
+			string langCode = translationForImport.dataName;
+			string langName = translationForImport.langName;
+			Translation translationForUpdate = translations.FirstOrDefault(it => it.dataName == langCode && it.langName == langName);
+			if(translationForUpdate == null)
+            {
+				translationForUpdate = translations.FirstOrDefault(it => it.dataName == langCode);
+			}
+			//Otherwise create a new one and add it to the list of translations
+			if(translationForUpdate == null)
+            {
+				translationForUpdate = new Translation(langCode);
+				translationForUpdate.langName = langName;
+				translations.Add(translationForUpdate);
+            }
+
+			//Update the translation object from the import file
+			Dictionary<string, string> importKeyValuePairs = new Dictionary<string, string>();
+			foreach(TranslationItemForExport item in translationForImport.translationItems)
+            {
+				try
+				{
+					importKeyValuePairs.Add(item.key, item.text);
+				} 
+				catch(Exception e) 
+				{
+					Debug.Log("error importing translation text for language " + langCode + " " + langName + " key: " + item.key + " text: " + item.text); 
+				}
+            }
+			foreach(TranslationItem item in translationForUpdate.translationItems)
+            {
+				string key = item.key;
+				if(importKeyValuePairs.ContainsKey(key))
+                {
+					if(item.text != importKeyValuePairs[key])
+                    {
+						item.text = importKeyValuePairs[key];
+						item.translationOK = true;
+                    }
+                }
+            }
 		}
 
 	}

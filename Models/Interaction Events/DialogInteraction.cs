@@ -145,5 +145,14 @@ namespace JiME
 			if ( c3Trigger == oldName )
 				c3Trigger = newName;
 		}
+
+		new public List<string> CollectTriggers()
+		{
+			List<string> triggers = base.CollectTriggers();
+			triggers.Add(c1Trigger);
+			triggers.Add(c2Trigger);
+			triggers.Add(c3Trigger);
+			return triggers;
+		}
 	}
 }

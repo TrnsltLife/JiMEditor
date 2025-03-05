@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace JiME
@@ -71,6 +72,26 @@ namespace JiME
 				if ( triggerList[i] == oldName )
 					triggerList[i] = newName;
 			}
+		}
+
+		new public List<string> CollectTriggers()
+		{
+			List<string> triggers = base.CollectTriggers();
+			foreach (string trigger in triggerList)
+			{
+				triggers.Add(trigger);
+			}
+			return triggers;
+		}
+
+		new public List<string> CollectEvents()
+		{
+			List<string> events = base.CollectEvents();
+			foreach (string anEvent in eventList)
+			{
+				events.Add(anEvent);
+			}
+			return events;
 		}
 	}
 }

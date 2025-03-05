@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace JiME
@@ -73,5 +74,12 @@ namespace JiME
 			return interact;
 		}
 
+		new public List<string> CollectEvents()
+		{
+			List<string> events = base.CollectEvents();
+			events.Add(eventToReplace);
+			events.Add(replaceWithEvent);
+			return events;
+		}
 	}
 }
