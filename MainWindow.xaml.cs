@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -426,8 +427,22 @@ namespace JiME
 			}
 		}
 
-		void HandleMissingTriggers_Event_Enemies_BonusesWhenImporting(ImportCreationRegistry icr, List<string> triggers, List<string> events) //TODO enemy activations, enemy bonuses
+		void HandleHandleInteractionImport(ImportCreationRegistry icr, Dictionary<string, string> dataNameMap, InteractionBase interaction, List<string> triggers, List<string> events, ObservableCollection<Monster> monsters = null)
         {
+			//Create a new GUID so we can't keep importing the same item and getting the same GUID.
+			//Also needed for detecting duplicate items in the Interaction editor windows.
+			interaction.GUID = Guid.NewGuid();
+
+			//Make sure the dataName we're importing is unique. Add (2), (3), etc. at the end if necessary.
+			int copyIndex = 2;
+			string baseDataName = interaction.dataName;
+			while(dataNameMap.ContainsKey(interaction.dataName))
+            {
+				interaction.dataName = baseDataName + "(" + copyIndex + ")";
+				copyIndex++;
+            }
+
+			//If the referenced trigger doesn't exist, create it
 			foreach(string trigger in triggers)
             {
 				if (trigger == null || trigger == "" || trigger == "None") { }
@@ -440,6 +455,7 @@ namespace JiME
 				}
             }
 
+			//If the referenced event doesn't exist, create it as a basic TestInteraction
 			foreach(string anEvent in events)
             {
 				if (anEvent == null || anEvent == "" || anEvent == "None") { }
@@ -451,7 +467,45 @@ namespace JiME
 					icr.interactions.Add(textInteraction);
                 }
             }
-        }
+
+			//Remove MonsterModifiers and MonsterActivations that are set on the Monster but don't exist in this scenario
+			if(monsters != null)
+            {
+				foreach(Monster monster in monsters)
+                {
+					Debug.Log("monster " + monster.dataName + " has " + monster.modifierList.Count() + " modifiers and " + monster.activationsId + " as activationId");
+					//Remove MonsterModifiers that don't exist in this scenario
+					List<MonsterModifier> removeList = new List<MonsterModifier>();
+					foreach(MonsterModifier modifier in monster.modifierList)
+                    {
+						if(!scenario.monsterModifierObserver.Any(it => (it.dataName == modifier.dataName) || (it.id == modifier.id)))
+                        {
+							Debug.Log("modifier " + modifier.id + " " + modifier.dataName + " doesn't match");
+							removeList.Add(modifier);
+                        }
+						else
+                        {
+							//Ids might not match up, so find matching dataName and then reassign the id to the monster
+							modifier.id = scenario.monsterModifierObserver.First(it => (it.dataName == modifier.dataName) || (it.id == modifier.id)).id;
+							Debug.Log("modifier " + modifier.id + " " + modifier.dataName + " does match");
+                        }
+                    }
+					foreach(MonsterModifier modifier in removeList)
+                    {
+						monster.modifierList.Remove(modifier);
+                    }
+					Debug.Log("monster modifiers after removals has " + monster.modifierList.Count() + " items");
+
+					//Remove MonsterActivations that don't exist in this scenario
+					if(!scenario.activationsObserver.Any(it => it.id == monster.activationsId))
+                    {
+						Debug.Log("activationId " + monster.activationsId + " doesn't exist so setting it to " + monster.id);
+						monster.activationsId = monster.id;
+                    }
+                }
+
+           }
+		}
 
 		public class ImportCreationRegistry
         {
@@ -464,74 +518,81 @@ namespace JiME
 			var interactionItem = new ImportManager().ImportEvent();
 			if(interactionItem == null) { return; }
 			bool? dialogSuccess = null;
+
+			Dictionary<string, string> dataNameMap = new Dictionary<string, string>();
+			foreach(var interaction in scenario.interactionObserver)
+            {
+				dataNameMap.Add(interaction.dataName, interaction.dataName);
+            }
+
 			ImportCreationRegistry icr = new ImportCreationRegistry();
 			if (interactionItem is TextInteraction)
 			{
 				TextInteraction castInteraction = (TextInteraction)interactionItem;
-				HandleMissingTriggers_Event_Enemies_BonusesWhenImporting(icr, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
+				HandleHandleInteractionImport(icr,  dataNameMap, castInteraction, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
 				TextInteractionWindow w = new TextInteractionWindow(scenario, castInteraction);
 				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if (interactionItem is BranchInteraction)
 			{
 				BranchInteraction castInteraction = (BranchInteraction)interactionItem;
-				HandleMissingTriggers_Event_Enemies_BonusesWhenImporting(icr, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
+				HandleHandleInteractionImport(icr,  dataNameMap, castInteraction, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
 				BranchInteractionWindow w = new BranchInteractionWindow(scenario, castInteraction);
 				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if (interactionItem is TestInteraction)
 			{
 				TestInteraction castInteraction = (TestInteraction)interactionItem;
-				HandleMissingTriggers_Event_Enemies_BonusesWhenImporting(icr, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
+				HandleHandleInteractionImport(icr,  dataNameMap, castInteraction, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
 				TestInteractionWindow w = new TestInteractionWindow(scenario, castInteraction);
 				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if (interactionItem is DecisionInteraction)
 			{
 				DecisionInteraction castInteraction = (DecisionInteraction)interactionItem;
-				HandleMissingTriggers_Event_Enemies_BonusesWhenImporting(icr, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
+				HandleHandleInteractionImport(icr,  dataNameMap, castInteraction, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
 				DecisionInteractionWindow w = new DecisionInteractionWindow(scenario, castInteraction);
 				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if (interactionItem is ThreatInteraction)
 			{
 				ThreatInteraction castInteraction = (ThreatInteraction)interactionItem;
-				HandleMissingTriggers_Event_Enemies_BonusesWhenImporting(icr, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
+				HandleHandleInteractionImport(icr,  dataNameMap, castInteraction, castInteraction.CollectTriggers(), castInteraction.CollectEvents(), castInteraction.monsterCollection);
 				ThreatInteractionWindow w = new ThreatInteractionWindow(scenario, castInteraction);
 				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if (interactionItem is MultiEventInteraction)
 			{
 				MultiEventInteraction castInteraction = (MultiEventInteraction)interactionItem;
-				HandleMissingTriggers_Event_Enemies_BonusesWhenImporting(icr, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
+				HandleHandleInteractionImport(icr,  dataNameMap, castInteraction, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
 				MultiEventWindow w = new MultiEventWindow(scenario, castInteraction);
 				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if (interactionItem is PersistentTokenInteraction)
 			{
 				PersistentTokenInteraction castInteraction = (PersistentTokenInteraction)interactionItem;
-				HandleMissingTriggers_Event_Enemies_BonusesWhenImporting(icr, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
+				HandleHandleInteractionImport(icr,  dataNameMap, castInteraction, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
 				PersistentInteractionWindow w = new PersistentInteractionWindow(scenario, castInteraction);
 				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if (interactionItem is ConditionalInteraction)
 			{
 				ConditionalInteraction castInteraction = (ConditionalInteraction)interactionItem;
-				HandleMissingTriggers_Event_Enemies_BonusesWhenImporting(icr, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
+				HandleHandleInteractionImport(icr,  dataNameMap, castInteraction, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
 				ConditionalInteractionWindow w = new ConditionalInteractionWindow(scenario, castInteraction);
 				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if (interactionItem is DialogInteraction)
 			{
 				DialogInteraction castInteraction = (DialogInteraction)interactionItem;
-				HandleMissingTriggers_Event_Enemies_BonusesWhenImporting(icr, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
+				HandleHandleInteractionImport(icr,  dataNameMap, castInteraction, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
 				DialogInteractionWindow w = new DialogInteractionWindow(scenario, castInteraction);
 				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if (interactionItem is ReplaceTokenInteraction)
 			{
 				ReplaceTokenInteraction castInteraction = (ReplaceTokenInteraction)interactionItem;
-				HandleMissingTriggers_Event_Enemies_BonusesWhenImporting(icr, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
+				HandleHandleInteractionImport(icr,  dataNameMap, castInteraction, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
 				ReplaceTokenInteractionWindow w = new ReplaceTokenInteractionWindow(scenario, castInteraction);
 				//w.ShowDialog();
 				castInteraction.HandleWindow(w, scenario.translationObserver);
@@ -539,28 +600,28 @@ namespace JiME
 			else if (interactionItem is RewardInteraction)
 			{
 				RewardInteraction castInteraction = (RewardInteraction)interactionItem;
-				HandleMissingTriggers_Event_Enemies_BonusesWhenImporting(icr, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
+				HandleHandleInteractionImport(icr,  dataNameMap, castInteraction, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
 				RewardInteractionWindow w = new RewardInteractionWindow(scenario, castInteraction);
 				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if (interactionItem is CorruptionInteraction)
 			{
 				CorruptionInteraction castInteraction = (CorruptionInteraction)interactionItem;
-				HandleMissingTriggers_Event_Enemies_BonusesWhenImporting(icr, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
+				HandleHandleInteractionImport(icr,  dataNameMap, castInteraction, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
 				CorruptionInteractionWindow w = new CorruptionInteractionWindow(scenario, castInteraction);
 				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if (interactionItem is ItemInteraction)
 			{
 				ItemInteraction castInteraction = (ItemInteraction)interactionItem;
-				HandleMissingTriggers_Event_Enemies_BonusesWhenImporting(icr, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
+				HandleHandleInteractionImport(icr,  dataNameMap, castInteraction, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
 				ItemInteractionWindow w = new ItemInteractionWindow(scenario, castInteraction);
 				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
 			else if (interactionItem is TitleInteraction)
 			{
 				TitleInteraction castInteraction = (TitleInteraction)interactionItem;
-				HandleMissingTriggers_Event_Enemies_BonusesWhenImporting(icr, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
+				HandleHandleInteractionImport(icr,  dataNameMap, castInteraction, castInteraction.CollectTriggers(), castInteraction.CollectEvents());
 				TitleInteractionWindow w = new TitleInteractionWindow(scenario, castInteraction);
 				dialogSuccess = castInteraction.HandleWindow(w, scenario.translationObserver);
 			}
