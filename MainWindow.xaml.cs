@@ -515,7 +515,7 @@ namespace JiME
 
 		void OnImportInteraction(object sender, EventArgs e)
         {
-			var interactionItem = new ImportManager().ImportEvent();
+			var interactionItem = new ImportManager().ImportEvent(scenario);
 			if(interactionItem == null) { return; }
 			bool? dialogSuccess = null;
 
@@ -653,7 +653,7 @@ namespace JiME
 
 		void OnExportInteraction(object sender, EventArgs e)
         {
-			bool exported = new ExportManager().Export("Event", interactionsUC.dataListView.SelectedItem);
+			bool exported = new ExportManager().ExportEvent(scenario, (InteractionBase)interactionsUC.dataListView.SelectedItem);
 		}
 
 
@@ -829,7 +829,7 @@ namespace JiME
 
 		void OnExportActivations(object sender, EventArgs e)
 		{
-			bool exported = new ExportManager().Export("Enemy", activationsUC.dataListView.SelectedItem);
+			bool exported = new ExportManager().ExportMonsterActivation(scenario, (MonsterActivations)activationsUC.dataListView.SelectedItem);
 		}
 
 
@@ -891,12 +891,12 @@ namespace JiME
 
 		void OnImportMonsterModifier(object sender, EventArgs e)
 		{
-
+			//TODO
 		}
 
 		void OnExportMonsterModifier(object sender, EventArgs e)
 		{
-			bool exported = new ExportManager().Export("Bonus", monsterModifiersUC.dataListView.SelectedItem);
+			bool exported = new ExportManager().ExportMonsterModifier(scenario, (MonsterModifier)monsterModifiersUC.dataListView.SelectedItem);
 		}
 
 		// Translations

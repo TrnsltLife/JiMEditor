@@ -105,6 +105,9 @@
     <Compile Include="Models\Interaction Events\TitleInteraction.cs" />
     <Compile Include="Models\Interaction Events\PersistentInteractionBase.cs" />
     <Compile Include="Models\Interaction Events\ItemInteraction.cs" />
+    <Compile Include="Models\MonsterModifierExportPackage.cs" />
+    <Compile Include="Models\MonsterActivationExportPackage.cs" />
+    <Compile Include="Models\InteractionExportPackage.cs" />
     <Compile Include="Models\Title.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\Items.cs" />

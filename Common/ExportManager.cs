@@ -80,6 +80,93 @@ namespace JiME
 			return Save(exportType, jsonOutput, (objectToExport as ICommonData).dataName);
 		}
 
+		public bool ExportMonsterModifier(Scenario scenario, MonsterModifier modifierToExport)
+        {
+			string exportType = "Bonus";
+			if (modifierToExport == null) { return false; }
+			MonsterModifierExportPackage modifierPackage = new MonsterModifierExportPackage();
+			modifierPackage.monsterModifier = modifierToExport;
+
+			//Add translation info to modifierPackage.translations
+			List<TranslationItem> defaultTranslation = scenario.CollectModifierTranslationItems(modifierToExport);
+			List<Translation> translations = CollectTranslationListForExport(scenario, defaultTranslation);
+			modifierPackage.translations = translations;
+
+			string jsonOutput = JsonConvert.SerializeObject(modifierPackage, Formatting.Indented);
+			return Save(exportType, jsonOutput, (modifierToExport as ICommonData).dataName);
+		}
+
+		public bool ExportMonsterActivation(Scenario scenario, MonsterActivations activationToExport)
+		{
+			string exportType = "Enemy";
+			if (activationToExport == null) { return false; }
+			MonsterActivationExportPackage activationPackage = new MonsterActivationExportPackage();
+			activationPackage.monsterActivations = activationToExport;
+
+			//Add translation info to modifierPackage.translations
+			List<TranslationItem> defaultTranslation = scenario.CollectActivationTranslationItems(activationToExport);
+			List<Translation> translations = CollectTranslationListForExport(scenario, defaultTranslation);
+			activationPackage.translations = translations;
+
+			string jsonOutput = JsonConvert.SerializeObject(activationPackage, Formatting.Indented);
+			return Save(exportType, jsonOutput, (activationToExport as ICommonData).dataName);
+		}
+
+		public bool ExportEvent(Scenario scenario, InteractionBase eventToExport)
+		{
+			string exportType = "Event";
+			if(eventToExport == null || !(eventToExport is InteractionBase)){ return false; }
+			InteractionExportPackage eventPackage = new InteractionExportPackage();
+			eventPackage.interaction = (InteractionBase)eventToExport;
+
+			//If it's a ThreatEvent, add info on the current Monster Activations and Monster Bonuses, to help match up or alert if those don't exist when importing
+			if(eventToExport is ThreatInteraction)
+            {
+				AddExtraInfoForThreatInteraction(scenario, eventPackage, eventToExport);			
+            }
+
+			//Add translation info to eventPackage.translations
+			List<TranslationItem> defaultTranslation = scenario.CollectInteractionTranslationItems(eventToExport);
+			List<Translation> translations = CollectTranslationListForExport(scenario, defaultTranslation);
+			eventPackage.translations = translations;
+
+			string jsonOutput = JsonConvert.SerializeObject(eventPackage, Formatting.Indented);
+			return Save(exportType, jsonOutput, (eventToExport as ICommonData).dataName);
+		}
+
+		void AddExtraInfoForThreatInteraction(Scenario scenario, InteractionExportPackage eventPackage, object objectToExport)
+        {
+			eventPackage.modifiersReference = new List<MonsterModifierInfo>();
+			eventPackage.activationsReference = new List<MonsterActivationInfo>();
+
+			ThreatInteraction threat = (ThreatInteraction)objectToExport;
+			List<int> activations = new List<int>();
+			List<int> modifiers = new List<int>();
+			//Get a list of all the current activation and modifiers in use in this event
+			foreach (Monster monster in threat.monsterCollection)
+			{
+				int activationId = monster.activationsId;
+				if (!activations.Contains(activationId))
+				{
+					activations.Add(activationId);
+					string name = scenario.activationsObserver.First(it => it.id == activationId).dataName;
+					eventPackage.activationsReference.Add(new MonsterActivationInfo(activationId, name));
+					Debug.Log("Add activation " + activationId + " " + name);
+				}
+
+				foreach (MonsterModifier mod in monster.modifierList)
+				{
+					if (!modifiers.Contains(mod.id))
+					{
+						modifiers.Add(mod.id);
+						string name = scenario.monsterModifierObserver.First(it => it.id == mod.id).name;
+						eventPackage.modifiersReference.Add(new MonsterModifierInfo(mod.id, name));
+						Debug.Log("Add modifier " + mod.id + " " + name);
+					}
+				}
+			}
+		}
+
 		public bool ExportTranslation(string scenarioName, TranslationForExport objectToExport)
 		{
 			string exportType = "Translation";
@@ -89,5 +176,40 @@ namespace JiME
 			return Save(exportType, jsonOutput, scenarioName + "-" + objectToExport.dataName + "-" + objectToExport.langName);
 		}
 
+		public List<Translation> CollectTranslationListForExport(Scenario scenario, List<TranslationItem> defaultTranslation)
+        {
+			List<Translation> translationList = new List<Translation>();
+			foreach(Translation translationInitialState in scenario.translationObserver)
+            {
+				Translation translationSubset = new Translation(translationInitialState.dataName);
+				translationSubset.langName = translationInitialState.langName;
+				translationList.Add(translationSubset);
+				CollectTranslationSubset(defaultTranslation, translationInitialState, translationSubset);
+            }
+
+			return translationList;
+        }
+
+		public void CollectTranslationSubset(List<TranslationItem> defaultTranslation, Translation translationInitialState, Translation translationSubset)
+		{
+			Dictionary<string, TranslationItem>  translationDict = new Dictionary<string, TranslationItem>(); //hold the keys from the language translation for easy lookup as we add in keys from the default translation that are missing in the language translation
+
+			//First copy all the TranslationItems from the language translation into the translation dictionary
+			foreach (var item in translationInitialState.translationItems)
+			{
+				TranslationItem clonedItem = item.Clone();
+				//translation.translationItems.Add(clonedItem);
+				translationDict.Add(item.key, clonedItem);
+			}
+
+			//Now insert items from defaultTranslation that have a match in translationDict into translationSubset
+			foreach (var item in defaultTranslation)
+            {
+				if(translationDict.ContainsKey(item.key))
+                {
+					translationSubset.translationItems.Add(translationDict[item.key]);
+				}
+            }
+		}
 	}
 }

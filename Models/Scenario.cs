@@ -857,10 +857,7 @@ namespace JiME
 
 			foreach(var modifier in monsterModifierObserver)
             {
-				if (modifier.id >= MonsterModifier.START_OF_CUSTOM_MODIFIERS)
-				{
-					defaultTranslations.AddRange(modifier.CollectTranslationItems());
-				}
+				defaultTranslations.AddRange(CollectModifierTranslationItems(modifier));
             }
 
 			foreach(var chapter in chapterObserver)
@@ -877,50 +874,74 @@ namespace JiME
 
 			foreach (var activation in activationsObserver)
 			{
-				if (activation.id >= MonsterActivations.START_OF_CUSTOM_ACTIVATIONS)
-				{
-					defaultTranslations.AddRange(activation.CollectTranslationItems());
-					//grab lists of TranslationItems from all the chapters tiles and flatten them into one big list
-					defaultTranslations.AddRange(activation.activations.ToList().ConvertAll(item =>
-					{
-						item.translationKeyParents = activation.dataName;
-						return item.CollectTranslationItems();
-					}).SelectMany(list => list));
-				}
+				defaultTranslations.AddRange(CollectActivationTranslationItems(activation));
 			}
 
 			foreach (var interaction in interactionObserver)
             {
-				defaultTranslations.AddRange(((InteractionBase)interaction).CollectTranslationItems());
-
-				if(interaction is ThreatInteraction)
-                {
-					ThreatInteraction threat = (ThreatInteraction)interaction;
-					threat.CheckMonsterNumbering(this.translationObserver);
-					//Collect the monster translations
-					defaultTranslations.AddRange(threat.monsterCollection.ToList().ConvertAll(item =>
-					{
-						item.translationKeyParents = threat.dataName;
-						return item.CollectTranslationItems();
-					}).SelectMany(list => list));
-
-					/*
-					List<TranslationAccessor> list = new List<TranslationAccessor>();
-					foreach (var monster in threat.monsterCollection)
-					{
-						list.Add(new TranslationAccessor("event.{1}.{0}.monster." + monster.index + ".name", () => monster.dataName));
-					}
-					translationAccessors.AddRange(list);
-					*/
-				}
+				defaultTranslations.AddRange(CollectInteractionTranslationItems(interaction));
 			}
 
 			//remove default translations with empty value
 			defaultTranslations = defaultTranslations.FindAll(it => !String.IsNullOrWhiteSpace(it.text)).ToList();
 
 			return defaultTranslations;
-        }
+		}
 
+
+		public List<TranslationItem> CollectModifierTranslationItems(MonsterModifier modifier)
+		{
+			List<TranslationItem> defaultTranslations = new List<TranslationItem>();
+			if (modifier.id >= MonsterModifier.START_OF_CUSTOM_MODIFIERS)
+			{
+				defaultTranslations.AddRange(modifier.CollectTranslationItems());
+			}
+			return defaultTranslations;
+		}
+
+		public List<TranslationItem> CollectActivationTranslationItems(MonsterActivations activation)
+        {
+			List<TranslationItem> defaultTranslations = new List<TranslationItem>();
+			if (activation.id >= MonsterActivations.START_OF_CUSTOM_ACTIVATIONS)
+			{
+				defaultTranslations.AddRange(activation.CollectTranslationItems());
+				//grab lists of TranslationItems from all the chapters tiles and flatten them into one big list
+				defaultTranslations.AddRange(activation.activations.ToList().ConvertAll(item =>
+				{
+					item.translationKeyParents = activation.dataName;
+					return item.CollectTranslationItems();
+				}).SelectMany(list => list));
+			}
+			return defaultTranslations;
+		}
+
+		public List<TranslationItem> CollectInteractionTranslationItems(IInteraction interaction)
+        {
+			List<TranslationItem> defaultTranslations = new List<TranslationItem>();
+			defaultTranslations.AddRange(((InteractionBase)interaction).CollectTranslationItems());
+
+			if (interaction is ThreatInteraction)
+			{
+				ThreatInteraction threat = (ThreatInteraction)interaction;
+				threat.CheckMonsterNumbering(this.translationObserver);
+				//Collect the monster translations
+				defaultTranslations.AddRange(threat.monsterCollection.ToList().ConvertAll(item =>
+				{
+					item.translationKeyParents = threat.dataName;
+					return item.CollectTranslationItems();
+				}).SelectMany(list => list));
+
+				/*
+				List<TranslationAccessor> list = new List<TranslationAccessor>();
+				foreach (var monster in threat.monsterCollection)
+				{
+					list.Add(new TranslationAccessor("event.{1}.{0}.monster." + monster.index + ".name", () => monster.dataName));
+				}
+				translationAccessors.AddRange(list);
+				*/
+			}
+			return defaultTranslations;
+		}
 
 		/// <summary>
 		/// adds a Resolution to Scenario AND adds EndStatus bool for it
