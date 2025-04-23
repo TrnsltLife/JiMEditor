@@ -824,7 +824,13 @@ namespace JiME
 
 		void OnImportActivations(object sender, EventArgs e)
 		{
+			var activationItem = new ImportManager().ImportMonsterActivations(scenario);
+			if (activationItem == null) { return; }
 
+			if (activationItem != null)
+			{
+				scenario.activationsObserver.Add(activationItem);
+			}
 		}
 
 		void OnExportActivations(object sender, EventArgs e)
@@ -891,7 +897,13 @@ namespace JiME
 
 		void OnImportMonsterModifier(object sender, EventArgs e)
 		{
-			//TODO
+			var modifierItem = new ImportManager().ImportMonsterModifier(scenario);
+			if (modifierItem == null) { return; }
+
+			if (modifierItem != null)
+			{
+				scenario.monsterModifierObserver.Add(modifierItem);
+			}
 		}
 
 		void OnExportMonsterModifier(object sender, EventArgs e)

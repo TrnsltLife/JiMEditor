@@ -85,25 +85,76 @@ namespace JiME
 			}
 		}
 
-		public MonsterActivations ImportMonsterActivations()
-        {
-			//TODO: Fix to use the InteractionExportPackage
-			//TODO: Update the translations for this item based on what is saved in the file
+		public MonsterModifier ImportMonsterModifier(Scenario scenario)
+		{
+			string importType = "Bonus";
+			string json = Load(importType);
+			if (json == null) { return null; }
+			var settings = new JsonSerializerSettings
+			{
+				DefaultValueHandling = DefaultValueHandling.Populate,
+				MissingMemberHandling = MissingMemberHandling.Ignore,
+				NullValueHandling = NullValueHandling.Ignore
+			};
 
-			return null;
+			MonsterModifierExportPackage package = JsonConvert.DeserializeObject<MonsterModifierExportPackage>(json, settings);
+
+			//Make sure the dataName we're importing is unique. Add (2), (3), etc. at the end if necessary.
+			Dictionary<string, string> dataNameMap = new Dictionary<string, string>();
+			foreach (var modifier in scenario.monsterModifierObserver)
+			{
+				dataNameMap.Add(modifier.dataName, modifier.dataName);
+			}
+			int copyIndex = 2;
+			string baseDataName = package.monsterModifier.dataName;
+			while (dataNameMap.ContainsKey(package.monsterModifier.dataName))
+			{
+				package.monsterModifier.dataName = baseDataName + "(" + copyIndex + ")";
+				copyIndex++;
+			}
+
+			//Update the translations for this item based on what is saved in the file
+			ImportTranslationSubset(scenario, package.translations);
+
+			return package.monsterModifier;
 		}
 
-		public MonsterActivations ImportMonsterModifiers()
-		{
-			//TODO: Fix to use the InteractionExportPackage
-			//TODO: Update the translations for this item based on what is saved in the file
+		public MonsterActivations ImportMonsterActivations(Scenario scenario)
+        {
+			string importType = "Enemy";
+			string json = Load(importType);
+			if (json == null) { return null; }
+			var settings = new JsonSerializerSettings
+			{
+				DefaultValueHandling = DefaultValueHandling.Populate,
+				MissingMemberHandling = MissingMemberHandling.Ignore,
+				NullValueHandling = NullValueHandling.Ignore
+			};
 
-			return null;
+			MonsterActivationExportPackage package = JsonConvert.DeserializeObject<MonsterActivationExportPackage>(json, settings);
+
+			//Make sure the dataName we're importing is unique. Add (2), (3), etc. at the end if necessary.
+			Dictionary<string, string> dataNameMap = new Dictionary<string, string>();
+			foreach (var activations in scenario.activationsObserver)
+			{
+				dataNameMap.Add(activations.dataName, activations.dataName);
+			}
+			int copyIndex = 2;
+			string baseDataName = package.monsterActivations.dataName;
+			while (dataNameMap.ContainsKey(package.monsterActivations.dataName))
+			{
+				package.monsterActivations.dataName = baseDataName + "(" + copyIndex + ")";
+				copyIndex++;
+			}
+
+			//Update the translations for this item based on what is saved in the file
+			ImportTranslationSubset(scenario, package.translations);
+
+			return package.monsterActivations;
 		}
 
 		public IInteraction ImportEvent(Scenario scenario)
         {
-
 			string importType = "Event";
 			string json = Load(importType);
 			if(json == null) { return null; }
@@ -123,9 +174,10 @@ namespace JiME
 				MatchExtraInfoForThreatInteraction(scenario, package);
 			}
 
-			//TODO: Update the translations for this item based on what is saved in the file
+			//Update the translations for this item based on what is saved in the file
+			ImportTranslationSubset(scenario, package.translations);
 
-			return JsonConvert.DeserializeObject<IInteraction>(json, settings);
+			return package.interaction;
 		}
 
 		void MatchExtraInfoForThreatInteraction(Scenario scenario, InteractionExportPackage eventPackage)
@@ -234,5 +286,36 @@ namespace JiME
             }
 		}
 
+
+		public void ImportTranslationSubset(Scenario scenario, List<Translation> importedTranslations)
+        {
+			foreach(Translation importedTranslation in importedTranslations)
+            {
+				//First make sure all the languages in the importedTranslations exist in the scenario's translation. If not, create them.
+				Translation translation = scenario.translationObserver.FirstOrDefault(it => it.dataName == importedTranslation.dataName);
+				if(translation == null)
+                {
+					translation = new Translation(importedTranslation.dataName);
+					translation.langName = importedTranslation.langName;
+					scenario.translationObserver.Add(translation);
+                }
+
+				//Add all the translation item from the import to the scenario's translation
+				foreach(TranslationItem importedItem in importedTranslation.translationItems)
+                {
+					TranslationItem item = translation.translationItems.FirstOrDefault(it => it.key == importedItem.key);
+					if(item == null)
+                    {
+						item = importedItem.Clone();
+						translation.translationItems.Add(item);
+                    }
+					else
+                    {
+						item.text = importedItem.text;
+						item.translationOK = false; //It might have been OK before but everything imported should be reviewed
+                    }
+                }
+			}
+		}
 	}
 }

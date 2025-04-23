@@ -35,7 +35,7 @@ namespace JiME
     public class InteractionExportPackage
     {
         public string version = Utils.formatVersion;
-        public InteractionBase interaction;
+        public IInteraction interaction;
         public List<Translation> translations;
         public List<MonsterActivationInfo> activationsReference;
         public List<MonsterModifierInfo> modifiersReference;
