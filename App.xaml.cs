@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using JiME.Common;
+using System.Windows;
+using System.Diagnostics;
 
 namespace JiME
 {
@@ -9,15 +11,18 @@ namespace JiME
 	{
 		private void Application_Startup( object sender, StartupEventArgs e )
 		{
-			//PresentationTraceSources.Refresh();
-			//PresentationTraceSources.DataBindingSource.Listeners.Add( new ConsoleTraceListener() );
-			//PresentationTraceSources.DataBindingSource.Listeners.Add( new DebugTraceListener() );
-			//PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Warning | SourceLevels.Error;
+            //PresentationTraceSources.Refresh();
+            //PresentationTraceSources.DataBindingSource.Listeners.Add( new ConsoleTraceListener() );
+            //PresentationTraceSources.DataBindingSource.Listeners.Add( new DebugTraceListener() );
+            //PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Warning | SourceLevels.Error;
+
+            Trace.Listeners.Clear();
+            Trace.Listeners.Add(new FilteredDebugListener());
 
 #if !DEBUG
 			Application.Current.Dispatcher.UnhandledException += Dispatcher_UnhandledException;
 #endif
-		}
+        }
 
 		//generic, app-wide error handler to catch any unhandled exceptions
 		private void Dispatcher_UnhandledException( object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e )

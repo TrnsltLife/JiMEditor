@@ -80,6 +80,7 @@
     <Compile Include="Common\CustomMonsterModifierListConverter.cs" />
     <Compile Include="Common\CollectionConverter.cs" />
     <Compile Include="Common\ActivationsListConverter.cs" />
+    <Compile Include="Common\FilteredDebugListener.cs" />
     <Compile Include="Common\ImportManager.cs" />
     <Compile Include="Common\ExportManager.cs" />
     <Compile Include="Common\InteractionConverter.cs" />
