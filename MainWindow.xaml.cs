@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -442,29 +443,37 @@ namespace JiME
 				copyIndex++;
             }
 
+			StringBuilder importInfo = new StringBuilder();
+
 			//If the referenced trigger doesn't exist, create it
 			foreach(string trigger in triggers)
             {
 				if (trigger == null || trigger == "" || trigger == "None") { }
-				else if (scenario.triggersObserver.Any(it => it.dataName == trigger)) { }
+				else if (scenario.triggersObserver.Any(it => it.dataName == trigger)) {
+                    importInfo.AppendLine("Matched existing trigger: " + trigger);
+				}
 				else
 				{
 					Trigger t = new Trigger(trigger);
 					scenario.triggersObserver.Add(t);
 					icr.triggers.Add(t);
-				}
+                    importInfo.AppendLine("Created expected trigger: " + trigger);
+                }
             }
 
-			//If the referenced event doesn't exist, create it as a basic TestInteraction
+			//If the referenced event doesn't exist, create it as a basic TextInteraction
 			foreach(string anEvent in events)
             {
 				if (anEvent == null || anEvent == "" || anEvent == "None") { }
-				else if (scenario.interactionObserver.Any(it => it.dataName == anEvent)) { }
+				else if (scenario.interactionObserver.Any(it => it.dataName == anEvent)) {
+                    importInfo.AppendLine("Matched existing event: " + anEvent);
+                }
 				else
                 {
 					TextInteraction textInteraction = new TextInteraction(anEvent);
 					scenario.interactionObserver.Add(textInteraction);
 					icr.interactions.Add(textInteraction);
+                    importInfo.AppendLine("Created expected event: " + anEvent);
                 }
             }
 
@@ -505,9 +514,15 @@ namespace JiME
                 }
 
            }
-		}
 
-		public class ImportCreationRegistry
+            if (importInfo.ToString() != "")
+            {
+                var ret = MessageBox.Show("Import information:\n\n" + importInfo.ToString(), "Import Information", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
+        }
+
+        public class ImportCreationRegistry
         {
 			public List<Trigger> triggers = new List<Trigger>();
 			public List<InteractionBase> interactions = new List<InteractionBase>();

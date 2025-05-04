@@ -168,21 +168,32 @@ namespace JiME
 
 			InteractionExportPackage package = JsonConvert.DeserializeObject<InteractionExportPackage>(json, settings);
 
+			string importErrors = "";
 			if(package != null && package.interaction != null && package.interaction.interactionType == InteractionType.Threat)
             {
 				//If it's a ThreatInteraction, try to match the activationsId based on the name, and the monsterModifiers based on the names
-				MatchExtraInfoForThreatInteraction(scenario, package);
+				importErrors = MatchExtraInfoForThreatInteraction(scenario, package);
 			}
 
-			//Update the translations for this item based on what is saved in the file
-			ImportTranslationSubset(scenario, package.translations);
+			if (importErrors != "")
+			{
+				var ret = MessageBox.Show("There were import errors.\nThe enemy Event you are trying to import is expecting Enemy attack groups and/or enemy Bonuses that do not exist yet in this project.\n(Avoid this by importing enemy Bonuses and Enemy attack groups before importing enemy Events.)\n\n" + importErrors + "\n\nContinue Import?", "Continue Import?", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+				if (ret == MessageBoxResult.Cancel)
+				{
+					return null;
+				}
+			}
+
+            //Update the translations for this item based on what is saved in the file
+            ImportTranslationSubset(scenario, package.translations);
 
 			return package.interaction;
 		}
 
-		void MatchExtraInfoForThreatInteraction(Scenario scenario, InteractionExportPackage eventPackage)
+		string MatchExtraInfoForThreatInteraction(Scenario scenario, InteractionExportPackage eventPackage)
 		{
-			ThreatInteraction threat = (ThreatInteraction)eventPackage.interaction;
+			StringBuilder missing = new StringBuilder();
+            ThreatInteraction threat = (ThreatInteraction)eventPackage.interaction;
 			//Get a list of all the current activation and modifiers in use in this event
 			//Set them to activation/modifier of the same name present in the current scenario, or set them to a default value
 			foreach (Monster monster in threat.monsterCollection)
@@ -198,6 +209,7 @@ namespace JiME
                 else
                 {
 					monster.activationsId = monster.id; //Set to the default monster figure type like Ruffian, Goblin Scout, etc.
+                    missing.AppendLine("Missing Enemy attack group: " + activationInfo.name + " for " + monster.dataName + ".");
                 }
 
 
@@ -217,15 +229,17 @@ namespace JiME
 					else
                     {
 						removeList.Add(mod);
-					}
-				}
+                        missing.AppendLine("Missing enemy Bonus: " + modifierInfo.name + " for " + monster.dataName + ".");
+                    }
+                }
 				//Remove MonsterModifiers that don't exist in this scenario
 				foreach (MonsterModifier modifier in removeList)
 				{
 					monster.modifierList.Remove(modifier);
 				}
 			}
-		}
+			return missing.ToString();
+        }
 
 		public void ImportTranslation(ObservableCollection<Translation> translations)
 		{
@@ -289,6 +303,7 @@ namespace JiME
 
 		public void ImportTranslationSubset(Scenario scenario, List<Translation> importedTranslations)
         {
+			if (importedTranslations == null) { return; }
 			foreach(Translation importedTranslation in importedTranslations)
             {
 				//First make sure all the languages in the importedTranslations exist in the scenario's translation. If not, create them.
