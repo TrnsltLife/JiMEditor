@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v0.38]
+### Added
+- Add import/export capability for Bonus (Monster Modifier), Enemy (activation text), and Events These items can be imported into a different scenario.
+- Threat Events can include hints for matching back up with Bonus and Enemy entries.
+- If you're importing a Threat Event, make sure to import the needed Bonus and Enemy items first.
+- You can also export Translation for a particular language, which can be edited and reimported later.
 
 ## [v0.37]
 ### Changed
