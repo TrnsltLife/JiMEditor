@@ -12,9 +12,15 @@ namespace JiME.UserControls
 		public string Title { get; set; }
 		public Array ListData { get; set; }
 
-		public EventHandler onAddEvent, onRemoveEvent, onSettingsEvent, onDuplicateEvent;
+		public EventHandler onAddEvent, onRemoveEvent, onSettingsEvent, onDuplicateEvent, onImportEvent, onExportEvent;
 		public bool _showDuplicateButton = false;
 		public string _duplicateButtonVisibility = "Collapsed";
+
+		public bool _showImportButton = false;
+		public string _importButtonVisibility = "Visible";
+
+		public bool _showExportButton = false;
+		public string _exportButtonVisibility = "Collapsed";
 
         public event Action<string> NewItemSelectedEvent;
 
@@ -35,9 +41,51 @@ namespace JiME.UserControls
 			set
 			{
 				_duplicateButtonVisibility = value;
-				PropChanged("DuplicateButtonVisiblity");
+				PropChanged("DuplicateButtonVisibility");
 			}
         }
+
+		public bool ShowImportButton
+		{
+			get => _showImportButton;
+			set
+			{
+				_showImportButton = value;
+				_importButtonVisibility = _showImportButton ? "Visible" : "Collapsed";
+				PropChanged("ShowImportButton");
+			}
+		}
+
+		public string ImportButtonVisibility
+		{
+			get => _importButtonVisibility;
+			set
+			{
+				_importButtonVisibility = value;
+				PropChanged("ImportButtonVisibility");
+			}
+		}
+
+		public bool ShowExportButton
+		{
+			get => _showExportButton;
+			set
+			{
+				_showExportButton = value;
+				_exportButtonVisibility = _showExportButton ? "Visible" : "Collapsed";
+				PropChanged("ShowExportButton");
+			}
+		}
+
+		public string ExportButtonVisibility
+		{
+			get => _exportButtonVisibility;
+			set
+			{
+				_exportButtonVisibility = value;
+				PropChanged("ExportButtonVisibility");
+			}
+		}
 
 		public SidebarListView()
 		{
@@ -80,6 +128,17 @@ namespace JiME.UserControls
 		{
 			onDuplicateEvent?.Invoke(sender, e);
 		}
+
+		private void Import_Click(object sender, System.Windows.RoutedEventArgs e)
+		{
+			onImportEvent?.Invoke(sender, e);
+		}
+
+		private void Export_Click(object sender, System.Windows.RoutedEventArgs e)
+		{
+			onExportEvent?.Invoke(sender, e);
+		}
+
 
 		public event PropertyChangedEventHandler PropertyChanged;
 

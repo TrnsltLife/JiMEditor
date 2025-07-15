@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Collections.ObjectModel;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace JiME
 {
@@ -94,6 +95,12 @@ namespace JiME
 			interact.titleList = new ObservableCollection<Title>(this.titleList);
 			interact.fallbackTrigger = this.fallbackTrigger;
 			return interact;
+		}
+		new public List<string> CollectTriggers()
+		{
+			List<string> triggers = base.CollectTriggers();
+			triggers.Add(fallbackTrigger);
+			return triggers;
 		}
 	}
 }

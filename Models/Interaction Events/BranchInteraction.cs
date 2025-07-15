@@ -13,6 +13,24 @@ namespace JiME
 
 		bool _branchTestEvent;
 
+		new public List<string> CollectTriggers()
+		{
+			List<string> triggers = base.CollectTriggers();
+			triggers.Add(triggerTest);
+			triggers.Add(triggerIsSetTrigger);
+			triggers.Add(triggerNotSetTrigger);
+			return triggers;
+		}
+
+		new public List<string> CollectEvents()
+        {
+			List<string> events = base.CollectEvents();
+			events.Add(triggerIsSet);
+			events.Add(triggerNotSet);
+			return events;
+        }
+
+
 		//Story branch
 		string _triggerTest; //a trigger name
 		string _triggerIsSetTrigger; //a trigger name

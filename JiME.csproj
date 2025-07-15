@@ -80,6 +80,10 @@
     <Compile Include="Common\CustomMonsterModifierListConverter.cs" />
     <Compile Include="Common\CollectionConverter.cs" />
     <Compile Include="Common\ActivationsListConverter.cs" />
+    <Compile Include="Common\FilteredDebugListener.cs" />
+    <Compile Include="Common\ImportManager.cs" />
+    <Compile Include="Common\ExportManager.cs" />
+    <Compile Include="Common\InteractionConverter.cs" />
     <Compile Include="Common\TitleListConverter.cs" />
     <Compile Include="Common\ItemListConverter.cs" />
     <Compile Include="Common\MonsterModifierListConverter.cs" />
@@ -90,7 +94,7 @@
     <Compile Include="Common\BaseTileData.cs" />
     <Compile Include="Common\HexTileData.cs" />
     <Compile Include="Common\CollectionListConverter.cs" />
-    <Compile Include="Common\InteractionConverter.cs" />
+    <Compile Include="Common\InteractionListConverter.cs" />
     <Compile Include="Common\TextBook.cs" />
     <Compile Include="Common\TileConverter.cs" />
     <Compile Include="Models\BattleTile.cs" />
@@ -102,11 +106,16 @@
     <Compile Include="Models\Interaction Events\TitleInteraction.cs" />
     <Compile Include="Models\Interaction Events\PersistentInteractionBase.cs" />
     <Compile Include="Models\Interaction Events\ItemInteraction.cs" />
+    <Compile Include="Models\MonsterModifierExportPackage.cs" />
+    <Compile Include="Models\MonsterActivationExportPackage.cs" />
+    <Compile Include="Models\InteractionExportPackage.cs" />
     <Compile Include="Models\Title.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\Items.cs" />
     <Compile Include="Models\MonsterModifier.cs" />
     <Compile Include="Models\Titles.cs" />
+    <Compile Include="Models\TranslationForExport.cs" />
+    <Compile Include="Models\TranslationItemForExport.cs" />
     <Compile Include="Models\TranslationItem.cs" />
     <Compile Include="Models\Translation.cs" />
     <Compile Include="Models\SquareTile.cs" />
@@ -1122,6 +1131,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\export.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\import.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

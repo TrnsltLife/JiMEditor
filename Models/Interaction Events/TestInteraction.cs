@@ -164,5 +164,13 @@ namespace JiME
 			if ( failTrigger == oldName )
 				failTrigger = newName;
 		}
+
+		new public List<string> CollectTriggers()
+		{
+			List<string> triggers = base.CollectTriggers();
+			triggers.Add(failTrigger);
+			triggers.Add(successTrigger);
+			return triggers;
+		}
 	}
 }

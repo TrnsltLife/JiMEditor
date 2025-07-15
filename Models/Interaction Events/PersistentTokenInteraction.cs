@@ -68,5 +68,19 @@ namespace JiME
 			//Transform the text to display icons properly in a TextBlock
 			get => RichTextBoxIconEditor.CreateFlowDocumentFromSimpleHtml(alternativeBookData.pages[0], "", "FontFamily=\"Segoe UI\" FontSize=\"12\"");
 		}
+
+		new public List<string> CollectTriggers()
+		{
+			List<string> triggers = base.CollectTriggers();
+			triggers.Add(alternativeTextTrigger);
+			return triggers;
+		}
+
+		new public List<string> CollectEvents()
+		{
+			List<string> events = base.CollectEvents();
+			events.Add(eventToActivate);
+			return events;
+		}
 	}
 }

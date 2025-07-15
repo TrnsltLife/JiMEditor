@@ -196,5 +196,21 @@ namespace JiME
 			if ( triggerAfterName == oldName )
 				triggerAfterName = newName;
 		}
+
+		//Used to collect all the trigger names to validate when importing a saved Event into a new Scenario. Overrides exist in subclasses.
+		public List<string> CollectTriggers()
+        {
+			List<string> triggers = new List<string>();
+			triggers.Add(triggerName);
+			triggers.Add(triggerAfterName);
+			return triggers;
+        }
+
+		//Used to collect all the trigger names to validate when importing a saved Event into a new Scenario. Overrides exist in subclasses.
+		public List<string> CollectEvents()
+		{
+			List<string> events = new List<string>();
+			return events;
+		}
 	}
 }

@@ -134,6 +134,19 @@ namespace JiME.Views
 				return false;
 			}
 
+			//check for missing triggers
+			if(interaction.alternativeTextTrigger == null || interaction.alternativeTextTrigger == "" || interaction.alternativeTextTrigger == "None")
+            {
+				MessageBox.Show("You must set the Alternative Flavor Text Trigger on the Persistent Event tab.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				return false;
+			}
+			if (interaction.eventToActivate == null || interaction.eventToActivate == "" || interaction.eventToActivate == "None")
+			{
+				MessageBox.Show("You must set the Event to Activate on the Persistent Event tab.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				return false;
+			}
+
+
 			return true;
 		}
 

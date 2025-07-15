@@ -99,5 +99,14 @@ namespace JiME
 			if ( choice3Trigger == oldName )
 				choice3Trigger = newName;
 		}
+
+		new public List<string> CollectTriggers()
+		{
+			List<string> triggers = base.CollectTriggers();
+			triggers.Add(choice1Trigger);
+			triggers.Add(choice2Trigger);
+			triggers.Add(choice3Trigger);
+			return triggers;
+		}
 	}
 }

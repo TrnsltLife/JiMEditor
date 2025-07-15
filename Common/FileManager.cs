@@ -44,7 +44,7 @@ namespace JiME
 		public int shadowFear { get; set; }
 		public bool useTileGraphics { get; set; }
 
-		[JsonConverter( typeof( InteractionConverter ) )]
+		[JsonConverter( typeof( InteractionListConverter ) )]
 		public List<IInteraction> interactions { get; set; }
 		public List<Trigger> triggers { get; set; }
 		public List<Objective> objectives { get; set; }
@@ -311,7 +311,7 @@ namespace JiME
 
 		public static Campaign LoadCampaign( string campaignGUID )
 		{
-			if ( campaignGUID == "Saves" || campaignGUID == "Skins" || campaignGUID == "Languages")
+			if ( campaignGUID == "Exports" || campaignGUID == "Saves" || campaignGUID == "Skins" || campaignGUID == "Languages")
 				return null;
 
 			string basePath = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ), "Your Journey", campaignGUID );

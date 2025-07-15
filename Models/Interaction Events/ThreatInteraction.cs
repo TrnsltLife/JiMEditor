@@ -143,5 +143,12 @@ namespace JiME
             }
 			_includedEnemies = newArray;
         }
+
+		new public List<string> CollectTriggers()
+		{
+			List<string> triggers = base.CollectTriggers();
+			triggers.Add(triggerDefeatedName);
+			return triggers;
+		}
 	}
 }
