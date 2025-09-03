@@ -13,6 +13,7 @@ namespace JiME
     {
         NONE = 0,
 
+
         //Armor
         CLOAK = 1,
         HOARY_COAT = 2,
@@ -21,11 +22,20 @@ namespace JiME
         RING_MAIL = 5,
         TRAVEL_GARB = 6,
 
+        //Custom Armor
+        ANCIENT_BARK = 7,
+        ROBES = 8,
+        HAUBERK = 9,
+        DRAGON_SCALES = 10,
+
         //Support
         BANNER = 100,
         HARP = 101,
         HORN = 102,
         SHIELD = 103,
+
+        //Custom Support
+        POUCH = 104,
 
         //Weapons
         BATTLE_AXE = 200,
@@ -43,6 +53,17 @@ namespace JiME
         STAFF = 212,
         SWORD = 213,
         WALKING_STICK = 214,
+
+        //Custom Weapons
+        BROADSWORD = 215,
+        CLUB = 216,
+        CURVED_SWORD = 217,
+        MIGHTY_LIMB = 218,
+        ROCK = 219,
+        ROD = 220,
+        CROSSBOW = 221,
+        DRAGON_CLAWS = 222,
+        DRAGON_TAIL = 223,
 
         //Trinkets
         BOOTS = 300,
@@ -63,6 +84,13 @@ namespace JiME
         TORCH = 315,
         WATERSKIN = 316,
 
+        //Custom Trinkets
+        HERBS_AND_POULTICES = 317,
+        SEEING_STONE = 318,
+        THE_ONE = 319,
+        BLACK_ARROWS = 320,
+        THRAINS_LEGACY_POUCH = 321,
+
         //Mounts
         FRIENDLY_PONY = 400,
         GRUMBLE_BUM = 401,
@@ -73,7 +101,11 @@ namespace JiME
         SWIFT_STEED = 406,
         TRAVELLERS_HORSE = 407,
         WAR_CHARGER = 408,
-        WITNESS_OF_MARANWE = 409
+        WITNESS_OF_MARANWE = 409,
+
+        //Custom Mounts
+        NORTH_TOOK_STEED = 410,
+        TRUSTED_STEED = 411
     };
 
     public class Item: INotifyPropertyChanged

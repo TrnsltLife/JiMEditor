@@ -63,6 +63,13 @@ namespace JiME
             false, false
         );
 
+        public static readonly Collection CUSTOM = new Collection(7, "Custom", "/",
+            new Monster[] { },
+            new int[] { }, //tileId
+            new int[] { }, //terrainCount
+            false, false
+        );
+
         public static IEnumerable<Collection> Values
         {
             get
@@ -74,6 +81,7 @@ namespace JiME
                 yield return DENIZENS_IN_DARKNESS;
                 yield return UNFURLING_WAR;
                 yield return SCORCHERS_OF_THE_WILDS;
+                yield return CUSTOM;
             }
         }
 
@@ -132,6 +140,8 @@ namespace JiME
                     return Collection.UNFURLING_WAR;
                 case 6:
                     return Collection.SCORCHERS_OF_THE_WILDS;
+                case 7:
+                    return Collection.CUSTOM;
                 default:
                     throw new Exception("Collection not recognized: " + id);
             }
@@ -160,6 +170,8 @@ namespace JiME
                 case "Scourges of the Wastes":
                 case "Scorchers of the Wilds":
                     return Collection.SCORCHERS_OF_THE_WILDS;
+                case "Custom":
+                    return Collection.CUSTOM;
                 default:
                     throw new Exception("Collection not recognized: " + name);
             }

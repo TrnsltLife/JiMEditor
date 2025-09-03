@@ -311,7 +311,7 @@ namespace JiME
 
 		public static Campaign LoadCampaign( string campaignGUID )
 		{
-			if ( campaignGUID == "Exports" || campaignGUID == "Saves" || campaignGUID == "Skins" || campaignGUID == "Languages")
+			if ( campaignGUID == "Exports" || campaignGUID == "Saves" || campaignGUID == "Skins" || campaignGUID == "Languages" || campaignGUID == "Tiles")
 				return null;
 
 			string basePath = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ), "Your Journey", campaignGUID );
