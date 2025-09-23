@@ -71,6 +71,7 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -160,6 +161,9 @@
     <Compile Include="UserControls\AddEventPopup.xaml.cs">
       <DependentUpon>AddEventPopup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\RichTextBoxRtfIconEditor.xaml.cs">
+      <DependentUpon>RichTextBoxRtfIconEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\TokenTypeSelector.xaml.cs">
       <DependentUpon>TokenTypeSelector.xaml</DependentUpon>
     </Compile>
@@ -180,6 +184,9 @@
     </Compile>
     <Compile Include="Views\MonsterModifierEditorWindow.xaml.cs">
       <DependentUpon>MonsterModifierEditorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LegacyTextEditorWindow.xaml.cs">
+      <DependentUpon>LegacyTextEditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TranslationItemEditorWindow.xaml.cs">
       <DependentUpon>TranslationItemEditorWindow.xaml</DependentUpon>
@@ -312,6 +319,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="UserControls\RichTextBoxRtfIconEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UserControls\TokenTypeSelector.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -337,6 +348,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\MonsterModifierEditorWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\LegacyTextEditorWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

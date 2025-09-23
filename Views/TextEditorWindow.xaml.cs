@@ -6,10 +6,10 @@ using System.Windows;
 
 namespace JiME.Views
 {
-	/// <summary>
-	/// Interaction logic for TextEditorWindow.xaml
-	/// </summary>
-	public partial class TextEditorWindow : Window
+    /// <summary>
+    /// Interaction logic for TextEditorWindow.xaml
+    /// </summary>
+    public partial class TextEditorWindow : Window
 	{
 		const int maxChars = 800;
 		EditMode editMode;
@@ -59,8 +59,10 @@ namespace JiME.Views
 
 			textBookController = new TextBookController();
 			textBookController.ImportPages( bookData.pages );
-			pageText.Text = textBookController.GetPage( 0 );
-			UpdateInfo();
+            //pageText.Text = textBookController.GetPage( 0 );
+            //pageText.SetPlainText(textBookController.GetPage(0));
+            pageText.ImportFromSimplifiedHtml(textBookController.GetPage(0));
+            UpdateInfo();
 
 			triggerLB.IsEnabled = mode == EditMode.Resolution;
 
@@ -128,9 +130,11 @@ namespace JiME.Views
 
 		private void OkButton_Click( object sender, RoutedEventArgs e )
 		{
-			textBookController.SetContent( pageText.Text );
+            //textBookController.SetContent( pageText.Text );
+            //textBookController.SetContent(pageText.GetPlainText());
+            textBookController.SetContent(pageText.ExportToSimplifiedHtml());
 
-			if ( editMode == EditMode.Resolution
+            if ( editMode == EditMode.Resolution
 				&& ( (Trigger)triggerLB.SelectedItem == null || ( (Trigger)triggerLB.SelectedItem ).dataName == "None" ) )
 			{
 				MessageBox.Show( "The Trigger cannot be \"None\".", "Invalid Trigger", MessageBoxButton.OK, MessageBoxImage.Error );
@@ -170,5 +174,10 @@ namespace JiME.Views
 			if (tw.ShowDialog() == true)
 				bookData.finalTriggerName = tw.triggerName;
 		}
-	}
+
+        private void pageText_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+    }
 }

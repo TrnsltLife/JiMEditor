@@ -434,14 +434,24 @@ namespace JiME.Views
 			TextBookData data = new TextBookData();
 			data.pages.Add( campaign.storyText );
 
+			/*
 			TextEditorWindow tw = new TextEditorWindow( null, EditMode.Story, data );
 			if ( tw.ShowDialog() == true )
 			{
 				campaign.storyText = tw.textBookController.pages[0].Trim();
 				;
 			}
+			*/
 
-			if ( campaign.storyText == "" )
+            LegacyTextEditorWindow tw = new LegacyTextEditorWindow(null, EditMode.Story, data);
+            if (tw.ShowDialog() == true)
+            {
+                campaign.storyText = tw.textBookController.pages[0].Trim();
+                ;
+            }
+
+
+            if ( campaign.storyText == "" )
 				storySet.Text = "The Story Text is not set.";
 			else
 				storySet.Text = "The Story Text is set.";

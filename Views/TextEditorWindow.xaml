@@ -21,7 +21,7 @@
 		</StackPanel>
 
 		<!--<TextBox Grid.Row="1" x:Name="pageText" AcceptsReturn="True" Background="{StaticResource bgColorLight}" Foreground="White" FontSize="14" TextWrapping="Wrap" Padding="5" Margin="5,5,5,0" BorderBrush="White" TextChanged="TextBox_TextChanged" VerticalScrollBarVisibility="Auto"/>-->
-		<uc:RichTextBoxIconEditor Grid.Row="1" x:Name="pageText" TextHeight="400" MaxTextHeight="600"/>
+		<uc:RichTextBoxRtfIconEditor Grid.Row="1" x:Name="pageText" Loaded="pageText_Loaded" TextHeight="600" MaxTextHeight="600" Height="350" Width="600"/>
 		
 		<!--page info-->
 		<!--<TextBlock x:Name="pageInfo" Grid.Row="2" Margin="10,0,10,0" Style="{StaticResource SubText}" Text="Info"/>
