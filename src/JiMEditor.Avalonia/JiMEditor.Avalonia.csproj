@@ -29,6 +29,16 @@
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\TilesB\**\*.png" Link="Assets\TilesB\%(RecursiveDir)%(Filename)%(Extension)" />
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\Tokens\*.png" Link="Assets\Tokens\%(Filename)%(Extension)" />
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\Terrain\*.png" Link="Assets\Terrain\%(Filename)%(Extension)" />
+    <!-- Campaign window toolbar icons (JiMEditor/Assets) -->
+    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\add2.png" Link="Assets\add2.png" />
+    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\addpage.png" Link="Assets\addpage.png" />
+    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\dice.png" Link="Assets\dice.png" />
+    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\arrow.png" Link="Assets\arrow.png" />
+    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\edit.png" Link="Assets\edit.png" />
+    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\package.png" Link="Assets\package.png" />
+    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\help.png" Link="Assets\help.png" />
+    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\save.png" Link="Assets\save.png" />
+    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\cancel.png" Link="Assets\cancel.png" />
   </ItemGroup>
 
   <!-- JiME engine JSON etc. (embedded resources read via Assembly.GetManifestResourceStream) -->

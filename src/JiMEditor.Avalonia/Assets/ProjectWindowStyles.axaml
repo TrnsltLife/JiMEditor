@@ -39,4 +39,34 @@
 		<Setter Property="CornerRadius" Value="5"/>
 		<Setter Property="Background" Value="{StaticResource bgColorLight}"/>
 	</Style>
+
+	<!--
+		FluentTheme's default TabControl looks Win11 / Mica-like; JiMEditor WPF used flat VS-style tabs.
+		Apply Classes="jimeTabStrip" on TabControl to get closer to the reference (dark chrome, selected tab = content bg).
+	-->
+	<Style Selector="TabControl.jimeTabStrip">
+		<Setter Property="Background" Value="#FF2D2D30"/>
+	</Style>
+	<Style Selector="TabControl.jimeTabStrip TabItem">
+		<Setter Property="Padding" Value="10,8"/>
+		<Setter Property="Foreground" Value="#E8E8E8"/>
+		<Setter Property="FontSize" Value="13"/>
+		<Setter Property="Background" Value="#323236"/>
+		<Setter Property="BorderBrush" Value="#555555"/>
+		<Setter Property="BorderThickness" Value="1,1,1,0"/>
+		<Setter Property="CornerRadius" Value="4,4,0,0"/>
+		<Setter Property="Margin" Value="0,4,2,0"/>
+	</Style>
+	<Style Selector="TabControl.jimeTabStrip TabItem:pointerover">
+		<Setter Property="Background" Value="#3E3E42"/>
+	</Style>
+	<Style Selector="TabControl.jimeTabStrip TabItem:selected">
+		<Setter Property="Background" Value="#FF2D2D30"/>
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="FontWeight" Value="SemiBold"/>
+		<Setter Property="BorderBrush" Value="#777777"/>
+	</Style>
+	<Style Selector="TabControl.jimeTabStrip TabItem:selected:pointerover">
+		<Setter Property="Background" Value="#FF2D2D30"/>
+	</Style>
 </Styles>

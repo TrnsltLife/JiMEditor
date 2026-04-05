@@ -1,33 +1,441 @@
-<!-- Stub shell: WPF opens JiME.CampaignWindow; full campaign UI TODO-Avalonia-Reenable. -->
+<!-- Ported from: JiMEditor/Views/CampaignWindow.xaml (2026-04-05) — Avalonia layout parity; some actions TODO-Avalonia-Reenable -->
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:jime="using:JiME"
         x:Class="JiMEditor.Avalonia.Views.CampaignWindow"
         x:CompileBindings="False"
-        Title="Campaign"
-        Width="640"
-        Height="480"
+        Title="Campaign Manager"
+        Width="845"
+        Height="720"
+        MinWidth="700"
+        MinHeight="500"
         WindowStartupLocation="CenterScreen"
-        Background="{StaticResource bgColor}">
-	<DockPanel Margin="16" LastChildFill="True">
-		<StackPanel DockPanel.Dock="Top" Spacing="6" Margin="0,0,0,12">
-			<TextBlock Text="{Binding campaignName}" Classes="heading" FontSize="20"/>
-			<TextBlock Text="{Binding description}" TextWrapping="Wrap" Classes="subText"/>
-			<TextBlock Text="Scenarios (open a scenario from the main editor when wired)" Classes="subText" Foreground="Orange"/>
-		</StackPanel>
-		<ListBox ItemsSource="{Binding scenarioCollection}" Background="{StaticResource bgColorLight}" IsEnabled="True">
-			<ListBox.ItemTemplate>
-				<DataTemplate DataType="jime:CampaignItem">
-					<Grid Margin="4">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="*"/>
-							<ColumnDefinition Width="Auto"/>
-						</Grid.ColumnDefinitions>
-						<TextBlock Grid.Column="0" Text="{Binding scenarioName}" Foreground="White" VerticalAlignment="Center"/>
-						<TextBlock Grid.Column="1" Text="{Binding fileName}" Classes="subText" VerticalAlignment="Center" Margin="12,0,0,0"/>
-					</Grid>
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-		</ListBox>
-	</DockPanel>
+        Background="{StaticResource bgColor}"
+        Opened="CampaignWindow_Opened"
+        KeyDown="CampaignWindow_KeyDown"
+        KeyUp="CampaignWindow_KeyUp">
+
+	<Window.Styles>
+		<Style Selector="TextBox.campaignField">
+			<Setter Property="Background" Value="#333337"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#77777d"/>
+			<Setter Property="Padding" Value="6,4"/>
+		</Style>
+		<Style Selector="ComboBox">
+			<Setter Property="Background" Value="#333337"/>
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+		<Style Selector="CheckBox">
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+	</Window.Styles>
+
+	<Grid RowDefinitions="*,Auto">
+		<TabControl Grid.Row="0"
+		            Classes="jimeTabStrip"
+		            Margin="0"
+					Padding="0"
+		            BorderThickness="0,1,0,0"
+		            BorderBrush="#555">
+
+			<TabItem Header="Scenarios and Packaging" Margin="0" Padding="0">
+				<Border Classes="callout" Margin="0" Padding="10,10,10,10">
+					<StackPanel Spacing="0">
+						<Grid ColumnDefinitions="320,100,180,*">
+							<StackPanel Spacing="4">
+								<TextBlock Text="Campaign Name:" Classes="heading"/>
+								<TextBlock Text="This is the name players will see in the Companion App." Classes="subText" TextWrapping="Wrap"/>
+								<TextBox x:Name="CampaignNameTextBox"
+								         Classes="campaignField"
+								         Text="{Binding campaign.campaignName, Mode=TwoWay}"
+								         Width="300"
+								         HorizontalAlignment="Left"
+								         Margin="0,5,0,0"/>
+							</StackPanel>
+
+							<StackPanel Grid.Column="1" Spacing="4">
+								<TextBlock Text="Version:" Classes="heading"/>
+								<TextBlock Text="Optional" Classes="subText"/>
+								<TextBox x:Name="CampaignVersionTextBox"
+								         Classes="campaignField"
+								         Text="{Binding campaign.campaignVersion, Mode=TwoWay}"
+								         Width="80"
+								         HorizontalAlignment="Left"
+								         Margin="0,5,0,0"/>
+							</StackPanel>
+
+							<StackPanel Grid.Column="2" Spacing="4">
+								<TextBlock Text="Campaign Cover Image:" Classes="heading" VerticalAlignment="Bottom"/>
+								<Button x:Name="ImageButton"
+								        Content="Choose Cover Image..."
+								        Background="#1E90FF"
+								        Foreground="White"
+								        Height="44"
+								        FontWeight="Bold"
+								        FontSize="14"
+								        HorizontalAlignment="Left"
+								        Margin="0,5,0,0"
+								        IsEnabled="False"
+								        ToolTip.Tip="TODO-Avalonia-Reenable: ImageEditorWindow"/>
+							</StackPanel>
+
+							<Button x:Name="OpenExplorerButton"
+							        Grid.Column="3"
+							        Content="Open Project Folder..."
+							        VerticalAlignment="Bottom"
+							        Background="#1E90FF"
+							        Foreground="White"
+							        Height="44"
+							        FontWeight="Bold"
+							        FontSize="14"
+							        HorizontalAlignment="Right"
+							        Click="OpenExplorer_Click"/>
+						</Grid>
+
+						<StackPanel Margin="0,12,0,0" Spacing="6">
+							<TextBlock Text="Campaign Scenarios" Classes="heading" Margin="0,5,0,0"/>
+							<StackPanel Orientation="Horizontal" Spacing="10">
+								<Button x:Name="CreateNewButton"
+								        Background="#1E90FF"
+								        Height="44"
+								        HorizontalAlignment="Left"
+								        Margin="0,5,0,0"
+								        IsEnabled="False"
+								        ToolTip.Tip="TODO-Avalonia-Reenable: create new scenario in campaign folder">
+									<StackPanel Orientation="Horizontal" Margin="5,0" Spacing="6">
+										<TextBlock Text="Create And Add New Scenario..." Classes="heading" VerticalAlignment="Center"/>
+										<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Height="24"/>
+									</StackPanel>
+								</Button>
+								<Button x:Name="AddExistingButton"
+								        Background="#1E90FF"
+								        Height="44"
+								        HorizontalAlignment="Left"
+								        Margin="0,5,0,0"
+								        IsEnabled="False"
+								        ToolTip.Tip="TODO-Avalonia-Reenable: OpenFileDialog + add scenario">
+									<StackPanel Orientation="Horizontal" Margin="5,0" Spacing="6">
+										<TextBlock Text="Add Existing Scenario..." Classes="heading" VerticalAlignment="Center"/>
+										<Image Source="avares://JiMEditor.Avalonia/Assets/addpage.png" Height="24"/>
+									</StackPanel>
+								</Button>
+								<Button x:Name="AddGeneratedButton"
+								        Background="#1E90FF"
+								        Height="44"
+								        HorizontalAlignment="Left"
+								        Margin="0,5,0,0"
+								        IsEnabled="False"
+								        ToolTip.Tip="TODO-Avalonia-Reenable: ProceduralGeneratorWindow">
+									<StackPanel Orientation="Horizontal" Margin="5,0" Spacing="6">
+										<TextBlock Text="Add Procedurally Generated Scenario..." Classes="heading" VerticalAlignment="Center"/>
+										<Image Source="avares://JiMEditor.Avalonia/Assets/dice.png" Height="24"/>
+									</StackPanel>
+								</Button>
+							</StackPanel>
+						</StackPanel>
+
+						<TextBlock Text="When creating a new Scenario, hold down the CONTROL key to also open the Scenario in the Editor (except for generated scenarios)."
+						           Classes="subText"
+						           TextWrapping="Wrap"
+						           Margin="0,5,0,0"
+						           IsVisible="False"/>
+						<TextBlock Text="Procedural generation opens up a dialog to fine tune generator parameters. You can edit the generated scenarios in the editor after saving."
+						           Classes="subText"
+						           TextWrapping="Wrap"
+						           Margin="0,5,0,0"
+						           IsVisible="False"/>
+						<TextBlock Classes="subText"
+						           TextWrapping="Wrap"
+						           Margin="0,5,0,0"
+						           Text="Removing a Scenario from the Campaign DOES NOT DELETE ITS FILE. The Scenario's file will be moved into the base Scenario folder (Documents\Your Journey). Hold CONTROL while clicking the X button to PERMANENTLY DELETE the file (you will be asked to confirm)."/>
+
+						<ScrollViewer VerticalScrollBarVisibility="Auto"
+						              MaxHeight="245"
+						              MinHeight="150"
+						              Margin="0,5,0,0">
+							<ItemsControl x:Name="ScenarioList"
+							              ItemsSource="{Binding campaign.scenarioCollection}"
+							              Background="{StaticResource bgColor}">
+								<ItemsControl.ItemTemplate>
+									<DataTemplate DataType="jime:CampaignItem">
+										<Grid Margin="0,2">
+											<Border Classes="callout" Padding="8" Margin="2">
+												<Grid ColumnDefinitions="*,Auto">
+													<StackPanel VerticalAlignment="Center" Spacing="4">
+														<TextBlock Text="{Binding scenarioName}" Classes="heading" VerticalAlignment="Center"/>
+														<StackPanel Orientation="Horizontal" Spacing="10">
+															<TextBlock Text="{Binding fileName}" Classes="subText"/>
+															<TextBlock Text="{Binding collectionIcons}"
+															           Foreground="White"
+															           FontSize="12"
+															           FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+														</StackPanel>
+													</StackPanel>
+
+													<!-- Fixed-size buttons; rotate Image only so layout slots don't overlap (RenderTransform on Button skews visuals vs measure). -->
+													<StackPanel Grid.Column="1"
+													            Orientation="Horizontal"
+													            Spacing="8"
+													            VerticalAlignment="Center"
+													            Margin="8,0,0,0">
+														<!-- RenderTransformOrigin must use % (e.g. 50%,50%); 0.5,0.5 is parsed as pixels and breaks rotation pivot. -->
+														<Button Background="Gainsboro"
+														        Width="44"
+														        Height="44"
+														        Padding="0"
+														        VerticalAlignment="Center"
+														        Margin="4,0,0,0"
+														        Click="MoveUp_Click"
+														        ClipToBounds="False">
+															<Grid Width="40"
+															      Height="40"
+															      HorizontalAlignment="Center"
+															      VerticalAlignment="Center">
+																<Image Width="30"
+																       Height="30"
+																       HorizontalAlignment="Center"
+																       VerticalAlignment="Center"
+																       Stretch="Uniform"
+																       Source="avares://JiMEditor.Avalonia/Assets/arrow.png"
+																       RenderTransformOrigin="50%,50%">
+																	<Image.RenderTransform>
+																		<RotateTransform Angle="-90"/>
+																	</Image.RenderTransform>
+																</Image>
+															</Grid>
+														</Button>
+														<Button Background="Gainsboro"
+														        Width="44"
+														        Height="44"
+														        Padding="0"
+														        VerticalAlignment="Center"
+														        Click="MoveDown_Click"
+														        ClipToBounds="False">
+															<Grid Width="40"
+															      Height="40"
+															      HorizontalAlignment="Center"
+															      VerticalAlignment="Center">
+																<Image Width="30"
+																       Height="30"
+																       HorizontalAlignment="Center"
+																       VerticalAlignment="Center"
+																       Stretch="Uniform"
+																       Source="avares://JiMEditor.Avalonia/Assets/arrow.png"
+																       RenderTransformOrigin="50%,50%">
+																	<Image.RenderTransform>
+																		<RotateTransform Angle="90"/>
+																	</Image.RenderTransform>
+																</Image>
+															</Grid>
+														</Button>
+														<Button Background="#1E90FF"
+														        Foreground="White"
+														        Height="44"
+														        MinWidth="160"
+														        Padding="8,0"
+														        VerticalAlignment="Center"
+														        Click="EditScenario_Click">
+															<StackPanel Orientation="Horizontal" Spacing="6">
+																<TextBlock Text="Edit Scenario..." Classes="heading" VerticalAlignment="Center"/>
+																<Image Source="avares://JiMEditor.Avalonia/Assets/edit.png" Height="20" Stretch="Uniform"/>
+															</StackPanel>
+														</Button>
+														<Button Background="{StaticResource bgCancelDelete}"
+														        Width="46"
+														        Height="44"
+														        Padding="4"
+														        VerticalAlignment="Center"
+														        ToolTip.Tip="Hold CONTROL to permanently delete the scenario file."
+														        Click="RemoveScenario_Click">
+															<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Stretch="Uniform"/>
+														</Button>
+													</StackPanel>
+												</Grid>
+											</Border>
+										</Grid>
+									</DataTemplate>
+								</ItemsControl.ItemTemplate>
+							</ItemsControl>
+						</ScrollViewer>
+
+						<Grid Margin="0,10,0,0" ColumnDefinitions="*,Auto">
+							<StackPanel Spacing="4" VerticalAlignment="Center">
+								<TextBlock x:Name="CampaignGuidTextBlock"
+								           Text="Campaign GUID: "
+								           Classes="heading"
+								           FontSize="12"/>
+								<TextBlock Text="The Package is a ZIP file of this Campaign's Scenarios and other data. It's saved to the Campaign's folder and can be shared."
+								           Classes="subText"
+								           FontSize="12"
+								           TextWrapping="Wrap"/>
+							</StackPanel>
+							<Button x:Name="PackageCampaignButton"
+							        Grid.Column="1"
+							        Background="#1E90FF"
+							        Foreground="White"
+							        Height="44"
+							        HorizontalAlignment="Right"
+							        VerticalAlignment="Center"
+							        IsEnabled="False"
+							        ToolTip.Tip="TODO-Avalonia-Reenable: ZIP packaging">
+								<StackPanel Orientation="Horizontal" Margin="5,0" Spacing="6">
+									<TextBlock Text="Create Package" Classes="heading" VerticalAlignment="Center"/>
+									<Image Source="avares://JiMEditor.Avalonia/Assets/package.png" Height="32"/>
+								</StackPanel>
+							</Button>
+						</Grid>
+					</StackPanel>
+				</Border>
+			</TabItem>
+
+			<TabItem Header="Settings" Padding="0" Margin="0">
+				<Border Classes="callout" Margin="0" Padding="0,10,10,10">
+					<StackPanel Spacing="8">
+						<TextBlock Text="Campaign Triggers" Classes="heading"/>
+						<StackPanel Orientation="Horizontal" Spacing="8">
+							<ComboBox x:Name="TriggersCombo"
+							          Width="250"
+							          VerticalAlignment="Center"
+							          ItemsSource="{Binding campaign.triggerCollection}">
+								<ComboBox.ItemTemplate>
+									<DataTemplate DataType="jime:Trigger">
+										<TextBlock Text="{Binding dataName}"/>
+									</DataTemplate>
+								</ComboBox.ItemTemplate>
+							</ComboBox>
+							<Button x:Name="AddTriggerButton"
+							        Background="#3CB371"
+							        Width="32"
+							        Height="32"
+							        Padding="4"
+							        IsEnabled="False"
+							        ToolTip.Tip="TODO-Avalonia-Reenable: CampaignTriggerEditor">
+								<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+							</Button>
+							<Button x:Name="DelTriggerButton"
+							        Background="{StaticResource bgCancelDelete}"
+							        Width="32"
+							        Height="32"
+							        Padding="4"
+							        IsEnabled="False"
+							        ToolTip.Tip="TODO-Avalonia-Reenable: delete trigger">
+								<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Stretch="Uniform"/>
+							</Button>
+							<Button x:Name="TriggerHelpButton"
+							        Background="#C98800"
+							        Height="32"
+							        Padding="6,0"
+							        IsEnabled="False"
+							        ToolTip.Tip="TODO-Avalonia-Reenable: HelpWindow">
+								<StackPanel Orientation="Horizontal" Spacing="6">
+									<Image Source="avares://JiMEditor.Avalonia/Assets/help.png" Stretch="Uniform" Height="18"/>
+									<TextBlock Text="Trigger Help" Classes="heading"/>
+								</StackPanel>
+							</Button>
+						</StackPanel>
+
+						<TextBlock Text="Campaign Trigger names are automatically appended with '[CMPN]' so they can be easily identified as Campaign Triggers in the Scenario Editor. For example, 'my trigger' would become 'my trigger [CMPN]'."
+						           Classes="subText"
+						           TextWrapping="Wrap"
+						           Margin="0,5,0,0"/>
+						<TextBlock Text="NOTE: If a Campaign Trigger is being referenced in a Scenario, and that Campaign Trigger is later removed, the Scenario will still refer to it and will need to be updated in the Editor."
+						           Classes="subText"
+						           TextWrapping="Wrap"
+						           Margin="0,5,0,0"
+						           FontWeight="Bold"/>
+
+						<TextBlock Text="Starting Equipment Options" Classes="heading" Margin="0,10,0,0"/>
+						<CheckBox x:Name="TrinketsCheck"
+						          IsChecked="{Binding campaign.startWithTrinkets, Mode=TwoWay}"
+						          Margin="0,6,0,0"
+						          Content="Trinkets!   Each player may choose a Trinket during the Setup Campfire."/>
+						<CheckBox x:Name="MountsCheck"
+						          IsChecked="{Binding campaign.startWithMounts, Mode=TwoWay}"
+						          Margin="0,6,0,0"
+						          Content="Mounts!   Each player may choose a Mount during the Setup Campfire."/>
+
+						<TextBlock Text="Campaign Description" Classes="heading" Margin="0,10,0,0"/>
+						<TextBlock Text="The Description is a very short summary of what the Campaign is about. It's shown on the Scenario selection screen in the Companion App."
+						           Classes="subText"
+						           TextWrapping="Wrap"/>
+						<TextBox x:Name="DescriptionTextBox"
+						         Classes="campaignField"
+						         Text="{Binding campaign.description, Mode=TwoWay}"
+						         AcceptsReturn="True"
+						         MinHeight="72"
+						         TextWrapping="Wrap"
+						         Margin="0,5,0,0"/>
+
+						<TextBlock Text="Campaign Story" Classes="heading" Margin="0,10,0,0"/>
+						<TextBlock Text="The Campaign Story is shown to players in the Companion App after the Campaign is selected to play. Use it to provide a backdrop story for the Campaign."
+						           Classes="subText"
+						           TextWrapping="Wrap"/>
+
+						<StackPanel Orientation="Horizontal" Spacing="10" Margin="0,5,0,0">
+							<Button x:Name="StoryButton"
+							        Background="#1E90FF"
+							        Height="44"
+							        HorizontalAlignment="Left"
+							        IsEnabled="False"
+							        ToolTip.Tip="TODO-Avalonia-Reenable: TextEditorWindow for story">
+								<StackPanel Orientation="Horizontal" Margin="5,0" Spacing="6">
+									<TextBlock Text="Edit Story Text..." Classes="heading" VerticalAlignment="Center"/>
+									<Image Source="avares://JiMEditor.Avalonia/Assets/edit.png" Height="24"/>
+								</StackPanel>
+							</Button>
+							<TextBlock x:Name="StoryStatusTextBlock"
+							           Text="The Story Text is not set."
+							           Classes="heading"
+							           VerticalAlignment="Center"/>
+						</StackPanel>
+					</StackPanel>
+				</Border>
+			</TabItem>
+		</TabControl>
+
+		<!-- Footer -->
+		<Border Grid.Row="1"
+		        BorderThickness="0,1,0,0"
+		        BorderBrush="Silver"
+		        Background="{StaticResource bgColorLight}">
+			<Grid Margin="10,0" ColumnDefinitions="*,Auto">
+				<Button x:Name="DeleteCampaignButton"
+				        Margin="0,10,10,10"
+				        Background="Red"
+				        Height="44"
+				        HorizontalAlignment="Left"
+				        IsEnabled="False"
+				        ToolTip.Tip="TODO-Avalonia-Reenable: delete campaign folder + confirm">
+					<StackPanel Orientation="Horizontal" Margin="5,0" Spacing="6">
+						<TextBlock Text="Delete Campaign..." Classes="heading" VerticalAlignment="Center"/>
+						<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Height="24"/>
+					</StackPanel>
+				</Button>
+
+				<StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" Margin="0,10,0,10">
+					<Button x:Name="SaveCloseButton"
+					        Background="#3CB371"
+					        Height="44"
+					        IsDefault="True"
+					        Click="SaveAndClose_Click">
+						<StackPanel Orientation="Horizontal" Margin="5,0" Spacing="6">
+							<TextBlock Text="Save and Close" Classes="heading" VerticalAlignment="Center"/>
+							<Image Source="avares://JiMEditor.Avalonia/Assets/save.png" Height="24"/>
+						</StackPanel>
+					</Button>
+					<Button x:Name="CancelFooterButton"
+					        Background="{StaticResource bgCancelDelete}"
+					        Height="44"
+					        IsVisible="False"
+					        Click="Cancel_Click">
+						<StackPanel Orientation="Horizontal" Margin="5,0" Spacing="6">
+							<TextBlock Text="Cancel" Classes="heading" VerticalAlignment="Center"/>
+							<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Height="24"/>
+						</StackPanel>
+					</Button>
+				</StackPanel>
+			</Grid>
+		</Border>
+	</Grid>
 </Window>
