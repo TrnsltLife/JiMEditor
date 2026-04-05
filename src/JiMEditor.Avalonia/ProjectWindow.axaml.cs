@@ -1,5 +1,6 @@
 // Ported from: JiMEditor/ProjectWindow.xaml.cs (2026-04-04)
 
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Avalonia;
@@ -72,7 +73,12 @@ public partial class ProjectWindow : Window, INotifyPropertyChanged
 
 	void ScenarioButton_Click(object? sender, RoutedEventArgs e)
 	{
-		// TODO-Avalonia-Reenable: new MainWindow(Guid.Empty)
+		if (global::Avalonia.Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+			return;
+		var w = new MainWindow(Guid.Empty);
+		desktop.MainWindow = w;
+		w.Show();
+		Close();
 	}
 
 	void RandomScenarioButton_Click(object? sender, RoutedEventArgs e)
@@ -82,7 +88,12 @@ public partial class ProjectWindow : Window, INotifyPropertyChanged
 
 	void CampaignButton_Click(object? sender, RoutedEventArgs e)
 	{
-		// TODO-Avalonia-Reenable: CampaignWindow
+		if (global::Avalonia.Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+			return;
+		var w = new CampaignWindow();
+		desktop.MainWindow = w;
+		w.Show();
+		Close();
 	}
 
 	void ProjectLV_SelectionChanged(object? sender, SelectionChangedEventArgs e)

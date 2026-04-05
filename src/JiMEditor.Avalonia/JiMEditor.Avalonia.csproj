@@ -39,6 +39,12 @@
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\help.png" Link="Assets\help.png" />
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\save.png" Link="Assets\save.png" />
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\cancel.png" Link="Assets\cancel.png" />
+    <!-- MainWindow sidebar (JiMEditor/Assets) -->
+    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\add.png" Link="Assets\add.png" />
+    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\remove.png" Link="Assets\remove.png" />
+    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\duplicate.png" Link="Assets\duplicate.png" />
+    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\import.png" Link="Assets\import.png" />
+    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\export.png" Link="Assets\export.png" />
   </ItemGroup>
 
   <!-- JiME engine JSON etc. (embedded resources read via Assembly.GetManifestResourceStream) -->

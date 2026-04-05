@@ -1,4 +1,5 @@
 // Ported from: JiMEditor/MainWindow.xaml.cs (2026-04-04) — Avalonia shell; editor logic TODO-Avalonia-Reenable.
+using System;
 using System.ComponentModel;
 using Avalonia.Controls;
 using JiME;
@@ -15,12 +16,46 @@ public partial class MainWindow : Window
 		InitializeComponent();
 	}
 
+	/// <summary>New standalone scenario (WPF: <c>new MainWindow(Guid.Empty)</c> from project window).</summary>
+	public MainWindow( Guid campaignGuid ) : this( NewScenarioForEditor( campaignGuid ) )
+	{
+	}
+
+	static Scenario NewScenarioForEditor( Guid campaignGuid )
+	{
+		var s = new Scenario();
+		s.campaignGUID = campaignGuid;
+		s.TriggerTitleChange( false );
+		return s;
+	}
+
 	public MainWindow( Scenario s ) : this()
 	{
 		scenario = s;
 		DataContext = scenario;
+		WireSidebarLists();
 		SyncTitleFromScenario();
 		scenario.PropertyChanged += OnScenarioPropertyChanged;
+	}
+
+	void WireSidebarLists()
+	{
+		interactionsUC.SetItemsSource( scenario.interactionObserver );
+		triggersUC.SetItemsSource( scenario.triggersObserver );
+		objectivesUC.SetItemsSource( scenario.objectiveObserver );
+		activationsUC.SetItemsSource( scenario.activationsObserver );
+		monsterModifiersUC.SetItemsSource( scenario.monsterModifierObserver );
+		translationsUC.SetItemsSource( scenario.translationObserver );
+	}
+
+	void DetachSidebarLists()
+	{
+		objectivesUC.DetachItemsSource();
+		interactionsUC.DetachItemsSource();
+		triggersUC.DetachItemsSource();
+		activationsUC.DetachItemsSource();
+		monsterModifiersUC.DetachItemsSource();
+		translationsUC.DetachItemsSource();
 	}
 
 	void OnScenarioPropertyChanged( object? sender, PropertyChangedEventArgs e )
@@ -51,6 +86,7 @@ public partial class MainWindow : Window
 
 	protected override void OnClosing( WindowClosingEventArgs e )
 	{
+		DetachSidebarLists();
 		if ( scenario != null )
 			scenario.PropertyChanged -= OnScenarioPropertyChanged;
 		base.OnClosing( e );

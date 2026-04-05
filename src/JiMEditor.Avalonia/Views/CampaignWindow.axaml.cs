@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
@@ -23,27 +24,32 @@ public partial class CampaignWindow : Window
 	string _campaignFolder = "";
 	bool _controlDown;
 
-	public CampaignWindow()
+	public CampaignWindow() : this( null )
 	{
-		InitializeComponent();
 	}
 
-	public CampaignWindow( Campaign c )
+	public CampaignWindow( Campaign? c )
 	{
 		InitializeComponent();
-		campaign = c;
+		campaign = c ?? new Campaign();
 		DataContext = this;
 		_campaignFolder = Path.Combine( UserJourneyPaths.GetBasePath(), campaign.campaignGUID.ToString() );
 
-		Title = string.IsNullOrWhiteSpace( c.campaignName )
-			? "Campaign Manager - Edit Campaign"
-			: "Campaign Manager - Edit Campaign - " + c.campaignName;
+		if ( c == null )
+		{
+			Title = "Campaign Manager - New Campaign";
+			CancelFooterButton.IsVisible = true;
+			DeleteCampaignButton.IsVisible = false;
+		}
+		else
+		{
+			Title = string.IsNullOrWhiteSpace( c.campaignName )
+				? "Campaign Manager - Edit Campaign"
+				: "Campaign Manager - Edit Campaign - " + c.campaignName;
+			CancelFooterButton.IsVisible = false;
+			DeleteCampaignButton.IsVisible = true;
+		}
 
-		// Opened from project list = existing campaign (WPF hides Cancel for edit).
-		CancelFooterButton.IsVisible = false;
-		DeleteCampaignButton.IsVisible = true;
-
-		// Match WPF: ensure campaign folder + JSON exist when window opens.
 		SaveCampaign();
 	}
 
@@ -248,6 +254,27 @@ public partial class CampaignWindow : Window
 
 	void Cancel_Click( object? sender, RoutedEventArgs e )
 	{
-		// WPF: only for new campaign — tear down folder. TODO-Avalonia-Reenable when new-campaign flow exists.
+		var di = new DirectoryInfo( _campaignFolder );
+		if ( di.Exists )
+		{
+			foreach ( var fi in di.GetFiles().Where( f => f.Extension == ".jime" ) )
+			{
+				var s = FileManager.LoadProjectFromPath( _campaignFolder, fi.Name );
+				if ( s == null )
+					continue;
+				s.campaignGUID = Guid.Empty;
+				var fm = new FileManager( s );
+				fm.Save();
+			}
+
+			if ( Directory.Exists( _campaignFolder ) )
+				Directory.Delete( _campaignFolder, true );
+		}
+
+		var pw = new ProjectWindow();
+		if ( global::Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop )
+			desktop.MainWindow = pw;
+		pw.Show();
+		Close();
 	}
 }

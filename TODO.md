@@ -1,8 +1,6 @@
 This is a list of things we need to do:
 
 * App window: 
-  * New Campaign button should create a new campaign
-  * New Scenario button should create a new scenario
   * New Random Scenario should launch the random scenario editor
 * Campaign window:
   * The Choose a Cover Image button should work. Create a way to save the image data as text like before. It should be the same format as it was before. This also needs to work for scenario images.
