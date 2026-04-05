@@ -1,0 +1,5 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<!-- Ported from: JiMEditor/App.xaml — brushes (2026-04-04). Styles live in ProjectWindowStyles.axaml (Avalonia uses Styles, not WPF keyed Style in ResourceDictionary). -->
+	<SolidColorBrush x:Key="bgColor" Color="#FF2D2D30"/>
+</ResourceDictionary>

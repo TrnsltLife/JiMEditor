@@ -1,0 +1,269 @@
+<!-- Ported from: JiMEditor/ProjectWindow.xaml (2026-04-04) -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="using:JiMEditor.Avalonia.Converters"
+        xmlns:jime="using:JiME"
+        x:Class="JiMEditor.Avalonia.ProjectWindow"
+        x:CompileBindings="False"
+        Title="Your Journey"
+        Height="460"
+        Width="800"
+        Background="{StaticResource bgColor}"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="-1"
+        PointerPressed="Window_PointerPressed">
+
+	<Window.Resources>
+		<conv:BoolToScrollBarVisibilityConverter x:Key="b2sv"/>
+		<conv:ProjectTypeToImageConverter x:Key="ptypeConverter"/>
+	</Window.Resources>
+
+	<Window.Styles>
+		<Style Selector="Button.projectChromeButton">
+			<Setter Property="Background" Value="#333337"/>
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="Padding" Value="5"/>
+			<Setter Property="CornerRadius" Value="0"/>
+		</Style>
+		<Style Selector="Button.projectChromeButton:pointerover">
+			<Setter Property="Background" Value="#4c4c52"/>
+		</Style>
+		<Style Selector="Button.projectChromeButton:disabled">
+			<Setter Property="Opacity" Value="0.25"/>
+		</Style>
+		<Style Selector="TextBlock">
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+	</Window.Styles>
+
+	<Grid Margin="30">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="0.5*"/>
+			<ColumnDefinition Width="0.5*"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<StackPanel Orientation="Horizontal">
+			<TextBlock FontSize="30" Text="JiMEditor"/>
+			<TextBlock x:Name="editorVersion"
+			           Classes="heading"
+			           VerticalAlignment="Bottom"
+			           Margin="20,5"/>
+		</StackPanel>
+
+		<StackPanel Grid.Column="1"
+		            Orientation="Horizontal"
+		            HorizontalAlignment="Right"
+		            VerticalAlignment="Center">
+			<TextBlock FontSize="14" Text="A Scenario Editor For "/>
+			<TextBlock FontSize="14" FontStyle="Italic" Text="Your Journey"/>
+			<TextBlock FontSize="14" Text="."/>
+		</StackPanel>
+
+		<TextBlock Grid.Row="1" Text="Open Recent File" Margin="0,10" FontSize="16"/>
+		<TextBlock Grid.Row="1" Grid.Column="1" Text="New Project" Margin="10,10" FontSize="16"/>
+
+		<StackPanel Grid.Row="2" Grid.Column="1">
+
+			<Button x:Name="campaignButton"
+			        Classes="projectChromeButton"
+			        Click="CampaignButton_Click">
+				<Grid Margin="0,10">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+					</Grid.RowDefinitions>
+
+					<Image Grid.RowSpan="2"
+					       Source="avares://JiMEditor.Avalonia/Assets/campaign.png"
+					       Width="40"
+					       Margin="0,0,10,0"/>
+
+					<TextBlock Grid.Column="1" Classes="buttonHeading" Text="New Campaign"/>
+
+					<TextBlock Grid.Column="1"
+					           Grid.Row="1"
+					           Text="Create a new Campaign that contains multiple linked Scenarios."
+					           TextWrapping="Wrap"
+					           Classes="subText"/>
+				</Grid>
+			</Button>
+
+			<Button x:Name="scenarioButton"
+			        Margin="0,10"
+			        Classes="projectChromeButton"
+			        Click="ScenarioButton_Click">
+				<Grid Margin="0,10">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+					</Grid.RowDefinitions>
+
+					<Image Grid.RowSpan="2"
+					       Source="avares://JiMEditor.Avalonia/Assets/standalone.png"
+					       Width="40"
+					       Margin="0,0,10,0"/>
+
+					<TextBlock Grid.Column="1" Classes="buttonHeading" Text="New Standalone Scenario"/>
+
+					<TextBlock Grid.Column="1"
+					           Grid.Row="1"
+					           Text="Create a new Standalone Scenario that is not a part of a Campaign."
+					           TextWrapping="Wrap"
+					           Classes="subText"/>
+				</Grid>
+			</Button>
+
+			<Button x:Name="randomScenarioButton"
+			        Classes="projectChromeButton"
+			        Click="RandomScenarioButton_Click">
+				<Grid Margin="0,10">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+					</Grid.RowDefinitions>
+
+					<Image Grid.RowSpan="2"
+					       Source="avares://JiMEditor.Avalonia/Assets/standalone.png"
+					       Width="40"
+					       Margin="0,0,10,0"/>
+
+					<TextBlock Grid.Column="1" Classes="buttonHeading" Text="New Random Scenario"/>
+
+					<TextBlock Grid.Column="1"
+					           Grid.Row="1"
+					           Text="Create a new Random Scenario that is not a part of a Campaign."
+					           TextWrapping="Wrap"
+					           Classes="subText"/>
+
+					<TextBlock Grid.Column="1"
+					           Grid.Row="0"
+					           Classes="subText"
+					           Foreground="OrangeRed"
+					           FontWeight="Bold"
+					           HorizontalAlignment="Right"
+					           Margin="0,-10,0,0"
+					           Text="EXPERIMENTAL">
+						<TextBlock.RenderTransform>
+							<RotateTransform Angle="7"/>
+						</TextBlock.RenderTransform>
+					</TextBlock>
+				</Grid>
+			</Button>
+		</StackPanel>
+
+		<Grid Grid.Column="1" Grid.Row="3">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+
+			<TextBlock x:Name="formatVersion"
+			           Grid.Column="1"
+			           Text="Scenario Format Version: "
+			           Classes="heading"/>
+
+			<Button x:Name="cancelButton"
+			        Grid.Column="2"
+			        Width="100"
+			        HorizontalAlignment="Right"
+			        Classes="projectChromeButton"
+			        Click="CancelButton_Click">
+				<TextBlock Classes="buttonHeading" Text="Cancel" Margin="0,5"/>
+			</Button>
+		</Grid>
+
+		<ScrollViewer x:Name="projectScroll"
+		              Grid.Row="2"
+		              Grid.RowSpan="2"
+		              VerticalScrollBarVisibility="{Binding scrollVisible, Converter={StaticResource b2sv}}"
+		              PointerWheelChanged="ScrollViewer_PointerWheelChanged"
+		              Margin="0,0,20,0"
+		              PointerEntered="ProjectList_PointerEntered"
+		              PointerExited="ProjectList_PointerExited">
+			<ListBox x:Name="projectLV"
+			         Background="{StaticResource bgColor}"
+			         BorderThickness="0"
+			         Margin="0,0,10,0"
+			         SelectionChanged="ProjectLV_SelectionChanged"
+			         HorizontalAlignment="Stretch">
+				<ListBox.Styles>
+					<Style Selector="ListBoxItem">
+						<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+					</Style>
+					<Style Selector="ListBoxItem:selected">
+						<Setter Property="Background" Value="#FF0071FF"/>
+					</Style>
+				</ListBox.Styles>
+				<ListBox.ItemTemplate>
+					<DataTemplate DataType="jime:ProjectItem">
+						<Grid Margin="10">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="Auto"/>
+								<ColumnDefinition Width="*"/>
+							</Grid.ColumnDefinitions>
+
+							<Image Margin="0,5,0,0"
+							       VerticalAlignment="Top"
+							       Source="{Binding projectType, Converter={StaticResource ptypeConverter}}"
+							       Width="32"/>
+
+							<StackPanel Grid.Column="1" Margin="10,0">
+								<TextBlock Text="{Binding Title}" Foreground="White" FontSize="16" Margin="0,0"/>
+
+								<Grid>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="*"/>
+										<ColumnDefinition Width="Auto"/>
+										<ColumnDefinition Width="Auto"/>
+										<ColumnDefinition Width="Auto"/>
+									</Grid.ColumnDefinitions>
+									<StackPanel Grid.Column="0" Orientation="Horizontal">
+										<TextBlock Text="{Binding projectType}" Foreground="White" FontSize="12" Margin="0,0"/>
+									</StackPanel>
+									<StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+										<TextBlock Text="{Binding collectionIcons}"
+										           Foreground="White"
+										           FontSize="12"
+										           Margin="10,0"
+										           FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+									</StackPanel>
+									<StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,0">
+										<TextBlock Text=" v." Foreground="White"/>
+										<TextBlock Text="{Binding fileVersion}" Foreground="White" FontSize="12"/>
+									</StackPanel>
+									<TextBlock Grid.Column="3"
+									           Text="{Binding Date}"
+									           Classes="subText"
+									           HorizontalAlignment="Right"/>
+								</Grid>
+							</StackPanel>
+						</Grid>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</ScrollViewer>
+
+	</Grid>
+</Window>

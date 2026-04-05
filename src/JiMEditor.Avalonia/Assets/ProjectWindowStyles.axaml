@@ -1,0 +1,26 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<!-- Ported from: JiMEditor/App.xaml — text / ScrollBar styles for ProjectWindow (2026-04-04) -->
+	<Style Selector="TextBlock.buttonHeading">
+		<Setter Property="FontSize" Value="16"/>
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="FontWeight" Value="Bold"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+	</Style>
+
+	<Style Selector="TextBlock.heading">
+		<Setter Property="FontSize" Value="14"/>
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="FontWeight" Value="Bold"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+	</Style>
+
+	<Style Selector="TextBlock.subText">
+		<Setter Property="FontSize" Value="12"/>
+		<Setter Property="Foreground" Value="Silver"/>
+	</Style>
+
+	<Style Selector="ScrollBar">
+		<Setter Property="Background" Value="#333337"/>
+	</Style>
+</Styles>
