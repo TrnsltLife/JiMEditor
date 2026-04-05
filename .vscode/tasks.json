@@ -1,0 +1,21 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "build-avalonia",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "build",
+          "${workspaceFolder}/src/JiMEditor.Avalonia/JiMEditor.Avalonia.csproj",
+          "/property:GenerateFullPaths=true",
+          "/consoleloggerparameters:NoSummary;ForceNoAlign"
+        ],
+        "group": "build",
+        "presentation": {
+          "reveal": "silent"
+        },
+        "problemMatcher": "$msCompile"
+      }
+    ]
+  }

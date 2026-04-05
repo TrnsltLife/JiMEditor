@@ -2,4 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 	<!-- Ported from: JiMEditor/App.xaml — brushes (2026-04-04). Styles live in ProjectWindowStyles.axaml (Avalonia uses Styles, not WPF keyed Style in ResourceDictionary). -->
 	<SolidColorBrush x:Key="bgColor" Color="#FF2D2D30"/>
+	<SolidColorBrush x:Key="bgColorLight" Color="#FF46464A"/>
+	<SolidColorBrush x:Key="bgButtonColor" Color="#FF5E5E63"/>
+	<SolidColorBrush x:Key="bgCancelDelete" Color="#ff4200"/>
 </ResourceDictionary>

@@ -1,0 +1,33 @@
+<!-- Stub shell: WPF opens JiME.CampaignWindow; full campaign UI TODO-Avalonia-Reenable. -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:jime="using:JiME"
+        x:Class="JiMEditor.Avalonia.Views.CampaignWindow"
+        x:CompileBindings="False"
+        Title="Campaign"
+        Width="640"
+        Height="480"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource bgColor}">
+	<DockPanel Margin="16" LastChildFill="True">
+		<StackPanel DockPanel.Dock="Top" Spacing="6" Margin="0,0,0,12">
+			<TextBlock Text="{Binding campaignName}" Classes="heading" FontSize="20"/>
+			<TextBlock Text="{Binding description}" TextWrapping="Wrap" Classes="subText"/>
+			<TextBlock Text="Scenarios (open a scenario from the main editor when wired)" Classes="subText" Foreground="Orange"/>
+		</StackPanel>
+		<ListBox ItemsSource="{Binding scenarioCollection}" Background="{StaticResource bgColorLight}" IsEnabled="True">
+			<ListBox.ItemTemplate>
+				<DataTemplate DataType="jime:CampaignItem">
+					<Grid Margin="4">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*"/>
+							<ColumnDefinition Width="Auto"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock Grid.Column="0" Text="{Binding scenarioName}" Foreground="White" VerticalAlignment="Center"/>
+						<TextBlock Grid.Column="1" Text="{Binding fileName}" Classes="subText" VerticalAlignment="Center" Margin="12,0,0,0"/>
+					</Grid>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+	</DockPanel>
+</Window>

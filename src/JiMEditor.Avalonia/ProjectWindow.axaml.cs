@@ -7,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using JiMEditor.Avalonia.Views;
 using JiME;
 
 namespace JiMEditor.Avalonia;
@@ -86,9 +87,42 @@ public partial class ProjectWindow : Window, INotifyPropertyChanged
 
 	void ProjectLV_SelectionChanged(object? sender, SelectionChangedEventArgs e)
 	{
-		// TODO-Avalonia-Reenable: open MainWindow / CampaignWindow from FileManager loads
-		if (projectLV.SelectedItem is ProjectItem item)
-			System.Diagnostics.Debug.WriteLine($"Selected: {item.Title} ({item.projectType})");
+		if (e.AddedItems.Count == 0 || projectLV.SelectedItem is not ProjectItem item)
+			return;
+
+		try
+		{
+			if (global::Avalonia.Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+				return;
+
+			if (item.projectType == ProjectType.Campaign)
+			{
+				var campaign = FileManager.LoadCampaign(item.fileName);
+				if (campaign != null)
+				{
+					var w = new CampaignWindow(campaign);
+					desktop.MainWindow = w;
+					w.Show();
+					Close();
+				}
+			}
+			else
+			{
+				var scenario = FileManager.LoadProject(item.fileName);
+				if (scenario != null)
+				{
+					scenario.TriggerTitleChange(false);
+					var w = new MainWindow(scenario);
+					desktop.MainWindow = w;
+					w.Show();
+					Close();
+				}
+			}
+		}
+		finally
+		{
+			projectLV.SelectedItem = null;
+		}
 	}
 
 	void Window_PointerPressed(object? sender, PointerPressedEventArgs e)

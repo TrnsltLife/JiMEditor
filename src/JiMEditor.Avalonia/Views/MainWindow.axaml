@@ -1,0 +1,150 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:jime="using:JiME"
+        mc:Ignorable="d"
+        d:DesignWidth="1200" d:DesignHeight="800"
+        x:Class="JiMEditor.Avalonia.Views.MainWindow"
+        x:CompileBindings="False"
+        Background="{StaticResource bgColor}"
+        Width="1200" Height="800">
+	<!--
+		Original WPF GraphX region (JiMEditor/MainWindow.xaml) — TODO-Avalonia-Reenable: replace with Avalonia graph or alternate layout.
+		<zoom:ZoomControl x:Name="zoomControl" Grid.Row="1" Grid.Column="1" ZoomBoxVisibility="Collapsed" Background="#FF1E1E1E">
+			<local:GraphArea x:Name="graphArea" />
+		</zoom:ZoomControl>
+	-->
+
+	<DockPanel LastChildFill="True">
+		<!-- Toolbar -->
+		<Border DockPanel.Dock="Top" Background="{StaticResource bgColorLight}" Padding="4">
+			<StackPanel Orientation="Horizontal" Spacing="2">
+				<Button Classes="iconbutton" Width="32" Height="32" Padding="0" IsEnabled="False" ToolTip.Tip="New scenario (TODO)">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/newcampaign.png" Width="24" Height="24"/>
+				</Button>
+				<Button Classes="iconbutton" Width="32" Height="32" Padding="0" IsEnabled="False" ToolTip.Tip="Open (TODO)">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/open.png" Width="24" Height="24"/>
+				</Button>
+				<Button Classes="iconbutton" Width="32" Height="32" Padding="0" IsEnabled="False" ToolTip.Tip="Save (TODO)">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/save.png" Width="24" Height="24"/>
+				</Button>
+				<Button Classes="iconbutton" Width="32" Height="32" Padding="0" IsEnabled="False" ToolTip.Tip="Settings (TODO)">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/settings.png" Width="24" Height="24"/>
+				</Button>
+				<Rectangle Width="1" Height="24" Fill="{StaticResource bgButtonColor}" Margin="4,0"/>
+				<Button Classes="iconbutton" Width="32" Height="32" Padding="0" IsEnabled="False" ToolTip.Tip="Add tile block (TODO)">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/addtileblock.png" Width="24" Height="24"/>
+				</Button>
+				<Button Classes="iconbutton" Width="32" Height="32" Padding="0" IsEnabled="False" ToolTip.Tip="Add objective (TODO)">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/addobjective.png" Width="24" Height="24"/>
+				</Button>
+				<Button Classes="iconbutton" Width="32" Height="32" Padding="0" IsEnabled="False" ToolTip.Tip="Add event (TODO)">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/addevent.png" Width="24" Height="24"/>
+				</Button>
+				<Button Classes="iconbutton" Width="32" Height="32" Padding="0" IsEnabled="False" ToolTip.Tip="Add trigger (TODO)">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/addtrigger.png" Width="24" Height="24"/>
+				</Button>
+				<Button Classes="iconbutton" Width="32" Height="32" Padding="0" IsEnabled="False" ToolTip.Tip="Cancel (TODO)">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Width="24" Height="24"/>
+				</Button>
+			</StackPanel>
+		</Border>
+
+		<!-- Status bar -->
+		<Border DockPanel.Dock="Bottom" Background="{StaticResource bgColorLight}" Padding="8,4">
+			<TextBlock x:Name="StatusText" Foreground="White" Text="Ready"/>
+		</Border>
+
+		<!-- Sidebar + main -->
+		<Grid ColumnDefinitions="260,*">
+			<!-- Left sidebar lists -->
+			<Border Grid.Column="0" Background="{StaticResource bgColorLight}" Padding="4">
+				<ScrollViewer>
+					<StackPanel Spacing="8">
+						<TextBlock Text="Objectives" Foreground="White" FontWeight="Bold"/>
+						<ListBox x:Name="ObjectivesList" ItemsSource="{Binding objectiveObserver}" Height="120" IsEnabled="False">
+							<ListBox.ItemTemplate>
+								<DataTemplate DataType="jime:Objective">
+									<TextBlock Text="{Binding dataName}" Foreground="White"/>
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+						</ListBox>
+
+						<TextBlock Text="Interactions" Foreground="White" FontWeight="Bold"/>
+						<ListBox x:Name="InteractionsList" ItemsSource="{Binding interactionObserver}" Height="120" IsEnabled="False">
+							<ListBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding dataName}" Foreground="White"/>
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+						</ListBox>
+
+						<TextBlock Text="Triggers" Foreground="White" FontWeight="Bold"/>
+						<ListBox x:Name="TriggersList" ItemsSource="{Binding triggersObserver}" Height="120" IsEnabled="False">
+							<ListBox.ItemTemplate>
+								<DataTemplate DataType="jime:Trigger">
+									<TextBlock Text="{Binding dataName}" Foreground="White"/>
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+						</ListBox>
+
+						<TextBlock Text="Activations" Foreground="White" FontWeight="Bold"/>
+						<ListBox x:Name="ActivationsList" ItemsSource="{Binding activationsObserver}" Height="100" IsEnabled="False">
+							<ListBox.ItemTemplate>
+								<DataTemplate DataType="jime:MonsterActivations">
+									<TextBlock Text="{Binding dataName}" Foreground="White"/>
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+						</ListBox>
+
+						<TextBlock Text="Monster modifiers" Foreground="White" FontWeight="Bold"/>
+						<ListBox x:Name="MonsterModsList" ItemsSource="{Binding monsterModifierObserver}" Height="80" IsEnabled="False">
+							<ListBox.ItemTemplate>
+								<DataTemplate DataType="jime:MonsterModifier">
+									<TextBlock Text="{Binding dataName}" Foreground="White"/>
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+						</ListBox>
+
+						<TextBlock Text="Translations" Foreground="White" FontWeight="Bold"/>
+						<ListBox x:Name="TranslationsList" ItemsSource="{Binding translationObserver}" Height="80" IsEnabled="False">
+							<ListBox.ItemTemplate>
+								<DataTemplate x:DataType="jime:Translation">
+									<TextBlock Text="{Binding dataName}" Foreground="White"/>
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+						</ListBox>
+					</StackPanel>
+				</ScrollViewer>
+			</Border>
+
+			<!-- Main: chapters + graph placeholder -->
+			<Grid Grid.Column="1" RowDefinitions="Auto,*">
+				<Border Grid.Row="0" Background="{StaticResource bgColor}" Padding="8">
+					<StackPanel>
+						<TextBlock Text="Chapters" Foreground="White" FontWeight="Bold" Margin="0,0,0,4"/>
+						<ItemsControl ItemsSource="{Binding chapterObserver}">
+							<ItemsControl.ItemsPanel>
+								<ItemsPanelTemplate>
+									<StackPanel Orientation="Horizontal" Spacing="8"/>
+								</ItemsPanelTemplate>
+							</ItemsControl.ItemsPanel>
+							<ItemsControl.ItemTemplate>
+								<DataTemplate DataType="jime:Chapter">
+									<Border Classes="callout" MinWidth="120">
+										<TextBlock Text="{Binding dataName}" Foreground="White" TextWrapping="Wrap"/>
+									</Border>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
+					</StackPanel>
+				</Border>
+
+				<Border Grid.Row="1" Background="#FF1E1E1E" BorderBrush="{StaticResource bgButtonColor}" BorderThickness="1" Margin="8">
+					<TextBlock Text="Map / graph (GraphX not ported — see comment in MainWindow.axaml)" Foreground="#888" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" Margin="16"/>
+				</Border>
+			</Grid>
+		</Grid>
+	</DockPanel>
+</Window>

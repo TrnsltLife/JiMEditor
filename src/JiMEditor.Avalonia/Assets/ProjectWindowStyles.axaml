@@ -23,4 +23,20 @@
 	<Style Selector="ScrollBar">
 		<Setter Property="Background" Value="#333337"/>
 	</Style>
+
+	<!-- MainWindow toolbar icon buttons (WPF iconbutton) -->
+	<Style Selector="Button.iconbutton">
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderThickness" Value="0"/>
+	</Style>
+	<Style Selector="Button.iconbutton:pointerover">
+		<Setter Property="Background" Value="#3a3a3e"/>
+	</Style>
+
+	<!-- MainWindow chapter cards (WPF callout) -->
+	<Style Selector="Border.callout">
+		<Setter Property="Padding" Value="10"/>
+		<Setter Property="CornerRadius" Value="5"/>
+		<Setter Property="Background" Value="{StaticResource bgColorLight}"/>
+	</Style>
 </Styles>
