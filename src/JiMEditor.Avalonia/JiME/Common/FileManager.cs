@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -116,9 +116,9 @@ namespace JiME
 		public bool Save()
 		{
 			if ( campaignGUID == Guid.Empty )
-				return Save( false, Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ), "Your Journey" ) );
+				return Save( false, UserJourneyPaths.GetBasePath() );
 			else
-				return Save( false, Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ), "Your Journey", campaignGUID.ToString() ) );
+				return Save( false, Path.Combine( UserJourneyPaths.GetBasePath(), campaignGUID.ToString() ) );
 		}
 
 		/// <summary>
@@ -126,7 +126,7 @@ namespace JiME
 		/// </summary>
 		public bool SaveAs()
 		{
-			return Save( true, Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ), "Your Journey" ) );
+			return Save( true, UserJourneyPaths.GetBasePath() );
 		}
 
 		/// <summary>
@@ -219,7 +219,7 @@ namespace JiME
 		/// </summary>
 		public static Scenario LoadProject( string filename )
 		{
-			string basePath = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ), "Your Journey" );
+			string basePath = UserJourneyPaths.GetBasePath();
 
 			//make sure the project folder exists
 			if ( !Directory.Exists( basePath ) )
@@ -251,7 +251,7 @@ namespace JiME
 		/// </summary>
 		public static IEnumerable<ProjectItem> GetProjects()
 		{
-			string basePath = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ), "Your Journey" );
+			string basePath = UserJourneyPaths.GetBasePath();
 
 			//make sure the project folder exists
 			if ( !Directory.Exists( basePath ) )
@@ -314,7 +314,7 @@ namespace JiME
 			if ( campaignGUID == "Exports" || campaignGUID == "Saves" || campaignGUID == "Skins" || campaignGUID == "Languages" || campaignGUID == "Tiles")
 				return null;
 
-			string basePath = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ), "Your Journey", campaignGUID );
+			string basePath = Path.Combine( UserJourneyPaths.GetBasePath(), campaignGUID );
 			string json = "";
 			try
 			{
@@ -365,7 +365,7 @@ namespace JiME
 
 		public static List<Scenario> LoadCampaignScenarios(Campaign c)
 		{
-			string campaignFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Your Journey", c.campaignGUID.ToString());
+			string campaignFolder = Path.Combine( UserJourneyPaths.GetBasePath(), c.campaignGUID.ToString() );
 			List<Scenario> scenarios = new List<Scenario>();
 			for (int i = 0; i < c.scenarioCollection.Count; i++)
 			{

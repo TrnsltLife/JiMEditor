@@ -41,12 +41,12 @@ public partial class MainWindow : Window
 		var t = scenario.titleChangedToken;
 		if ( t == null )
 		{
-			Title = "Your Journey";
+			Title = UserJourneyPaths.EditorWindowTitlePrefix;
 			return;
 		}
 
 		string name = string.IsNullOrEmpty( t.Item2 ) ? "Untitled" : t.Item2;
-		Title = $"Your Journey - {t.Item4} Scenario - {name}{( t.Item1 ? "*" : "" )}";
+		Title = $"{UserJourneyPaths.EditorWindowTitlePrefix} - {t.Item4} Scenario - {name}{( t.Item1 ? "*" : "" )}";
 	}
 
 	protected override void OnClosing( WindowClosingEventArgs e )

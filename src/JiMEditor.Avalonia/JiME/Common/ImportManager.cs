@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -36,14 +36,14 @@ namespace JiME
 		/// </summary>
 		public string Load(string importType)
 		{
-			string basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Your Journey", "Exports", importType);
+			string basePath = Path.Combine(UserJourneyPaths.GetBasePath(), "Exports", importType);
 
 			if (!Directory.Exists(basePath))
 			{
-				basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Your Journey", "Exports");
+				basePath = Path.Combine(UserJourneyPaths.GetBasePath(), "Exports");
 				if (!Directory.Exists(basePath))
 				{
-					basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Your Journey");
+					basePath = UserJourneyPaths.GetBasePath();
 					if (!Directory.Exists(basePath))
 					{
 						var di = Directory.CreateDirectory(basePath);

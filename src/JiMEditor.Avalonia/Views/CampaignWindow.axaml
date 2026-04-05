@@ -148,7 +148,7 @@
 						<TextBlock Classes="subText"
 						           TextWrapping="Wrap"
 						           Margin="0,5,0,0"
-						           Text="Removing a Scenario from the Campaign DOES NOT DELETE ITS FILE. The Scenario's file will be moved into the base Scenario folder (Documents\Your Journey). Hold CONTROL while clicking the X button to PERMANENTLY DELETE the file (you will be asked to confirm)."/>
+						           Text="{x:Static jime:UserJourneyPaths.CampaignScenarioRemovalFootnote}"/>
 
 						<ScrollViewer VerticalScrollBarVisibility="Auto"
 						              MaxHeight="245"

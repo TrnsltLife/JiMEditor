@@ -33,10 +33,7 @@ public partial class CampaignWindow : Window
 		InitializeComponent();
 		campaign = c;
 		DataContext = this;
-		_campaignFolder = Path.Combine(
-			Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ),
-			"Your Journey",
-			campaign.campaignGUID.ToString() );
+		_campaignFolder = Path.Combine( UserJourneyPaths.GetBasePath(), campaign.campaignGUID.ToString() );
 
 		Title = string.IsNullOrWhiteSpace( c.campaignName )
 			? "Campaign Manager - Edit Campaign"
@@ -194,7 +191,7 @@ public partial class CampaignWindow : Window
 		if ( ci == null )
 			return;
 
-		var basePath = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ), "Your Journey" );
+		var basePath = UserJourneyPaths.GetBasePath();
 		var doDelete = _controlDown;
 
 		if ( doDelete )

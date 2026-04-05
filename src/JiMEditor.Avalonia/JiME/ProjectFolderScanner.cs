@@ -34,7 +34,7 @@ public static class ProjectFolderScanner
 
 	public static IReadOnlyList<ProjectItem> GetProjects()
 	{
-		string basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Your Journey");
+		string basePath = UserJourneyPaths.GetBasePath();
 		if (!Directory.Exists(basePath))
 		{
 			try

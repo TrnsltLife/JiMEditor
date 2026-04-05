@@ -5,7 +5,7 @@
         xmlns:jime="using:JiME"
         x:Class="JiMEditor.Avalonia.ProjectWindow"
         x:CompileBindings="False"
-        Title="Your Journey"
+        Title="{x:Static jime:UserJourneyPaths.EditorWindowTitlePrefix}"
         Height="460"
         Width="800"
         Background="{StaticResource bgColor}"

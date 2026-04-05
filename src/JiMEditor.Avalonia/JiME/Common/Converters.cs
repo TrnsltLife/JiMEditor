@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -68,7 +68,7 @@ namespace JiME
 			{
 				//Scenario s = value as Scenario;
 				Tuple<bool, string, Guid, ProjectType> token = value as Tuple<bool, string, Guid, ProjectType>;
-				return $"Your Journey - {token.Item4} Scenario - {( string.IsNullOrEmpty( token.Item2 ) ? "Untitled" : token.Item2 )}{( token.Item1 ? "*" : "" )}";
+				return $"{UserJourneyPaths.EditorWindowTitlePrefix} - {token.Item4} Scenario - {( string.IsNullOrEmpty( token.Item2 ) ? "Untitled" : token.Item2 )}{( token.Item1 ? "*" : "" )}";
 			}
 			catch { return "Error Converting Window Title"; }
 		}
