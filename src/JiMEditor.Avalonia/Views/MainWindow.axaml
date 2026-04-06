@@ -37,7 +37,13 @@
 				<Button Classes="iconbutton" Width="32" Height="32" Padding="0" IsEnabled="False" ToolTip.Tip="Add tile block (TODO)">
 					<Image Source="avares://JiMEditor.Avalonia/Assets/addtileblock.png" Width="24" Height="24"/>
 				</Button>
-				<Button Classes="iconbutton" Width="32" Height="32" Padding="0" IsEnabled="False" ToolTip.Tip="Add objective (TODO)">
+				<Button x:Name="AddObjectiveToolbarButton"
+				        Classes="iconbutton"
+				        Width="32"
+				        Height="32"
+				        Padding="0"
+				        Click="AddObjectiveToolbarButton_Click"
+				        ToolTip.Tip="New objective">
 					<Image Source="avares://JiMEditor.Avalonia/Assets/addobjective.png" Width="24" Height="24"/>
 				</Button>
 				<Button Classes="iconbutton" Width="32" Height="32" Padding="0" IsEnabled="False" ToolTip.Tip="Add event (TODO)">

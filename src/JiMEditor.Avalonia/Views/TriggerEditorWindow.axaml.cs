@@ -16,6 +16,9 @@ public partial class TriggerEditorWindow : Window
 	string _oldName = "";
 	bool _isNew;
 
+	/// <summary>True when OK applied a new trigger or rename (WPF <c>DialogResult == true</c>); false for cancel or multi-only tweak.</summary>
+	public bool Accepted { get; private set; }
+
 	public TriggerEditorWindow()
 	{
 		InitializeComponent();
@@ -95,6 +98,7 @@ public partial class TriggerEditorWindow : Window
 			if ( t != null )
 				t.isMultiTrigger = MultiCheckBox.IsChecked == true;
 			_scenario.TriggerTitleChange( true );
+			Accepted = false;
 			Close();
 			return;
 		}
@@ -111,6 +115,7 @@ public partial class TriggerEditorWindow : Window
 			if ( _scenario.RenameTrigger( _oldName, triggerName, MultiCheckBox.IsChecked == true ) )
 			{
 				_scenario.TriggerTitleChange( true );
+				Accepted = true;
 				Close();
 			}
 
@@ -120,6 +125,7 @@ public partial class TriggerEditorWindow : Window
 		if ( _scenario.AddTrigger( triggerName, MultiCheckBox.IsChecked == true ) )
 		{
 			_scenario.TriggerTitleChange( true );
+			Accepted = true;
 			Close();
 		}
 		else
@@ -129,7 +135,11 @@ public partial class TriggerEditorWindow : Window
 		}
 	}
 
-	void CancelButton_Click( object? sender, RoutedEventArgs e ) => Close();
+	void CancelButton_Click( object? sender, RoutedEventArgs e )
+	{
+		Accepted = false;
+		Close();
+	}
 
 	async void Help_Click( object? sender, RoutedEventArgs e ) =>
 		await HelpWindow.ShowDialogAsync( this, HelpType.Triggers, 0 );

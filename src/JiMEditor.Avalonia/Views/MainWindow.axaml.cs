@@ -1,5 +1,6 @@
 // Ported from: JiMEditor/MainWindow.xaml.cs (2026-04-04) — Avalonia shell; editor logic TODO-Avalonia-Reenable.
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -53,6 +54,10 @@ public partial class MainWindow : Window
 		triggersUC.onSettingsEvent += OnSettingsTrigger;
 		triggersUC.onDuplicateEvent += OnDuplicateTrigger;
 		objectivesUC.SetItemsSource( scenario.objectiveObserver );
+		objectivesUC.onAddEvent += OnAddObjective;
+		objectivesUC.onRemoveEvent += OnRemoveObjective;
+		objectivesUC.onSettingsEvent += OnSettingsObjective;
+		objectivesUC.onDuplicateEvent += OnDuplicateObjective;
 		activationsUC.SetItemsSource( scenario.activationsObserver );
 		monsterModifiersUC.SetItemsSource( scenario.monsterModifierObserver );
 		translationsUC.SetItemsSource( scenario.translationObserver );
@@ -60,6 +65,10 @@ public partial class MainWindow : Window
 
 	void DetachSidebarLists()
 	{
+		objectivesUC.onAddEvent -= OnAddObjective;
+		objectivesUC.onRemoveEvent -= OnRemoveObjective;
+		objectivesUC.onSettingsEvent -= OnSettingsObjective;
+		objectivesUC.onDuplicateEvent -= OnDuplicateObjective;
 		triggersUC.onAddEvent -= OnAddTrigger;
 		triggersUC.onRemoveEvent -= OnRemoveTrigger;
 		triggersUC.onSettingsEvent -= OnSettingsTrigger;
@@ -107,6 +116,67 @@ public partial class MainWindow : Window
 	async void AddTriggerToolbarButton_Click( object? sender, RoutedEventArgs e ) => await AddTriggerAsync();
 
 	async void OnAddTrigger( object? sender, EventArgs e ) => await AddTriggerAsync();
+
+	async void AddObjectiveToolbarButton_Click( object? sender, RoutedEventArgs e ) => await AddObjectiveAsync();
+
+	async Task AddObjectiveAsync()
+	{
+		var ow = new ObjectiveEditorWindow( scenario, new Objective( "Default Short Name - Change This" ) );
+		await ow.ShowDialog( this );
+		if ( ow.Accepted )
+			scenario.AddObjective( ow.objective );
+	}
+
+	async void OnAddObjective( object? sender, EventArgs e ) => await AddObjectiveAsync();
+
+	void OnRemoveObjective( object? sender, EventArgs e )
+	{
+		if ( scenario.objectiveObserver.Count > 1 )
+		{
+			var ret = MessageBox.Show(
+				"Are you sure you want to delete this Objective?\n\nALL ITS INFORMATION WILL BE DELETED.",
+				"Delete Objective", MessageBoxButton.YesNo, MessageBoxImage.Question );
+			if ( ret == MessageBoxResult.Yes )
+			{
+				var idx = objectivesUC.DataListView.SelectedIndex;
+				if ( idx >= 0 && objectivesUC.DataListView.SelectedItem is Objective o )
+					scenario.RemoveData( o );
+				objectivesUC.DataListView.SelectedIndex = scenario.objectiveObserver.Count > 0 ? 0 : -1;
+			}
+		}
+		else
+		{
+			MessageBox.Show( "There must be at least one Objective.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
+		}
+	}
+
+	async void OnDuplicateObjective( object? sender, EventArgs e )
+	{
+		if ( objectivesUC.DataListView.SelectedItem is not Objective src )
+			return;
+		var obj = src.Clone();
+		var oew = new ObjectiveEditorWindow( scenario, obj, true );
+		await oew.ShowDialog( this );
+		if ( oew.Accepted )
+			scenario.objectiveObserver.Add( obj );
+	}
+
+	async void OnSettingsObjective( object? sender, EventArgs e )
+	{
+		if ( objectivesUC.DataListView.SelectedItem is not Objective o )
+			return;
+		await OpenObjectiveEditorAsync( o );
+	}
+
+	async Task OpenObjectiveEditorAsync( Objective o )
+	{
+		Dictionary<string, string> originalValues = o.CaptureStartingValues();
+		string originalPrefix = o.TranslationKeyPrefix();
+		string originalKeyName = o.TranslationKeyName();
+		var ow = new ObjectiveEditorWindow( scenario, o, false );
+		await ow.ShowDialog( this );
+		o.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+	}
 
 	void OnRemoveTrigger( object? sender, EventArgs e )
 	{

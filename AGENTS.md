@@ -37,6 +37,32 @@ Instructions for AI assistants and humans working in **this repository** while p
 - **Tabs (porting WPF `TabControl`):** Avalonia’s default **Fluent** tab chrome differs from classic WPF. For JiMEditor-like flat dark tabs, put **`Classes="jimeTabStrip"`** on the **`TabControl`** (styles live in [`Assets/ProjectWindowStyles.axaml`](src/JiMEditor.Avalonia/Assets/ProjectWindowStyles.axaml)). **CampaignWindow** already uses this; reuse for other ported windows with tabs.
 - **`TabItem` padding (WPF → Avalonia):** Copying WPF **`TabItem`** **`Padding`** (e.g. `Padding="5"`) onto Avalonia often looks wrong—layout/chrome differs. Prefer something like **`Margin="2,2,2,0"`** **`Padding="2"`** on each **`TabItem`** until a shared style exists. **CampaignWindow.axaml** and **HelpWindow.axaml** in this repo use that pattern for now.
 
+## Avalonia popup dialogs: hydrating the form and saving back
+
+Many JiMEditor windows are **model-owned** (`Scenario`, `Objective`, interactions, etc.). WPF often relied on **`TwoWay`** bindings and **`LostFocus`** update timing; Avalonia needs a more explicit pattern so values **show on open** and **persist on OK**.
+
+**Reference implementation:** [`ObjectiveEditorWindow`](src/JiMEditor.Avalonia/Views/ObjectiveEditorWindow.axaml) / [code-behind](src/JiMEditor.Avalonia/Views/ObjectiveEditorWindow.axaml.cs).
+
+1. **Hydrate after the visual tree exists**  
+   Use a **one-shot `Window.Loaded`** handler (subscribe from the ctor that receives the model). Do not rely on **`Opened` alone** for filling nested controls inside **`ScrollViewer`** / templates—ordering can leave fields empty even when the model is correct.
+
+2. **Named controls + explicit model → UI**  
+   For fields that are awkward to bind (see below), use **`x:Name`** on **`TextBox`** / pickers and a method such as **`Populate*FromModel()`** that assigns **`.Text`** (or selected items) from the domain object when the dialog opens.
+
+3. **Explicit UI → model on OK**  
+   At the start of **`OkButton_Click`** (before validation), read **`TextBox.Text`** (trim, **`int.TryParse`** with **`CultureInfo.InvariantCulture`** for integers) and write into the model. Do not assume **`TwoWay`** binding has already updated **`int`** properties from **`Text`**—that path is unreliable without a converter.
+
+4. **`ComboBox` / `ItemsSource` churn**  
+   Setting **`ItemsSource = null`** clears **selection** and can fire **`SelectionChanged`** with **`SelectedItem == null`**. If a handler maps “null selection” to a sentinel (e.g. **`"None"`**), it can **wipe** a value you just set (e.g. after “add new item” + rebind). Use a **`_suppressSelectionSync`** flag around programmatic rebinding + re-select, and/or restore the previous suppress state in **`finally`** so nested helpers do not clear it early.
+
+5. **Translatable entities after `ShowDialog`**  
+   WPF’s **`Translatable.HandleWindow`** wraps WPF **`ShowDialog`**. For Avalonia windows, capture **`CaptureStartingValues()`**, **`TranslationKeyPrefix()`**, **`TranslationKeyName()`** *before* **`await ShowDialog`**, then call **`ApplyTranslationUpdatesAfterEditorDialog(...)`** on the entity after the dialog closes (see **`JiME/Common/Common.cs`**). Run that **whether the user OK’d or Cancelled**, to match WPF’s post-dialog key/decertify behavior.
+
+6. **Success flag**  
+   Expose something like **`Accepted`** (set only on successful OK) so callers do not add clones or new rows when the user cancels.
+
+Reuse this checklist for each new popup: **Loaded hydrate → OK commit → combo suppress as needed → translation tail → `Accepted`.**
+
 ## Quick reference: TODO tags
 
 | Tag | Meaning |

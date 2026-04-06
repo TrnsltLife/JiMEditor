@@ -198,6 +198,22 @@ namespace JiME
             }
         }
 
+		/// <summary>
+		/// Avalonia: run after an editor dialog closes instead of <see cref="HandleWindow"/>, which uses WPF <see cref="Window.ShowDialog()"/>.
+		/// Matches the post-dialog steps in <see cref="HandleWindow"/> (translation key rename + decertify).
+		/// </summary>
+		public void ApplyTranslationUpdatesAfterEditorDialog(
+			ObservableCollection<Translation> translations,
+			Dictionary<string, string> originalValues,
+			string originalPrefix,
+			string originalKeyName )
+		{
+			UpdateKeysStartingWith( translations, originalPrefix );
+			DecertifyChangedValues( translations, originalValues, originalKeyName );
+			if ( TranslationKeyName() != originalKeyName )
+				DecertifyChangedValues( translations, originalValues, TranslationKeyName() );
+		}
+
 		public bool? HandleWindow(Window w, ObservableCollection<Translation> translations)
         {
 			Dictionary<string, string> originalValues = CaptureStartingValues();

@@ -1,0 +1,214 @@
+<!-- Ported from: JiMEditor/Views/ObjectiveEditorWindow.xaml (2026-04-06) — Avalonia UI. -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="using:JiMEditor.Avalonia.Converters"
+        x:Class="JiMEditor.Avalonia.Views.ObjectiveEditorWindow"
+        x:CompileBindings="False"
+        Title="Objective Editor"
+        Width="760"
+        MinWidth="640"
+        MinHeight="560"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource bgColor}">
+
+	<Window.Styles>
+		<Style Selector="TextBox.campaignField">
+			<Setter Property="Background" Value="#333337"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#77777d"/>
+			<Setter Property="Padding" Value="6,4"/>
+		</Style>
+		<Style Selector="ComboBox">
+			<Setter Property="Background" Value="#333337"/>
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+		<Style Selector="CheckBox">
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+	</Window.Styles>
+
+	<Window.Resources>
+		<conv:BoolInvertValueConverter x:Key="BoolInvert"/>
+	</Window.Resources>
+
+	<Grid RowDefinitions="*,Auto">
+		<ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+			<StackPanel Margin="8" Spacing="0">
+				<Border Classes="callout">
+					<StackPanel Spacing="8">
+						<TextBlock Classes="heading" Text="This Objective is started when the following Trigger is fired: (Required)"/>
+						<StackPanel Orientation="Horizontal" Spacing="10">
+							<ComboBox x:Name="TriggeredByCombo"
+							          MinWidth="220"
+							          VerticalAlignment="Center">
+								<ComboBox.ItemTemplate>
+									<DataTemplate>
+										<TextBlock Text="{Binding dataName}" Foreground="White"/>
+									</DataTemplate>
+								</ComboBox.ItemTemplate>
+							</ComboBox>
+							<Button Background="#3CB371"
+							        Width="32"
+							        Height="32"
+							        Padding="4"
+							        Click="AddTriggeredBy_Click">
+								<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+							</Button>
+						</StackPanel>
+					</StackPanel>
+				</Border>
+
+				<Border Classes="callout" Margin="0,10,0,0">
+					<StackPanel Spacing="6">
+						<TextBlock Classes="heading" Text="Objective Name:"/>
+						<TextBlock Classes="subText">
+							<Run Text="A short name used within the Editor. "/>
+							<Run FontWeight="Bold" FontStyle="Italic" Text="Required"/>
+						</TextBlock>
+						<TextBox x:Name="ShortNameTextBox"
+						         Classes="campaignField"
+						         Width="250"
+						         HorizontalAlignment="Left"
+						         Text="{Binding shortName, Mode=TwoWay}"/>
+
+						<TextBlock Margin="0,10,0,0" Classes="heading" Text="Objective Reminder:"/>
+						<TextBlock Classes="subText">
+							<Run Text="This text is shown at all times within the app to describe the current Objective. "/>
+							<Run FontWeight="Bold" FontStyle="Italic" Text="Required"/>
+						</TextBlock>
+						<TextBox x:Name="ObjectiveReminderTextBox"
+						         Classes="campaignField"
+						         HorizontalAlignment="Stretch"/>
+					</StackPanel>
+				</Border>
+
+				<Border Classes="callout" Margin="0,10,0,0">
+					<StackPanel Spacing="8">
+						<Grid ColumnDefinitions="*,Auto">
+							<StackPanel Grid.Column="0" Spacing="4">
+								<TextBlock Classes="heading" Text="Objective Summary"/>
+								<TextBlock Classes="subText" TextWrapping="Wrap">
+									<Run Text="This text is shown when the Objective begins in order to describe how to complete it. "/>
+									<Run FontWeight="Bold" FontStyle="Italic" Text="Required"/>
+								</TextBlock>
+							</StackPanel>
+							<Button x:Name="EditSummaryButton"
+							        Grid.Column="1"
+							        Background="CornflowerBlue"
+							        Width="46"
+							        Height="46"
+							        Margin="10,0,0,0"
+							        VerticalAlignment="Top"
+							        IsEnabled="{Binding objective.skipSummary, Converter={StaticResource BoolInvert}}"
+							        Click="EditSummary_Click">
+								<Image Source="avares://JiMEditor.Avalonia/Assets/edit.png" Stretch="Uniform" Width="24"/>
+							</Button>
+						</Grid>
+						<CheckBox Content="Skip Summary"
+						          Foreground="White"
+						          IsChecked="{Binding objective.skipSummary, Mode=TwoWay}"/>
+						<TextBlock TextWrapping="Wrap" Classes="subText"
+						           Text="If Skip Summary is checked, this Objective will begin without showing the Objective Summary text. Use this for multi-part Objectives where a summary isn't needed when going into the next part, and an updated Objective Reminder is enough."/>
+					</StackPanel>
+				</Border>
+
+				<Border Margin="0,12,0,0"
+				        BorderBrush="#666"
+				        BorderThickness="1"
+				        CornerRadius="4"
+				        Padding="8">
+					<StackPanel Spacing="8">
+						<TextBlock FontSize="14" FontWeight="SemiBold" Foreground="White" Text="Objective Completion"/>
+						<Border Classes="callout" Margin="0,4,0,0">
+							<StackPanel Spacing="10">
+								<StackPanel Orientation="Horizontal" Spacing="10">
+									<TextBlock Classes="heading" VerticalAlignment="Center" TextWrapping="Wrap"
+									           Text="Lore/ XP / Threat Reduction Rewards:"/>
+									<TextBox x:Name="LoreRewardTextBox" Width="36" Classes="campaignField"/>
+									<TextBox x:Name="XpRewardTextBox" Width="36" Classes="campaignField"/>
+									<TextBox x:Name="ThreatRewardTextBox" Width="36" Classes="campaignField"/>
+								</StackPanel>
+
+								<Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto">
+									<StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,8,0" Spacing="6">
+										<TextBlock Classes="heading" TextWrapping="Wrap">
+											<Run Text="This Objective Is Completed When The Following Trigger Is Set: ("/>
+											<Run FontStyle="Italic" Text="Required"/>
+											<Run Text="):"/>
+										</TextBlock>
+										<StackPanel Orientation="Horizontal" Spacing="10">
+											<ComboBox x:Name="CompletionTriggerCombo"
+											          MinWidth="200"
+											          VerticalAlignment="Center">
+												<ComboBox.ItemTemplate>
+													<DataTemplate>
+														<TextBlock Text="{Binding dataName}" Foreground="White"/>
+													</DataTemplate>
+												</ComboBox.ItemTemplate>
+											</ComboBox>
+											<Button Background="#3CB371"
+											        Width="32"
+											        Height="32"
+											        Padding="4"
+											        Click="AddCompletionTrigger_Click">
+												<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+											</Button>
+										</StackPanel>
+									</StackPanel>
+
+									<StackPanel Grid.Row="0" Grid.Column="1" Spacing="6">
+										<TextBlock Classes="heading" TextWrapping="Wrap">
+											<Run Text="Set This Trigger When The Objective Is Completed: ("/>
+											<Run FontStyle="Italic" Text="Optional"/>
+											<Run Text="):"/>
+										</TextBlock>
+										<StackPanel Orientation="Horizontal" Spacing="10">
+											<ComboBox x:Name="NextTriggerCombo"
+											          MinWidth="220"
+											          VerticalAlignment="Center">
+												<ComboBox.ItemTemplate>
+													<DataTemplate>
+														<TextBlock Text="{Binding dataName}" Foreground="White"/>
+													</DataTemplate>
+												</ComboBox.ItemTemplate>
+											</ComboBox>
+											<Button Background="#3CB371"
+											        Width="32"
+											        Height="32"
+											        Padding="4"
+											        Click="AddNextTrigger_Click">
+												<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+											</Button>
+										</StackPanel>
+									</StackPanel>
+								</Grid>
+							</StackPanel>
+						</Border>
+					</StackPanel>
+				</Border>
+			</StackPanel>
+		</ScrollViewer>
+
+		<Border Grid.Row="1"
+		        BorderThickness="0,1,0,0"
+		        BorderBrush="Silver"
+		        Background="#FF46464A">
+			<WrapPanel HorizontalAlignment="Right">
+				<Button x:Name="OkButton"
+				        Margin="10"
+				        Background="MediumSeaGreen"
+				        Click="OkButton_Click"
+				        IsDefault="True">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+				<Button x:Name="CancelButton"
+				        Margin="0,10,10,10"
+				        Background="{StaticResource bgCancelDelete}"
+				        Click="CancelButton_Click"
+				        IsCancel="True">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+			</WrapPanel>
+		</Border>
+	</Grid>
+</Window>
