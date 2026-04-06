@@ -51,6 +51,34 @@ public partial class CampaignWindow : Window
 		}
 
 		SaveCampaign();
+
+		DescriptionTextBox.TextChanged += DescriptionTextBox_OnTextChanged;
+	}
+
+	/// <summary>Campaign description is a single line in the Companion App; collapse line breaks from paste or legacy data.</summary>
+	bool _descriptionTextBoxNormalizing;
+
+	void DescriptionTextBox_OnTextChanged( object? sender, TextChangedEventArgs e )
+	{
+		if ( _descriptionTextBoxNormalizing )
+			return;
+		if ( sender is not TextBox box )
+			return;
+		var t = box.Text ?? "";
+		if ( t.IndexOfAny( new[] { '\r', '\n' } ) < 0 )
+			return;
+		_descriptionTextBoxNormalizing = true;
+		try
+		{
+			var caret = box.CaretIndex;
+			var normalized = t.Replace( "\r\n", " " ).Replace( '\r', ' ' ).Replace( '\n', ' ' );
+			box.Text = normalized;
+			box.CaretIndex = Math.Min( Math.Max( 0, caret ), normalized.Length );
+		}
+		finally
+		{
+			_descriptionTextBoxNormalizing = false;
+		}
 	}
 
 	async void StoryButton_Click( object? sender, RoutedEventArgs e )
@@ -64,6 +92,12 @@ public partial class CampaignWindow : Window
 			? "The Story Text is not set."
 			: "The Story Text is set.";
 		SaveCampaign();
+	}
+
+	async void TriggerHelpButton_Click( object? sender, RoutedEventArgs e )
+	{
+		// Tab 3 = "Campaign Triggers". (WPF passed 2 = "Last Stand Triggers"; index 3 matches this screen.)
+		await HelpWindow.ShowDialogAsync( this, HelpType.Triggers, 3 );
 	}
 
 	void CampaignWindow_Opened( object? sender, EventArgs e )

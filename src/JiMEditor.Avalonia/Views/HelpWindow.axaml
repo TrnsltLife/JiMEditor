@@ -1,0 +1,330 @@
+<!-- Ported from: JiMEditor/Views/HelpWindow.xaml (2026-04-05) — Avalonia TextBlock + Run instead of WPF Bold/Italic inlines. -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="JiMEditor.Avalonia.Views.HelpWindow"
+        x:CompileBindings="False"
+        Title=""
+        Width="725"
+        MinHeight="400"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource bgColor}">
+	<Grid RowDefinitions="*,Auto">
+		<TabControl x:Name="groupHelp"
+		            Grid.Row="0"
+		            Classes="jimeTabStrip"
+		            Margin="5"
+		            Background="#FF2D2D30"
+		            BorderThickness="0,1,0,0"
+		            BorderBrush="#555"
+		            IsVisible="False">
+			<TabItem Header="Token Interaction Groups" Margin="2,2,2,0" Padding="2">
+				<ScrollViewer VerticalScrollBarVisibility="Auto">
+					<Border Classes="callout">
+						<StackPanel>
+							<TextBlock Classes="heading" Text="What Are Token Interaction Groups?"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap"
+							           Text="A Token Interaction Group is just a named collection of Events. A Tile Block can randomly choose Events from a Group you create, assign them to Tokens, and randomly place those Tokens on its tiles. This is opposed to fixed Tokens that you explicitly assign and place by hand in the Tile and Token Editors. Fixed and Random Token Interaction Groups can be used together in a Tile Block."/>
+							<TextBlock Margin="0,10,0,0" Classes="heading" Text="Creating Token Interaction Groups"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap" Text="1) When creating an Event, make sure Token Interaction is checked."/>
+							<TextBlock Classes="subText" TextWrapping="Wrap" Text="2) Select a Token Type associated with this Token Interaction Event."/>
+							<TextBlock Classes="subText" TextWrapping="Wrap" Text="3) At the end of the Event Name, use 'GRP#' to place it into an Interaction Group, where # uniquely identifies that group."/>
+							<TextBlock Classes="subText" TextWrapping="Wrap" Text="4) Use this same GRP# naming convention to add other Token Interactions you create into this group."/>
+							<TextBlock Classes="subText" TextWrapping="Wrap" Text="5) (optionally) click the checkbox [x] This grouped Event can be used more than once"/>
+							<TextBlock Margin="0,10,0,0" Classes="subText" TextWrapping="Wrap" Text="For example, two different Events named 'light fire GRP2' and 'orc squad GRP2' will put both of the Events into an Interaction Group with the name 'GRP2'. You can put as many Events into groups as you wish."/>
+							<TextBlock Margin="0,10,0,0" Classes="subText" TextWrapping="Wrap" FontStyle="Italic"
+							           Text="NOTE: The Token Interactions in the group don't have to be of the same type. They can be a combination of any of the Event types (Text, Enemies, Stat Tests, etc)."/>
+						</StackPanel>
+					</Border>
+				</ScrollViewer>
+			</TabItem>
+			<TabItem Header="Using Interaction Groups" Margin="2,2,2,0" Padding="2">
+				<ScrollViewer VerticalScrollBarVisibility="Auto">
+					<Border Classes="callout">
+						<StackPanel>
+							<TextBlock Classes="subText" TextWrapping="Wrap"
+							           Text="The Interaction Group dropdown menu lists all the Token Interaction Groups you've created. When you select a Token Interaction Group from the dropdown menu, the interface tells you how many Events were found using that group name."/>
+							<TextBlock Margin="0,10,0,0" Classes="subText" TextWrapping="Wrap"
+							           Text="The interface also tells you how many total spaces are available to place Tokens on the Tiles you've added to this Block. For example, using Tiles 201 and 202 will give you 4 total spaces for Token placement. You can use a combination of fixed Tokens and Random Token Interaction Groups. The interface tells you how many fixed Tokens are being used on spaces."/>
+							<TextBlock Margin="0,10,0,0" Classes="subText" TextWrapping="Wrap"
+							           Text="It's up to you if you want to use all of the Events in the Group, or only a small selection of them, randomly chosen during the game. Specify this number in the text box. You can only use as many Token Interactions as there are Tile spaces available to hold them."/>
+							<TextBlock Margin="0,10,0,0" Classes="subText" TextWrapping="Wrap"
+							           Text="If you add or remove Events from the Group assigned to this Block, you may need to revisit these settings to adjust the number of Events to use from the Group."/>
+							<TextBlock Margin="0,10,0,0" Classes="subText" TextWrapping="Wrap"
+							           Text="Example: Using Tiles 201 and 202, we have 4 spaces available, and we're not using any fixed Tokens. Let's say we assign an Interaction Group to this Tile Block with 6 different Events in it. We can use a maximum of 4 of those 6 Events because there are only 4 spaces available on the Tiles we're using. However, we only want 2 of those 6 Events to randomly spawn Tokens on these Tiles, so we enter 2 into the text box. During the game, the Companion App will randomly choose 2 Events out of the Group and randomly spawn their Token on the tiles. The other 4 Events are discarded."/>
+							<TextBlock Margin="0,10,0,0" Classes="subText" TextWrapping="Wrap">
+								<Run FontWeight="Bold" FontStyle="Italic" Text="CAUTION"/>
+								<Run Text=": You can assign the same Token Interaction Group to more than one Block. Once an Event token has been placed in one Tile Block, it will not be placed in another Tile BLock unless you check the box &quot;This grouped Event can be used more than once&quot;. Only do this if you create Events that are generic enough to appear more than once by design. A good example of this might be a Threat Events with enemies that can appear on various places in the map. Or perhaps natural hazards like avalanches or cave-ins that could occur in multiple locations. Or a healing herb that appears in random spots and instructs the player to add a token to their Hero card."/>
+							</TextBlock>
+						</StackPanel>
+					</Border>
+				</ScrollViewer>
+			</TabItem>
+		</TabControl>
+		<TabControl x:Name="tokenHelp"
+		            Grid.Row="0"
+		            Classes="jimeTabStrip"
+		            Margin="5"
+		            Background="#FF2D2D30"
+		            BorderThickness="0,1,0,0"
+		            BorderBrush="#555"
+		            IsVisible="False">
+			<TabItem Header="Events" Margin="2,2,2,0" Padding="2">
+				<ScrollViewer VerticalScrollBarVisibility="Auto">
+					<Border Classes="callout">
+						<StackPanel>
+							<TextBlock Classes="heading" Text="What Are Events?"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap"
+							           Text="Events make up the action and challenges the players face while they play. There are 5 kinds of Events: Text Popups, Story Branches, Darkness, Decisions, Stat Tests, and Enemy Threats. Events that do NOT have Token Interaction checked are activated by a Trigger that you specify in the &quot;Triggered By&quot; dropdown menu."/>
+							<TextBlock Margin="0,5,0,0" Classes="heading" Text="Text Popup Event"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap"
+							           Text="A simple dialog box with text. Players click a Continue button to dismiss it."/>
+							<TextBlock Margin="0,5,0,0" Classes="heading" Text="Story Branch Event"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap"
+							           Text="A Story Branch is a special kind of Event that tests whether a specified Trigger has been set, then fires additional Triggers or Events based on the result."/>
+							<TextBlock Classes="subText" TextWrapping="Wrap"
+							           Text="For example, you might create a Trigger called &quot;Treasure Found&quot; that is only triggered (set to True) if the players discover some kind of treasure during the game. Later, a Story Branch Event could be fired that tests whether this &quot;Treasure Found&quot; Trigger has been set, which in turn fires a Trigger or Event based on whether that happened or not."/>
+							<TextBlock Margin="0,5,0,0" Classes="heading" Text="Decision Event"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap"
+							           Text="Decisions are Events that present a choice to the player. Decision Events can have 2 or 3 choices to select from. A Trigger that you specify is fired based on which choice the players select during the game."/>
+							<TextBlock Margin="0,5,0,0" Classes="heading" Text="Stat Test Event"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap"
+							           Text="A Stat Test Event presents the players with a challenge that tests one of their Hero's Stats (Might, Agility, Spirit, Wisdom, or Wit). During a Stat Test, two buttons (labeled 'Pass' and 'Fail') will be presented to the player. You can assign Triggers to the pass and fail conditions, one of which will be fired based on the outcome of the test."/>
+							<TextBlock Margin="0,5,0,0" Classes="heading" Text="Threat Event"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap"
+							           Text="When a Threat Event is activated, one or more enemy groups that you create will be spawned in the game."/>
+						</StackPanel>
+					</Border>
+				</ScrollViewer>
+			</TabItem>
+			<TabItem Header="Token Interaction Events" Margin="2,2,2,0" Padding="2">
+				<ScrollViewer VerticalScrollBarVisibility="Auto">
+					<Border Classes="callout">
+						<StackPanel>
+							<TextBlock Classes="heading" Text="What Are Token Interaction Events?"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap">
+								<Run Text="A Token Interaction Event is the same as a normal Event except for HOW it is activated. It is only activated by a player "/>
+								<Run FontStyle="Italic" Text="interacting"/>
+								<Run Text=" with a "/>
+								<Run FontStyle="Italic" FontWeight="Bold" Text="Token"/>
+								<Run Text=" on a Tile in the game. There are 4 kinds of Tokens: Person, Search, Threat and Darkness. Assign the Token Type after you check the Event to be a Token Interaction."/>
+							</TextBlock>
+							<TextBlock Margin="0,5,0,0" Classes="subText" TextWrapping="Wrap"
+							           Text="Marking an Event as a Token Interaction will make it available to assign to a Token in the Token Editor. Only Events with Token Interaction checked can be assigned to Tokens."/>
+						</StackPanel>
+					</Border>
+				</ScrollViewer>
+			</TabItem>
+		</TabControl>
+		<TabControl x:Name="threatHelp"
+		            Grid.Row="0"
+		            Classes="jimeTabStrip"
+		            Margin="5"
+		            Background="#FF2D2D30"
+		            BorderThickness="0,1,0,0"
+		            BorderBrush="#555"
+		            IsVisible="False">
+			<TabItem Header="Scripted Enemy Groups" Margin="2,2,2,0" Padding="2">
+				<ScrollViewer VerticalScrollBarVisibility="Auto">
+					<Border Classes="callout">
+						<StackPanel>
+							<TextBlock Classes="heading" Text="Designing Enemy Events"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap">
+								<Run Text="Enemy Events are generated from two potential sources of enemies: "/>
+								<Run FontWeight="Bold" Text="Scripted Enemy Groups"/>
+								<Run Text=" and the "/>
+								<Run FontWeight="Bold" Text="Enemy Pool"/>
+								<Run Text=". Scripted Enemy Groups allow you to fully customize an Enemy Group's combat values and Difficulty. Enemies generated from the Enemy Pool are randomly created from a Points System using default combat values. The Base Pool Points are automatically adjusted by Hero Count, Game Difficulty, and parameters you specify."/>
+							</TextBlock>
+							<TextBlock Margin="0,10,0,0" Classes="heading" Text="Scripted Enemy Groups"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap"
+							           Text="Enemies you design yourself are Scripted Enemies. They can use either default or custom values for Health, Damage/Fear and Elite Modifiers. They can be uniquely named and assigned to specific Game Difficulty modes. Since they are not part of the Enemy Pool, they are guaranteed to spawn exactly how you design them when the Event activates. Use Scripted Enemy Groups to create tailored encounters that are guaranteed to spawn. They can also be used to create unique enemies, such as Captains or special characters using unique names."/>
+							<TextBlock Margin="0,5,0,0" Classes="subText" TextWrapping="Wrap" FontWeight="Bold"
+							           Text="Using Scripted Enemies is entirely optional, as the standard method of enemy generation uses the automated yet customizable Enemy Pool system."/>
+							<TextBlock Margin="0,10,0,0" Classes="heading" TextWrapping="Wrap" Text="Things To Remember:"/>
+							<TextBlock Classes="subText" FontWeight="Bold" TextWrapping="Wrap"
+							           Text="- For Scripted Groups, the base Damage/Fear value in the Enemy Editor is that used as if there is only ONE Enemy in the group. The value is automatically modified by the Companion App when the Enemy Count is greater than ONE. See the Enemy Damage and Enemy Count tab."/>
+							<TextBlock Margin="0,5,0,0" Classes="subText" FontWeight="Bold" TextWrapping="Wrap"
+							           Text="- If you wish to ONLY use Scripted Enemy Groups in the Event, simply enter 0 (zero) for the Base Pool Points."/>
+							<TextBlock Margin="0,5,0,0" Classes="subText" FontWeight="Bold" TextWrapping="Wrap"
+							           Text="- Raise or lower the Base Points from 10 to make the generated enemies more difficult or easier than usual, respectively. Scale the overall difficulty even further by changing the Difficulty Bias."/>
+						</StackPanel>
+					</Border>
+				</ScrollViewer>
+			</TabItem>
+			<TabItem Header="Enemy Pool System" Margin="2,2,2,0" Padding="2">
+				<ScrollViewer VerticalScrollBarVisibility="Auto">
+					<Border Classes="callout">
+						<StackPanel>
+							<TextBlock Classes="heading" Text="Enemy Pool System"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap"
+							           Text="The Enemy Pool System automates the creation of Enemy Events that are random yet balanced, and automatically scale with Player Count and Game Difficulty. In spite of its automation, you still have control over how it works."/>
+							<TextBlock Margin="0,5,0,0" Classes="subText" TextWrapping="Wrap">
+								<Run Text="You can think of the Base Pool Points as a "/>
+								<Run FontWeight="Bold" Text="currency"/>
+								<Run Text=". Different enemy types have a "/>
+								<Run FontWeight="Bold" Text="cost"/>
+								<Run Text=" associated with them. Points are randomly &quot;spent&quot; from the Base Pool to &quot;purchase&quot; enemies for the encounter. Leftover points are used to &quot;purchase&quot; Elite Modifiers for the chosen enemies."/>
+							</TextBlock>
+							<TextBlock Margin="0,5,0,0" Classes="subText" TextWrapping="Wrap">
+								<Run Text="The "/>
+								<Run FontWeight="Bold" Text="Base Pool Points"/>
+								<Run Text=" defaults to 10, and it represents the amount of points available as if 1 Hero was playing at Normal difficulty. The Base Pool Points you enter is automatically increased or decreased by the Companion App based on Game Difficulty and Hero Count. To make the Event more difficult, assign more than 10 points. To make the Event easier, assign less points."/>
+							</TextBlock>
+							<TextBlock Margin="0,5,0,0" Classes="subText" TextWrapping="Wrap"
+							           Text="In Easy Difficulty mode, the Base Pool Points are automatically reduced by 25% by the Companion App. In Hard Difficulty mode, the Pool points are automatically increased by 50%. This adjustment is made AFTER Difficulty Bias is calculated in."/>
+							<TextBlock Margin="0,5,0,0" Classes="subText" TextWrapping="Wrap">
+								<Run Text="The "/>
+								<Run FontWeight="Bold" Text="Difficulty Bias"/>
+								<Run Text=" affects the number of points added by the Companion App per additional Hero Count above 1. At the default of "/>
+								<Run FontWeight="Bold" Text="Medium"/>
+								<Run Text=", 5 points are added to the Pool per additional Hero. At Light, only 3 points are added per additional Hero. At Heavy, 7 points are added per additional Hero."/>
+							</TextBlock>
+							<TextBlock Margin="0,5,0,0" Classes="subText" TextWrapping="Wrap"
+							           Text="As enemies are added to Groups, their cost does not decrease the available points linearly. Instead, the first enemy in the Group is full cost, but any additional enemies in the Group are .6 of the full cost."/>
+							<TextBlock Margin="0,5,0,0" Classes="subText" TextWrapping="Wrap"
+							           Text="Use the checkboxes to control which enemy types can potentially be chosen by the Pool System when the Event is activated. Only the types with a check have a chance to be spawned by the Event. Enemies chosen by the Pool System will use Default Stats for their Health and Damage/Fear."/>
+						</StackPanel>
+					</Border>
+				</ScrollViewer>
+			</TabItem>
+			<TabItem Header="Enemy Damage and Enemy Count" Margin="2,2,2,0" Padding="2">
+				<ScrollViewer VerticalScrollBarVisibility="Auto">
+					<Border Classes="callout">
+						<StackPanel>
+							<TextBlock Classes="heading" Text="How is Enemy Damage Calculated?"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap">
+								<Run FontWeight="Bold" Text="Whether using Scripted Enemy Groups or the Enemy Pool System, the Companion App will use the enemy's Damage/Fear value, randomly modified by +/- (0-1) and randomly split between the two."/>
+								<Run Text=" For example, a value of 2 could become 1, 2, or 3, randomly split between Damage and Fear, when the Enemy is spawned in the Companion App. When creating Scripted Enemies, plan your numbers accordingly when not using Default Stats."/>
+							</TextBlock>
+							<TextBlock Margin="0,10,0,0" Classes="heading" Text="Enemy Count"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap">
+								<Run Text="Increasing the number of Enemies in Scripted Groups (up to 3) will also "/>
+								<Run FontWeight="Bold" Text="automatically increase the base Damage/Fear the group does by +1 per count above 1"/>
+								<Run Text=". These increased values are "/>
+								<Run FontWeight="Bold" Text="only shown in the Companion App"/>
+								<Run Text=" during Combat. As Enemies in the group are defeated in the Companion App, the Damage/Fear decreases back down to the base value seen in the Editor when only 1 Enemy remains in the group."/>
+							</TextBlock>
+						</StackPanel>
+					</Border>
+				</ScrollViewer>
+			</TabItem>
+		</TabControl>
+		<TabControl x:Name="triggerHelp"
+		            Grid.Row="0"
+		            Classes="jimeTabStrip"
+		            Margin="5"
+					Padding="0"
+		            Background="#FF2D2D30"
+		            BorderThickness="0,1,0,0"
+		            BorderBrush="#555"
+		            IsVisible="False">
+			<TabItem Header="Triggers" Margin="2,2,2,0" Padding="2">
+				<ScrollViewer VerticalScrollBarVisibility="Auto">
+					<Border Classes="callout">
+						<StackPanel>
+							<TextBlock Classes="heading" Text="How Triggers Work"/>
+							<TextBlock Margin="0,5,0,0" Classes="subText" TextWrapping="Wrap">
+								<Run Text="Triggers are "/>
+								<Run FontStyle="Italic" Text="True / False"/>
+								<Run Text=" values that are set during the Scenario to keep track of player actions. "/>
+								<Run FontWeight="Bold" Text="All Triggers start off with a value of "/>
+								<Run FontWeight="Bold" FontStyle="Italic" Text="False"/>
+								<Run Text="."/>
+							</TextBlock>
+							<TextBlock Margin="0,5,0,0" Classes="subText" TextWrapping="Wrap"
+							           Text="Triggers are also used by many components to get notified of when to activate. For example, Triggers can activate Events, start and end Objectives, activate Chapters, end the Scenario, and other actions that use Triggers."/>
+							<TextBlock Margin="0,5,0,0" Classes="subText" TextWrapping="Wrap">
+								<Run FontWeight="Bold" Text="Triggers can only be fired once"/>
+								<Run Text=". Firing a Trigger more than once is ignored by the companion app. If more than one component is set to be activated by the same Trigger, for example an Objective and a Token, "/>
+								<Run FontWeight="Bold" Text="only the first one the companion app finds will be Triggered"/>
+								<Run Text=". The rest are ignored."/>
+							</TextBlock>
+							<TextBlock Margin="0,10,0,0" Classes="heading" Text="Special Instructions For Events"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap">
+								<Run Text="If more than one "/>
+								<Run FontWeight="Bold" Text="Event"/>
+								<Run Text=" is triggered by the same Trigger (and NO other components), "/>
+								<Run FontWeight="Bold" Text="one of the Events will be randomly chosen to activate"/>
+								<Run Text=". The rest are ignored."/>
+							</TextBlock>
+						</StackPanel>
+					</Border>
+				</ScrollViewer>
+			</TabItem>
+			<TabItem Header="Multi-Triggers" Margin="2,2,2,0" Padding="2">
+				<ScrollViewer VerticalScrollBarVisibility="Auto">
+					<Border Classes="callout">
+						<StackPanel>
+							<TextBlock Classes="heading" Text="What is a Multi-Trigger?"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap">
+								<Run Text="If a Trigger is marked as a "/>
+								<Run FontWeight="Bold" Text="Multi-Trigger"/>
+								<Run Text=", the normal behavior changes, and it will "/>
+								<Run FontWeight="Bold" Text="activate all components listening for it, including all Events set to be triggered by it. Multi-Triggers can be fired multiple times, and once they are, their value will always be "/>
+								<Run FontWeight="Bold" FontStyle="Italic" Text="True"/>
+								<Run Text="."/>
+							</TextBlock>
+							<TextBlock Margin="0,5,0,0" Classes="subText" TextWrapping="Wrap" FontSize="14">
+								<Run FontWeight="Bold" Text="Be careful using Multi-Triggers. You can create a circular loop of actions that keeps activating itself. You could also repeatedly activate components that aren't meant to be triggered more than once, such as Tile Blocks. Keep their usage simple."/>
+							</TextBlock>
+						</StackPanel>
+					</Border>
+				</ScrollViewer>
+			</TabItem>
+			<TabItem Header="Last Stand Triggers" Margin="2,2,2,0" Padding="2">
+				<ScrollViewer VerticalScrollBarVisibility="Auto">
+					<Border Classes="callout">
+						<StackPanel>
+							<TextBlock Classes="heading" Text="There are special triggers associated with a Last Stand"/>
+							<TextBlock Margin="0,5,0,0" Classes="heading" Text="Last Stand Failed #"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap" FontSize="14"
+							           Text="Triggers named &quot;Last Stand Failed 1&quot;, &quot;Last Stand Failed 2&quot;, &quot;Last Stand Failed 3&quot;, &quot;Last Stand Failed 4&quot;, and &quot;Last Stand Failed 5&quot; will be fired by the Companion App when the 1st, 2nd, 3rd, 4th, and 5th hero fail a Last Stand. You can trigger an event from those triggers. Of course, 3, 4, and 5 are very unlikely."/>
+							<TextBlock Margin="0,5,0,0" Classes="heading" Text="Last Stand x#"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap" FontSize="14"
+							           Text="Triggers can also be named &quot;Last Stand x1&quot;, &quot;Last Stand x2&quot;, &quot;Last Stand x3&quot;, etc. The Companion App will fire these triggers for the first hero who successfully passes their 1st, 2nd, or 3rd Last Stand, (and so on)."/>
+						</StackPanel>
+					</Border>
+				</ScrollViewer>
+			</TabItem>
+			<TabItem Header="Campaign Triggers" Margin="2,2,2,0" Padding="2">
+				<ScrollViewer VerticalScrollBarVisibility="Auto">
+					<Border Classes="callout">
+						<StackPanel>
+							<TextBlock Classes="heading" Text="What is a Campaign Trigger?"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap"
+							           Text="A Campaign Trigger is a special Trigger that is only useable from within Scenarios that are part of a Campaign. After it's created in the Campaign Manager (see below), it becomes available to every Scenario in the Campaign."/>
+							<TextBlock Margin="0,5,0,0" Classes="subText" TextWrapping="Wrap">
+								<Run Text="A Campaign Trigger fires like normal, except it also carries over into future Scenarios in the Campaign. Another Scenario can read the result (True/False) of a previously fired (or un-fired) Campaign Trigger. In this way, "/>
+								<Run FontWeight="Bold" Text="a Scenario can react"/>
+								<Run Text=" to a Trigger that was fired or un-fired in a "/>
+								<Run FontWeight="Bold" Text="previous Scenario"/>
+								<Run Text="."/>
+							</TextBlock>
+							<TextBlock Margin="0,5,0,0" Classes="subText" TextWrapping="Wrap" FontWeight="Bold"
+							           Text="A normal Scenario Trigger cannot be made into a Campaign Trigger from within the Scenario's Trigger Editor. Likewise, a Campaign Trigger can't be modified from within the Scenario's normal Trigger Editor. The checkbox is only a helpful indicator to let you know it's a Campaign Trigger."/>
+							<TextBlock Margin="0,10,0,0" Classes="heading" Text="What If A Scenario Is Replayed?"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap">
+								<Run Text="As of v0.34, the Companion App keeps track of the Campaign Triggers that were in effect at the end of the previous scenario. For example, if Scenario 2 is Replayed, its Campaign Triggers are reset to the values from the end of Scenario 1. Any Campaign Triggers set during the first playthrough of Scenario 2 will not be in effect at the start of the Scenario 2 Replay, although they may become set again during the Replay of Scenario 2."/>
+								<LineBreak/>
+								<LineBreak/>
+								<Run Text="If both Scenario 1 and Scenario 2 are played, and then Scenario 1 is Replayed, a Replay of Scenario 2 will start with the Campaign Triggers from the end of the Replay of Scenario 1."/>
+							</TextBlock>
+							<TextBlock Margin="0,10,0,0" Classes="heading" Text="How Do I Create A Campaign Trigger?"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap"
+							           Text="Campaign Triggers are created and removed from within the Campaign Manager."/>
+							<TextBlock Margin="0,5,0,0" Classes="subText" TextWrapping="Wrap"
+							           Text="All Campaign Triggers are available in the Scenario Editor to all Scenarios that are included in the Campaign."/>
+						</StackPanel>
+					</Border>
+				</ScrollViewer>
+			</TabItem>
+		</TabControl>
+		<Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Silver" HorizontalAlignment="Stretch" Background="#FF46464A">
+			<WrapPanel HorizontalAlignment="Right">
+				<Button x:Name="okButton" Margin="10" Background="MediumSeaGreen" Click="okButton_Click" IsDefault="True">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+			</WrapPanel>
+		</Border>
+	</Grid>
+</Window>

@@ -34,13 +34,13 @@
 	<Grid RowDefinitions="*,Auto">
 		<TabControl Grid.Row="0"
 		            Classes="jimeTabStrip"
-		            Margin="0"
+		            Margin="5"
 					Padding="0"
 		            BorderThickness="0,1,0,0"
 		            BorderBrush="#555">
 
-			<TabItem Header="Scenarios and Packaging" Margin="0" Padding="0">
-				<Border Classes="callout" Margin="0" Padding="10,10,10,10">
+			<TabItem Header="Scenarios and Packaging" Margin="2,2,2,0" Padding="2">
+				<Border Classes="callout">
 					<StackPanel Spacing="0">
 						<Grid ColumnDefinitions="320,100,180,*">
 							<StackPanel Spacing="4">
@@ -289,8 +289,8 @@
 				</Border>
 			</TabItem>
 
-			<TabItem Header="Settings" Padding="0" Margin="0">
-				<Border Classes="callout" Margin="0" Padding="0,10,10,10">
+			<TabItem Header="Settings" Padding="2,2,2,0" Margin="2">
+				<Border Classes="callout">
 					<StackPanel Spacing="8">
 						<TextBlock Text="Campaign Triggers" Classes="heading"/>
 						<StackPanel Orientation="Horizontal" Spacing="8">
@@ -326,8 +326,8 @@
 							        Background="#C98800"
 							        Height="32"
 							        Padding="6,0"
-							        IsEnabled="False"
-							        ToolTip.Tip="TODO-Avalonia-Reenable: HelpWindow">
+							        Click="TriggerHelpButton_Click"
+							        ToolTip.Tip="Campaign and scenario triggers (opens help)">
 								<StackPanel Orientation="Horizontal" Spacing="6">
 									<Image Source="avares://JiMEditor.Avalonia/Assets/help.png" Stretch="Uniform" Height="18"/>
 									<TextBlock Text="Trigger Help" Classes="heading"/>
@@ -362,9 +362,8 @@
 						<TextBox x:Name="DescriptionTextBox"
 						         Classes="campaignField"
 						         Text="{Binding campaign.description, Mode=TwoWay}"
-						         AcceptsReturn="True"
-						         MinHeight="72"
-						         TextWrapping="Wrap"
+						         AcceptsReturn="False"
+						         TextWrapping="NoWrap"
 						         Margin="0,5,0,0"/>
 
 						<TextBlock Text="Campaign Story" Classes="heading" Margin="0,10,0,0"/>

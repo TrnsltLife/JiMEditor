@@ -37,6 +37,7 @@
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\edit.png" Link="Assets\edit.png" />
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\package.png" Link="Assets\package.png" />
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\help.png" Link="Assets\help.png" />
+    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\ok.png" Link="Assets\ok.png" />
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\save.png" Link="Assets\save.png" />
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\cancel.png" Link="Assets\cancel.png" />
     <!-- MainWindow sidebar (JiMEditor/Assets) -->
