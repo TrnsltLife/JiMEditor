@@ -309,8 +309,8 @@
 							        Width="32"
 							        Height="32"
 							        Padding="4"
-							        IsEnabled="False"
-							        ToolTip.Tip="TODO-Avalonia-Reenable: CampaignTriggerEditor">
+							        Click="AddTriggerButton_Click"
+							        ToolTip.Tip="Add campaign trigger">
 								<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
 							</Button>
 							<Button x:Name="DelTriggerButton"
@@ -318,8 +318,8 @@
 							        Width="32"
 							        Height="32"
 							        Padding="4"
-							        IsEnabled="False"
-							        ToolTip.Tip="TODO-Avalonia-Reenable: delete trigger">
+							        Click="DelTriggerButton_Click"
+							        ToolTip.Tip="Remove selected campaign trigger">
 								<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Stretch="Uniform"/>
 							</Button>
 							<Button x:Name="TriggerHelpButton"

@@ -8,6 +8,3 @@ This is a list of things we need to do:
   * Create and Add New Scenario button needs to work
   * Add Existing Scenario... button needs to work
   * Add Procedurally Generated Scenario... button should launch the random scenario editor
-  * Settings Tab
-    * Add and Delete Campaign Triggers should work
-    * Campaign Triggers list should work

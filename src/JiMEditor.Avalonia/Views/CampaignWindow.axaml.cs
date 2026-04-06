@@ -53,7 +53,12 @@ public partial class CampaignWindow : Window
 		SaveCampaign();
 
 		DescriptionTextBox.TextChanged += DescriptionTextBox_OnTextChanged;
+		TriggersCombo.SelectionChanged += ( _, _ ) => UpdateDelTriggerButtonEnabled();
+		UpdateDelTriggerButtonEnabled();
 	}
+
+	void UpdateDelTriggerButtonEnabled() =>
+		DelTriggerButton.IsEnabled = TriggersCombo.SelectedItem is Trigger;
 
 	/// <summary>Campaign description is a single line in the Companion App; collapse line breaks from paste or legacy data.</summary>
 	bool _descriptionTextBoxNormalizing;
@@ -100,6 +105,31 @@ public partial class CampaignWindow : Window
 		await HelpWindow.ShowDialogAsync( this, HelpType.Triggers, 3 );
 	}
 
+	async void AddTriggerButton_Click( object? sender, RoutedEventArgs e )
+	{
+		var dlg = new CampaignTriggerEditorWindow( campaign );
+		await dlg.ShowDialog( this );
+		if ( !dlg.Accepted )
+			return;
+		var t = new Trigger( dlg.ResultTriggerName );
+		t.isCampaignTrigger = true;
+		t.isMultiTrigger = true;
+		campaign.triggerCollection.Add( t );
+		TriggersCombo.SelectedIndex = campaign.triggerCollection.Count - 1;
+		UpdateDelTriggerButtonEnabled();
+		SaveCampaign();
+	}
+
+	void DelTriggerButton_Click( object? sender, RoutedEventArgs e )
+	{
+		if ( TriggersCombo.SelectedItem is not Trigger selected )
+			return;
+		campaign.triggerCollection.Remove( selected );
+		TriggersCombo.SelectedIndex = campaign.triggerCollection.Count > 0 ? 0 : -1;
+		UpdateDelTriggerButtonEnabled();
+		SaveCampaign();
+	}
+
 	void CampaignWindow_Opened( object? sender, EventArgs e )
 	{
 		CampaignGuidTextBlock.Text = "Campaign GUID:  " + campaign.campaignGUID;
@@ -108,6 +138,9 @@ public partial class CampaignWindow : Window
 			: "The Story Text is set.";
 		if ( TriggersCombo.Items.Count > 0 )
 			TriggersCombo.SelectedIndex = 0;
+		else
+			TriggersCombo.SelectedIndex = -1;
+		UpdateDelTriggerButtonEnabled();
 		CampaignNameTextBox?.SelectAll();
 	}
 
