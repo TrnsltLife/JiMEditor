@@ -1,0 +1,156 @@
+<!-- Ported from: JiMEditor/Views/TranslationEditorWindow.xaml (2026-04-06) — Avalonia; list uses TextBlock + row background converter (no FlowDocument). -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="using:JiMEditor.Avalonia.Converters"
+        x:Class="JiMEditor.Avalonia.Views.TranslationEditorWindow"
+        x:CompileBindings="False"
+        Title="Translation Editor"
+        Width="920"
+        MinWidth="800"
+        MinHeight="720"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource bgColor}">
+
+	<Window.Resources>
+		<conv:TranslationItemRowBackgroundConverter x:Key="TransRowBg"/>
+	</Window.Resources>
+
+	<Window.Styles>
+		<Style Selector="TextBox.campaignField">
+			<Setter Property="Background" Value="#333337"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#77777d"/>
+			<Setter Property="Padding" Value="6,4"/>
+		</Style>
+		<Style Selector="ComboBox">
+			<Setter Property="Background" Value="#333337"/>
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+	</Window.Styles>
+
+	<Grid RowDefinitions="*,Auto">
+		<ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+			<StackPanel Margin="8" Spacing="6">
+				<Grid ColumnDefinitions="*,*">
+					<Border Grid.Column="0" Classes="callout" Margin="0,0,6,0">
+						<StackPanel Spacing="4">
+							<TextBlock Classes="heading" Text="Language Code:"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap" Text="2 or 3 letter ISO-639 code (e.g. fr, es)."/>
+							<StackPanel Orientation="Horizontal" Spacing="8">
+								<TextBox x:Name="LangCodeTextBox" Width="250" Classes="campaignField" Watermark="en, fr, de, …"/>
+								<TextBlock Classes="subText" VerticalAlignment="Center"><Run FontWeight="Bold" FontStyle="Italic" Text="Required"/></TextBlock>
+							</StackPanel>
+						</StackPanel>
+					</Border>
+					<Border Grid.Column="1" Classes="callout" Margin="6,0,0,0">
+						<StackPanel Spacing="4">
+							<TextBlock Classes="heading" Text="Language Name:"/>
+							<TextBlock Classes="subText" TextWrapping="Wrap" Text="Display name (e.g. Français, Español)."/>
+							<StackPanel Orientation="Horizontal" Spacing="8">
+								<TextBox x:Name="LangNameTextBox" Width="250" Classes="campaignField"/>
+								<TextBlock Classes="subText" VerticalAlignment="Center"><Run FontWeight="Bold" FontStyle="Italic" Text="Required"/></TextBlock>
+							</StackPanel>
+						</StackPanel>
+					</Border>
+				</Grid>
+
+				<Border Classes="callout">
+					<Grid ColumnDefinitions="*,Auto">
+						<TextBlock Grid.Column="0" Classes="subText" TextWrapping="Wrap" Text="Edit each string with the pencil; green = marked OK, orange = needs translation or approval, gray = key no longer in scenario."/>
+					</Grid>
+				</Border>
+
+				<Border Classes="callout" Margin="0,2">
+					<Grid ColumnDefinitions="0.33*,0.33*,0.34*">
+						<TextBlock Grid.Column="0" Text="Translation OK" Foreground="White" Background="Green" Padding="4"/>
+						<TextBlock Grid.Column="1" Text="No longer needed / copy?" Foreground="White" Background="Gray" Padding="4" Margin="2,0"/>
+						<TextBlock Grid.Column="2" Text="Needs translation or approval" Foreground="White" Background="DarkOrange" Padding="4"/>
+					</Grid>
+				</Border>
+
+				<Border Classes="callout" Margin="0,2">
+					<Grid ColumnDefinitions="44,200,*,44,44">
+						<TextBlock Grid.Column="0" Text="Done" Foreground="White" VerticalAlignment="Center"/>
+						<TextBlock Grid.Column="1" Text="Key" Foreground="White" VerticalAlignment="Center"/>
+						<TextBlock Grid.Column="2" Text="Translation" Foreground="White" VerticalAlignment="Center"/>
+						<TextBlock Grid.Column="3" Text="Edit" Foreground="White" VerticalAlignment="Center"/>
+						<TextBlock Grid.Column="4" Text="Del" Foreground="White" VerticalAlignment="Center"/>
+					</Grid>
+				</Border>
+
+				<ScrollViewer MaxHeight="380" VerticalScrollBarVisibility="Auto">
+					<ItemsControl x:Name="TranslationItemsControl">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Border Margin="0,2"
+								        Classes="callout"
+								        Background="{Binding ., Converter={StaticResource TransRowBg}}">
+									<Grid ColumnDefinitions="44,200,*,44,44">
+										<CheckBox Grid.Column="0"
+										           IsChecked="{Binding translationOK, Mode=TwoWay}"
+										           Margin="6,0"
+										           VerticalAlignment="Center"/>
+										<TextBlock Grid.Column="1"
+										           Text="{Binding key}"
+										           MaxHeight="48"
+										           Foreground="White"
+										           TextWrapping="Wrap"
+										           VerticalAlignment="Center"/>
+										<TextBlock Grid.Column="2"
+										           Text="{Binding text}"
+										           MaxHeight="48"
+										           Foreground="White"
+										           TextWrapping="Wrap"
+										           VerticalAlignment="Center"
+										           Margin="6,0"/>
+										<Button Grid.Column="3"
+										        Background="CornflowerBlue"
+										        Width="32"
+										        Height="32"
+										        Margin="4,0"
+										        VerticalAlignment="Center"
+										        Click="EditButton_Click"
+										        DataContext="{Binding}">
+											<Image Source="avares://JiMEditor.Avalonia/Assets/edit.png" Stretch="Uniform"/>
+										</Button>
+										<Button Grid.Column="4"
+										        Background="{StaticResource bgCancelDelete}"
+										        Width="32"
+										        Height="32"
+										        Margin="4,0"
+										        VerticalAlignment="Center"
+										        Click="DeleteButton_Click"
+										        DataContext="{Binding}">
+											<Image Source="avares://JiMEditor.Avalonia/Assets/remove.png" Stretch="Uniform"/>
+										</Button>
+									</Grid>
+								</Border>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</ScrollViewer>
+			</StackPanel>
+		</ScrollViewer>
+
+		<Border Grid.Row="1"
+		        BorderThickness="0,1,0,0"
+		        BorderBrush="Silver"
+		        Background="#FF46464A">
+			<WrapPanel HorizontalAlignment="Right">
+				<Button Margin="10"
+				        Background="MediumSeaGreen"
+				        Click="OkButton_Click"
+				        IsDefault="True">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+				<Button x:Name="CancelButton"
+				        Margin="0,10,10,10"
+				        Background="{StaticResource bgCancelDelete}"
+				        Click="CancelButton_Click"
+				        IsCancel="True">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+			</WrapPanel>
+		</Border>
+	</Grid>
+</Window>

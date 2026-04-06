@@ -71,7 +71,9 @@ namespace JiME
 			string json = "";
 			try
 			{
-				using (StreamReader sr = new StreamReader(Path.Combine(basePath, fileName)))
+				// FileName is usually a full path; Path.Combine(basePath, fullPath) is wrong when the second segment is not rooted in some cases — read the selected file directly.
+				var pathToRead = Path.IsPathRooted( fileName ) ? fileName : Path.Combine( basePath, fileName );
+				using ( StreamReader sr = new StreamReader( pathToRead ) )
 				{
 					json = sr.ReadToEnd();
 				}
@@ -256,10 +258,12 @@ namespace JiME
 			};
 
 			TranslationForExport translationForImport = JsonConvert.DeserializeObject<TranslationForExport>(json, settings);
+			if ( translationForImport == null )
+				return;
 
 			//Find a matching translation object that already exists...
-			string langCode = translationForImport.dataName;
-			string langName = translationForImport.langName;
+			string langCode = translationForImport.dataName ?? "";
+			string langName = translationForImport.langName ?? "";
 			Translation translationForUpdate = translations.FirstOrDefault(it => it.dataName == langCode && it.langName == langName);
 			if(translationForUpdate == null)
             {
@@ -272,32 +276,35 @@ namespace JiME
 				translationForUpdate.langName = langName;
 				translations.Add(translationForUpdate);
             }
+			else if ( !string.IsNullOrEmpty( langName ) )
+				translationForUpdate.langName = langName;
 
-			//Update the translation object from the import file
-			Dictionary<string, string> importKeyValuePairs = new Dictionary<string, string>();
-			foreach(TranslationItemForExport item in translationForImport.translationItems)
-            {
-				try
+			// Key -> translated text from file (last wins on duplicate keys in file)
+			var importKeyValuePairs = new Dictionary<string, string>( StringComparer.Ordinal );
+			if ( translationForImport.translationItems != null )
+			{
+				foreach ( var item in translationForImport.translationItems )
 				{
-					importKeyValuePairs.Add(item.key, item.text);
-				} 
-				catch(Exception e) 
-				{
-					Debug.Log("error importing translation text for language " + langCode + " " + langName + " key: " + item.key + " text: " + item.text); 
+					if ( item == null || string.IsNullOrEmpty( item.key ) )
+						continue;
+					importKeyValuePairs[item.key] = item.text ?? "";
 				}
-            }
-			foreach(TranslationItem item in translationForUpdate.translationItems)
-            {
-				string key = item.key;
-				if(importKeyValuePairs.ContainsKey(key))
-                {
-					if(item.text != importKeyValuePairs[key])
-                    {
-						item.text = importKeyValuePairs[key];
-						item.translationOK = true;
-                    }
-                }
-            }
+			}
+
+			// Apply to existing rows and add any keys that are only in the import (new Translation has an empty collection — the old loop never ran).
+			foreach ( var kvp in importKeyValuePairs )
+			{
+				var existing = translationForUpdate.translationItems.FirstOrDefault( it => it.key == kvp.Key );
+				if ( existing == null )
+				{
+					translationForUpdate.translationItems.Add( new TranslationItem( kvp.Key, kvp.Value, true ) );
+					continue;
+				}
+
+				if ( existing.text != kvp.Value )
+					existing.text = kvp.Value;
+				existing.translationOK = true;
+			}
 		}
 
 

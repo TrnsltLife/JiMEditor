@@ -1,0 +1,76 @@
+<!-- Ported from: JiMEditor/Views/TranslationItemEditorWindow.xaml (2026-04-06). Original = read-only markup; Translation = PseudoHtmlRichEditor. -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="using:JiMEditor.Avalonia.Views"
+        x:Class="JiMEditor.Avalonia.Views.TranslationItemEditorWindow"
+        x:CompileBindings="False"
+        Title="Translation Item Editor"
+        Width="780"
+        MinWidth="640"
+        MinHeight="620"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource bgColor}">
+
+	<Window.Styles>
+		<Style Selector="TextBox.campaignField">
+			<Setter Property="Background" Value="#333337"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#77777d"/>
+			<Setter Property="Padding" Value="6,4"/>
+		</Style>
+	</Window.Styles>
+
+	<Grid RowDefinitions="*,Auto">
+		<ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+			<StackPanel Margin="8" Spacing="0">
+				<Border Classes="callout">
+					<StackPanel Spacing="8">
+						<StackPanel Orientation="Horizontal" Spacing="8">
+							<TextBlock Classes="subText" Text="Translation Item Key:" VerticalAlignment="Center"/>
+							<TextBlock Text="{Binding translationItem.key}" Classes="heading"/>
+						</StackPanel>
+
+						<StackPanel Orientation="Horizontal" Spacing="8">
+							<TextBlock Classes="heading" Margin="0,4,0,0" Text="Original Text:" VerticalAlignment="Bottom"/>
+							<TextBlock Classes="subText" Margin="0,4,0,0" VerticalAlignment="Bottom" TextWrapping="Wrap">
+								<Run Text="Reference only (markup as stored in the scenario). "/>
+								<Run FontWeight="Bold" FontStyle="Italic" Text="Select and copy into Translation if useful."/>
+							</TextBlock>
+						</StackPanel>
+						<TextBox x:Name="OriginalMarkupTextBox"
+						         Classes="campaignField"
+						         IsReadOnly="True"
+						         AcceptsReturn="True"
+						         TextWrapping="Wrap"
+						         MinHeight="120"
+						         MaxHeight="220"
+						         FontFamily="Consolas,Courier New,monospace"/>
+
+						<StackPanel Orientation="Horizontal" Spacing="8">
+							<TextBlock Classes="heading" Margin="0,8,0,0" Text="Translation:" VerticalAlignment="Bottom"/>
+							<TextBlock Classes="subText" Margin="0,8,0,0" VerticalAlignment="Bottom">
+								<Run FontWeight="Bold" FontStyle="Italic" Text="Required"/>
+								<Run Text=" — pseudo-HTML; use Markup + Preview below."/>
+							</TextBlock>
+						</StackPanel>
+						<views:PseudoHtmlRichEditor x:Name="TranslationRichEditor" MinHeight="300"/>
+					</StackPanel>
+				</Border>
+			</StackPanel>
+		</ScrollViewer>
+
+		<Border Grid.Row="1"
+		        BorderThickness="0,1,0,0"
+		        BorderBrush="Silver"
+		        Background="#FF46464A">
+			<WrapPanel HorizontalAlignment="Right">
+				<Button Margin="10"
+				        Background="MediumSeaGreen"
+				        Click="OkButton_Click"
+				        IsDefault="True">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+			</WrapPanel>
+		</Border>
+	</Grid>
+</Window>

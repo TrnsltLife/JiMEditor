@@ -61,10 +61,20 @@ public partial class MainWindow : Window
 		activationsUC.SetItemsSource( scenario.activationsObserver );
 		monsterModifiersUC.SetItemsSource( scenario.monsterModifierObserver );
 		translationsUC.SetItemsSource( scenario.translationObserver );
+		translationsUC.onAddEvent += OnAddTranslation;
+		translationsUC.onRemoveEvent += OnRemoveTranslation;
+		translationsUC.onSettingsEvent += OnSettingsTranslation;
+		translationsUC.onImportEvent += OnImportTranslation;
+		translationsUC.onExportEvent += OnExportTranslation;
 	}
 
 	void DetachSidebarLists()
 	{
+		translationsUC.onAddEvent -= OnAddTranslation;
+		translationsUC.onRemoveEvent -= OnRemoveTranslation;
+		translationsUC.onSettingsEvent -= OnSettingsTranslation;
+		translationsUC.onImportEvent -= OnImportTranslation;
+		translationsUC.onExportEvent -= OnExportTranslation;
 		objectivesUC.onAddEvent -= OnAddObjective;
 		objectivesUC.onRemoveEvent -= OnRemoveObjective;
 		objectivesUC.onSettingsEvent -= OnSettingsObjective;
@@ -223,6 +233,61 @@ public partial class MainWindow : Window
 		var trig = src.Clone();
 		var w = new TriggerEditorWindow( scenario, trig, true );
 		await w.ShowDialog( this );
+	}
+
+	async void OnAddTranslation( object? sender, EventArgs e ) => await AddTranslationAsync();
+
+	async Task AddTranslationAsync()
+	{
+		var defaultTranslation = scenario.CollectTranslationItemsAsDictionary();
+		var initial = new Translation();
+		var w = new TranslationEditorWindow( scenario, defaultTranslation, initial, true );
+		await w.ShowDialog( this );
+		if ( w.Accepted )
+			scenario.AddTranslation( initial );
+	}
+
+	void OnRemoveTranslation( object? sender, EventArgs e )
+	{
+		if ( translationsUC.DataListView.SelectedItem is not Translation translation )
+			return;
+		var title = $"Delete Translation: {translation.langName} / {translation.dataName}";
+		var ret = MessageBox.Show(
+			$"Are you sure you want to delete this Translation?\n\n{translation.langName} / {translation.dataName}\n\nALL TRANSLATION TEXT FOR THIS LANGUAGE WILL BE DELETED.\n\nThis cannot be undone.",
+			title, MessageBoxButton.YesNo, MessageBoxImage.Question );
+		if ( ret != MessageBoxResult.Yes )
+			return;
+		var ret2 = MessageBox.Show(
+			$"Please Reconfirm:\n\nAre you REALLY, REALLY sure you want to delete this Translation?\n\n{translation.langName} / {translation.dataName}\n\nALL TRANSLATION TEXT FOR THIS LANGUAGE WILL BE DELETED.\n\nThis cannot be undone.",
+			title, MessageBoxButton.YesNo, MessageBoxImage.Question );
+		if ( ret2 != MessageBoxResult.Yes )
+			return;
+		var idx = translationsUC.DataListView.SelectedIndex;
+		scenario.RemoveData( translation );
+		translationsUC.DataListView.SelectedIndex = scenario.translationObserver.Count > 0 ? Math.Max( idx - 1, 0 ) : -1;
+	}
+
+	async void OnSettingsTranslation( object? sender, EventArgs e )
+	{
+		if ( translationsUC.DataListView.SelectedItem is not Translation t )
+			return;
+		var defaultTranslation = scenario.CollectTranslationItemsAsDictionary();
+		var w = new TranslationEditorWindow( scenario, defaultTranslation, t, false );
+		await w.ShowDialog( this );
+	}
+
+	void OnImportTranslation( object? sender, EventArgs e )
+	{
+		new ImportManager().ImportTranslation( scenario.translationObserver );
+	}
+
+	void OnExportTranslation( object? sender, EventArgs e )
+	{
+		if ( translationsUC.DataListView.SelectedItem is not Translation selectedTranslation )
+			return;
+		var translationItemsForExport = scenario.CollectTranslationItemsForExport( selectedTranslation );
+		var translationForExport = new TranslationForExport( selectedTranslation.dataName, selectedTranslation.langName, translationItemsForExport );
+		new ExportManager().ExportTranslation( scenario.scenarioName, translationForExport );
 	}
 
 	protected override void OnClosing( WindowClosingEventArgs e )

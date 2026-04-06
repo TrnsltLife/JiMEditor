@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -806,8 +806,9 @@ namespace JiME
 			Dictionary<string, TranslationItem> defaultTranslation = new Dictionary<string, TranslationItem>();
 			foreach (var item in defaultTranslationList)
 			{
-				//Console.WriteLine(item.key + " => " + item.text);
-				defaultTranslation.Add(item.key, item);
+				// Same key can appear from multiple sources; keep the first (sorted) entry so the dialog still opens.
+				if ( !defaultTranslation.ContainsKey( item.key ) )
+					defaultTranslation.Add( item.key, item );
 			}
 			return defaultTranslation;
 		}
@@ -848,39 +849,65 @@ namespace JiME
         {
 			List<TranslationItem> defaultTranslations = new List<TranslationItem>();
 
-			defaultTranslations.AddRange(this.CollectTranslationItems());
-
-			foreach(var objective in objectiveObserver)
-            {
-				defaultTranslations.AddRange(objective.CollectTranslationItems());
-			}
-
-			foreach(var modifier in monsterModifierObserver)
-            {
-				defaultTranslations.AddRange(CollectModifierTranslationItems(modifier));
-            }
-
-			foreach(var chapter in chapterObserver)
-            {
-				defaultTranslations.AddRange(chapter.CollectTranslationItems());
-				//grab lists of TranslationItems from all the chapters tiles and flatten them into one big list
-				defaultTranslations.AddRange(chapter.tileObserver.ToList().ConvertAll(tile => ((BaseTile)tile).CollectTranslationItems()).SelectMany(list => list));
-            }
-
-			foreach(var resolution in resolutionObserver)
-            {
-				defaultTranslations.AddRange(resolution.CollectTranslationItems());
-            }
-
-			foreach (var activation in activationsObserver)
+			void SafeCollect( string section, Action collect )
 			{
-				defaultTranslations.AddRange(CollectActivationTranslationItems(activation));
+				try
+				{
+					collect();
+				}
+				catch ( Exception e )
+				{
+					Debug.Log( "CollectAllTranslationItems: " + section + " — " + e.Message );
+				}
 			}
 
-			foreach (var interaction in interactionObserver)
-            {
-				defaultTranslations.AddRange(CollectInteractionTranslationItems(interaction));
-			}
+			SafeCollect( "scenario", () => defaultTranslations.AddRange( this.CollectTranslationItems() ) );
+
+			SafeCollect( "objectives", () =>
+			{
+				foreach ( var objective in objectiveObserver )
+					defaultTranslations.AddRange( objective.CollectTranslationItems() );
+			} );
+
+			SafeCollect( "chapters", () =>
+			{
+				foreach ( var chapter in chapterObserver )
+					defaultTranslations.AddRange( chapter.CollectTranslationItems() );
+			} );
+
+			/* TODO-Avalonia-Reenable: per-tile strings when tile/chapter editors are ported (was WPF chapter.tileObserver → BaseTile.CollectTranslationItems). */
+			// SafeCollect( "chapter tiles", () =>
+			// {
+			// 	foreach ( var chapter in chapterObserver )
+			// 		defaultTranslations.AddRange( chapter.tileObserver.ToList().ConvertAll( tile => ( (BaseTile)tile ).CollectTranslationItems() ).SelectMany( list => list ) );
+			// } );
+
+			SafeCollect( "resolutions", () =>
+			{
+				foreach ( var resolution in resolutionObserver )
+					defaultTranslations.AddRange( resolution.CollectTranslationItems() );
+			} );
+
+			/* TODO-Avalonia-Reenable: events / interactions when interaction editors are fully available in Avalonia. */
+			// SafeCollect( "interactions", () =>
+			// {
+			// 	foreach ( var interaction in interactionObserver )
+			// 		defaultTranslations.AddRange( CollectInteractionTranslationItems( interaction ) );
+			// } );
+
+			/* TODO-Avalonia-Reenable: built-in + custom enemy attack groups when ActivationsEditor is ported. */
+			// SafeCollect( "activations", () =>
+			// {
+			// 	foreach ( var activation in activationsObserver )
+			// 		defaultTranslations.AddRange( CollectActivationTranslationItems( activation ) );
+			// } );
+
+			/* TODO-Avalonia-Reenable: enemy bonuses when modifier editor path is stable in Avalonia. */
+			// SafeCollect( "monster modifiers", () =>
+			// {
+			// 	foreach ( var modifier in monsterModifierObserver )
+			// 		defaultTranslations.AddRange( CollectModifierTranslationItems( modifier ) );
+			// } );
 
 			//remove default translations with empty value
 			defaultTranslations = defaultTranslations.FindAll(it => !String.IsNullOrWhiteSpace(it.text)).ToList();
