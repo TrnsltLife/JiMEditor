@@ -32,7 +32,6 @@
 			           Text="{Binding Title}"/>
 			<ComboBox x:Name="dataListView"
 			          Margin="3"
-			          ItemsSource="{Binding SortedItems}"
 			          SelectionChanged="DataListView_OnSelectionChanged">
 				<ComboBox.ItemTemplate>
 					<DataTemplate>

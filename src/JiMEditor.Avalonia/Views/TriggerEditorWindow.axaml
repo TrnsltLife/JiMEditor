@@ -1,0 +1,88 @@
+<!-- Ported from: JiMEditor/Views/TriggerEditorWindow.xaml (2026-04-06) — Avalonia UI. -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="JiMEditor.Avalonia.Views.TriggerEditorWindow"
+        x:CompileBindings="False"
+        Title="Trigger Editor"
+        Width="480"
+        MinWidth="400"
+        MinHeight="320"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource bgColor}"
+        Opened="Window_Opened">
+
+	<Window.Styles>
+		<Style Selector="TextBox.campaignField">
+			<Setter Property="Background" Value="#333337"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#77777d"/>
+			<Setter Property="Padding" Value="6,4"/>
+		</Style>
+		<Style Selector="CheckBox">
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+	</Window.Styles>
+
+	<Grid RowDefinitions="Auto,*,Auto">
+		<Border Grid.Row="0" Classes="callout" Margin="8,8,8,0">
+			<StackPanel Spacing="0">
+				<TextBlock x:Name="NameLabel" Classes="heading" Text="Trigger Name:"/>
+				<TextBox x:Name="NameTextBox"
+				         Classes="campaignField"
+				         Width="250"
+				         HorizontalAlignment="Left"
+				         Margin="0,6,0,0"/>
+				<StackPanel Orientation="Horizontal" Spacing="40" Margin="0,10,0,0">
+					<CheckBox x:Name="MultiCheckBox" Content="This Trigger is a Multi-Trigger"/>
+					<CheckBox x:Name="CampaignCheckBox"
+					          Content="This Trigger is a Campaign Trigger"
+					          IsEnabled="False"/>
+				</StackPanel>
+			</StackPanel>
+		</Border>
+
+		<StackPanel Grid.Row="1" Margin="14,8,14,8" Spacing="6">
+			<TextBlock Classes="subText" TextWrapping="Wrap">
+				<Run Text="Triggers are "/>
+				<Run FontStyle="Italic" Text="True / False"/>
+				<Run Text=" values that are set during the Scenario to keep track of player actions. "/>
+				<Run FontWeight="Bold" Text="All Triggers start off with a value of "/>
+				<Run FontWeight="Bold" FontStyle="Italic" Text="False"/>
+				<Run Text="."/>
+			</TextBlock>
+			<TextBlock Classes="subText" TextWrapping="Wrap"
+			           Text="Triggers are also used by many components to get notified of when to activate. For example, Triggers can activate Events, start and end Objectives, activate Chapters, end the Scenario, and other actions that use Triggers."/>
+			<Button HorizontalAlignment="Left"
+			        Background="#C98800"
+			        Height="32"
+			        Padding="8,0"
+			        Margin="0,6,0,0"
+			        Click="Help_Click">
+				<StackPanel Orientation="Horizontal" Spacing="6">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/help.png" Stretch="Uniform" Height="18"/>
+					<TextBlock Text="Trigger Help" Classes="heading" VerticalAlignment="Center"/>
+				</StackPanel>
+			</Button>
+		</StackPanel>
+
+		<Border Grid.Row="2"
+		        BorderThickness="0,1,0,0"
+		        BorderBrush="Silver"
+		        Background="#FF46464A">
+			<WrapPanel HorizontalAlignment="Right">
+				<Button Margin="10"
+				        Background="MediumSeaGreen"
+				        Click="OkButton_Click"
+				        IsDefault="True">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+				<Button Margin="0,10,10,10"
+				        Background="{StaticResource bgCancelDelete}"
+				        Click="CancelButton_Click"
+				        IsCancel="True">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+			</WrapPanel>
+		</Border>
+	</Grid>
+</Window>

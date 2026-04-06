@@ -42,6 +42,7 @@
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\cancel.png" Link="Assets\cancel.png" />
     <!-- MainWindow sidebar (JiMEditor/Assets) -->
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\add.png" Link="Assets\add.png" />
+    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\addtrigger.png" Link="Assets\addtrigger.png" />
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\remove.png" Link="Assets\remove.png" />
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\duplicate.png" Link="Assets\duplicate.png" />
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\import.png" Link="Assets\import.png" />

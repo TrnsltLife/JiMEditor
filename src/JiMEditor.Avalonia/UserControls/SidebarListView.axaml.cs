@@ -17,8 +17,19 @@ public partial class SidebarListView : UserControl, INotifyPropertyChanged
 {
 	IEnumerable? _rawSource;
 	INotifyCollectionChanged? _notifiable;
+	string _title = "";
 
-	public string Title { get; set; } = "";
+	public string Title
+	{
+		get => _title;
+		set
+		{
+			if ( _title == value )
+				return;
+			_title = value;
+			Notify( nameof( Title ) );
+		}
+	}
 
 	public ObservableCollection<object> SortedItems { get; } = new();
 
@@ -77,6 +88,14 @@ public partial class SidebarListView : UserControl, INotifyPropertyChanged
 	public SidebarListView()
 	{
 		InitializeComponent();
+		// MainWindow sets DataContext = scenario on the window; that inherits here and replaces any ctor assignment.
+		// Re-assert this control as its own binding root after attach so Title, SortedItems, and toolbar bindings work.
+		Loaded += OnSidebarLoaded;
+		dataListView.ItemsSource = SortedItems;
+	}
+
+	void OnSidebarLoaded( object? sender, RoutedEventArgs e )
+	{
 		DataContext = this;
 	}
 
