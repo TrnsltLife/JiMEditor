@@ -120,4 +120,121 @@ public class JiMePseudoHtmlFormatTests
 		Assert.Equal( 0, s0 );
 		Assert.Equal( 2, s1 );
 	}
+
+	[Fact]
+	public void SelectionRestore_BoldOff_SelectingInnerText_MatchesPlainSpan()
+	{
+		Assert.True(
+			JiMePseudoHtmlContentEditing.TryGetMarkupAndSelectionAfterSemanticEdit(
+				"<b>hi</b>",
+				3,
+				5,
+				JiMePseudoHtmlContentEditing.ApplyBoldToggle,
+				out var after,
+				out var ns,
+				out var ne ) );
+		Assert.Equal( "hi", after );
+		Assert.Equal( 0, ns );
+		Assert.Equal( 2, ne );
+	}
+
+	[Fact]
+	public void SelectionRestore_BoldOn_PlainText_SelectsInnerLettersInMarkup()
+	{
+		Assert.True(
+			JiMePseudoHtmlContentEditing.TryGetMarkupAndSelectionAfterSemanticEdit(
+				"hi",
+				0,
+				2,
+				JiMePseudoHtmlContentEditing.ApplyBoldToggle,
+				out var after,
+				out var ns,
+				out var ne ) );
+		Assert.Equal( "<b>hi</b>", after );
+		Assert.Equal( 3, ns );
+		Assert.Equal( 5, ne );
+	}
+
+	[Fact]
+	public void SelectionRestore_ItalicOn_PlainText_SelectsInnerLettersInMarkup()
+	{
+		Assert.True(
+			JiMePseudoHtmlContentEditing.TryGetMarkupAndSelectionAfterSemanticEdit(
+				"ab",
+				0,
+				2,
+				JiMePseudoHtmlContentEditing.ApplyItalicToggle,
+				out var after,
+				out var ns,
+				out var ne ) );
+		Assert.Equal( "<i>ab</i>", after );
+		Assert.Equal( 3, ns );
+		Assert.Equal( 5, ne );
+	}
+
+	[Fact]
+	public void SelectionRestore_ClearIcon_SelectingGlyph_SelectsPlainGlyph()
+	{
+		const string t = "<font=\"Icon\">M</font>";
+		Assert.True(
+			JiMePseudoHtmlContentEditing.TryGetMarkupAndSelectionAfterSemanticEdit(
+				t,
+				13,
+				14,
+				JiMePseudoHtmlContentEditing.ClearFormattingInContentRange,
+				out var after,
+				out var ns,
+				out var ne ) );
+		Assert.Equal( "M", after );
+		Assert.Equal( 0, ns );
+		Assert.Equal( 1, ne );
+	}
+
+	[Fact]
+	public void SelectionRestore_PartialBoldOff_SelectsMiddlePlainRun()
+	{
+		// `<b>hello</b>` — source "ell" is indices 4–7 (e,l,l).
+		Assert.True(
+			JiMePseudoHtmlContentEditing.TryGetMarkupAndSelectionAfterSemanticEdit(
+				"<b>hello</b>",
+				4,
+				7,
+				JiMePseudoHtmlContentEditing.ApplyBoldToggle,
+				out var after,
+				out var ns,
+				out var ne ) );
+		Assert.Equal( "<b>h</b>ell<b>o</b>", after );
+		Assert.Equal( 8, ns );
+		Assert.Equal( 11, ne );
+		Assert.Equal( "ell", after.Substring( ns, ne - ns ) );
+	}
+
+	[Theory]
+	[InlineData( "<b>hi</b>", 0, 2, 3, 5 )]
+	[InlineData( "<i>x</i>", 0, 1, 3, 4 )]
+	public void TryGetSourceRangeForContentRange_FindsLiteralSpan( string markup, int c0, int c1, int expStart, int expEnd )
+	{
+		Assert.True( JiMePseudoHtmlContentEditing.TryGetSourceRangeForContentRange( markup, c0, c1, out var s0, out var s1 ) );
+		Assert.Equal( expStart, s0 );
+		Assert.Equal( expEnd, s1 );
+	}
+
+	[Fact]
+	public void IconFontToggle_OnPlain_Wraps_Then_Toggle_Removes()
+	{
+		Assert.True(
+			JiMePseudoHtmlContentEditing.TryGetMarkupAndSelectionAfterSemanticEdit(
+				"z",
+				0,
+				1,
+				JiMePseudoHtmlContentEditing.ApplyIconFontToggle,
+				out var wrapped,
+				out _,
+				out _ ) );
+		Assert.Equal( "<font=\"Icon\">z</font>", wrapped );
+
+		var doc = JiMePseudoHtmlFormat.Parse( wrapped );
+		JiMePseudoHtmlContentEditing.ApplyIconFontToggle( doc, 0, 1 );
+		Assert.Equal( "z", JiMePseudoHtmlFormat.NormalizePseudoHtml( JiMePseudoHtmlFormat.Serialize( doc ) ) );
+	}
 }

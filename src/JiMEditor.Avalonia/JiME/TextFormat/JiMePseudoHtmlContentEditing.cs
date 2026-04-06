@@ -147,6 +147,29 @@ public static class JiMePseudoHtmlContentEditing
 		return srcStart < srcEnd;
 	}
 
+	/// <summary>
+	/// Runs the same mapping pipeline as the rich editor after B/I/Clear: content selection → edit → normalize → restored source span.
+	/// Used by tests and to validate selection restoration without UI.
+	/// </summary>
+	public static bool TryGetMarkupAndSelectionAfterSemanticEdit(
+		string markupBefore,
+		int sourceSelStart,
+		int sourceSelEnd,
+		Action<JiMeTextDocument, int, int> applyEdit,
+		out string markupAfter,
+		out int newSourceSelStart,
+		out int newSourceSelEnd )
+	{
+		markupAfter = markupBefore;
+		newSourceSelStart = newSourceSelEnd = 0;
+		if ( !TryGetContentRangeForSourceSelection( markupBefore, sourceSelStart, sourceSelEnd, out var c0, out var c1 ) )
+			return false;
+		var doc = JiMePseudoHtmlFormat.Parse( markupBefore );
+		applyEdit( doc, c0, c1 );
+		markupAfter = JiMePseudoHtmlFormat.NormalizePseudoHtml( JiMePseudoHtmlFormat.Serialize( doc ) );
+		return TryGetSourceRangeForContentRange( markupAfter, c0, c1, out newSourceSelStart, out newSourceSelEnd );
+	}
+
 	public static void ApplyBoldToggle( JiMeTextDocument doc, int cStart, int cEnd )
 	{
 		if ( cStart >= cEnd )
@@ -168,6 +191,17 @@ public static class JiMePseudoHtmlContentEditing
 		var allItalic = AllCharsHaveItalic( doc, cStart, cEnd );
 		var newItalic = !allItalic;
 		ApplyItalicInRange( doc, cStart, cEnd, newItalic );
+		MergeAllParagraphs( doc );
+	}
+
+	public static void ApplyIconFontToggle( JiMeTextDocument doc, int cStart, int cEnd )
+	{
+		if ( cStart >= cEnd )
+			return;
+		SplitAtContentOffset( doc, cEnd );
+		SplitAtContentOffset( doc, cStart );
+		var allIcon = AllCharsHaveIconFont( doc, cStart, cEnd );
+		ApplyIconFontInRange( doc, cStart, cEnd, !allIcon );
 		MergeAllParagraphs( doc );
 	}
 
@@ -446,6 +480,46 @@ public static class JiMePseudoHtmlContentEditing
 		}
 
 		return true;
+	}
+
+	static bool AllCharsHaveIconFont( JiMeTextDocument doc, int cStart, int cEnd )
+	{
+		var g = 0;
+		foreach ( var p in doc.Paragraphs )
+		{
+			foreach ( var r in p.Runs )
+			{
+				var len = r.Text?.Length ?? 0;
+				var rg0 = g;
+				var rg1 = g + len;
+				var o0 = Math.Max( rg0, cStart );
+				var o1 = Math.Min( rg1, cEnd );
+				if ( o0 < o1 && !r.IsIconFont )
+					return false;
+				g = rg1;
+			}
+		}
+
+		return true;
+	}
+
+	static void ApplyIconFontInRange( JiMeTextDocument doc, int cStart, int cEnd, bool iconFont )
+	{
+		var g = 0;
+		foreach ( var p in doc.Paragraphs )
+		{
+			foreach ( var r in p.Runs )
+			{
+				var len = r.Text?.Length ?? 0;
+				var rg0 = g;
+				var rg1 = g + len;
+				var o0 = Math.Max( rg0, cStart );
+				var o1 = Math.Min( rg1, cEnd );
+				if ( o0 < o1 )
+					r.IsIconFont = iconFont;
+				g = rg1;
+			}
+		}
 	}
 
 	static void ApplyBoldInRange( JiMeTextDocument doc, int cStart, int cEnd, bool bold )

@@ -1,7 +1,9 @@
 // Source + live preview for JiME pseudo-HTML (2026-04-05)
 using System;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using JiME.TextFormat;
 
 namespace JiMEditor.Avalonia.Views;
@@ -18,6 +20,7 @@ public partial class PseudoHtmlRichEditor : UserControl
 	{
 		InitializeComponent();
 		IconToolbarRows.ItemsSource = IconButtonRows;
+		SourceBox.AddHandler( InputElement.KeyDownEvent, SourceBox_OnKeyDown, RoutingStrategies.Tunnel );
 	}
 
 	public string Text
@@ -31,6 +34,31 @@ public partial class PseudoHtmlRichEditor : UserControl
 	}
 
 	void SourceBox_OnTextChanged( object? sender, TextChangedEventArgs e ) => UpdatePreview();
+
+	void SourceBox_OnKeyDown( object? sender, KeyEventArgs e )
+	{
+		if ( !e.KeyModifiers.HasFlag( KeyModifiers.Control ) )
+			return;
+		switch ( e.Key )
+		{
+			case Key.B:
+				e.Handled = true;
+				ToggleFormatOrWrapEmpty( "<b>", "</b>", JiMePseudoHtmlContentEditing.ApplyBoldToggle );
+				break;
+			case Key.I:
+				e.Handled = true;
+				ToggleFormatOrWrapEmpty( "<i>", "</i>", JiMePseudoHtmlContentEditing.ApplyItalicToggle );
+				break;
+			case Key.Space:
+				e.Handled = true;
+				ApplyClearFormatting();
+				break;
+			case Key.F:
+				e.Handled = true;
+				ToggleFormatOrWrapEmpty( "<font=\"Icon\">", "</font>", JiMePseudoHtmlContentEditing.ApplyIconFontToggle );
+				break;
+		}
+	}
 
 	/// <summary>Parse+serialize repairs (tag order, interleaving, unterminated tags, non-Icon font opens).</summary>
 	void ApplyNormalizedText( string raw, int caretHint )
@@ -62,7 +90,9 @@ public partial class PseudoHtmlRichEditor : UserControl
 	void Italic_Click( object? sender, RoutedEventArgs e ) =>
 		ToggleFormatOrWrapEmpty( "<i>", "</i>", JiMePseudoHtmlContentEditing.ApplyItalicToggle );
 
-	void ClearFmt_Click( object? sender, RoutedEventArgs e )
+	void ClearFmt_Click( object? sender, RoutedEventArgs e ) => ApplyClearFormatting();
+
+	void ApplyClearFormatting()
 	{
 		var (start, end) = GetSelectionRange();
 		var t = SourceBox.Text ?? "";
@@ -117,10 +147,21 @@ public partial class PseudoHtmlRichEditor : UserControl
 		var newText = JiMePseudoHtmlFormat.NormalizePseudoHtml( raw );
 		if ( JiMePseudoHtmlContentEditing.TryGetSourceRangeForContentRange( newText, cStart, cEnd, out var ns, out var ne ) )
 		{
+			var selLo = Math.Clamp( Math.Min( ns, ne ), 0, newText.Length );
+			var selHi = Math.Clamp( Math.Max( ns, ne ), 0, newText.Length );
 			SourceBox.Text = newText;
-			SourceBox.SelectionStart = Math.Min( ns, ne );
-			SourceBox.SelectionEnd = Math.Max( ns, ne );
-			SourceBox.CaretIndex = ne;
+			// Setting CaretIndex after a range collapses selection in Avalonia; defer range restore so it survives the Text change.
+			Dispatcher.UIThread.Post(
+				() =>
+				{
+					if ( SourceBox.Text != newText )
+						return;
+					SourceBox.SelectionStart = selLo;
+					SourceBox.SelectionEnd = selHi;
+					if ( selLo == selHi )
+						SourceBox.CaretIndex = selLo;
+				},
+				DispatcherPriority.Normal );
 		}
 		else
 			ApplyNormalizedText( newText, newText.Length );
