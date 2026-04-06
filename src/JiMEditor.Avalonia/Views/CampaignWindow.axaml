@@ -377,8 +377,7 @@
 							        Background="#1E90FF"
 							        Height="44"
 							        HorizontalAlignment="Left"
-							        IsEnabled="False"
-							        ToolTip.Tip="TODO-Avalonia-Reenable: TextEditorWindow for story">
+							        Click="StoryButton_Click">
 								<StackPanel Orientation="Horizontal" Margin="5,0" Spacing="6">
 									<TextBlock Text="Edit Story Text..." Classes="heading" VerticalAlignment="Center"/>
 									<Image Source="avares://JiMEditor.Avalonia/Assets/edit.png" Height="24"/>

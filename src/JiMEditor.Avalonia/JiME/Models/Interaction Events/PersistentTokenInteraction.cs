@@ -1,8 +1,6 @@
-﻿using JiME.UserControls;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows.Documents;
 
 namespace JiME
 {
@@ -60,13 +58,6 @@ namespace JiME
 
 			if ( alternativeTextTrigger == oldName )
 				alternativeTextTrigger = newName;
-		}
-
-		[JsonIgnore]
-		public FlowDocument AlternativeFlowDocument
-		{
-			//Transform the text to display icons properly in a TextBlock
-			get => RichTextBoxIconEditor.CreateFlowDocumentFromSimpleHtml(alternativeBookData.pages[0], "", "FontFamily=\"Segoe UI\" FontSize=\"12\"");
 		}
 
 		new public List<string> CollectTriggers()

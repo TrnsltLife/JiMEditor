@@ -1,10 +1,6 @@
-﻿using System.Windows.Documents;
 using System;
-using System.Windows.Markup;
-using System.Text.RegularExpressions;
 using System.ComponentModel;
 using Newtonsoft.Json;
-using JiME.UserControls;
 using System.Windows.Media;
 
 namespace JiME
@@ -59,7 +55,6 @@ namespace JiME
 					_text = value;
 					translationOK = false; //when the text changes, change the translationOK flag to false; it needs to be revalidated by the translator
 					NotifyPropertyChanged("text");
-					NotifyPropertyChanged("TextFlowDocument");
 					NotifyPropertyChanged("Background");
 				}
 			}
@@ -134,20 +129,6 @@ namespace JiME
 				}
 			}
 		}
-
-		[JsonIgnore]
-		public FlowDocument TextFlowDocument
-        {
-			//Transform the text to display icons properly in a TextBlock
-			get => CreateFlowDocumentFromSimpleHtml(text);
-        }
-
-		private FlowDocument CreateFlowDocumentFromSimpleHtml(string html)
-		{
-			if (html == null) { return null; }
-			return RichTextBoxIconEditor.CreateFlowDocumentFromSimpleHtml(html, "", "FontFamily=\"Segoe UI\" FontSize=\"12\"");
-		}
-
 
 		public event PropertyChangedEventHandler PropertyChanged;
 

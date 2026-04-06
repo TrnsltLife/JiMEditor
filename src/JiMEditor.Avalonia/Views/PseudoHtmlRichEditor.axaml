@@ -1,0 +1,92 @@
+<!-- Source + live preview editor for JiME pseudo-HTML (2026-04-05) -->
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="JiMEditor.Avalonia.Views.PseudoHtmlRichEditor"
+             x:CompileBindings="False">
+
+	<Grid RowDefinitions="Auto,*" MinHeight="280">
+		<ScrollViewer Grid.Row="0"
+		              HorizontalScrollBarVisibility="Auto"
+		              VerticalScrollBarVisibility="Disabled"
+		              Margin="0,0,0,6">
+			<StackPanel Orientation="Vertical" Spacing="4">
+				<StackPanel Orientation="Horizontal" Spacing="4">
+					<!-- Focusable=false: keep focus in SourceBox so B/I/Clear see the text selection instead of a collapsed caret. -->
+					<Button x:Name="BoldButton" Focusable="False" Classes="projectChromeButton" Content="B" FontWeight="Bold" MinWidth="28" Click="Bold_Click"/>
+					<Button x:Name="ItalicButton" Focusable="False" Classes="projectChromeButton" Content="I" FontStyle="Italic" MinWidth="28" Click="Italic_Click"/>
+					<Button x:Name="ClearFmtButton" Focusable="False" Classes="projectChromeButton" Content="Clear" MinWidth="44" Click="ClearFmt_Click"/>
+				</StackPanel>
+				<ItemsControl x:Name="IconToolbarRows">
+					<ItemsControl.ItemsPanel>
+						<ItemsPanelTemplate>
+							<StackPanel Spacing="4"/>
+						</ItemsPanelTemplate>
+					</ItemsControl.ItemsPanel>
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<StackPanel Orientation="Horizontal" Spacing="2">
+								<ItemsControl ItemsSource="{Binding}">
+									<ItemsControl.ItemsPanel>
+										<ItemsPanelTemplate>
+											<StackPanel Orientation="Horizontal" Spacing="2"/>
+										</ItemsPanelTemplate>
+									</ItemsControl.ItemsPanel>
+									<ItemsControl.ItemTemplate>
+										<DataTemplate>
+											<Button Focusable="False"
+											        Classes="projectChromeButton"
+											        Content="{Binding}"
+											        FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"
+											        MinWidth="26"
+											        Padding="4,2"
+											        Click="IconGlyph_Click"/>
+										</DataTemplate>
+									</ItemsControl.ItemTemplate>
+								</ItemsControl>
+							</StackPanel>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</StackPanel>
+		</ScrollViewer>
+
+		<Grid Grid.Row="1" ColumnDefinitions="*,8,*" MinHeight="200">
+			<DockPanel Grid.Column="0">
+				<TextBlock DockPanel.Dock="Top"
+				           Text="Markup (saved to .jime)"
+				           Foreground="White"
+				           FontSize="11"
+				           Opacity="0.85"
+				           Margin="0,0,0,4"/>
+				<TextBox x:Name="SourceBox"
+				         AcceptsReturn="True"
+				         TextWrapping="Wrap"
+				         FontFamily="Consolas,Courier New,monospace"
+				         Foreground="White"
+				         Background="#2a2a2e"
+				         Watermark="Pseudo-HTML: &lt;b&gt;, &lt;i&gt;, &lt;font=&quot;Icon&quot;&gt;…&lt;/font&gt;, blank line = new paragraph"
+				         TextChanged="SourceBox_OnTextChanged"/>
+			</DockPanel>
+			<GridSplitter Grid.Column="1"
+			              Width="8"
+			              Background="#555"/>
+
+			<DockPanel Grid.Column="2">
+				<TextBlock DockPanel.Dock="Top"
+				           Text="Preview"
+				           Foreground="White"
+				           FontSize="11"
+				           Opacity="0.85"
+				           Margin="0,0,0,4"/>
+				<!-- Horizontal scroll off so PreviewBlock gets a bounded width and TextWrapping applies. -->
+				<ScrollViewer HorizontalScrollBarVisibility="Disabled"
+				              VerticalScrollBarVisibility="Auto">
+					<TextBlock x:Name="PreviewBlock"
+					           TextWrapping="Wrap"
+					           Foreground="White"
+					           FontSize="14"/>
+				</ScrollViewer>
+			</DockPanel>
+		</Grid>
+	</Grid>
+</UserControl>

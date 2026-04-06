@@ -1,10 +1,6 @@
-﻿using System.Windows.Documents;
 using System;
-using System.Windows.Markup;
-using System.Text.RegularExpressions;
 using System.ComponentModel;
 using Newtonsoft.Json;
-using JiME.UserControls;
 using System.Collections.Generic;
 
 namespace JiME
@@ -72,7 +68,6 @@ namespace JiME
 				{
 					_text = value;
 					NotifyPropertyChanged("text");
-					NotifyPropertyChanged("TextFlowDocument");
 				}
 			}
 		}
@@ -86,7 +81,6 @@ namespace JiME
 				{
 					_effect = value;
 					NotifyPropertyChanged("effect");
-					NotifyPropertyChanged("EffectFlowDocument");
 				}
 			}
 		}
@@ -145,27 +139,6 @@ namespace JiME
 				}
 			}
 		}
-
-        [JsonIgnore]
-		public FlowDocument TextFlowDocument
-        {
-			//Transform the text to display icons properly in a TextBlock
-			get => CreateFlowDocumentFromSimpleHtml(text);
-        }
-
-        [JsonIgnore]
-		public FlowDocument EffectFlowDocument
-        {
-			//Transform the effect to display icons properly in a TextBlock
-			get => CreateFlowDocumentFromSimpleHtml(effect);
-        }
-
-		private FlowDocument CreateFlowDocumentFromSimpleHtml(string html)
-		{
-			if (html == null) { return null; }
-			return RichTextBoxIconEditor.CreateFlowDocumentFromSimpleHtml(html, "", "FontFamily=\"Segoe UI\" FontSize=\"12\"");
-		}
-
 
 		public void UpdateValid()
         {

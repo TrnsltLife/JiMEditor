@@ -1,11 +1,4 @@
-﻿using System.Windows.Documents;
 using System;
-using System.Windows.Markup;
-using System.Text.RegularExpressions;
-using System.ComponentModel;
-using Newtonsoft.Json;
-using JiME.UserControls;
-using System.Windows.Media;
 
 namespace JiME
 {

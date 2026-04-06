@@ -53,6 +53,19 @@ public partial class CampaignWindow : Window
 		SaveCampaign();
 	}
 
+	async void StoryButton_Click( object? sender, RoutedEventArgs e )
+	{
+		var dlg = new StoryTextEditWindow( campaign.storyText ?? "" );
+		await dlg.ShowDialog( this );
+		if ( !dlg.Accepted )
+			return;
+		campaign.storyText = dlg.StoryText;
+		StoryStatusTextBlock.Text = string.IsNullOrWhiteSpace( campaign.storyText )
+			? "The Story Text is not set."
+			: "The Story Text is set.";
+		SaveCampaign();
+	}
+
 	void CampaignWindow_Opened( object? sender, EventArgs e )
 	{
 		CampaignGuidTextBlock.Text = "Campaign GUID:  " + campaign.campaignGUID;

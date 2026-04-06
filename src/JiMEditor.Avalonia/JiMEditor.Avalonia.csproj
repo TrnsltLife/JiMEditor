@@ -45,6 +45,7 @@
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\duplicate.png" Link="Assets\duplicate.png" />
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\import.png" Link="Assets\import.png" />
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\export.png" Link="Assets\export.png" />
+    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\LoTR-JiME-Icons.ttf" Link="Assets\LoTR-JiME-Icons.ttf" />
   </ItemGroup>
 
   <!-- JiME engine JSON etc. (embedded resources read via Assembly.GetManifestResourceStream) -->
