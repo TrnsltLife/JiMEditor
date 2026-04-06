@@ -35,6 +35,7 @@ Instructions for AI assistants and humans working in **this repository** while p
 - **Naming:** Align assembly/root namespace with whatever this repo adopts (e.g. `JiME` vs `JiMEditor.Avalonia`) and stay consistent across new projects.
 
 - **Tabs (porting WPF `TabControl`):** Avalonia’s default **Fluent** tab chrome differs from classic WPF. For JiMEditor-like flat dark tabs, put **`Classes="jimeTabStrip"`** on the **`TabControl`** (styles live in [`Assets/ProjectWindowStyles.axaml`](src/JiMEditor.Avalonia/Assets/ProjectWindowStyles.axaml)). **CampaignWindow** already uses this; reuse for other ported windows with tabs.
+- **`TabItem` padding (WPF → Avalonia):** Copying WPF **`TabItem`** **`Padding`** (e.g. `Padding="5"`) onto Avalonia often looks wrong—layout/chrome differs. Prefer something like **`Margin="2,2,2,0"`** **`Padding="2"`** on each **`TabItem`** until a shared style exists. **CampaignWindow.axaml** and **HelpWindow.axaml** in this repo use that pattern for now.
 
 ## Quick reference: TODO tags
 
