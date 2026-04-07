@@ -120,6 +120,11 @@ public partial class SidebarListView : UserControl, INotifyPropertyChanged
 		UpdateToolbarEnabled();
 	}
 
+	/// <summary>
+	/// Rebuilds sorted rows so in-place edits to display fields (e.g. <see cref="ICommonData.dataName"/>) show in the combo without collection churn.
+	/// </summary>
+	public void RefreshSortedItems() => RebuildSorted();
+
 	void OnSourceCollectionChanged( object? sender, NotifyCollectionChangedEventArgs e ) => RebuildSorted();
 
 	void RebuildSorted()

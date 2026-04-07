@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -242,6 +242,12 @@ namespace JiME
             this.sorcery = from.sorcery;
             this.damage = from.damage;
             this.fear = from.fear;
+            this.immuneCleave = from.immuneCleave;
+            this.immuneLethal = from.immuneLethal;
+            this.immunePierce = from.immunePierce;
+            this.immuneSmite = from.immuneSmite;
+            this.immuneStun = from.immuneStun;
+            this.immuneSunder = from.immuneSunder;
             this.fakeCleave = from.fakeCleave;
             this.fakeLethal = from.fakeLethal;
             this.fakePierce = from.fakePierce;

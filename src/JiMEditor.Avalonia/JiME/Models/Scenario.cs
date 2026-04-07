@@ -902,12 +902,11 @@ namespace JiME
 			// 		defaultTranslations.AddRange( CollectActivationTranslationItems( activation ) );
 			// } );
 
-			/* TODO-Avalonia-Reenable: enemy bonuses when modifier editor path is stable in Avalonia. */
-			// SafeCollect( "monster modifiers", () =>
-			// {
-			// 	foreach ( var modifier in monsterModifierObserver )
-			// 		defaultTranslations.AddRange( CollectModifierTranslationItems( modifier ) );
-			// } );
+			SafeCollect( "monster modifiers", () =>
+			{
+				foreach ( var modifier in monsterModifierObserver )
+					defaultTranslations.AddRange( CollectModifierTranslationItems( modifier ) );
+			} );
 
 			//remove default translations with empty value
 			defaultTranslations = defaultTranslations.FindAll(it => !String.IsNullOrWhiteSpace(it.text)).ToList();

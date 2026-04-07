@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -60,6 +61,12 @@ public partial class MainWindow : Window
 		objectivesUC.onDuplicateEvent += OnDuplicateObjective;
 		activationsUC.SetItemsSource( scenario.activationsObserver );
 		monsterModifiersUC.SetItemsSource( scenario.monsterModifierObserver );
+		monsterModifiersUC.onAddEvent += OnAddMonsterModifier;
+		monsterModifiersUC.onRemoveEvent += OnRemoveMonsterModifier;
+		monsterModifiersUC.onSettingsEvent += OnSettingsMonsterModifier;
+		monsterModifiersUC.onDuplicateEvent += OnDuplicateMonsterModifier;
+		monsterModifiersUC.onImportEvent += OnImportMonsterModifier;
+		monsterModifiersUC.onExportEvent += OnExportMonsterModifier;
 		translationsUC.SetItemsSource( scenario.translationObserver );
 		translationsUC.onAddEvent += OnAddTranslation;
 		translationsUC.onRemoveEvent += OnRemoveTranslation;
@@ -70,6 +77,12 @@ public partial class MainWindow : Window
 
 	void DetachSidebarLists()
 	{
+		monsterModifiersUC.onAddEvent -= OnAddMonsterModifier;
+		monsterModifiersUC.onRemoveEvent -= OnRemoveMonsterModifier;
+		monsterModifiersUC.onSettingsEvent -= OnSettingsMonsterModifier;
+		monsterModifiersUC.onDuplicateEvent -= OnDuplicateMonsterModifier;
+		monsterModifiersUC.onImportEvent -= OnImportMonsterModifier;
+		monsterModifiersUC.onExportEvent -= OnExportMonsterModifier;
 		translationsUC.onAddEvent -= OnAddTranslation;
 		translationsUC.onRemoveEvent -= OnRemoveTranslation;
 		translationsUC.onSettingsEvent -= OnSettingsTranslation;
@@ -158,6 +171,104 @@ public partial class MainWindow : Window
 		{
 			MessageBox.Show( "There must be at least one Objective.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
 		}
+	}
+
+	async Task AddMonsterModifierAsync()
+	{
+		int maxId = scenario.monsterModifierObserver.Max( a => a.id );
+		int newId = Math.Max( maxId + 1, MonsterModifier.START_OF_CUSTOM_MODIFIERS );
+		var mmew = new MonsterModifierEditorWindow( scenario, new MonsterModifier( newId ), false );
+		await mmew.ShowDialog( this );
+		if ( mmew.Accepted )
+			scenario.AddMonsterModifier( mmew.modifier );
+	}
+
+	async void OnAddMonsterModifier( object? sender, EventArgs e ) => await AddMonsterModifierAsync();
+
+	void OnRemoveMonsterModifier( object? sender, EventArgs e )
+	{
+		if ( monsterModifiersUC.DataListView.SelectedItem is not MonsterModifier mod )
+			return;
+		if ( mod.id >= MonsterModifier.START_OF_CUSTOM_MODIFIERS )
+		{
+			var ret = MessageBox.Show(
+				"Are you sure you want to delete this Enemy Bonus?",
+				"Delete Enemy Bonus", MessageBoxButton.YesNo, MessageBoxImage.Question );
+			if ( ret == MessageBoxResult.Yes )
+			{
+				var idx = monsterModifiersUC.DataListView.SelectedIndex;
+				scenario.RemoveData( mod );
+				monsterModifiersUC.DataListView.SelectedIndex =
+					scenario.monsterModifierObserver.Count > 0 ? Math.Max( idx - 1, 0 ) : -1;
+			}
+		}
+		else
+		{
+			MessageBox.Show(
+				"You can't delete the default Enemy Bonuses, but you can copy them and modify the copy.",
+				"Cannot Delete Enemy Bonus", MessageBoxButton.OK, MessageBoxImage.Information );
+		}
+	}
+
+	async void OnSettingsMonsterModifier( object? sender, EventArgs e )
+	{
+		if ( monsterModifiersUC.DataListView.SelectedItem is not MonsterModifier mod )
+			return;
+		if ( mod.id >= MonsterModifier.START_OF_CUSTOM_MODIFIERS )
+			await OpenMonsterModifierEditorAsync( mod, readOnly: false );
+		else
+		{
+			MessageBox.Show(
+				"You can't modify the default Enemy Bonuses, but you can copy them and modify the copy.",
+				"Cannot Modify Enemy Bonus", MessageBoxButton.OK, MessageBoxImage.Information );
+			await OpenMonsterModifierEditorAsync( mod, readOnly: true );
+		}
+	}
+
+	async Task OpenMonsterModifierEditorAsync( MonsterModifier mod, bool readOnly )
+	{
+		if ( readOnly )
+		{
+			var view = new MonsterModifierEditorWindow( scenario, mod, isNew: false, readOnly: true );
+			await view.ShowDialog( this );
+			return;
+		}
+
+		var originalValues = mod.CaptureStartingValues();
+		var originalPrefix = mod.TranslationKeyPrefix();
+		var originalKeyName = mod.TranslationKeyName();
+		var editor = new MonsterModifierEditorWindow( scenario, mod, false );
+		await editor.ShowDialog( this );
+		mod.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+		if ( editor.Accepted )
+			monsterModifiersUC.RefreshSortedItems();
+	}
+
+	async void OnDuplicateMonsterModifier( object? sender, EventArgs e )
+	{
+		if ( monsterModifiersUC.DataListView.SelectedItem is not MonsterModifier src )
+			return;
+		int maxId = scenario.monsterModifierObserver.Max( a => a.id );
+		int newId = Math.Max( maxId + 1, MonsterModifier.START_OF_CUSTOM_MODIFIERS );
+		var mod = src.Clone( newId );
+		var mmew = new MonsterModifierEditorWindow( scenario, mod, true );
+		await mmew.ShowDialog( this );
+		if ( mmew.Accepted )
+			scenario.AddMonsterModifier( mod );
+	}
+
+	void OnImportMonsterModifier( object? sender, EventArgs e )
+	{
+		var modifierItem = new ImportManager().ImportMonsterModifier( scenario );
+		if ( modifierItem != null )
+			scenario.AddMonsterModifier( modifierItem );
+	}
+
+	void OnExportMonsterModifier( object? sender, EventArgs e )
+	{
+		if ( monsterModifiersUC.DataListView.SelectedItem is not MonsterModifier selected )
+			return;
+		new ExportManager().ExportMonsterModifier( scenario, selected );
 	}
 
 	async void OnDuplicateObjective( object? sender, EventArgs e )
