@@ -1,5 +1,6 @@
 // Source + live preview for JiME pseudo-HTML (2026-04-05)
 using System;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -10,10 +11,29 @@ namespace JiMEditor.Avalonia.Views;
 
 public partial class PseudoHtmlRichEditor : UserControl
 {
-	static readonly string[][] IconButtonRows =
+	public static readonly StyledProperty<string?> WatermarkProperty =
+		AvaloniaProperty.Register<PseudoHtmlRichEditor, string?>(
+			nameof( Watermark ),
+			"" /*default to an empty watermark*/ );
+
+	static readonly string[][][] IconButtonRows =
 	{
-		new[] { "M", "Z", "A", "S", "W", "X", "s", "f", "u", "a", "O", "T", "m", "R", "t", "D", "F", "C", "r", "v", "p", "d", "w", "c", "I", "L" },
-		new[] { "B", "b", "l", "x", "i", "@", "!", "e", "g", "k", "H", "h", "K", "E", "(", ")", "-", "/" }
+		new[]
+		{
+			new[] { "M", "Z", "A", "S", "W", "X" },
+			new[] { "I", "L" },
+			new[] { "a", "O", "T", "m", "R", "t" },
+			new[] { "r", "v", "p", "d", "w", "c" },
+			new[] { "B", "b", "l" }
+		},
+		new[]
+		{
+			new[] { "D", "F", "C" },
+			new[] { "s", "f", "u" },
+			new[] { "H", "h", "K", "E" },
+			new[] { "x", "i", "@", "!", "e", "g", "k" },
+			new[] { "(", ")", "-", "/" }
+		}
 	};
 
 	public PseudoHtmlRichEditor()
@@ -31,6 +51,12 @@ public partial class PseudoHtmlRichEditor : UserControl
 			SourceBox.Text = value ?? "";
 			UpdatePreview();
 		}
+	}
+
+	public string? Watermark
+	{
+		get => GetValue( WatermarkProperty );
+		set => SetValue( WatermarkProperty, value );
 	}
 
 	void SourceBox_OnTextChanged( object? sender, TextChangedEventArgs e ) => UpdatePreview();
@@ -107,7 +133,7 @@ public partial class PseudoHtmlRichEditor : UserControl
 
 	void IconGlyph_Click( object? sender, RoutedEventArgs e )
 	{
-		if ( sender is not Button { Content: string ch } || string.IsNullOrEmpty( ch ) )
+		if ( sender is not Button { Content: string ch } || string.IsNullOrWhiteSpace( ch ) )
 			return;
 		var insert = "<font=\"Icon\">" + ch + "</font>";
 		InsertAtCaret( insert );

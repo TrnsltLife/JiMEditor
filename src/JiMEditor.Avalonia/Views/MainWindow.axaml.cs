@@ -60,6 +60,12 @@ public partial class MainWindow : Window
 		objectivesUC.onSettingsEvent += OnSettingsObjective;
 		objectivesUC.onDuplicateEvent += OnDuplicateObjective;
 		activationsUC.SetItemsSource( scenario.activationsObserver );
+		activationsUC.onAddEvent += OnAddActivations;
+		activationsUC.onRemoveEvent += OnRemoveActivations;
+		activationsUC.onSettingsEvent += OnSettingsActivations;
+		activationsUC.onDuplicateEvent += OnDuplicateActivations;
+		activationsUC.onImportEvent += OnImportActivations;
+		activationsUC.onExportEvent += OnExportActivations;
 		monsterModifiersUC.SetItemsSource( scenario.monsterModifierObserver );
 		monsterModifiersUC.onAddEvent += OnAddMonsterModifier;
 		monsterModifiersUC.onRemoveEvent += OnRemoveMonsterModifier;
@@ -96,6 +102,12 @@ public partial class MainWindow : Window
 		triggersUC.onRemoveEvent -= OnRemoveTrigger;
 		triggersUC.onSettingsEvent -= OnSettingsTrigger;
 		triggersUC.onDuplicateEvent -= OnDuplicateTrigger;
+		activationsUC.onAddEvent -= OnAddActivations;
+		activationsUC.onRemoveEvent -= OnRemoveActivations;
+		activationsUC.onSettingsEvent -= OnSettingsActivations;
+		activationsUC.onDuplicateEvent -= OnDuplicateActivations;
+		activationsUC.onImportEvent -= OnImportActivations;
+		activationsUC.onExportEvent -= OnExportActivations;
 		objectivesUC.DetachItemsSource();
 		interactionsUC.DetachItemsSource();
 		triggersUC.DetachItemsSource();
@@ -151,6 +163,87 @@ public partial class MainWindow : Window
 	}
 
 	async void OnAddObjective( object? sender, EventArgs e ) => await AddObjectiveAsync();
+
+	async Task AddActivationsAsync()
+	{
+		int maxId = scenario.activationsObserver.Max( a => a.id );
+		int newId = Math.Max( maxId + 1, MonsterActivations.START_OF_CUSTOM_ACTIVATIONS );
+		var aew = new ActivationsEditorWindow( scenario, new MonsterActivations( newId ), false );
+		await aew.ShowDialog( this );
+		if ( aew.Accepted )
+			scenario.AddActivations( aew.activations );
+	}
+
+	async void OnAddActivations( object? sender, EventArgs e ) => await AddActivationsAsync();
+
+	void OnRemoveActivations( object? sender, EventArgs e )
+	{
+		if ( activationsUC.DataListView.SelectedItem is not MonsterActivations act )
+			return;
+		if ( act.id >= MonsterActivations.START_OF_CUSTOM_ACTIVATIONS )
+		{
+			var ret = MessageBox.Show(
+				"Are you sure you want to delete this Enemy Attack Group?\n\nALL DESCRIPTIONS AND DAMAGE WILL BE DELETED.",
+				"Delete Enemy Attack Group", MessageBoxButton.YesNo, MessageBoxImage.Question );
+			if ( ret == MessageBoxResult.Yes )
+			{
+				var idx = activationsUC.DataListView.SelectedIndex;
+				scenario.RemoveData( act );
+				activationsUC.DataListView.SelectedIndex =
+					scenario.activationsObserver.Count > 0 ? Math.Max( idx - 1, 0 ) : -1;
+			}
+		}
+		else
+		{
+			MessageBox.Show(
+				"You can't delete the default Enemy Attack Groups, but you can copy them and modify the copy.",
+				"Cannot Delete Enemy Attack Group", MessageBoxButton.OK, MessageBoxImage.Information );
+		}
+	}
+
+	async void OnSettingsActivations( object? sender, EventArgs e )
+	{
+		if ( activationsUC.DataListView.SelectedItem is not MonsterActivations act )
+			return;
+		if ( act.id >= MonsterActivations.START_OF_CUSTOM_ACTIVATIONS )
+		{
+			var ow = new ActivationsEditorWindow( scenario, act, false );
+			await ow.ShowDialog( this );
+		}
+		else
+		{
+			MessageBox.Show(
+				"You can't modify the default Enemy Attack Groups, but you can copy them and modify the copy.",
+				"Cannot Modify Enemy Attack Group", MessageBoxButton.OK, MessageBoxImage.Information );
+		}
+	}
+
+	async void OnDuplicateActivations( object? sender, EventArgs e )
+	{
+		if ( activationsUC.DataListView.SelectedItem is not MonsterActivations src )
+			return;
+		int maxId = scenario.activationsObserver.Max( a => a.id );
+		int newId = Math.Max( maxId + 1, MonsterActivations.START_OF_CUSTOM_ACTIVATIONS );
+		var act = src.Clone( newId );
+		var aew = new ActivationsEditorWindow( scenario, act, true );
+		await aew.ShowDialog( this );
+		if ( aew.Accepted )
+			scenario.activationsObserver.Add( act );
+	}
+
+	void OnImportActivations( object? sender, EventArgs e )
+	{
+		var activationItem = new ImportManager().ImportMonsterActivations( scenario );
+		if ( activationItem != null )
+			scenario.activationsObserver.Add( activationItem );
+	}
+
+	void OnExportActivations( object? sender, EventArgs e )
+	{
+		if ( activationsUC.DataListView.SelectedItem is not MonsterActivations selected )
+			return;
+		new ExportManager().ExportMonsterActivation( scenario, selected );
+	}
 
 	void OnRemoveObjective( object? sender, EventArgs e )
 	{

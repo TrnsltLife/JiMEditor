@@ -1,0 +1,84 @@
+<!-- Ported from: JiMEditor/Views/ActivationsEditorWindow.xaml (2026-04-07) — simplified Avalonia editor. -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="JiMEditor.Avalonia.Views.ActivationsEditorWindow"
+        x:CompileBindings="False"
+        Title="Enemy Attack Group Editor"
+        Width="860"
+        MinWidth="700"
+        MinHeight="580"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource bgColor}">
+
+	<Window.Styles>
+		<Style Selector="TextBox.campaignField">
+			<Setter Property="Background" Value="#333337"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#77777d"/>
+			<Setter Property="Padding" Value="6,4"/>
+		</Style>
+	</Window.Styles>
+
+	<Grid RowDefinitions="*,Auto">
+		<ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+			<StackPanel Margin="8" Spacing="8">
+				<Border Classes="callout">
+					<StackPanel Spacing="6">
+						<TextBlock Classes="heading" Text="Enemy Attack Group Name:"/>
+						<StackPanel Orientation="Horizontal" Spacing="8">
+							<TextBox x:Name="NameTextBox" Classes="campaignField" Width="280"/>
+							<TextBlock x:Name="LockText" Classes="subText" VerticalAlignment="Center" Text="Locked default group"/>
+						</StackPanel>
+					</StackPanel>
+				</Border>
+
+				<Border Classes="callout">
+					<StackPanel Spacing="8">
+						<Button x:Name="AddActivationButton" Background="DodgerBlue" HorizontalAlignment="Left" Click="AddActivationButton_Click">
+							<StackPanel Orientation="Horizontal" Spacing="6">
+								<TextBlock Classes="heading" Text="Add Attack Description..."/>
+								<Image Source="avares://JiMEditor.Avalonia/Assets/add.png" Height="22"/>
+							</StackPanel>
+						</Button>
+
+						<ItemsControl x:Name="ActivationItemsControl" ItemsSource="{Binding activations.activations}">
+							<ItemsControl.ItemTemplate>
+								<DataTemplate>
+									<Border Classes="callout" Margin="0,2">
+										<Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
+											<TextBlock Grid.Row="0" Classes="subText"
+											           Text="{Binding text}" TextWrapping="Wrap"/>
+											<TextBlock Grid.Row="1" Classes="subText"
+											           Text="{Binding effect}" TextWrapping="Wrap"/>
+											<TextBlock Grid.Row="2" Classes="subText"
+											           Text="{Binding negate, StringFormat=Negated By: {0}}"/>
+											<StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center" Margin="8,0,0,0">
+												<Button Width="40" Height="40" Background="CornflowerBlue" Click="EditButton_Click" Tag="{Binding}">
+													<Image Source="avares://JiMEditor.Avalonia/Assets/edit.png" Stretch="Uniform"/>
+												</Button>
+												<Button Width="40" Height="40" Background="{StaticResource bgCancelDelete}" Click="DeleteButton_Click" Tag="{Binding}">
+													<Image Source="avares://JiMEditor.Avalonia/Assets/remove.png" Stretch="Uniform"/>
+												</Button>
+											</StackPanel>
+										</Grid>
+									</Border>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
+					</StackPanel>
+				</Border>
+			</StackPanel>
+		</ScrollViewer>
+
+		<Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Silver" Background="#FF46464A">
+			<WrapPanel HorizontalAlignment="Right">
+				<Button Margin="10" Background="MediumSeaGreen" Click="OkButton_Click" IsDefault="True">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+				<Button x:Name="CancelButton" Margin="0,10,10,10" Background="{StaticResource bgCancelDelete}" Click="CancelButton_Click" IsCancel="True">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+			</WrapPanel>
+		</Border>
+	</Grid>
+</Window>

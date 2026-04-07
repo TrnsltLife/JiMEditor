@@ -2,55 +2,72 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="JiMEditor.Avalonia.Views.PseudoHtmlRichEditor"
+             x:Name="Root"
              x:CompileBindings="False">
 
-	<Grid RowDefinitions="Auto,*" MinHeight="280">
+	<Grid RowDefinitions="Auto,*" MinHeight="160">
 		<ScrollViewer Grid.Row="0"
 		              HorizontalScrollBarVisibility="Auto"
 		              VerticalScrollBarVisibility="Disabled"
 		              Margin="0,0,0,6">
-			<StackPanel Orientation="Vertical" Spacing="4">
-				<StackPanel Orientation="Horizontal" Spacing="4">
+			<StackPanel Orientation="Horizontal" Spacing="4">
+				<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Top">
 					<!-- Focusable=false: keep focus in SourceBox so B/I/Clear see the text selection instead of a collapsed caret. -->
-					<Button x:Name="BoldButton" Focusable="False" Classes="projectChromeButton" Content="B" FontWeight="Bold" MinWidth="28" Click="Bold_Click"/>
-					<Button x:Name="ItalicButton" Focusable="False" Classes="projectChromeButton" Content="I" FontStyle="Italic" MinWidth="28" Click="Italic_Click"/>
-					<Button x:Name="ClearFmtButton" Focusable="False" Classes="projectChromeButton" Content="Clear" MinWidth="44" Click="ClearFmt_Click"/>
+					<Button x:Name="BoldButton" Focusable="False" Classes="projectChromeButton" HorizontalContentAlignment="Center" Content="B" FontWeight="Bold" FontSize="12" Padding="4,4,4,4" MinWidth="20" Click="Bold_Click"/>
+					<Button x:Name="ItalicButton" Focusable="False" Classes="projectChromeButton" HorizontalContentAlignment="Center" Content="I" FontStyle="Italic" FontSize="12" Padding="4,4,4,4" MinWidth="20" Click="Italic_Click"/>
+					<Button x:Name="ClearFmtButton" Focusable="False" Classes="projectChromeButton" HorizontalContentAlignment="Center" Content="Clear" MinWidth="40" FontSize="12" Padding="4,4,4,4" Click="ClearFmt_Click"/>
 				</StackPanel>
-				<ItemsControl x:Name="IconToolbarRows">
-					<ItemsControl.ItemsPanel>
-						<ItemsPanelTemplate>
-							<StackPanel Spacing="4"/>
-						</ItemsPanelTemplate>
-					</ItemsControl.ItemsPanel>
-					<ItemsControl.ItemTemplate>
-						<DataTemplate>
-							<StackPanel Orientation="Horizontal" Spacing="2">
-								<ItemsControl ItemsSource="{Binding}">
-									<ItemsControl.ItemsPanel>
-										<ItemsPanelTemplate>
-											<StackPanel Orientation="Horizontal" Spacing="2"/>
-										</ItemsPanelTemplate>
-									</ItemsControl.ItemsPanel>
-									<ItemsControl.ItemTemplate>
-										<DataTemplate>
-											<Button Focusable="False"
-											        Classes="projectChromeButton"
-											        Content="{Binding}"
-											        FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"
-											        MinWidth="26"
-											        Padding="4,2"
-											        Click="IconGlyph_Click"/>
-										</DataTemplate>
-									</ItemsControl.ItemTemplate>
-								</ItemsControl>
-							</StackPanel>
-						</DataTemplate>
-					</ItemsControl.ItemTemplate>
-				</ItemsControl>
+				<StackPanel Orientation="Vertical" Spacing="4" VerticalAlignment="Top">
+					<!-- Row template: each item here is one toolbar row (array of groups). -->
+					<ItemsControl x:Name="IconToolbarRows">
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<StackPanel Spacing="4"/>
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<StackPanel Orientation="Horizontal">
+									<!-- Group template: each item here is one button group within the current row. -->
+									<ItemsControl ItemsSource="{Binding}">
+										<ItemsControl.ItemsPanel>
+											<ItemsPanelTemplate>
+												<StackPanel Orientation="Horizontal" Spacing="10"/>
+											</ItemsPanelTemplate>
+										</ItemsControl.ItemsPanel>
+										<ItemsControl.ItemTemplate>
+											<DataTemplate>
+												<!-- Button template: each item here is one glyph button within the current group. -->
+												<ItemsControl ItemsSource="{Binding}">
+													<ItemsControl.ItemsPanel>
+														<ItemsPanelTemplate>
+															<StackPanel Orientation="Horizontal" Spacing="2"/>
+														</ItemsPanelTemplate>
+													</ItemsControl.ItemsPanel>
+													<ItemsControl.ItemTemplate>
+														<DataTemplate>
+															<Button Focusable="False"
+																	Classes="projectChromeButton"
+																	Content="{Binding}"
+																	FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"
+																	MinWidth="20"
+																	Padding="4,4,4,4"
+																	Click="IconGlyph_Click"/>
+														</DataTemplate>
+													</ItemsControl.ItemTemplate>
+												</ItemsControl>
+											</DataTemplate>
+										</ItemsControl.ItemTemplate>
+									</ItemsControl>
+								</StackPanel>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</StackPanel>
 			</StackPanel>
 		</ScrollViewer>
 
-		<Grid Grid.Row="1" ColumnDefinitions="*,8,*" MinHeight="200">
+		<Grid Grid.Row="1" ColumnDefinitions="*,8,*" MinHeight="80">
 			<DockPanel Grid.Column="0">
 				<TextBlock DockPanel.Dock="Top"
 				           Text="Markup (saved to .jime)"
@@ -64,7 +81,7 @@
 				         FontFamily="Consolas,Courier New,monospace"
 				         Foreground="White"
 				         Background="#2a2a2e"
-				         Watermark="Pseudo-HTML: &lt;b&gt;, &lt;i&gt;, &lt;font=&quot;Icon&quot;&gt;…&lt;/font&gt;, blank line = new paragraph"
+				         Watermark="{Binding Watermark, ElementName=Root}"
 				         TextChanged="SourceBox_OnTextChanged"/>
 			</DockPanel>
 			<GridSplitter Grid.Column="1"

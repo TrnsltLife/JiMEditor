@@ -1,0 +1,108 @@
+<!-- Ported from: JiMEditor/Views/MonsterActivationItemEditorWindow.xaml (2026-04-07) — simplified Avalonia editor. -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:v="using:JiMEditor.Avalonia.Views"
+        x:Class="JiMEditor.Avalonia.Views.MonsterActivationItemEditorWindow"
+        x:CompileBindings="False"
+        Title="Attack Description Editor"
+        Width="760"
+        MinWidth="640"
+        MinHeight="560"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource bgColor}">
+
+	<Window.Styles>
+		<Style Selector="TextBox.campaignField">
+			<Setter Property="Background" Value="#333337"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#77777d"/>
+			<Setter Property="Padding" Value="6,4"/>
+		</Style>
+		<Style Selector="ComboBox.campaignField">
+			<Setter Property="Background" Value="#333337"/>
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+	</Window.Styles>
+
+	<Grid RowDefinitions="*,Auto">
+		<ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+			<StackPanel Margin="8" Spacing="8">
+				<Border Classes="callout">
+					<StackPanel Spacing="6">
+						<StackPanel Orientation="Horizontal" Spacing="6">
+							<TextBlock Classes="subText" Text="Enemy Attack Group Name:"/>
+							<TextBlock Classes="heading" Text="{Binding activations.dataName}"/>
+						</StackPanel>
+
+						<StackPanel Orientation="Horizontal" Margin="0,10,0,0" Spacing="8">
+							<TextBlock Classes="heading" Text="Attack Text:"/>
+							<TextBlock Classes="subText"><Run FontWeight="Bold" FontStyle="Italic" Text="Required"/></TextBlock>
+							<TextBlock Classes="subText" Text="Write a vivid description. It will be shown to the Heroes when the enemy attacks."/>
+						</StackPanel>
+						<v:PseudoHtmlRichEditor x:Name="AttackTextBox" Watermark="Write a vivid description. It will be shown to the Heroes when the enemy attacks."/>
+
+						<StackPanel Orientation="Horizontal" Margin="0,10,0,0" Spacing="8">
+							<TextBlock Classes="heading" Text="After Effect:"/>
+							<TextBlock Classes="subText"><Run FontWeight="Bold" FontStyle="Italic" Text="Optional"/></TextBlock>
+							<TextBlock Classes="subText" Text="Describe any effects that occur after the attack."/>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Spacing="4">
+							<TextBlock Classes="subText" Text="e.g. &quot;If you did not take damage, gain one Inspiration.&quot;"/>
+							<TextBlock Classes="subText" Text="or &quot;After the attack, move the Enemy 1 space away.&quot;"/>
+						</StackPanel>
+						<v:PseudoHtmlRichEditor x:Name="AfterEffectTextBox" Watermark="Describe any effects that occur after the attack."/>
+					</StackPanel>
+				</Border>
+
+				<Border Classes="callout">
+					<StackPanel Spacing="8">
+						<TextBlock Classes="heading" Text="Damage by Group Size"/>
+						<Grid ColumnDefinitions="*,Auto">
+							<StackPanel Spacing="6">
+								<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="6">
+									<TextBlock Classes="heading" Text="1 Enemy:" Width="90"/>
+									<TextBox x:Name="Damage1TextBox" Classes="campaignField" Width="38"/>
+									<TextBlock Classes="heading" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons" Text="D"/>
+									<TextBlock Classes="heading" Text="/" FontSize="16"/>
+									<TextBox x:Name="Fear1TextBox" Classes="campaignField" Width="38"/>
+									<TextBlock Classes="heading" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons" Text="F"/>
+								</StackPanel>
+								<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="6">
+									<TextBlock Classes="heading" Text="2 Enemies:" Width="90"/>
+									<TextBox x:Name="Damage2TextBox" Classes="campaignField" Width="38"/>
+									<TextBlock Classes="heading" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons" Text="D"/>
+									<TextBlock Classes="heading" Text="/" FontSize="16"/>
+									<TextBox x:Name="Fear2TextBox" Classes="campaignField" Width="38"/>
+									<TextBlock Classes="heading" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons" Text="F"/>
+								</StackPanel>
+								<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="6">
+									<TextBlock Classes="heading" Text="3 Enemies:" Width="90"/>
+									<TextBox x:Name="Damage3TextBox" Classes="campaignField" Width="38"/>
+									<TextBlock Classes="heading" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons" Text="D"/>
+									<TextBlock Classes="heading" Text="/" FontSize="16"/>
+									<TextBox x:Name="Fear3TextBox" Classes="campaignField" Width="38"/>
+									<TextBlock Classes="heading" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons" Text="F"/>
+								</StackPanel>
+							</StackPanel>
+							<StackPanel Grid.Column="1" Spacing="4" Margin="20,0,0,0">
+								<TextBlock Classes="heading" TextWrapping="Wrap" Text="Damage and Fear Negated By:"/>
+								<ComboBox x:Name="NegateComboBox" Classes="campaignField" Width="220"/>
+							</StackPanel>
+						</Grid>
+					</StackPanel>
+				</Border>
+			</StackPanel>
+		</ScrollViewer>
+
+		<Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Silver" Background="#FF46464A">
+			<WrapPanel HorizontalAlignment="Right">
+				<Button Margin="10" Background="MediumSeaGreen" Click="OkButton_Click" IsDefault="True">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+				<Button x:Name="CancelButton" Margin="0,10,10,10" Background="{StaticResource bgCancelDelete}" Click="CancelButton_Click" IsCancel="True">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+			</WrapPanel>
+		</Border>
+	</Grid>
+</Window>

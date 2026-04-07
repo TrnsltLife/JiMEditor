@@ -895,12 +895,11 @@ namespace JiME
 			// 		defaultTranslations.AddRange( CollectInteractionTranslationItems( interaction ) );
 			// } );
 
-			/* TODO-Avalonia-Reenable: built-in + custom enemy attack groups when ActivationsEditor is ported. */
-			// SafeCollect( "activations", () =>
-			// {
-			// 	foreach ( var activation in activationsObserver )
-			// 		defaultTranslations.AddRange( CollectActivationTranslationItems( activation ) );
-			// } );
+			SafeCollect( "activations", () =>
+			{
+				foreach ( var activation in activationsObserver )
+					defaultTranslations.AddRange( CollectActivationTranslationItems( activation ) );
+			} );
 
 			SafeCollect( "monster modifiers", () =>
 			{
