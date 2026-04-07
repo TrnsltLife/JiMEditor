@@ -207,7 +207,7 @@ public partial class MainWindow : Window
 			return;
 		if ( act.id >= MonsterActivations.START_OF_CUSTOM_ACTIVATIONS )
 		{
-			var ow = new ActivationsEditorWindow( scenario, act, false );
+			var ow = new ActivationsEditorWindow( scenario, act, false, readOnly: false );
 			await ow.ShowDialog( this );
 		}
 		else
@@ -215,6 +215,8 @@ public partial class MainWindow : Window
 			MessageBox.Show(
 				"You can't modify the default Enemy Attack Groups, but you can copy them and modify the copy.",
 				"Cannot Modify Enemy Attack Group", MessageBoxButton.OK, MessageBoxImage.Information );
+			var view = new ActivationsEditorWindow( scenario, act, false, readOnly: true );
+			await view.ShowDialog( this );
 		}
 	}
 

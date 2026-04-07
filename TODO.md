@@ -8,3 +8,6 @@ This is a list of things we need to do:
   * Create and Add New Scenario button needs to work
   * Add Existing Scenario... button needs to work
   * Add Procedurally Generated Scenario... button should launch the random scenario editor
+* Main  Window
+  * Enable Events in the sidebar. Enable event types one by one.
+  * Have built-in Enemy Activations be viewable in read-only mode

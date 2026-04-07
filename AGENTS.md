@@ -26,6 +26,8 @@ Instructions for AI assistants and humans working in **this repository** while p
 
 - **`.jime` compatibility is non-negotiable unless explicitly decided.** Scenario files are JSON consumed by the playback app. When touching serialization models or converters copied from `JiMEditor`, preserve field names, `interactionType` values, and the **pseudo-HTML** text format documented in [PLAN.md](PLAN.md). Prefer golden-file or round-trip tests as this repo grows.
 
+- **Pseudo-HTML preview rendering:** For read-only/display previews of JiME pseudo-HTML, use [`PseudoHtmlPreviewTextBlock`](src/JiMEditor.Avalonia/PseudoHtmlPreviewTextBlock.cs) instead of plain `TextBlock` text binding. It renders `<b>`, `<i>`, and `<font="Icon">` (icon font runs) consistently via `JiMeAvaloniaRichPreview`.
+
 - **Replace WPF-specific pieces with Avalonia equivalents** as you port: `MessageBox`, `OpenFileDialog`/`SaveFileDialog`, `pack://` URIs, `Window`-chrome hacks (`user32`), `FlowDocument`/`RichTextBox`, **GraphX**. See [PLAN.md](PLAN.md) for hotspots.
 
 - **Prefer async APIs** where Avalonia expects them (e.g. file pickers) instead of blocking patterns carried over from WPF.

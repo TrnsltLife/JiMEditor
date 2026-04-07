@@ -15,6 +15,7 @@ public partial class MonsterActivationItemEditorWindow : Window
 {
 	string _originalText = "";
 	string _originalEffect = "";
+	readonly bool _readOnly;
 
 	public Scenario scenario { get; private set; } = null!;
 	public MonsterActivations activations { get; private set; } = null!;
@@ -27,16 +28,17 @@ public partial class MonsterActivationItemEditorWindow : Window
 		InitializeComponent();
 	}
 
-	public MonsterActivationItemEditorWindow( Scenario s, MonsterActivations act, MonsterActivationItem actItem, bool isNew = true )
+	public MonsterActivationItemEditorWindow( Scenario s, MonsterActivations act, MonsterActivationItem actItem, bool isNew = true, bool readOnly = false )
 		: this()
 	{
 		scenario = s;
 		activations = act;
 		activationItem = actItem;
+		_readOnly = readOnly;
 		_originalText = actItem.text ?? "";
 		_originalEffect = actItem.effect ?? "";
 
-		CancelButton.IsVisible = isNew;
+		CancelButton.IsVisible = isNew && !readOnly;
 		NegateComboBox.ItemsSource = Enum.GetValues<Ability>().ToList();
 		DataContext = this;
 
@@ -55,11 +57,34 @@ public partial class MonsterActivationItemEditorWindow : Window
 		Fear2TextBox.Text = activationItem.fear[1].ToString( CultureInfo.InvariantCulture );
 		Fear3TextBox.Text = activationItem.fear[2].ToString( CultureInfo.InvariantCulture );
 		NegateComboBox.SelectedItem = activationItem.negate;
-		AttackTextBox.Focus();
+		if ( _readOnly )
+			ApplyReadOnlyChrome();
+		else
+			AttackTextBox.Focus();
+	}
+
+	void ApplyReadOnlyChrome()
+	{
+		AttackTextBox.IsEnabled = false;
+		AfterEffectTextBox.IsEnabled = false;
+		Damage1TextBox.IsEnabled = false;
+		Damage2TextBox.IsEnabled = false;
+		Damage3TextBox.IsEnabled = false;
+		Fear1TextBox.IsEnabled = false;
+		Fear2TextBox.IsEnabled = false;
+		Fear3TextBox.IsEnabled = false;
+		NegateComboBox.IsEnabled = false;
 	}
 
 	void OkButton_Click( object? sender, RoutedEventArgs e )
 	{
+		if ( _readOnly )
+		{
+			Accepted = false;
+			Close();
+			return;
+		}
+
 		var text = ( AttackTextBox.Text ?? "" ).Trim();
 		if ( string.IsNullOrEmpty( text ) )
 		{

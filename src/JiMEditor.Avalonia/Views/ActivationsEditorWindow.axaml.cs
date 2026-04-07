@@ -15,10 +15,12 @@ namespace JiMEditor.Avalonia.Views;
 public partial class ActivationsEditorWindow : Window, INotifyPropertyChanged
 {
 	string _oldName = "";
+	readonly bool _readOnly;
 
 	public Scenario scenario { get; private set; } = null!;
 	public MonsterActivations activations { get; private set; } = null!;
 	public bool Accepted { get; private set; }
+	public bool CanDeleteAttackDescriptions => !_readOnly;
 
 	public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -27,16 +29,18 @@ public partial class ActivationsEditorWindow : Window, INotifyPropertyChanged
 		InitializeComponent();
 	}
 
-	public ActivationsEditorWindow( Scenario s, MonsterActivations? activ = null, bool isNew = true )
+	public ActivationsEditorWindow( Scenario s, MonsterActivations? activ = null, bool isNew = true, bool readOnly = false )
 		: this()
 	{
 		scenario = s;
 		activations = activ ?? new MonsterActivations();
+		_readOnly = readOnly;
 		_oldName = activations.dataName;
 
-		CancelButton.IsVisible = isNew;
+		CancelButton.IsVisible = isNew && !readOnly;
 		bool isLockedDefault = activ != null && activ.id < MonsterActivations.START_OF_CUSTOM_ACTIVATIONS;
-		NameTextBox.IsEnabled = !isLockedDefault;
+		NameTextBox.IsEnabled = !isLockedDefault && !readOnly;
+		AddActivationButton.IsEnabled = !readOnly;
 		LockText.IsVisible = isLockedDefault;
 		DataContext = this;
 
@@ -49,8 +53,11 @@ public partial class ActivationsEditorWindow : Window, INotifyPropertyChanged
 		NameTextBox.Text = activations.dataName ?? "";
 		NameTextBox.TextChanged += NameTextBox_TextChanged;
 		RefreshItems();
-		NameTextBox.Focus();
-		NameTextBox.SelectAll();
+		if ( !_readOnly )
+		{
+			NameTextBox.Focus();
+			NameTextBox.SelectAll();
+		}
 	}
 
 	bool TryClosing()
@@ -66,6 +73,12 @@ public partial class ActivationsEditorWindow : Window, INotifyPropertyChanged
 
 	void OkButton_Click( object? sender, RoutedEventArgs e )
 	{
+		if ( _readOnly )
+		{
+			Accepted = false;
+			Close();
+			return;
+		}
 		if ( !TryClosing() )
 			return;
 		Accepted = true;
@@ -95,6 +108,13 @@ public partial class ActivationsEditorWindow : Window, INotifyPropertyChanged
 		if ( sender is not Button { Tag: MonsterActivationItem mai } )
 			return;
 
+		if ( _readOnly )
+		{
+			var ro = new MonsterActivationItemEditorWindow( scenario, activations, mai, false, readOnly: true );
+			await ro.ShowDialog( this );
+			return;
+		}
+
 		var originalValues = mai.CaptureStartingValues();
 		var originalPrefix = mai.TranslationKeyPrefix();
 		var originalKeyName = mai.TranslationKeyName();
@@ -107,6 +127,8 @@ public partial class ActivationsEditorWindow : Window, INotifyPropertyChanged
 
 	void DeleteButton_Click( object? sender, RoutedEventArgs e )
 	{
+		if ( _readOnly )
+			return;
 		var ret = MessageBox.Show(
 			"Are you sure you want to delete this Enemy Attack Description?\n\nTHIS CANNOT BE UNDONE.",
 			"Delete Enemy Attack Description", MessageBoxButton.YesNo, MessageBoxImage.Question );

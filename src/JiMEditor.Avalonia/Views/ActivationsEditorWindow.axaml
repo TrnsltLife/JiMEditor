@@ -1,6 +1,7 @@
 <!-- Ported from: JiMEditor/Views/ActivationsEditorWindow.xaml (2026-04-07) — simplified Avalonia editor. -->
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:jimeui="clr-namespace:JiMEditor.Avalonia"
         x:Class="JiMEditor.Avalonia.Views.ActivationsEditorWindow"
         x:CompileBindings="False"
         Title="Enemy Attack Group Editor"
@@ -16,6 +17,13 @@
 			<Setter Property="Foreground" Value="White"/>
 			<Setter Property="BorderBrush" Value="#77777d"/>
 			<Setter Property="Padding" Value="6,4"/>
+		</Style>
+		<!-- List rows: darker than outer callout, slight radius, vertical gap (WPF Activations list) -->
+		<Style Selector="Border.activationListItem">
+			<Setter Property="Background" Value="{StaticResource bgColor}"/>
+			<Setter Property="CornerRadius" Value="2"/>
+			<Setter Property="Padding" Value="10"/>
+			<Setter Property="Margin" Value="0,2"/>
 		</Style>
 	</Window.Styles>
 
@@ -44,19 +52,68 @@
 						<ItemsControl x:Name="ActivationItemsControl" ItemsSource="{Binding activations.activations}">
 							<ItemsControl.ItemTemplate>
 								<DataTemplate>
-									<Border Classes="callout" Margin="0,2">
-										<Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
-											<TextBlock Grid.Row="0" Classes="subText"
-											           Text="{Binding text}" TextWrapping="Wrap"/>
-											<TextBlock Grid.Row="1" Classes="subText"
-											           Text="{Binding effect}" TextWrapping="Wrap"/>
-											<TextBlock Grid.Row="2" Classes="subText"
-											           Text="{Binding negate, StringFormat=Negated By: {0}}"/>
-											<StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center" Margin="8,0,0,0">
+									<Border Classes="activationListItem">
+										<Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+											<StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Spacing="14">
+												<StackPanel Orientation="Horizontal" Spacing="4">
+													<TextBlock Classes="subText" Text="1 Enemy"/>
+													<TextBlock FontSize="12" Foreground="White" FontWeight="Bold">
+														<Run Text="{Binding damage[0]}"/>
+														<Run Text="D" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+														<Run Text="/"/>
+														<Run Text="{Binding fear[0]}"/>
+														<Run Text="F" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+													</TextBlock>
+												</StackPanel>
+												<StackPanel Orientation="Horizontal" Spacing="4">
+													<TextBlock Classes="subText" Text="2 Enemies"/>
+													<TextBlock FontSize="12" Foreground="White" FontWeight="Bold">
+														<Run Text="{Binding damage[1]}"/>
+														<Run Text="D" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+														<Run Text="/"/>
+														<Run Text="{Binding fear[1]}"/>
+														<Run Text="F" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+													</TextBlock>
+												</StackPanel>
+												<StackPanel Orientation="Horizontal" Spacing="4">
+													<TextBlock Classes="subText" Text="3 Enemies"/>
+													<TextBlock FontSize="12" Foreground="White" FontWeight="Bold">
+														<Run Text="{Binding damage[2]}"/>
+														<Run Text="D" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+														<Run Text="/"/>
+														<Run Text="{Binding fear[2]}"/>
+														<Run Text="F" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+													</TextBlock>
+												</StackPanel>
+												<StackPanel Orientation="Horizontal" Spacing="4">
+													<TextBlock Classes="subText" Text="Negated by:"/>
+													<TextBlock FontSize="12" Foreground="White" FontWeight="Bold" Text="{Binding negate}"/>
+												</StackPanel>
+											</StackPanel>
+
+											<TextBlock Grid.Row="1" Grid.Column="0" Classes="subText" Text="Attack Text:"/>
+											<jimeui:PseudoHtmlPreviewTextBlock Grid.Row="2" Grid.Column="0"
+											                               PseudoHtml="{Binding text}"
+											                               FontSize="12"
+											                               Foreground="White"
+											                               TextWrapping="Wrap"/>
+
+											<TextBlock Grid.Row="3" Grid.Column="0" Classes="subText" Text="After Effect:"/>
+											<jimeui:PseudoHtmlPreviewTextBlock Grid.Row="4" Grid.Column="0"
+											                               PseudoHtml="{Binding effect}"
+											                               FontSize="12"
+											                               Foreground="White"
+											                               TextWrapping="Wrap"/>
+											<StackPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="5" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center" Margin="8,0,0,0">
 												<Button Width="40" Height="40" Background="CornflowerBlue" Click="EditButton_Click" Tag="{Binding}">
 													<Image Source="avares://JiMEditor.Avalonia/Assets/edit.png" Stretch="Uniform"/>
 												</Button>
-												<Button Width="40" Height="40" Background="{StaticResource bgCancelDelete}" Click="DeleteButton_Click" Tag="{Binding}">
+												<Button Width="40"
+												        Height="40"
+												        Background="{StaticResource bgCancelDelete}"
+												        IsEnabled="{Binding DataContext.CanDeleteAttackDescriptions, RelativeSource={RelativeSource AncestorType=Window}}"
+												        Click="DeleteButton_Click"
+												        Tag="{Binding}">
 													<Image Source="avares://JiMEditor.Avalonia/Assets/remove.png" Stretch="Uniform"/>
 												</Button>
 											</StackPanel>
