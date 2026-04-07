@@ -35,7 +35,9 @@ public partial class TranslationItemEditorWindow : Window
 	void OnLoaded( object? sender, RoutedEventArgs e )
 	{
 		Loaded -= OnLoaded;
-		OriginalMarkupTextBox.Text = defaultTranslation.text ?? "";
+		var original = defaultTranslation.text ?? "";
+		OriginalMarkupTextBox.Text = original;
+		OriginalPreviewTextBlock.PseudoHtml = original;
 		TranslationRichEditor.Text = translationItem.text ?? "";
 	}
 
