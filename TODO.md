@@ -10,4 +10,5 @@ This is a list of things we need to do:
   * Add Procedurally Generated Scenario... button should launch the random scenario editor
 * Main  Window
   * Enable Events in the sidebar. Enable event types one by one.
-  * Have built-in Enemy Activations be viewable in read-only mode
+* PseudoHtmlRichEditor
+  * Probably need to escape <> & that aren't part of 
