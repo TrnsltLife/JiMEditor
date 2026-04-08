@@ -19,47 +19,71 @@
 
 	<DockPanel LastChildFill="True">
 		<!-- Toolbar -->
-		<Border DockPanel.Dock="Top" Background="{StaticResource bgColorLight}" Padding="4">
-			<StackPanel Orientation="Horizontal" Spacing="2">
-				<Button Classes="iconbutton" Width="32" Height="32" Padding="0" IsEnabled="False" ToolTip.Tip="New scenario (TODO)">
-					<Image Source="avares://JiMEditor.Avalonia/Assets/newcampaign.png" Width="24" Height="24"/>
+		<Border DockPanel.Dock="Top" Background="{StaticResource bgColorLight}" Padding="6">
+			<StackPanel Orientation="Horizontal" Spacing="4">
+				<Button Classes="iconbutton" Height="32" Padding="4,0,4,0" IsEnabled="False" ToolTip.Tip="New scenario (TODO)">
+					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/newcampaign.png" Width="24" Height="24"/>
+					</StackPanel>
 				</Button>
-				<Button Classes="iconbutton" Width="32" Height="32" Padding="0" IsEnabled="False" ToolTip.Tip="Open (TODO)">
-					<Image Source="avares://JiMEditor.Avalonia/Assets/open.png" Width="24" Height="24"/>
+				<Button Classes="iconbutton" Height="32" Padding="4,0,4,0" IsEnabled="False" ToolTip.Tip="Open (TODO)">
+					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/open.png" Width="24" Height="24"/>
+					</StackPanel>
 				</Button>
-				<Button Classes="iconbutton" Width="32" Height="32" Padding="0" IsEnabled="False" ToolTip.Tip="Save (TODO)">
-					<Image Source="avares://JiMEditor.Avalonia/Assets/save.png" Width="24" Height="24"/>
-				</Button>
-				<Button Classes="iconbutton" Width="32" Height="32" Padding="0" IsEnabled="False" ToolTip.Tip="Settings (TODO)">
-					<Image Source="avares://JiMEditor.Avalonia/Assets/settings.png" Width="24" Height="24"/>
+				<Button Classes="iconbutton" Height="32" Padding="4,0,4,0" IsEnabled="False" ToolTip.Tip="Save (TODO)">
+					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/save.png" Width="24" Height="24"/>
+					</StackPanel>
 				</Button>
 				<Rectangle Width="1" Height="24" Fill="{StaticResource bgButtonColor}" Margin="4,0"/>
-				<Button Classes="iconbutton" Width="32" Height="32" Padding="0" IsEnabled="False" ToolTip.Tip="Add tile block (TODO)">
-					<Image Source="avares://JiMEditor.Avalonia/Assets/addtileblock.png" Width="24" Height="24"/>
+				<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+					<TextBox x:Name="ScenarioNameTextBox"
+					         Width="200"
+					         Classes="campaignField"
+					         Watermark="Scenario name..."
+					         VerticalAlignment="Center" />
+				</StackPanel>
+				<Button Classes="iconbutton" Height="32" Padding="4,0,4,0" IsEnabled="False" ToolTip.Tip="ScenarioSettings (TODO)">
+					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/settings.png" Width="24" Height="24"/>
+						<TextBlock Text="Settings" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
+					</StackPanel>
+				</Button>
+				<Rectangle Width="1" Height="24" Fill="{StaticResource bgButtonColor}" Margin="4,0"/>
+				<Button Classes="iconbutton" Height="32" Padding="4,0,4,0" IsEnabled="False" ToolTip.Tip="Add tile block (TODO)">
+					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/addtileblock.png" Width="24" Height="24"/>
+						<TextBlock Text="New Tile Block" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
+					</StackPanel>
 				</Button>
 				<Button x:Name="AddObjectiveToolbarButton"
 				        Classes="iconbutton"
-				        Width="32"
 				        Height="32"
-				        Padding="0"
+				        Padding="4,0,4,0"
 				        Click="AddObjectiveToolbarButton_Click"
 				        ToolTip.Tip="New objective">
-					<Image Source="avares://JiMEditor.Avalonia/Assets/addobjective.png" Width="24" Height="24"/>
+					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/addobjective.png" Width="24" Height="24"/>
+						<TextBlock Text="New Objective" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
+					</StackPanel>
 				</Button>
-				<Button Classes="iconbutton" Width="32" Height="32" Padding="0" IsEnabled="False" ToolTip.Tip="Add event (TODO)">
-					<Image Source="avares://JiMEditor.Avalonia/Assets/addevent.png" Width="24" Height="24"/>
+				<Button Classes="iconbutton" Height="32" Padding="4,0,4,0" IsEnabled="False" ToolTip.Tip="Add event (TODO)">
+					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/addevent.png" Width="24" Height="24"/>
+						<TextBlock Text="New Event" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
+					</StackPanel>
 				</Button>
 				<Button x:Name="AddTriggerToolbarButton"
 				        Classes="iconbutton"
-				        Width="32"
 				        Height="32"
-				        Padding="0"
+				        Padding="4,0,4,0"
 				        Click="AddTriggerToolbarButton_Click"
 				        ToolTip.Tip="New trigger">
-					<Image Source="avares://JiMEditor.Avalonia/Assets/addtrigger.png" Width="24" Height="24"/>
-				</Button>
-				<Button Classes="iconbutton" Width="32" Height="32" Padding="0" IsEnabled="False" ToolTip.Tip="Cancel (TODO)">
-					<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Width="24" Height="24"/>
+					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/addtrigger.png" Width="24" Height="24"/>
+						<TextBlock Text="New Trigger" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
+					</StackPanel>
 				</Button>
 			</StackPanel>
 		</Border>
