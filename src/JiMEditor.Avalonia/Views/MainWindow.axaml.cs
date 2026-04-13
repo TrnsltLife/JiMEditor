@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using JiME;
 using MessageBox = System.Windows.MessageBox;
@@ -43,6 +44,7 @@ public partial class MainWindow : Window
 		DataContext = scenario;
 		WireSidebarLists();
 		SyncTitleFromScenario();
+		ScenarioNameEdit.Text = scenario.scenarioName ?? "";
 		scenario.PropertyChanged += OnScenarioPropertyChanged;
 	}
 
@@ -124,6 +126,59 @@ public partial class MainWindow : Window
 		     or nameof( Scenario.fileName )
 		     or nameof( Scenario.projectType ) )
 			SyncTitleFromScenario();
+		if ( e.PropertyName == nameof( Scenario.scenarioName ) && !ScenarioNameEdit.IsVisible )
+			ScenarioNameEdit.Text = scenario.scenarioName ?? "";
+	}
+
+	void ScenarioNameText_PointerPressed( object? sender, PointerPressedEventArgs e )
+	{
+		if ( !e.GetCurrentPoint( ScenarioNameText ).Properties.IsLeftButtonPressed )
+			return;
+		ScenarioNameText.IsVisible = false;
+		ScenarioNameEdit.IsVisible = true;
+		ScenarioNameEdit.Text = scenario.scenarioName ?? "";
+		ScenarioNameEdit.Focus();
+		ScenarioNameEdit.SelectAll();
+	}
+
+	void ScenarioNameEdit_KeyDown( object? sender, KeyEventArgs e )
+	{
+		if ( e.Key == Key.Enter )
+		{
+			CommitScenarioNameEdit();
+			e.Handled = true;
+		}
+		else if ( e.Key == Key.Escape )
+		{
+			CancelScenarioNameEdit();
+			e.Handled = true;
+		}
+	}
+
+	void ScenarioNameEdit_LostFocus( object? sender, RoutedEventArgs e ) => CommitScenarioNameEdit();
+
+	void CommitScenarioNameEdit()
+	{
+		var newName = ( ScenarioNameEdit.Text ?? "" ).Trim();
+		if ( newName.Length == 0 )
+		{
+			MessageBox.Show( "The Scenario name cannot be an empty string.", "Invalid Scenario Name", MessageBoxButton.OK, MessageBoxImage.Information );
+			ScenarioNameEdit.Text = scenario.scenarioName ?? "";
+			ScenarioNameEdit.Focus();
+			ScenarioNameEdit.SelectAll();
+			return;
+		}
+
+		scenario.scenarioName = newName;
+		ScenarioNameText.IsVisible = true;
+		ScenarioNameEdit.IsVisible = false;
+	}
+
+	void CancelScenarioNameEdit()
+	{
+		ScenarioNameEdit.Text = scenario.scenarioName ?? "";
+		ScenarioNameText.IsVisible = true;
+		ScenarioNameEdit.IsVisible = false;
 	}
 
 	/// <summary>Mirrors WPF <see cref="TitleConverter"/> (JiME/Converters.cs).</summary>
@@ -494,6 +549,18 @@ public partial class MainWindow : Window
 		var translationItemsForExport = scenario.CollectTranslationItemsForExport( selectedTranslation );
 		var translationForExport = new TranslationForExport( selectedTranslation.dataName, selectedTranslation.langName, translationItemsForExport );
 		new ExportManager().ExportTranslation( scenario.scenarioName, translationForExport );
+	}
+
+	async void ScenarioSettingsButton_Click( object? sender, RoutedEventArgs e )
+	{
+		var sw = new ScenarioWindow( scenario );
+		await sw.ShowDialog( this );
+	}
+
+	async void ThreatsToolbarButton_Click( object? sender, RoutedEventArgs e )
+	{
+		var w = new ThreatsWindow( scenario );
+		await w.ShowDialog( this );
 	}
 
 	protected override void OnClosing( WindowClosingEventArgs e )

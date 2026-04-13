@@ -11,5 +11,5 @@ public sealed class BoolInvertValueConverter : IValueConverter
 		value is bool b ? !b : value;
 
 	public object? ConvertBack( object? value, Type targetType, object? parameter, CultureInfo culture ) =>
-		throw new NotSupportedException();
+		value is bool b ? !b : value;
 }

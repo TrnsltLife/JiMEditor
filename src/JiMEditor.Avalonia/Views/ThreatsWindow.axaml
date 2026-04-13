@@ -1,0 +1,81 @@
+<!-- Ported from: JiMEditor/Views/ScenarioWindow.xaml - threat panel (2026-04-08) -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="using:JiMEditor.Avalonia.Converters"
+        x:Class="JiMEditor.Avalonia.Views.ThreatsWindow"
+        x:CompileBindings="False"
+        Title="Threat Settings"
+        Width="720"
+        MinWidth="560"
+        MinHeight="400"
+        MaxHeight="640"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource bgColor}">
+
+	<Window.Resources>
+		<conv:BoolInvertValueConverter x:Key="binv"/>
+	</Window.Resources>
+
+	<Grid RowDefinitions="*,Auto">
+		<ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+			<StackPanel Margin="8" Spacing="8">
+				<Border BorderBrush="#777777" BorderThickness="1" CornerRadius="4" Padding="8">
+					<StackPanel Spacing="8">
+						<TextBlock Text="Threat Settings" Foreground="Silver" FontSize="14"/>
+						<Grid RowDefinitions="Auto,Auto,*">
+							<Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+								<CheckBox x:Name="NoThreatCheckBox" Content="Don't use Threat" IsChecked="{Binding scenario.threatNotUsed}"/>
+								<Button Grid.Column="1" x:Name="AddThreatButton" Background="DodgerBlue" IsEnabled="{Binding IsChecked, ElementName=NoThreatCheckBox, Converter={StaticResource binv}}" Click="AddThreatButton_Click">
+									<StackPanel Orientation="Horizontal" Spacing="5">
+										<TextBlock Text="Add Threat" Classes="heading"/>
+										<Image Source="avares://JiMEditor.Avalonia/Assets/add.png" Height="24" Width="24"/>
+									</StackPanel>
+								</Button>
+							</Grid>
+							<Grid Grid.Row="1" IsVisible="{Binding IsChecked, ElementName=NoThreatCheckBox, Converter={StaticResource binv}}" Margin="0,0,0,5" ColumnDefinitions="Auto,Auto,*">
+								<TextBlock Text="Max Threat:" Classes="heading"/>
+								<TextBox Grid.Column="1" Classes="campaignField" Width="40" Text="{Binding scenario.threatMax}" Margin="10,0"/>
+								<TextBlock Grid.Column="2" Classes="subText" Text="Only Events that are not Token Interactions can be assigned to Threat Threshold Trigger Events." TextWrapping="Wrap" VerticalAlignment="Center"/>
+							</Grid>
+							<ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" MaxHeight="360">
+								<ItemsControl x:Name="ThreatItemsControl" ItemsSource="{Binding threatCollection}">
+									<ItemsControl.ItemTemplate>
+										<DataTemplate>
+											<Border Classes="callout" Padding="5" Margin="0,2">
+												<Grid ColumnDefinitions="Auto,*">
+													<StackPanel Orientation="Horizontal">
+														<TextBlock Text="Threshold:" Foreground="White" VerticalAlignment="Center"/>
+														<TextBox Classes="campaignField" Margin="10,0" Width="40" Text="{Binding theThreat.threshold}"/>
+														<TextBlock Text="Triggered Event:" Foreground="White" VerticalAlignment="Center" Margin="20,0,10,0"/>
+														<ComboBox Width="250"
+														          ItemsSource="{Binding threatItemCollection}"
+														          SelectedItem="{Binding selectedItem}"
+														          SelectionChanged="EventInteractionComboBox_SelectionChanged">
+															<ComboBox.ItemTemplate>
+																<DataTemplate>
+																	<TextBlock Text="{Binding trigger.dataName}"/>
+																</DataTemplate>
+															</ComboBox.ItemTemplate>
+														</ComboBox>
+													</StackPanel>
+													<Button Grid.Column="1" Width="32" HorizontalAlignment="Right" Margin="10,0,0,0" Background="{StaticResource bgCancelDelete}" Click="RemoveThreatButton_Click">
+														<Image Width="16" Source="avares://JiMEditor.Avalonia/Assets/remove.png"/>
+													</Button>
+												</Grid>
+											</Border>
+										</DataTemplate>
+									</ItemsControl.ItemTemplate>
+								</ItemsControl>
+							</ScrollViewer>
+						</Grid>
+					</StackPanel>
+				</Border>
+			</StackPanel>
+		</ScrollViewer>
+		<Border Grid.Row="1" Background="{StaticResource bgButtonColor}" Padding="8">
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+				<Button MinWidth="100" Background="DodgerBlue" Foreground="White" FontWeight="Bold" Click="OkButton_Click" Content="OK"/>
+			</StackPanel>
+		</Border>
+	</Grid>
+</Window>

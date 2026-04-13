@@ -37,17 +37,33 @@
 					</StackPanel>
 				</Button>
 				<Rectangle Width="1" Height="24" Fill="{StaticResource bgButtonColor}" Margin="4,0"/>
-				<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
-					<TextBox x:Name="ScenarioNameTextBox"
+				<Grid Width="200" VerticalAlignment="Center">
+					<TextBlock x:Name="ScenarioNameText"
+					           Text="{Binding scenarioName}"
+					           Foreground="White"
+					           FontWeight="Bold"
+					           FontSize="15"
+					           VerticalAlignment="Center"
+					           TextTrimming="CharacterEllipsis"
+					           PointerPressed="ScenarioNameText_PointerPressed"/>
+					<TextBox x:Name="ScenarioNameEdit"
 					         Width="200"
 					         Classes="campaignField"
-					         Watermark="Scenario name..."
-					         VerticalAlignment="Center" />
-				</StackPanel>
-				<Button Classes="iconbutton" Height="32" Padding="4,0,4,0" IsEnabled="False" ToolTip.Tip="ScenarioSettings (TODO)">
+					         FontSize="15"
+					         IsVisible="False"
+					         KeyDown="ScenarioNameEdit_KeyDown"
+					         LostFocus="ScenarioNameEdit_LostFocus"/>
+				</Grid>
+				<Button Classes="iconbutton" Height="32" Padding="4,0,4,0" Click="ScenarioSettingsButton_Click" ToolTip.Tip="Edit scenario settings">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/settings.png" Width="24" Height="24"/>
 						<TextBlock Text="Settings" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
+					</StackPanel>
+				</Button>
+				<Button Classes="iconbutton" Height="32" Padding="4,0,4,0" Click="ThreatsToolbarButton_Click" ToolTip.Tip="Edit threat settings">
+					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/threat_button.png" Width="24" Height="24"/>
+						<TextBlock Text="Threat" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
 					</StackPanel>
 				</Button>
 				<Rectangle Width="1" Height="24" Fill="{StaticResource bgButtonColor}" Margin="4,0"/>

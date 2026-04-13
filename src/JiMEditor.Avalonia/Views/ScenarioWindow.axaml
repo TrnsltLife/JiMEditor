@@ -1,0 +1,246 @@
+<!-- Ported from: JiMEditor/Views/ScenarioWindow.xaml (2026-04-08) -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="using:JiMEditor.Avalonia.Converters"
+        x:Class="JiMEditor.Avalonia.Views.ScenarioWindow"
+        x:CompileBindings="False"
+        Title="Scenario Settings"
+        Width="800"
+        MinWidth="720"
+        MaxHeight="975"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource bgColor}">
+
+	<Window.Resources>
+		<conv:BoolInvertValueConverter x:Key="binv"/>
+	</Window.Resources>
+
+	<Grid RowDefinitions="*,Auto">
+		<ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+			<StackPanel Margin="5" Spacing="5">
+				<Border x:Name="CampaignNotice" Classes="callout" IsVisible="False">
+					<StackPanel Orientation="Horizontal" Spacing="6">
+						<TextBlock Classes="heading" Text="Campaign GUID:"/>
+						<TextBlock x:Name="CampaignGuidText" Classes="heading"/>
+					</StackPanel>
+				</Border>
+
+				<Grid ColumnDefinitions="Auto,Auto,*,Auto">
+					<Border Classes="callout" Margin="0,0,5,0">
+						<StackPanel Orientation="Horizontal" Spacing="10">
+							<TextBlock Classes="heading" Text="Scenario Title:" VerticalAlignment="Center"/>
+							<TextBox x:Name="NameTextBox"
+							         Classes="campaignField"
+							         Text="{Binding scenario.scenarioName}"
+							         MinWidth="300"/>
+						</StackPanel>
+					</Border>
+					<Border Grid.Column="2" Classes="callout" Margin="5,0,0,0">
+						<StackPanel Orientation="Horizontal" Spacing="10">
+							<TextBlock Classes="heading" Text="Scenario Type:" VerticalAlignment="Center"/>
+							<RadioButton Content="Journey" IsChecked="{Binding scenario.scenarioTypeJourney, Mode=TwoWay}" Click="RadioType_Checked"/>
+							<RadioButton Content="Battle" IsChecked="{Binding scenario.scenarioTypeJourney, Converter={StaticResource binv}, Mode=TwoWay}" Click="RadioType_Checked"/>
+						</StackPanel>
+					</Border>
+				</Grid>
+
+				<Grid ColumnDefinitions="Auto,Auto,*,Auto">
+					<Border Classes="callout" Margin="0,0,5,0">
+						<StackPanel Orientation="Horizontal" Spacing="10">
+							<TextBlock Classes="heading" Text="Version:" VerticalAlignment="Center"/>
+							<TextBox x:Name="VersionTextBox" Classes="campaignField" Text="{Binding scenario.scenarioVersion}" MinWidth="100"/>
+						</StackPanel>
+					</Border>
+					<Border Grid.Column="2" Classes="callout" Margin="5,0,0,0">
+						<StackPanel Orientation="Horizontal" Spacing="8">
+							<TextBlock Classes="heading" Text="Scout... Initial:" VerticalAlignment="Center"/>
+							<ComboBox x:Name="InitialScoutComboBox" Width="72" SelectedIndex="{Binding scenario.initialScout}">
+								<ComboBoxItem Content="0" IsVisible="False"/>
+								<ComboBoxItem Content="1"/>
+								<ComboBoxItem Content="2"/>
+								<ComboBoxItem Content="3"/>
+								<ComboBoxItem Content="4"/>
+							</ComboBox>
+							<TextBlock Classes="heading" Text="Subsequent:" VerticalAlignment="Center"/>
+							<ComboBox x:Name="SubsequentScoutComboBox" Width="72" SelectedIndex="{Binding scenario.subsequentScout}">
+								<ComboBoxItem Content="0" IsVisible="False"/>
+								<ComboBoxItem Content="1"/>
+								<ComboBoxItem Content="2"/>
+								<ComboBoxItem Content="3"/>
+								<ComboBoxItem Content="4"/>
+							</ComboBox>
+						</StackPanel>
+					</Border>
+				</Grid>
+
+				<Border Classes="callout" Padding="5,0,5,0">
+					<StackPanel Orientation="Horizontal" Spacing="30">
+						<StackPanel>
+							<TextBlock Text="Enable these Collections:" Classes="heading"/>
+							<Grid Margin="0,5,0,10" ColumnDefinitions="Auto,Auto,Auto" RowDefinitions="Auto,Auto,Auto">
+								<StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0,0,10,0">
+									<TextBlock Text="r" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+									<CheckBox x:Name="CoreSetCheckBox" Content="Core Set" FontWeight="Bold" IsEnabled="False" IsChecked="True"/>
+								</StackPanel>
+								<StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="0,0,10,0">
+									<TextBlock Text="p" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+									<CheckBox x:Name="ShadedPathsCheckBox" Content="Shaded Paths" IsCheckedChanged="CollectionCheckBox_Changed"/>
+								</StackPanel>
+								<StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal">
+									<TextBlock Text="w" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+									<CheckBox x:Name="UnfurlingWarCheckBox" Content="Unfurling War" IsCheckedChanged="CollectionCheckBox_Changed"/>
+								</StackPanel>
+
+								<StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="0,0,10,0">
+									<TextBlock Text="v" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+									<CheckBox x:Name="VillainsOfEriadorCheckBox" Content="Villains of Eriador" IsCheckedChanged="CollectionCheckBox_Changed"/>
+								</StackPanel>
+								<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="0,0,10,0">
+									<TextBlock Text="d" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+									<CheckBox x:Name="DenizensInDarknessCheckBox" Content="Denizens in Darkness" IsCheckedChanged="CollectionCheckBox_Changed"/>
+								</StackPanel>
+								<StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal">
+									<TextBlock Text="c" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+									<CheckBox x:Name="ScorchersOfTheWildsCheckBox" Content="Scorchers of the Wilds" IsCheckedChanged="CollectionCheckBox_Changed"/>
+								</StackPanel>
+
+								<StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Margin="0,0,10,0">
+									<TextBlock Text="/" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+									<CheckBox x:Name="CustomCheckBox" Content="Custom" IsCheckedChanged="CollectionCheckBox_Changed"/>
+								</StackPanel>
+							</Grid>
+						</StackPanel>
+						<StackPanel>
+							<TextBlock Text="Scenario Cover Image:" Classes="heading"/>
+							<Button x:Name="ImageButton"
+							        Content="Choose Cover Image..."
+							        IsEnabled="False"
+							        Background="DodgerBlue"
+							        Foreground="White"
+							        Height="36"
+							        FontWeight="Bold"
+							        FontSize="14"
+							        Margin="0,8,0,0"/>
+						</StackPanel>
+					</StackPanel>
+				</Border>
+
+				<Border Classes="callout">
+					<StackPanel>
+						<Grid ColumnDefinitions="Auto,Auto,Auto,Auto,*">
+							<StackPanel Grid.Column="0">
+								<TextBlock Text="First Objective (Optional):" Classes="heading"/>
+								<ComboBox x:Name="ObjectiveComboBox"
+								          ItemsSource="{Binding scenario.objectiveObserver}"
+								          Margin="0,5,0,0"
+								          SelectionChanged="ObjectiveComboBox_SelectionChanged">
+									<ComboBox.ItemTemplate>
+										<DataTemplate>
+											<TextBlock Text="{Binding dataName}"/>
+										</DataTemplate>
+									</ComboBox.ItemTemplate>
+								</ComboBox>
+							</StackPanel>
+							<StackPanel Grid.Column="1" Margin="20,0,0,0">
+								<TextBlock Text="Shadow Phase Fear:" Classes="heading"/>
+								<TextBox x:Name="ShadowFearTextBox" Classes="campaignField" Text="{Binding scenario.shadowFear}" Width="64"/>
+							</StackPanel>
+							<StackPanel Grid.Column="2" Margin="20,0,0,0">
+								<TextBlock Text="Starting Lore:" Classes="heading"/>
+								<TextBox Classes="campaignField" Text="{Binding scenario.loreStartValue}" Width="64"/>
+							</StackPanel>
+							<StackPanel Grid.Column="3" Margin="20,0,0,0">
+								<TextBlock Text="Starting XP:" Classes="heading"/>
+								<TextBox Classes="campaignField" Text="{Binding scenario.xpStartValue}" Width="64"/>
+							</StackPanel>
+							<Button Grid.Column="4" x:Name="SpecialButton" Content="Story / Special Instructions..." Background="DodgerBlue" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" Height="36" FontWeight="Bold" FontSize="14" Click="SpecialButton_Click"/>
+						</Grid>
+						<TextBlock TextWrapping="Wrap" Classes="subText" Text="The Story/Special Instructions text and Starting Lore are shown to Players in the Companion App before embarking on the Scenario." Margin="0,5,0,0"/>
+					</StackPanel>
+				</Border>
+
+				<Border Classes="callout">
+					<Grid ColumnDefinitions="Auto,Auto,*">
+						<TextBlock Text="Scenario Rewards" Classes="heading"/>
+						<StackPanel Grid.Column="1" Orientation="Horizontal" Margin="20,0,0,0">
+							<TextBlock Text="Lore Reward:" Classes="heading" VerticalAlignment="Center" Margin="0,0,10,0"/>
+							<TextBox Classes="campaignField" Width="40" Text="{Binding scenario.loreReward}"/>
+							<TextBlock Text="XP Reward:" Classes="heading" VerticalAlignment="Center" Margin="15,0,10,0"/>
+							<TextBox Classes="campaignField" Width="40" Text="{Binding scenario.xpReward}"/>
+						</StackPanel>
+						<TextBlock Grid.Column="2" Text="Lore and XP Rewards are only relevant for Campaigns." Classes="subText" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+					</Grid>
+				</Border>
+
+				<Grid ColumnDefinitions="*,*" Margin="0,5,0,0">
+					<StackPanel Grid.Column="0" Margin="0,0,5,0">
+						<Border Classes="callout" VerticalAlignment="Top">
+							<Grid ColumnDefinitions="*,Auto">
+								<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="8">
+									<TextBlock Text="Introduction Text" Classes="heading"/>
+									<Image Source="avares://JiMEditor.Avalonia/Assets/help.png" Width="24" Height="24" ToolTip.Tip="The Introduction Text is shown at the beginning of the Scenario to describe the mission. If it's left empty, it will not be shown."/>
+								</StackPanel>
+								<Button Grid.Column="1" x:Name="EditIntroButton" Margin="5,0,5,0" Padding="5" Background="CornflowerBlue" Click="EditIntroButton_Click" VerticalAlignment="Center">
+									<Image Source="avares://JiMEditor.Avalonia/Assets/edit.png" Width="32"/>
+								</Button>
+							</Grid>
+						</Border>
+
+						<Border Classes="callout" Margin="0,5,0,0" VerticalAlignment="Top">
+							<StackPanel>
+								<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="8">
+									<TextBlock Text="Last Stand Failed Resolution Text" Classes="heading"/>
+									<Image Source="avares://JiMEditor.Avalonia/Assets/help.png" Width="24" Height="24" ToolTip.Tip="Pick one of the Scenario Resolution Texts to apply when a Hero fails Last Stand and the remaining heroes cannot win by Shadow Phase."/>
+								</StackPanel>
+								<ComboBox x:Name="LastStandFailedResolutionComboBox"
+								          Margin="0,5,0,0"
+								          SelectionChanged="LastStandFailedResolutionComboBox_SelectionChanged">
+									<ComboBox.ItemTemplate>
+										<DataTemplate>
+											<TextBlock Text="{Binding dataName}"/>
+										</DataTemplate>
+									</ComboBox.ItemTemplate>
+								</ComboBox>
+							</StackPanel>
+						</Border>
+					</StackPanel>
+
+					<Border Grid.Column="1" Classes="callout" Margin="5,0,0,0">
+						<Grid ColumnDefinitions="*,Auto">
+							<StackPanel>
+								<TextBlock Text="Scenario Resolution Text" Classes="heading"/>
+								<TextBlock TextWrapping="Wrap" Classes="subText" Text="All Scenarios have at least one Resolution that is displayed at the end of the Scenario. Multiple Resolutions can be created and triggered based on success, failure, or other conditions."/>
+								<ComboBox x:Name="ResolutionComboBox" Margin="0,5,0,0">
+									<ComboBox.ItemTemplate>
+										<DataTemplate>
+											<TextBlock Text="{Binding dataName}"/>
+										</DataTemplate>
+									</ComboBox.ItemTemplate>
+								</ComboBox>
+							</StackPanel>
+							<StackPanel Grid.Column="1" Margin="5,0,0,0" Spacing="5">
+								<Button x:Name="AddResolutionButton" Padding="5" Background="MediumSeaGreen" Click="AddResolutionButton_Click">
+									<Image Source="avares://JiMEditor.Avalonia/Assets/add.png" Width="24"/>
+								</Button>
+								<Button x:Name="RemoveResolutionButton" Padding="5" Background="{StaticResource bgCancelDelete}" Click="RemoveResolutionButton_Click">
+									<Image Source="avares://JiMEditor.Avalonia/Assets/remove.png" Width="24"/>
+								</Button>
+								<Button x:Name="ResolutionEditButton" Padding="5" Background="CornflowerBlue" Click="ResolutionEditButton_Click">
+									<Image Source="avares://JiMEditor.Avalonia/Assets/edit.png" Width="24"/>
+								</Button>
+							</StackPanel>
+						</Grid>
+					</Border>
+				</Grid>
+			</StackPanel>
+		</ScrollViewer>
+
+		<Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Silver" Background="#FF46464A">
+			<WrapPanel HorizontalAlignment="Right">
+				<Button x:Name="OkButton" Margin="10" Background="MediumSeaGreen" Click="OkButton_Click" IsDefault="True">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+			</WrapPanel>
+		</Border>
+	</Grid>
+</Window>

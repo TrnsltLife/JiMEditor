@@ -13,3 +13,11 @@ This is a list of things we need to do:
   * App Version and Scenario Format Version in the status bar
 * PseudoHtmlRichEditor
   * Probably need to escape <> & that aren't part of 
+* Settings Dialog TODO:
+  *  Cover image chooser is intentionally disabled
+    *  Choose Cover Image... button exists but IsEnabled="False" per your request.
+  *  Notes on intentionally deferred pieces
+    *  Resolution editor actions (add/remove/edit) are present in layout but currently show:
+      *  TODO-Avalonia-Reenable: Resolution editor flow is not ported yet.
+    *  Intro editing is wired to existing StoryTextEditWindow as a practical interim.
+    *  If you want, next I can port the full resolution editor workflow (the WPF TextEditorWindow-based behavior) so those three buttons become fully functional too.
