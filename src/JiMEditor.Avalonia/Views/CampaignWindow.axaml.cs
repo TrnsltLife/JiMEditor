@@ -99,6 +99,15 @@ public partial class CampaignWindow : Window
 		SaveCampaign();
 	}
 
+	async void ImageButton_Click( object? sender, RoutedEventArgs e )
+	{
+		var dlg = new CoverImageEditorWindow( campaign.coverImage );
+		await dlg.ShowDialog( this );
+		if ( !dlg.Accepted )
+			return;
+		campaign.coverImage = dlg.CoverImage;
+	}
+
 	async void TriggerHelpButton_Click( object? sender, RoutedEventArgs e )
 	{
 		// Tab 3 = "Campaign Triggers". (WPF passed 2 = "Last Stand Triggers"; index 3 matches this screen.)

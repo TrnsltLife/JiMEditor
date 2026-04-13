@@ -128,6 +128,14 @@ public partial class ScenarioWindow : Window
 		scenario.introBookData.pages[0] = w.StoryText;
 	}
 
+	async void ImageButton_Click( object? sender, RoutedEventArgs e )
+	{
+		var w = new CoverImageEditorWindow( scenario.coverImage );
+		await w.ShowDialog( this );
+		if ( w.Accepted )
+			scenario.coverImage = w.CoverImage;
+	}
+
 	void AddResolutionButton_Click( object? sender, RoutedEventArgs e ) =>
 		MessageBox.Show( "TODO-Avalonia-Reenable: Resolution editor flow is not ported yet.", "Not Yet Implemented", MessageBoxButton.OK, MessageBoxImage.Information );
 

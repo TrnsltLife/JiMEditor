@@ -1,0 +1,66 @@
+<!-- Ported from: JiMEditor/Views/ImageEditorWindow.xaml (2026-04-12) -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="JiMEditor.Avalonia.Views.CoverImageEditorWindow"
+        x:CompileBindings="False"
+        Title="Cover Image"
+        Width="760"
+        Height="520"
+        MinWidth="620"
+        MinHeight="420"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource bgColor}">
+	<Grid RowDefinitions="Auto,*,Auto">
+		<StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10" Spacing="10">
+			<Button x:Name="ChooseImageButton"
+			        Content="Choose New Image..."
+			        Background="DodgerBlue"
+			        Foreground="White"
+			        Height="36"
+			        FontWeight="Bold"
+			        FontSize="14"
+			        Click="ChooseImageButton_Click"/>
+			<Button x:Name="ClearImageButton"
+			        Background="{StaticResource bgCancelDelete}"
+			        Foreground="White"
+			        Height="36"
+			        FontWeight="Bold"
+			        FontSize="14"
+			        Click="ClearImageButton_Click">
+				<StackPanel Orientation="Horizontal" Spacing="6">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Width="18" Height="18"/>
+					<TextBlock Text="Clear Image"/>
+				</StackPanel>
+			</Button>
+		</StackPanel>
+
+		<Border Grid.Row="1" Margin="10" BorderBrush="#777777" BorderThickness="1" CornerRadius="4" Padding="8">
+			<Grid>
+				<Image x:Name="ImagePreview" Stretch="Uniform"/>
+				<TextBlock x:Name="EmptyStateText"
+				           Text="No cover image selected."
+				           Classes="subText"
+				           HorizontalAlignment="Center"
+				           VerticalAlignment="Center"/>
+			</Grid>
+		</Border>
+
+		<Border Grid.Row="2" BorderThickness="0,1,0,0" BorderBrush="Silver" Background="{StaticResource bgColorLight}">
+			<Grid Margin="10" ColumnDefinitions="*,Auto">
+				<TextBlock x:Name="ImageSizeText"
+				           Grid.Column="0"
+				           VerticalAlignment="Center"
+				           HorizontalAlignment="Left"
+				           Classes="heading"/>
+				<StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+					<Button Background="MediumSeaGreen" Click="OkButton_Click" IsDefault="True">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/ok.png" Width="32" Margin="5"/>
+					</Button>
+					<Button Background="{StaticResource bgCancelDelete}" Click="CancelButton_Click" IsCancel="True">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Width="32" Margin="5"/>
+					</Button>
+				</StackPanel>
+			</Grid>
+		</Border>
+	</Grid>
+</Window>

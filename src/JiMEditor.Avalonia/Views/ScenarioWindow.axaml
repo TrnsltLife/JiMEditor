@@ -114,13 +114,13 @@
 							<TextBlock Text="Scenario Cover Image:" Classes="heading"/>
 							<Button x:Name="ImageButton"
 							        Content="Choose Cover Image..."
-							        IsEnabled="False"
 							        Background="DodgerBlue"
 							        Foreground="White"
 							        Height="36"
 							        FontWeight="Bold"
 							        FontSize="14"
-							        Margin="0,8,0,0"/>
+							        Margin="0,8,0,0"
+							        Click="ImageButton_Click"/>
 						</StackPanel>
 					</StackPanel>
 				</Border>
