@@ -4,6 +4,12 @@
              x:Class="JiMEditor.Avalonia.Views.PseudoHtmlRichEditor"
              x:Name="Root"
              x:CompileBindings="False">
+	<UserControl.Styles>
+		<!-- Add right inset inside the TextBox viewport so content is not obscured by the vertical scrollbar. -->
+		<Style Selector="TextBox.markupBox /template/ ScrollViewer#PART_ScrollViewer">
+			<Setter Property="Padding" Value="0,0,32,0"/>
+		</Style>
+	</UserControl.Styles>
 
 	<Grid RowDefinitions="Auto,*" MinHeight="160">
 		<ScrollViewer Grid.Row="0"
@@ -76,8 +82,13 @@
 				           Opacity="0.85"
 				           Margin="0,0,0,4"/>
 				<TextBox x:Name="SourceBox"
+				         Classes="markupBox"
 				         AcceptsReturn="True"
-				         TextWrapping="Wrap"
+				         TextWrapping="WrapWithOverflow"
+				         Padding="0"
+						 Margin="0"
+						 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+						 ScrollViewer.VerticalScrollBarVisibility="Visible"
 				         FontFamily="Consolas,Courier New,monospace"
 				         Foreground="White"
 				         Background="#2a2a2e"
@@ -100,6 +111,7 @@
 				              VerticalScrollBarVisibility="Auto">
 					<TextBlock x:Name="PreviewBlock"
 					           TextWrapping="Wrap"
+					           Margin="0,0,20,0"
 					           Foreground="White"
 					           FontSize="14"/>
 				</ScrollViewer>

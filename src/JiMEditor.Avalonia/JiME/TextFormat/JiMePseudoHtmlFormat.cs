@@ -236,30 +236,115 @@ public static class JiMePseudoHtmlFormat
 		var t = run.Text ?? "";
 		if ( t.Length == 0 )
 			return;
+		var escaped = EscapeTextPreservingEntities( t );
 
 		if ( run.IsIconFont )
 		{
 			if ( run.Bold && run.Italic )
-				sb.Append( "<font=\"Icon\"><b><i>" ).Append( t ).Append( "</i></b></font>" );
+				sb.Append( "<font=\"Icon\"><b><i>" ).Append( escaped ).Append( "</i></b></font>" );
 			else if ( run.Bold )
-				sb.Append( "<font=\"Icon\"><b>" ).Append( t ).Append( "</b></font>" );
+				sb.Append( "<font=\"Icon\"><b>" ).Append( escaped ).Append( "</b></font>" );
 			else if ( run.Italic )
-				sb.Append( "<font=\"Icon\"><i>" ).Append( t ).Append( "</i></font>" );
+				sb.Append( "<font=\"Icon\"><i>" ).Append( escaped ).Append( "</i></font>" );
 			else
-				sb.Append( "<font=\"Icon\">" ).Append( t ).Append( "</font>" );
+				sb.Append( "<font=\"Icon\">" ).Append( escaped ).Append( "</font>" );
 		}
 		else
 		{
 			if ( run.Bold && run.Italic )
-				sb.Append( "<b><i>" ).Append( t ).Append( "</i></b>" );
+				sb.Append( "<b><i>" ).Append( escaped ).Append( "</i></b>" );
 			else if ( run.Bold )
-				sb.Append( "<b>" ).Append( t ).Append( "</b>" );
+				sb.Append( "<b>" ).Append( escaped ).Append( "</b>" );
 			else if ( run.Italic )
-				sb.Append( "<i>" ).Append( t ).Append( "</i>" );
+				sb.Append( "<i>" ).Append( escaped ).Append( "</i>" );
 			else
-				sb.Append( t );
+				sb.Append( escaped );
 		}
 	}
+
+	static string EscapeTextPreservingEntities( string text )
+	{
+		var sb = new StringBuilder( text.Length );
+		for ( var i = 0; i < text.Length; i++ )
+		{
+			var ch = text[i];
+			if ( ch == '&' )
+			{
+				if ( TryFindEntityEnd( text, i, out var entityEnd ) )
+				{
+					sb.Append( text, i, entityEnd - i + 1 );
+					i = entityEnd;
+				}
+				else
+				{
+					sb.Append( "&amp;" );
+				}
+			}
+			else if ( ch == '<' )
+			{
+				sb.Append( "&lt;" );
+			}
+			else if ( ch == '>' )
+			{
+				sb.Append( "&gt;" );
+			}
+			else
+			{
+				sb.Append( ch );
+			}
+		}
+
+		return sb.ToString();
+	}
+
+	static bool TryFindEntityEnd( string s, int ampIndex, out int entityEnd )
+	{
+		entityEnd = -1;
+		var i = ampIndex + 1;
+		if ( i >= s.Length )
+			return false;
+
+		// Named entity: &name;
+		if ( IsAsciiLetter( s[i] ) )
+		{
+			var start = i;
+			while ( i < s.Length && ( IsAsciiLetter( s[i] ) || char.IsDigit( s[i] ) ) )
+				i++;
+			if ( i > start && i < s.Length && s[i] == ';' )
+			{
+				entityEnd = i;
+				return true;
+			}
+
+			return false;
+		}
+
+		// Numeric entity: &#123; or &#x1F600;
+		if ( s[i] != '#' )
+			return false;
+		i++;
+		if ( i >= s.Length )
+			return false;
+
+		var isHex = ( s[i] == 'x' || s[i] == 'X' );
+		if ( isHex )
+			i++;
+		if ( i >= s.Length )
+			return false;
+		var startDigits = i;
+
+		while ( i < s.Length && ( isHex ? IsHexDigit( s[i] ) : char.IsDigit( s[i] ) ) )
+			i++;
+		if ( i == startDigits || i >= s.Length || s[i] != ';' )
+			return false;
+
+		entityEnd = i;
+		return true;
+	}
+
+	static bool IsAsciiLetter( char c ) => ( c >= 'a' && c <= 'z' ) || ( c >= 'A' && c <= 'Z' );
+	static bool IsHexDigit( char c ) =>
+		( c >= '0' && c <= '9' ) || ( c >= 'a' && c <= 'f' ) || ( c >= 'A' && c <= 'F' );
 
 	static void MergeAdjacentSameFormat( IList<JiMeTextRun> runs )
 	{

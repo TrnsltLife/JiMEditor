@@ -25,7 +25,7 @@ public static class JiMeAvaloniaRichPreview
 			{
 				if ( string.IsNullOrEmpty( run.Text ) )
 					continue;
-				var r = new Run( run.Text )
+				var r = new Run( DecodeBasicEntities( run.Text ) )
 				{
 					FontFamily = run.IsIconFont ? IconFontFamily : bodyFont,
 					FontWeight = run.Bold ? FontWeight.Bold : FontWeight.Normal,
@@ -41,5 +41,14 @@ public static class JiMeAvaloniaRichPreview
 				textBlock.Inlines.Add( new LineBreak() );
 			}
 		}
+	}
+
+	static string DecodeBasicEntities( string s )
+	{
+		// Keep decode scope narrow to JiME needs; do not decode quotes or arbitrary entities here.
+		return s
+			.Replace( "&lt;", "<" )
+			.Replace( "&gt;", ">" )
+			.Replace( "&amp;", "&" );
 	}
 }

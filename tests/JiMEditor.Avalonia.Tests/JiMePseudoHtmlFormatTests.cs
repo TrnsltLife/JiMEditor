@@ -20,6 +20,25 @@ public class JiMePseudoHtmlFormatTests
 	}
 
 	[Fact]
+	public void Normalize_Escapes_Bare_Angles_And_Ampersand()
+	{
+		Assert.Equal( "A &lt; B &amp; C &gt; D", JiMePseudoHtmlFormat.NormalizePseudoHtml( "A < B & C > D" ) );
+	}
+
+	[Fact]
+	public void Normalize_Does_Not_DoubleEncode_Existing_Entities()
+	{
+		Assert.Equal( "A &lt; B &amp; C &gt; D", JiMePseudoHtmlFormat.NormalizePseudoHtml( "A &lt; B &amp; C &gt; D" ) );
+	}
+
+	[Fact]
+	public void Normalize_Preserves_Valid_Tags_And_Escapes_Text_Around_Them()
+	{
+		var s = "<b>hi</b> & <i>there</i> <font=\"Icon\">M</font> <x>";
+		Assert.Equal( "<b>hi</b> &amp; <i>there</i> <font=\"Icon\">M</font> &lt;x&gt;", JiMePseudoHtmlFormat.NormalizePseudoHtml( s ) );
+	}
+
+	[Fact]
 	public void RoundTrip_Paragraphs()
 	{
 		var s = "First para" + JiMePseudoHtmlFormat.ParagraphSeparator + "Second";
