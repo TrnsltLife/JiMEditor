@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="JiMEditor.Avalonia.Views.Events.EventDialogs.EventRewardsSection"
+             x:CompileBindings="False">
+	<Border Classes="callout">
+		<StackPanel>
+			<TextBlock Classes="heading" Text="Lore / XP / Threat Rewards"/>
+			<TextBlock Classes="subText" TextWrapping="Wrap" Margin="0,0,0,6">
+				Rewards are given after the Event is finished activating.
+			</TextBlock>
+			<StackPanel Orientation="Horizontal" Spacing="10">
+				<TextBox x:Name="LoreRewardTextBox" Width="40" Classes="campaignField"/>
+				<TextBox x:Name="XpRewardTextBox" Width="40" Classes="campaignField"/>
+				<TextBox x:Name="ThreatRewardTextBox" Width="40" Classes="campaignField"/>
+			</StackPanel>
+		</StackPanel>
+	</Border>
+</UserControl>

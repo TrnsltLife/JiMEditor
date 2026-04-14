@@ -1,0 +1,121 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="JiMEditor.Avalonia.Views.Events.EventDialogs.DialogEventCustomTab"
+             x:CompileBindings="False">
+	<StackPanel Margin="0,5,0,0" Spacing="8">
+		<Border Classes="callout">
+			<TextBlock Classes="subText"
+			           TextWrapping="Wrap"
+			           Text="Dialog Events present the players with a choice of up to 3 dialog options to choose from. Choosing a dialog option uses an Action in the Companion App. After choosing a dialog option, the players are shown the story text associated with that option. Dialog Event Tokens are removed from the tile after all Dialog Options have been used, unless the persistent checkbox below is checked."/>
+		</Border>
+		<Border Classes="callout">
+			<TextBlock Classes="heading"
+			           HorizontalAlignment="Center"
+			           Text="To disable a dialog option in the Companion App, leave the textbox empty."/>
+		</Border>
+		<Border Classes="callout">
+			<StackPanel Spacing="6">
+				<StackPanel Orientation="Horizontal" Spacing="10">
+					<CheckBox x:Name="DialogPersistentCheckBox"
+					          Foreground="White"
+					          VerticalAlignment="Center"
+					          Content="This Event is persistent"
+					          Checked="DialogPersistentCheckBox_OnIsCheckedChanged"
+					          Unchecked="DialogPersistentCheckBox_OnIsCheckedChanged"/>
+					<Button x:Name="EditPersistentDialogButton"
+					        Content="Edit Persistent Text..."
+					        Foreground="White"
+					        Background="#1E90FF"
+					        VerticalAlignment="Center"
+					        Click="EditPersistentDialog_OnClick"/>
+				</StackPanel>
+				<TextBlock Classes="subText" TextWrapping="Wrap"
+				           Text="If this Event is a Token Interaction and this option is checked, its Token will remain on the board. After all dialog options have been used, the Persistent Text will be shown when players interact with the Token instead of the normal Event Text. If this option is NOT checked, its Token will be removed when all dialog options have been explored."/>
+			</StackPanel>
+		</Border>
+
+		<Border Classes="callout">
+			<Grid ColumnDefinitions="Auto,Auto,*" RowDefinitions="Auto">
+				<StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
+					<TextBlock Classes="heading" Text="Dialog 1:" VerticalAlignment="Center"/>
+					<TextBox x:Name="Choice1TextBox" Width="120" Classes="campaignField"/>
+				</StackPanel>
+				<StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+					<TextBlock Classes="heading" Text="Fire This Trigger (Optional):" VerticalAlignment="Center"/>
+					<ComboBox x:Name="C1TriggerCombo" MinWidth="200" VerticalAlignment="Center">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding dataName}" Foreground="White"/>
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+					<Button Width="32" Height="32" Background="#3CB371" Padding="4" Click="AddC1Trigger_OnClick">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+					</Button>
+				</StackPanel>
+				<Button Grid.Column="2"
+				        HorizontalAlignment="Right"
+				        Background="#1E90FF"
+				        Foreground="White"
+				        Content="Edit Story..."
+				        Click="EditStory1_OnClick"/>
+			</Grid>
+		</Border>
+
+		<Border Classes="callout">
+			<Grid ColumnDefinitions="Auto,Auto,*">
+				<StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
+					<TextBlock Classes="heading" Text="Dialog 2:" VerticalAlignment="Center"/>
+					<TextBox x:Name="Choice2TextBox" Width="120" Classes="campaignField"/>
+				</StackPanel>
+				<StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+					<TextBlock Classes="heading" Text="Fire This Trigger (Optional):" VerticalAlignment="Center"/>
+					<ComboBox x:Name="C2TriggerCombo" MinWidth="200" VerticalAlignment="Center">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding dataName}" Foreground="White"/>
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+					<Button Width="32" Height="32" Background="#3CB371" Padding="4" Click="AddC2Trigger_OnClick">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+					</Button>
+				</StackPanel>
+				<Button Grid.Column="2"
+				        HorizontalAlignment="Right"
+				        Background="#1E90FF"
+				        Foreground="White"
+				        Content="Edit Story..."
+				        Click="EditStory2_OnClick"/>
+			</Grid>
+		</Border>
+
+		<Border Classes="callout">
+			<Grid ColumnDefinitions="Auto,Auto,*">
+				<StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
+					<TextBlock Classes="heading" Text="Dialog 3:" VerticalAlignment="Center"/>
+					<TextBox x:Name="Choice3TextBox" Width="120" Classes="campaignField"/>
+				</StackPanel>
+				<StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+					<TextBlock Classes="heading" Text="Fire This Trigger (Optional):" VerticalAlignment="Center"/>
+					<ComboBox x:Name="C3TriggerCombo" MinWidth="200" VerticalAlignment="Center">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding dataName}" Foreground="White"/>
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+					<Button Width="32" Height="32" Background="#3CB371" Padding="4" Click="AddC3Trigger_OnClick">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+					</Button>
+				</StackPanel>
+				<Button Grid.Column="2"
+				        HorizontalAlignment="Right"
+				        Background="#1E90FF"
+				        Foreground="White"
+				        Content="Edit Story..."
+				        Click="EditStory3_OnClick"/>
+			</Grid>
+		</Border>
+	</StackPanel>
+</UserControl>

@@ -19,6 +19,9 @@ public partial class TriggerEditorWindow : Window
 	/// <summary>True when OK applied a new trigger or rename (WPF <c>DialogResult == true</c>); false for cancel or multi-only tweak.</summary>
 	public bool Accepted { get; private set; }
 
+	/// <summary>Trigger name from the editor field after <see cref="Accepted"/> is true (or after Add/Rename succeeded).</summary>
+	public string EnteredTriggerName => NameTextBox.Text?.Trim() ?? "";
+
 	public TriggerEditorWindow()
 	{
 		InitializeComponent();

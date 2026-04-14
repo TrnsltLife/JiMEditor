@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using JiMEditor.Avalonia.EventDialog;
+using JiMEditor.Avalonia.Views.Events;
 using JiME;
 using MessageBox = System.Windows.MessageBox;
 using MessageBoxButton = System.Windows.MessageBoxButton;
@@ -51,6 +53,12 @@ public partial class MainWindow : Window
 	void WireSidebarLists()
 	{
 		interactionsUC.SetItemsSource( scenario.interactionObserver );
+		interactionsUC.onAddEvent += OnAddInteraction;
+		interactionsUC.onRemoveEvent += OnRemoveInteraction;
+		interactionsUC.onSettingsEvent += OnSettingsInteraction;
+		interactionsUC.onDuplicateEvent += OnDuplicateInteraction;
+		interactionsUC.onImportEvent += OnImportInteraction;
+		interactionsUC.onExportEvent += OnExportInteraction;
 		triggersUC.SetItemsSource( scenario.triggersObserver );
 		triggersUC.onAddEvent += OnAddTrigger;
 		triggersUC.onRemoveEvent += OnRemoveTrigger;
@@ -85,6 +93,12 @@ public partial class MainWindow : Window
 
 	void DetachSidebarLists()
 	{
+		interactionsUC.onAddEvent -= OnAddInteraction;
+		interactionsUC.onRemoveEvent -= OnRemoveInteraction;
+		interactionsUC.onSettingsEvent -= OnSettingsInteraction;
+		interactionsUC.onDuplicateEvent -= OnDuplicateInteraction;
+		interactionsUC.onImportEvent -= OnImportInteraction;
+		interactionsUC.onExportEvent -= OnExportInteraction;
 		monsterModifiersUC.onAddEvent -= OnAddMonsterModifier;
 		monsterModifiersUC.onRemoveEvent -= OnRemoveMonsterModifier;
 		monsterModifiersUC.onSettingsEvent -= OnSettingsMonsterModifier;
@@ -561,6 +575,111 @@ public partial class MainWindow : Window
 	{
 		var w = new ThreatsWindow( scenario );
 		await w.ShowDialog( this );
+	}
+
+	void OnAddInteraction( object? sender, EventArgs e )
+	{
+		var flyout = new MenuFlyout();
+		var dialogItem = new MenuItem { Header = "Dialog Event" };
+		dialogItem.Click += async (_, _) => await AddDialogInteractionAsync();
+		flyout.Items.Add( dialogItem );
+		flyout.ShowAt( interactionsUC.AddInteractionButton );
+	}
+
+	async Task AddDialogInteractionAsync()
+	{
+		var (accepted, created) = await EventEditorFactory.TryCreateDialogInteractionAsync( this, scenario );
+		if ( accepted )
+			scenario.AddInteraction( created );
+	}
+
+	async void OnSettingsInteraction( object? sender, EventArgs e )
+	{
+		if ( interactionsUC.DataListView.SelectedItem is not IInteraction i )
+			return;
+		await EventEditorFactory.TryEditInteractionAsync( this, scenario, i );
+		interactionsUC.RefreshSortedItems();
+	}
+
+	async void OnDuplicateInteraction( object? sender, EventArgs e )
+	{
+		if ( interactionsUC.DataListView.SelectedItem is not DialogInteraction src )
+		{
+			MessageBox.Show(
+				"Duplicating this event type is not implemented yet in Avalonia.",
+				"Not implemented",
+				MessageBoxButton.OK,
+				MessageBoxImage.Information );
+			return;
+		}
+
+		var clone = src.Clone();
+		var originalValues = clone.CaptureStartingValues();
+		var originalPrefix = clone.TranslationKeyPrefix();
+		var originalKeyName = clone.TranslationKeyName();
+		var w = new DialogInteractionWindow( scenario, clone, showCancelButton: true );
+		await w.ShowDialog( this );
+		clone.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+		if ( w.Accepted )
+			scenario.AddInteraction( clone );
+	}
+
+	void OnRemoveInteraction( object? sender, EventArgs e )
+	{
+		if ( interactionsUC.DataListView.SelectedItem is StartInteraction )
+		{
+			MessageBox.Show(
+				"You can't delete the Starting Position event.",
+				"Cannot Delete Start Position Event",
+				MessageBoxButton.OK,
+				MessageBoxImage.Information );
+			return;
+		}
+
+		var ret = MessageBox.Show(
+			"Are you sure you want to delete this Event?\n\nALL OF ITS DATA WILL BE DELETED.",
+			"Delete Event",
+			MessageBoxButton.YesNo,
+			MessageBoxImage.Question );
+		if ( ret != MessageBoxResult.Yes )
+			return;
+
+		var idx = interactionsUC.DataListView.SelectedIndex;
+		if ( idx >= 0 && interactionsUC.DataListView.SelectedItem is IInteraction item )
+			scenario.RemoveData( item );
+		interactionsUC.DataListView.SelectedIndex = scenario.interactionObserver.Count > 0 ? 0 : -1;
+	}
+
+	async void OnImportInteraction( object? sender, EventArgs e )
+	{
+		var interactionItem = new ImportManager().ImportEvent( scenario );
+		if ( interactionItem == null )
+			return;
+		if ( interactionItem is not DialogInteraction d )
+		{
+			MessageBox.Show(
+				"Importing this event type is not implemented yet in Avalonia (Dialog imports are supported).",
+				"Not implemented",
+				MessageBoxButton.OK,
+				MessageBoxImage.Information );
+			return;
+		}
+
+		var originalValues = d.CaptureStartingValues();
+		var originalPrefix = d.TranslationKeyPrefix();
+		var originalKeyName = d.TranslationKeyName();
+		var w = new DialogInteractionWindow( scenario, d, showCancelButton: true );
+		await w.ShowDialog( this );
+		d.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+		if ( w.Accepted )
+			scenario.AddInteraction( d );
+	}
+
+	void OnExportInteraction( object? sender, EventArgs e )
+	{
+		if ( interactionsUC.DataListView.SelectedItem is not InteractionBase selected )
+			return;
+		new ExportManager().ExportEvent( scenario, selected );
 	}
 
 	protected override void OnClosing( WindowClosingEventArgs e )

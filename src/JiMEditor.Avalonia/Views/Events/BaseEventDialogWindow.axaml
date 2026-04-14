@@ -1,0 +1,86 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ed="using:JiMEditor.Avalonia.Views.Events.EventDialogs"
+        x:Class="JiMEditor.Avalonia.Views.Events.BaseEventDialogWindow"
+        x:CompileBindings="False"
+        Title="Event Editor"
+        Width="780"
+        MinHeight="560"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource bgColor}">
+
+	<Window.Styles>
+		<Style Selector="TextBox.campaignField">
+			<Setter Property="Background" Value="#333337"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#77777d"/>
+			<Setter Property="Padding" Value="6,4"/>
+		</Style>
+		<Style Selector="ComboBox">
+			<Setter Property="Background" Value="#333337"/>
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+		<Style Selector="CheckBox">
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+	</Window.Styles>
+
+	<DockPanel LastChildFill="True">
+		<Border DockPanel.Dock="Bottom"
+		        Background="#FF46464A"
+		        BorderBrush="Silver"
+		        BorderThickness="0,1,0,0"
+		        Padding="0,4">
+			<StackPanel Orientation="Horizontal"
+			            HorizontalAlignment="Right"
+			            Spacing="10"
+			            Margin="10">
+				<Button x:Name="OkButton"
+				        Width="52"
+				        Height="44"
+				        Background="#3CB371"
+				        Padding="6"
+				        Click="OkButton_OnClick">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/ok.png" Stretch="Uniform"/>
+				</Button>
+				<Button x:Name="CancelButton"
+				        Width="52"
+				        Height="44"
+				        Background="{StaticResource bgCancelDelete}"
+				        Padding="6"
+				        Click="CancelButton_OnClick">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Stretch="Uniform"/>
+				</Button>
+			</StackPanel>
+		</Border>
+
+		<TabControl x:Name="RootTabs" Classes="jimeTabStrip" Margin="5">
+			<TabItem Header="General Properties">
+				<ScrollViewer VerticalScrollBarVisibility="Auto">
+					<StackPanel Margin="8" Spacing="10">
+						<Border x:Name="ThreatCalloutBorder" Classes="callout" IsVisible="False">
+							<StackPanel Spacing="6">
+								<TextBlock Classes="heading"
+								           Text="This Event is triggered by a Scenario Threat Threshold."
+								           HorizontalAlignment="Center"/>
+								<TextBlock Classes="subText"
+								           TextWrapping="Wrap"
+								           HorizontalAlignment="Center"
+								           Text="Events triggered by Threat Thresholds cannot be Token Interactions and cannot be Triggered By another source."/>
+							</StackPanel>
+						</Border>
+
+						<ed:EventNameAndGroupSection x:Name="NameGroupSection"/>
+						<ed:EventRewardsSection x:Name="RewardsSection"/>
+						<ed:EventTokenSection x:Name="TokenSection"/>
+						<ed:EventTriggerSection x:Name="TriggerSection"/>
+						<ed:EventTextFlavorSection x:Name="TextFlavorSection"/>
+					</StackPanel>
+				</ScrollViewer>
+			</TabItem>
+			<TabItem x:Name="CustomTabItem" Header="Custom">
+				<ContentPresenter x:Name="CustomTabHost" Margin="8"/>
+			</TabItem>
+		</TabControl>
+	</DockPanel>
+</Window>

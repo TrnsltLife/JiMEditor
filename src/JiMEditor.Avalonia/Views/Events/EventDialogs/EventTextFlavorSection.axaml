@@ -1,0 +1,43 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="JiMEditor.Avalonia.Views.Events.EventDialogs.EventTextFlavorSection"
+             x:CompileBindings="False">
+	<Grid ColumnDefinitions="*,*" Margin="0,10,0,0">
+		<Border Grid.Column="0" Classes="callout" Margin="0,0,5,0">
+			<Grid ColumnDefinitions="*,Auto">
+				<StackPanel Grid.Column="0">
+					<TextBlock Classes="heading" Text="Event Text"/>
+					<TextBlock Classes="subText" TextWrapping="Wrap">
+						Use the Event Text to describe the actual Event that has been activated. Example: Describe an Enemy Threat, present a Test, describe a Decision, etc.
+					</TextBlock>
+				</StackPanel>
+				<Button Grid.Column="1"
+				        x:Name="EditEventTextButton"
+				        Width="46"
+				        Height="46"
+				        Margin="10,0,0,0"
+				        Background="#6495ED"
+				        Click="EditEventText_OnClick">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/edit.png" Stretch="Uniform"/>
+				</Button>
+			</Grid>
+		</Border>
+		<Border Grid.Column="1" Classes="callout" Margin="5,0,0,0">
+			<Grid ColumnDefinitions="*,Auto">
+				<StackPanel Grid.Column="0">
+					<TextBlock x:Name="FlavorTitleText" Classes="heading" Text="Flavor Text For Token Interaction"/>
+					<TextBlock x:Name="FlavorBodyText" Classes="subText" TextWrapping="Wrap"/>
+				</StackPanel>
+				<Button Grid.Column="1"
+				        x:Name="EditFlavorTextButton"
+				        Width="46"
+				        Height="46"
+				        Margin="10,0,0,0"
+				        Background="#6495ED"
+				        Click="EditFlavorText_OnClick">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/edit.png" Stretch="Uniform"/>
+				</Button>
+			</Grid>
+		</Border>
+	</Grid>
+</UserControl>

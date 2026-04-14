@@ -1,0 +1,65 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="JiMEditor.Avalonia.Views.Events.EventDialogs.EventTokenSection"
+             x:CompileBindings="False">
+	<Border Classes="callout">
+		<StackPanel Spacing="8">
+			<Grid ColumnDefinitions="Auto,*,Auto">
+				<CheckBox x:Name="IsTokenInteractionCheckBox"
+				          Grid.Column="0"
+				          Foreground="White"
+				          Content="This Event is a Token Interaction"
+				          VerticalAlignment="Top"
+				          Checked="IsTokenInteractionCheckBox_OnIsCheckedChanged"
+				          Unchecked="IsTokenInteractionCheckBox_OnIsCheckedChanged"/>
+				<StackPanel Grid.Column="1" Margin="24,0,0,0" Spacing="6">
+					<StackPanel x:Name="TokenPersistentRow" Orientation="Horizontal" Spacing="10" IsVisible="False">
+						<CheckBox x:Name="TokenPersistentCheckBox"
+						          Foreground="White"
+						          VerticalAlignment="Center"
+						          Content="This Event's Token is Persistent"
+						          Checked="TokenPersistentCheckBox_OnIsCheckedChanged"
+						          Unchecked="TokenPersistentCheckBox_OnIsCheckedChanged"/>
+						<Button x:Name="EditPersistentFromTokenButton"
+						        Content="Edit Persistent Text"
+						        Foreground="White"
+						        Background="#3CB371"
+						        Click="EditPersistentFromToken_OnClick"/>
+					</StackPanel>
+				</StackPanel>
+				<Button Grid.Column="2"
+				        x:Name="TokenHelpButton"
+				        Width="32"
+				        Height="32"
+				        Margin="10,0,0,0"
+				        Background="#FFC98800"
+				        Click="TokenHelpButton_OnClick">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/help.png" Stretch="Uniform"/>
+				</Button>
+			</Grid>
+
+			<StackPanel x:Name="TokenDetailsPanel" Spacing="6" IsVisible="False">
+				<StackPanel Orientation="Horizontal" Spacing="10">
+					<TextBlock Classes="heading" Text="Token Type:" VerticalAlignment="Center"/>
+					<ComboBox x:Name="TokenTypeCombo" MinWidth="160" SelectionChanged="TokenTypeCombo_OnSelectionChanged"/>
+				</StackPanel>
+				<StackPanel x:Name="PersonTypeRow" Orientation="Horizontal" Spacing="10" IsVisible="False">
+					<TextBlock Classes="heading" Text="Person Type:" VerticalAlignment="Center"/>
+					<ComboBox x:Name="PersonTypeCombo" MinWidth="140"/>
+				</StackPanel>
+				<StackPanel x:Name="TerrainTypeRow" Orientation="Horizontal" Spacing="10" IsVisible="False">
+					<TextBlock Classes="heading" Text="Terrain Type:" VerticalAlignment="Center"/>
+					<ComboBox x:Name="TerrainTypeCombo" MinWidth="200"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal" Spacing="8">
+					<TextBlock Classes="subText" VerticalAlignment="Center" Text="Token Interaction Text (Optional):"/>
+					<TextBox x:Name="TokenInteractionTextBox" Width="280" Classes="campaignField"/>
+				</StackPanel>
+			</StackPanel>
+
+			<TextBlock Classes="subText" TextWrapping="Wrap">
+				Token Interactions are triggered by players as they journey across the map. When a player clicks a Token, the Flavor Text below is shown. The player can decide to use an Action to Interact with the Token, after which the Event Text is shown, along with the Event itself.
+			</TextBlock>
+		</StackPanel>
+	</Border>
+</UserControl>

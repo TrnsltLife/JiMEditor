@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="JiMEditor.Avalonia.Views.Events.EventDialogs.EventTriggerSection"
+             x:CompileBindings="False">
+	<Border Classes="callout">
+		<StackPanel Spacing="8">
+			<Grid ColumnDefinitions="*,*">
+				<StackPanel Grid.Column="0" HorizontalAlignment="Left">
+					<TextBlock Classes="heading" Text="Triggered By (Optional):"/>
+					<StackPanel Orientation="Horizontal" Spacing="10">
+						<ComboBox x:Name="TriggeredByCombo"
+						          Width="250"
+						          VerticalAlignment="Center">
+							<ComboBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding dataName}" Foreground="White"/>
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+						<Button x:Name="AddTriggeredByButton"
+						        Background="#3CB371"
+						        Width="32"
+						        Height="32"
+						        Padding="4"
+						        Click="AddTriggeredBy_OnClick">
+							<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+						</Button>
+					</StackPanel>
+				</StackPanel>
+				<StackPanel Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,0,0">
+					<TextBlock Classes="heading" Text="Set Trigger After Event Is Resolved (Optional):"/>
+					<StackPanel Orientation="Horizontal" Spacing="10">
+						<ComboBox x:Name="TriggerAfterCombo"
+						          Width="250"
+						          VerticalAlignment="Center">
+							<ComboBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding dataName}" Foreground="White"/>
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+						<Button x:Name="AddTriggerAfterButton"
+						        Background="#3CB371"
+						        Width="32"
+						        Height="32"
+						        Padding="4"
+						        Click="AddTriggerAfter_OnClick">
+							<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+						</Button>
+					</StackPanel>
+				</StackPanel>
+			</Grid>
+			<TextBlock Classes="subText" TextWrapping="Wrap">
+				Multiple Events can be 'Triggered By' the same Trigger. When this happens, only ONE of the Events will be randomly chosen to fire.
+			</TextBlock>
+		</StackPanel>
+	</Border>
+</UserControl>

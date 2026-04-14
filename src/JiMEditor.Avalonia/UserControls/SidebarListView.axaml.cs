@@ -85,6 +85,9 @@ public partial class SidebarListView : UserControl, INotifyPropertyChanged
 	/// <summary>WPF parity name for the scenario list combo (future handlers use SelectedItem / Items).</summary>
 	public ComboBox DataListView => dataListView;
 
+	/// <summary>Green add button (for attaching a flyout / context menu from the parent window).</summary>
+	public Button AddInteractionButton => addInteraction;
+
 	public SidebarListView()
 	{
 		InitializeComponent();
