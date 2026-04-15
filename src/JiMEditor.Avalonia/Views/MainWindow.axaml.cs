@@ -582,13 +582,43 @@ public partial class MainWindow : Window
 		var flyout = new MenuFlyout();
 		var dialogItem = new MenuItem { Header = "Dialog Event" };
 		dialogItem.Click += async (_, _) => await AddDialogInteractionAsync();
+		var rewardItem = new MenuItem { Header = "Reward Event" };
+		rewardItem.Click += async (_, _) => await AddRewardInteractionAsync();
+		var persistentItem = new MenuItem { Header = "Persistent Event" };
+		persistentItem.Click += async (_, _) => await AddPersistentInteractionAsync();
+		var conditionalItem = new MenuItem { Header = "Conditional Event" };
+		conditionalItem.Click += async (_, _) => await AddConditionalInteractionAsync();
 		flyout.Items.Add( dialogItem );
+		flyout.Items.Add( rewardItem );
+		flyout.Items.Add( persistentItem );
+		flyout.Items.Add( conditionalItem );
 		flyout.ShowAt( interactionsUC.AddInteractionButton );
 	}
 
 	async Task AddDialogInteractionAsync()
 	{
 		var (accepted, created) = await EventEditorFactory.TryCreateDialogInteractionAsync( this, scenario );
+		if ( accepted )
+			scenario.AddInteraction( created );
+	}
+
+	async Task AddRewardInteractionAsync()
+	{
+		var (accepted, created) = await EventEditorFactory.TryCreateRewardInteractionAsync( this, scenario );
+		if ( accepted )
+			scenario.AddInteraction( created );
+	}
+
+	async Task AddPersistentInteractionAsync()
+	{
+		var (accepted, created) = await EventEditorFactory.TryCreatePersistentInteractionAsync( this, scenario );
+		if ( accepted )
+			scenario.AddInteraction( created );
+	}
+
+	async Task AddConditionalInteractionAsync()
+	{
+		var (accepted, created) = await EventEditorFactory.TryCreateConditionalInteractionAsync( this, scenario );
 		if ( accepted )
 			scenario.AddInteraction( created );
 	}
@@ -603,7 +633,7 @@ public partial class MainWindow : Window
 
 	async void OnDuplicateInteraction( object? sender, EventArgs e )
 	{
-		if ( interactionsUC.DataListView.SelectedItem is not DialogInteraction src )
+		if ( interactionsUC.DataListView.SelectedItem is not IInteraction src )
 		{
 			MessageBox.Show(
 				"Duplicating this event type is not implemented yet in Avalonia.",
@@ -613,15 +643,68 @@ public partial class MainWindow : Window
 			return;
 		}
 
-		var clone = src.Clone();
-		var originalValues = clone.CaptureStartingValues();
-		var originalPrefix = clone.TranslationKeyPrefix();
-		var originalKeyName = clone.TranslationKeyName();
-		var w = new DialogInteractionWindow( scenario, clone, showCancelButton: true );
-		await w.ShowDialog( this );
-		clone.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
-		if ( w.Accepted )
-			scenario.AddInteraction( clone );
+		switch ( src )
+		{
+			case DialogInteraction d:
+			{
+				var clone = d.Clone();
+				var originalValues = clone.CaptureStartingValues();
+				var originalPrefix = clone.TranslationKeyPrefix();
+				var originalKeyName = clone.TranslationKeyName();
+				var w = new DialogInteractionWindow( scenario, clone, showCancelButton: true );
+				await w.ShowDialog( this );
+				clone.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( clone );
+				break;
+			}
+			case RewardInteraction r:
+			{
+				var clone = r.Clone();
+				var originalValues = clone.CaptureStartingValues();
+				var originalPrefix = clone.TranslationKeyPrefix();
+				var originalKeyName = clone.TranslationKeyName();
+				var w = new RewardInteractionWindow( scenario, clone, showCancelButton: true );
+				await w.ShowDialog( this );
+				clone.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( clone );
+				break;
+			}
+			case PersistentTokenInteraction p:
+			{
+				var clone = p.Clone();
+				var originalValues = clone.CaptureStartingValues();
+				var originalPrefix = clone.TranslationKeyPrefix();
+				var originalKeyName = clone.TranslationKeyName();
+				var w = new PersistentInteractionWindow( scenario, clone, showCancelButton: true );
+				await w.ShowDialog( this );
+				clone.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( clone );
+				break;
+			}
+			case ConditionalInteraction c:
+			{
+				var clone = c.Clone();
+				var originalValues = clone.CaptureStartingValues();
+				var originalPrefix = clone.TranslationKeyPrefix();
+				var originalKeyName = clone.TranslationKeyName();
+				var w = new ConditionalInteractionWindow( scenario, clone, showCancelButton: true );
+				await w.ShowDialog( this );
+				clone.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( clone );
+				break;
+			}
+			default:
+				MessageBox.Show(
+					"Duplicating this event type is not implemented yet in Avalonia.",
+					"Not implemented",
+					MessageBoxButton.OK,
+					MessageBoxImage.Information );
+				break;
+		}
 	}
 
 	void OnRemoveInteraction( object? sender, EventArgs e )
@@ -655,24 +738,64 @@ public partial class MainWindow : Window
 		var interactionItem = new ImportManager().ImportEvent( scenario );
 		if ( interactionItem == null )
 			return;
-		if ( interactionItem is not DialogInteraction d )
+		switch ( interactionItem )
 		{
-			MessageBox.Show(
-				"Importing this event type is not implemented yet in Avalonia (Dialog imports are supported).",
-				"Not implemented",
-				MessageBoxButton.OK,
-				MessageBoxImage.Information );
-			return;
+			case DialogInteraction d:
+			{
+				var originalValues = d.CaptureStartingValues();
+				var originalPrefix = d.TranslationKeyPrefix();
+				var originalKeyName = d.TranslationKeyName();
+				var w = new DialogInteractionWindow( scenario, d, showCancelButton: true );
+				await w.ShowDialog( this );
+				d.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( d );
+				break;
+			}
+			case RewardInteraction r:
+			{
+				var originalValues = r.CaptureStartingValues();
+				var originalPrefix = r.TranslationKeyPrefix();
+				var originalKeyName = r.TranslationKeyName();
+				var w = new RewardInteractionWindow( scenario, r, showCancelButton: true );
+				await w.ShowDialog( this );
+				r.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( r );
+				break;
+			}
+			case PersistentTokenInteraction p:
+			{
+				var originalValues = p.CaptureStartingValues();
+				var originalPrefix = p.TranslationKeyPrefix();
+				var originalKeyName = p.TranslationKeyName();
+				var w = new PersistentInteractionWindow( scenario, p, showCancelButton: true );
+				await w.ShowDialog( this );
+				p.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( p );
+				break;
+			}
+			case ConditionalInteraction c:
+			{
+				var originalValues = c.CaptureStartingValues();
+				var originalPrefix = c.TranslationKeyPrefix();
+				var originalKeyName = c.TranslationKeyName();
+				var w = new ConditionalInteractionWindow( scenario, c, showCancelButton: true );
+				await w.ShowDialog( this );
+				c.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( c );
+				break;
+			}
+			default:
+				MessageBox.Show(
+					"Importing this event type is not implemented yet in Avalonia.",
+					"Not implemented",
+					MessageBoxButton.OK,
+					MessageBoxImage.Information );
+				break;
 		}
-
-		var originalValues = d.CaptureStartingValues();
-		var originalPrefix = d.TranslationKeyPrefix();
-		var originalKeyName = d.TranslationKeyName();
-		var w = new DialogInteractionWindow( scenario, d, showCancelButton: true );
-		await w.ShowDialog( this );
-		d.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
-		if ( w.Accepted )
-			scenario.AddInteraction( d );
 	}
 
 	void OnExportInteraction( object? sender, EventArgs e )

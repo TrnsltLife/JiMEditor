@@ -7,9 +7,7 @@
 			<Grid ColumnDefinitions="*,Auto">
 				<StackPanel Grid.Column="0">
 					<TextBlock Classes="heading" Text="Event Text"/>
-					<TextBlock Classes="subText" TextWrapping="Wrap">
-						Use the Event Text to describe the actual Event that has been activated. Example: Describe an Enemy Threat, present a Test, describe a Decision, etc.
-					</TextBlock>
+					<TextBlock x:Name="EventBodyText" Classes="subText" TextWrapping="Wrap"/>
 				</StackPanel>
 				<Button Grid.Column="1"
 				        x:Name="EditEventTextButton"

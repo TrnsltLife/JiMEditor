@@ -26,6 +26,7 @@ public partial class BaseEventDialogWindow : Window
 	bool _allowClose;
 	bool _loaded;
 	PropertyChangedEventHandler? _interactionPropHandler;
+	IEventCustomTab? _customTab;
 
 	/// <summary>Parameterless ctor required by Avalonia XAML for <c>x:Class</c>; not used for real editors.</summary>
 	public BaseEventDialogWindow()
@@ -79,10 +80,13 @@ public partial class BaseEventDialogWindow : Window
 		NameGroupSection.Attach( Interaction );
 		RewardsSection.Attach( Interaction );
 		TokenSection.Attach( Scenario, Interaction, IsThreatTriggered() );
-		TriggerSection.Attach( Scenario, Interaction );
-		var flavorBody =
-			"Dialog Events don't use Flavor Text. When its Token is interacted with, the Event Text is shown along with up to 3 dialog choices the players can use their action on.";
-		TextFlavorSection.Attach( Interaction, Config.FlavorReadOnly, flavorBody );
+		TriggerSection.Attach( Scenario, Interaction, Config.TriggerHeadingText, Config.TriggerBodyText );
+		TextFlavorSection.Attach(
+			Interaction,
+			Config.FlavorReadOnly,
+			Config.EventText == EventSectionVis.Disabled,
+			Config.EventBodyText,
+			Config.FlavorBodyText );
 
 		NameGroupSection.Hydrate();
 		RewardsSection.Hydrate();
@@ -98,8 +102,10 @@ public partial class BaseEventDialogWindow : Window
 		SyncTriggeredByEnabledFromModel();
 		_interactionPropHandler = OnInteractionPropertyChanged;
 		Interaction.PropertyChanged += _interactionPropHandler;
-		CustomTabHost.Content = CreateCustomTab();
-		HydrateCustomTabIfSupported();
+		var customControl = CreateCustomTab();
+		_customTab = customControl as IEventCustomTab;
+		CustomTabHost.Content = customControl;
+		_customTab?.Hydrate();
 
 		NameGroupSection.NameTextBox.Focus();
 		NameGroupSection.NameTextBox.SelectAll();
@@ -121,10 +127,22 @@ public partial class BaseEventDialogWindow : Window
 		}
 
 		EventDialogSectionHelper.ApplyVisibility( NameGroupSection, Config.EventNameGroup );
+		InstructionsHost.Content = Config.InstructionsFactory?.Invoke();
+		var instructionsVis = InstructionsHost.Content == null ? EventSectionVis.Collapsed : Config.Instructions;
+		EventDialogSectionHelper.ApplyVisibility( InstructionsHost, instructionsVis );
 		EventDialogSectionHelper.ApplyVisibility( RewardsSection, Config.Rewards );
+		TokenOverrideHost.Content = Config.TokenSectionOverrideFactory?.Invoke();
+		EventDialogSectionHelper.ApplyVisibility(
+			TokenOverrideHost,
+			TokenOverrideHost.Content == null ? EventSectionVis.Collapsed : EventSectionVis.Visible );
 		EventDialogSectionHelper.ApplyVisibility( TokenSection, Config.Token );
+		TriggerOverrideHost.Content = Config.TriggerSectionOverrideFactory?.Invoke();
+		EventDialogSectionHelper.ApplyVisibility(
+			TriggerOverrideHost,
+			TriggerOverrideHost.Content == null ? EventSectionVis.Collapsed : EventSectionVis.Visible );
 		EventDialogSectionHelper.ApplyVisibility( TriggerSection, Config.Triggers );
 		EventDialogSectionHelper.ApplyVisibility( TextFlavorSection, Config.EventText );
+		CustomTabItem.IsVisible = Config.ShowCustomTab;
 	}
 
 	void OnInteractionPropertyChanged( object? sender, PropertyChangedEventArgs e )
@@ -137,12 +155,6 @@ public partial class BaseEventDialogWindow : Window
 	{
 		if ( Interaction != null )
 			TriggerSection.SetTriggeredByEnabled( !Interaction.isTokenInteraction );
-	}
-
-	void HydrateCustomTabIfSupported()
-	{
-		if ( CustomTabHost.Content is DialogEventCustomTab d )
-			d.Hydrate();
 	}
 
 	protected override void OnClosing( WindowClosingEventArgs e )
@@ -162,8 +174,7 @@ public partial class BaseEventDialogWindow : Window
 		}
 
 		TokenSection.Detach();
-		if ( CustomTabHost.Content is DialogEventCustomTab d )
-			d.Detach();
+		_customTab?.Detach();
 
 		base.OnClosing( e );
 	}
@@ -191,7 +202,7 @@ public partial class BaseEventDialogWindow : Window
 		Close();
 	}
 
-	bool TryValidateForOk()
+	protected virtual bool TryValidateForOk()
 	{
 		if ( Interaction is null || Scenario is null )
 			return false;

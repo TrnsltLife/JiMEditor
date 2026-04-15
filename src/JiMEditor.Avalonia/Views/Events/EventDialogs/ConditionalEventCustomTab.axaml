@@ -1,0 +1,112 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="JiMEditor.Avalonia.Views.Events.EventDialogs.ConditionalEventCustomTab"
+             x:CompileBindings="False">
+	<StackPanel Margin="0,5,0,0" Spacing="10">
+		<Border Classes="callout">
+			<TextBlock Classes="subText" TextWrapping="Wrap"
+			           Text="Conditional Events silently listen for Triggers. After the required number of monitored Triggers fire, this Event fires its own completion Trigger. Conditional Events are always active and cannot be assigned to a Token."/>
+		</Border>
+
+		<Border Classes="callout">
+			<StackPanel Spacing="6">
+				<Grid ColumnDefinitions="Auto,*,Auto">
+					<TextBlock Classes="heading" Text="After These Triggers Have Been Fired..."/>
+					<TextBlock Grid.Column="1"/>
+					<StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10">
+						<ComboBox x:Name="TriggerSelectCombo" MinWidth="220">
+							<ComboBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding dataName}" Foreground="White"/>
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+						<Button x:Name="AddSelectedTriggerButton"
+						        Content="Add Selected Trigger"
+						        Background="#1E90FF"
+						        Foreground="White"
+						        IsEnabled="False"
+						        Click="AddSelectedTrigger_OnClick"/>
+						<Button x:Name="AddTriggerButton"
+						        Background="#3CB371"
+						        Width="32"
+						        Height="32"
+						        Padding="4"
+						        Click="AddTrigger_OnClick">
+							<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+						</Button>
+					</StackPanel>
+				</Grid>
+
+				<ItemsControl x:Name="SelectedTriggersItems">
+					<ItemsControl.ItemsPanel>
+						<ItemsPanelTemplate>
+							<WrapPanel/>
+						</ItemsPanelTemplate>
+					</ItemsControl.ItemsPanel>
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<Border Classes="callout" Background="{StaticResource bgButtonColor}" Margin="0,0,6,6">
+								<StackPanel Orientation="Horizontal" Spacing="8">
+									<TextBlock Classes="subText" Text="{Binding}" VerticalAlignment="Center"/>
+									<Button Width="32"
+									        Height="32"
+									        Padding="4"
+									        Background="{StaticResource bgCancelDelete}"
+									        Click="RemoveTrigger_OnClick"
+									        CommandParameter="{Binding}">
+										<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Stretch="Uniform"/>
+									</Button>
+								</StackPanel>
+							</Border>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+
+				<Grid ColumnDefinitions="Auto,*,Auto" Margin="0,4,0,0">
+					<StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
+						<TextBlock Classes="heading" Text="Number of Triggers Required to Fire..."/>
+						<TextBlock x:Name="TriggersRequiredValueText" Classes="heading"/>
+					</StackPanel>
+					<TextBlock Grid.Column="1"/>
+					<StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+						<TextBlock Classes="heading" Text="One"/>
+						<Slider x:Name="TriggersRequiredSlider"
+						        Width="280"
+						        Minimum="1"
+						        TickFrequency="1"
+						        TickPlacement="Outside"
+						        SmallChange="1"
+						        LargeChange="1"
+						        IsSnapToTickEnabled="True"
+						        ValueChanged="TriggersRequiredSlider_OnValueChanged"/>
+						<TextBlock Classes="heading" Text="All"/>
+					</StackPanel>
+				</Grid>
+			</StackPanel>
+		</Border>
+
+		<Border Classes="callout">
+			<StackPanel Spacing="6">
+				<TextBlock Classes="heading" Text="...Fire This Trigger (Required):"/>
+				<StackPanel Orientation="Horizontal" Spacing="10">
+					<ComboBox x:Name="FinishedTriggerCombo" MinWidth="260">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding dataName}" Foreground="White"/>
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+					<Button x:Name="AddFinishedTriggerButton"
+					        Background="#3CB371"
+					        Width="32"
+					        Height="32"
+					        Padding="4"
+					        Click="AddFinishedTrigger_OnClick">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+					</Button>
+				</StackPanel>
+			</StackPanel>
+		</Border>
+	</StackPanel>
+</UserControl>

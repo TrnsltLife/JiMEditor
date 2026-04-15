@@ -9,7 +9,7 @@ using JiME;
 
 namespace JiMEditor.Avalonia.Views.Events.EventDialogs;
 
-public partial class DialogEventCustomTab : UserControl
+public partial class DialogEventCustomTab : UserControl, IEventCustomTab
 {
 	bool _suppress;
 	Scenario? _scenario;
@@ -38,6 +38,8 @@ public partial class DialogEventCustomTab : UserControl
 	}
 
 	public void Detach() => DetachDialogPropertyListener();
+
+	Control IEventCustomTab.AsControl() => this;
 
 	void DetachDialogPropertyListener()
 	{
@@ -86,7 +88,7 @@ public partial class DialogEventCustomTab : UserControl
 		}
 	}
 
-	public void Commit()
+	internal void Commit()
 	{
 		if ( _dialog == null )
 			return;

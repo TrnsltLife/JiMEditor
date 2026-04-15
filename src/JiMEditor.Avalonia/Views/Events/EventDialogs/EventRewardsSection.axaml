@@ -4,8 +4,8 @@
              x:CompileBindings="False">
 	<Border Classes="callout">
 		<StackPanel>
-			<TextBlock Classes="heading" Text="Lore / XP / Threat Rewards"/>
-			<TextBlock Classes="subText" TextWrapping="Wrap" Margin="0,0,0,6">
+			<TextBlock x:Name="RewardsHeadingText" Classes="heading" Text="Lore / XP / Threat Rewards"/>
+			<TextBlock x:Name="RewardsBodyText" Classes="subText" TextWrapping="Wrap" Margin="0,0,0,6">
 				Rewards are given after the Event is finished activating.
 			</TextBlock>
 			<StackPanel Orientation="Horizontal" Spacing="10">

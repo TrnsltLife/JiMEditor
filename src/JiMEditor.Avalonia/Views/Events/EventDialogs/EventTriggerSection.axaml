@@ -6,7 +6,7 @@
 		<StackPanel Spacing="8">
 			<Grid ColumnDefinitions="*,*">
 				<StackPanel Grid.Column="0" HorizontalAlignment="Left">
-					<TextBlock Classes="heading" Text="Triggered By (Optional):"/>
+					<TextBlock x:Name="TriggeredByHeadingText" Classes="heading" Text="Triggered By (Optional):"/>
 					<StackPanel Orientation="Horizontal" Spacing="10">
 						<ComboBox x:Name="TriggeredByCombo"
 						          Width="250"
@@ -50,7 +50,7 @@
 					</StackPanel>
 				</StackPanel>
 			</Grid>
-			<TextBlock Classes="subText" TextWrapping="Wrap">
+			<TextBlock x:Name="TriggerBodyText" Classes="subText" TextWrapping="Wrap">
 				Multiple Events can be 'Triggered By' the same Trigger. When this happens, only ONE of the Events will be randomly chosen to fire.
 			</TextBlock>
 		</StackPanel>

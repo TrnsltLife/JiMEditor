@@ -1,0 +1,68 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="JiMEditor.Avalonia.Views.Events.EventDialogs.PersistentEventCustomTab"
+             x:CompileBindings="False">
+	<StackPanel Margin="0,5,0,0" Spacing="10">
+		<Border Classes="callout">
+			<StackPanel Spacing="6">
+				<TextBlock Classes="subText" TextWrapping="Wrap">
+					Persistent Events are <Bold>Token Interaction Events</Bold> whose Token stays on the tile even after being activated. They act like a relay and delegate the player's Action to the "real" Event set below.
+				</TextBlock>
+				<TextBlock Classes="subText" TextWrapping="Wrap">
+					<Bold>Events are normally not persistent</Bold>. After an Event is activated, its Token is removed from the board. A Persistent Event, on the other hand, <Bold>stays on the board after it's activated</Bold>. A Persistent Event doesn't do anything other than forward its activation to another Event that you specify below.
+				</TextBlock>
+			</StackPanel>
+		</Border>
+
+		<Border Classes="callout">
+			<StackPanel Spacing="6">
+				<TextBlock Classes="heading" Text="When Players Use an Action to Explore this Event's Token, Activate The Event Below (Required):"/>
+				<TextBlock Classes="subText" TextWrapping="Wrap">
+					This is the Event that this Persistent Event delegates its Action to. Only Events that <Bold>are Token Interactions</Bold> can be selected below.
+				</TextBlock>
+				<ComboBox x:Name="EventToActivateCombo" MinWidth="260" HorizontalAlignment="Left"/>
+			</StackPanel>
+		</Border>
+
+		<Border Classes="callout">
+			<StackPanel Spacing="6">
+				<TextBlock Classes="heading" Text="Alternative Flavor Text Trigger (Required):"/>
+				<TextBlock Classes="subText" TextWrapping="Wrap">
+					When this trigger is fired, the Alternative Flavor Text below will be shown for this token instead of the delegated Event's flavor text.
+				</TextBlock>
+				<StackPanel Orientation="Horizontal" Spacing="10">
+					<ComboBox x:Name="AltTriggerCombo" MinWidth="260" HorizontalAlignment="Left">
+					<ComboBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding dataName}" Foreground="White"/>
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
+				</ComboBox>
+					<Button x:Name="AddAltTriggerButton"
+					        Background="#3CB371"
+					        Width="32"
+					        Height="32"
+					        Padding="4"
+					        Click="AddAltTrigger_OnClick">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+					</Button>
+				</StackPanel>
+			</StackPanel>
+		</Border>
+
+		<Border Classes="callout">
+			<StackPanel Spacing="6">
+				<TextBlock Classes="heading" Text="Alternative Flavor Text"/>
+				<TextBlock Classes="subText" TextWrapping="Wrap">
+					Normally, players see the delegated Event's flavor text. After the trigger above is set, this alternative flavor text is shown instead every time. <Bold><Italic>Required</Italic></Bold>
+				</TextBlock>
+				<Button x:Name="EditAltTextButton"
+				        HorizontalAlignment="Left"
+				        Background="#6495ED"
+				        Foreground="White"
+				        Content="Edit Alternative Flavor Text..."
+				        Click="EditAltText_OnClick"/>
+			</StackPanel>
+		</Border>
+	</StackPanel>
+</UserControl>

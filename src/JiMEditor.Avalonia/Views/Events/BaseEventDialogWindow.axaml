@@ -54,8 +54,8 @@
 			</StackPanel>
 		</Border>
 
-		<TabControl x:Name="RootTabs" Classes="jimeTabStrip" Margin="5">
-			<TabItem Header="General Properties">
+		<TabControl x:Name="RootTabs" Classes="jimeTabStrip" Margin="5" Padding="0">
+			<TabItem Header="General Properties" Margin="2,2,2,0" Padding="2">
 				<ScrollViewer VerticalScrollBarVisibility="Auto">
 					<StackPanel Margin="8" Spacing="10">
 						<Border x:Name="ThreatCalloutBorder" Classes="callout" IsVisible="False">
@@ -71,14 +71,17 @@
 						</Border>
 
 						<ed:EventNameAndGroupSection x:Name="NameGroupSection"/>
+						<ContentPresenter x:Name="InstructionsHost" IsVisible="False"/>
 						<ed:EventRewardsSection x:Name="RewardsSection"/>
+						<ContentPresenter x:Name="TokenOverrideHost" IsVisible="False"/>
 						<ed:EventTokenSection x:Name="TokenSection"/>
+						<ContentPresenter x:Name="TriggerOverrideHost" IsVisible="False"/>
 						<ed:EventTriggerSection x:Name="TriggerSection"/>
 						<ed:EventTextFlavorSection x:Name="TextFlavorSection"/>
 					</StackPanel>
 				</ScrollViewer>
 			</TabItem>
-			<TabItem x:Name="CustomTabItem" Header="Custom">
+			<TabItem x:Name="CustomTabItem" Header="Custom" Margin="2,2,2,0" Padding="2">
 				<ContentPresenter x:Name="CustomTabHost" Margin="8"/>
 			</TabItem>
 		</TabControl>

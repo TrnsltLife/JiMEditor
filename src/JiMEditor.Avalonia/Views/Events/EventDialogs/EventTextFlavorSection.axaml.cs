@@ -11,23 +11,27 @@ public partial class EventTextFlavorSection : UserControl
 {
 	InteractionBase? _interaction;
 	bool _flavorReadOnly;
+	bool _eventReadOnly;
 
 	public EventTextFlavorSection()
 	{
 		InitializeComponent();
 	}
 
-	public void Attach( InteractionBase interaction, bool flavorReadOnly, string flavorBodyText )
+	public void Attach( InteractionBase interaction, bool flavorReadOnly, bool eventReadOnly, string eventBodyText, string flavorBodyText )
 	{
 		_interaction = interaction;
 		_flavorReadOnly = flavorReadOnly;
+		_eventReadOnly = eventReadOnly;
+		EventBodyText.Text = eventBodyText;
 		FlavorBodyText.Text = flavorBodyText;
 		EditFlavorTextButton.IsVisible = !flavorReadOnly;
+		EditEventTextButton.IsVisible = !eventReadOnly;
 	}
 
 	async void EditEventText_OnClick( object? sender, RoutedEventArgs e )
 	{
-		if ( _interaction == null )
+		if ( _interaction == null || _eventReadOnly )
 			return;
 		var owner = TopLevel.GetTopLevel( this ) as Window;
 		if ( owner == null )

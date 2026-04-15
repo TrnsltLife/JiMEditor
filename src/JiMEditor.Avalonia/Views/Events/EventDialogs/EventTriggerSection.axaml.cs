@@ -21,10 +21,14 @@ public partial class EventTriggerSection : UserControl
 		TriggerAfterCombo.SelectionChanged += TriggerAfterCombo_OnSelectionChanged;
 	}
 
-	public void Attach( Scenario scenario, InteractionBase interaction )
+	public void Attach( Scenario scenario, InteractionBase interaction, string? triggeredByHeading = null, string? bodyText = null )
 	{
 		_scenario = scenario;
 		_interaction = interaction;
+		TriggeredByHeadingText.Text = string.IsNullOrWhiteSpace( triggeredByHeading ) ? "Triggered By (Optional):" : triggeredByHeading;
+		TriggerBodyText.Text = string.IsNullOrWhiteSpace( bodyText )
+			? "Multiple Events can be 'Triggered By' the same Trigger. When this happens, only ONE of the Events will be randomly chosen to fire."
+			: bodyText;
 		var sorted = SortTriggers( scenario.triggersObserver );
 		TriggeredByCombo.ItemsSource = sorted;
 		TriggerAfterCombo.ItemsSource = sorted;
