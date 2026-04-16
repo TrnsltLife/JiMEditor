@@ -23,7 +23,7 @@
 				<TextBlock Classes="subText" TextWrapping="Wrap">
 					This is the Event that this Persistent Event delegates its Action to. Only Events that <Bold>are Token Interactions</Bold> can be selected below.
 				</TextBlock>
-				<ComboBox x:Name="EventToActivateCombo" MinWidth="260" HorizontalAlignment="Left"/>
+				<ComboBox x:Name="EventToActivateCombo" MinWidth="280" HorizontalAlignment="Left"/>
 			</StackPanel>
 		</Border>
 
@@ -34,7 +34,7 @@
 					When this trigger is fired, the Alternative Flavor Text below will be shown for this token instead of the delegated Event's flavor text.
 				</TextBlock>
 				<StackPanel Orientation="Horizontal" Spacing="10">
-					<ComboBox x:Name="AltTriggerCombo" MinWidth="260" HorizontalAlignment="Left">
+					<ComboBox x:Name="AltTriggerCombo" MinWidth="280" HorizontalAlignment="Left">
 					<ComboBox.ItemTemplate>
 						<DataTemplate>
 							<TextBlock Text="{Binding dataName}" Foreground="White"/>

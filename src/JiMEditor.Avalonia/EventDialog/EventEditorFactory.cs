@@ -80,6 +80,26 @@ public static class EventEditorFactory
 				t.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 				return w.Accepted;
 			}
+			case CorruptionInteraction c:
+			{
+				var originalValues = c.CaptureStartingValues();
+				var originalPrefix = c.TranslationKeyPrefix();
+				var originalKeyName = c.TranslationKeyName();
+				var w = new CorruptionInteractionWindow( scenario, c, showCancelButton: false );
+				await w.ShowDialog( owner );
+				c.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				return w.Accepted;
+			}
+			case MultiEventInteraction m:
+			{
+				var originalValues = m.CaptureStartingValues();
+				var originalPrefix = m.TranslationKeyPrefix();
+				var originalKeyName = m.TranslationKeyName();
+				var w = new MultiEventInteractionWindow( scenario, m, showCancelButton: false );
+				await w.ShowDialog( owner );
+				m.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				return w.Accepted;
+			}
 			default:
 				MessageBox.Show(
 					"This event type does not have an Avalonia editor yet.",
@@ -159,6 +179,30 @@ public static class EventEditorFactory
 		var originalPrefix = created.TranslationKeyPrefix();
 		var originalKeyName = created.TranslationKeyName();
 		var w = new TitleInteractionWindow( scenario, created, showCancelButton: true );
+		await w.ShowDialog( owner );
+		created.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+		return ( w.Accepted, created );
+	}
+
+	public static async Task<(bool accepted, CorruptionInteraction created)> TryCreateCorruptionInteractionAsync( Window owner, Scenario scenario )
+	{
+		var created = new CorruptionInteraction( "New Corruption Event" );
+		var originalValues = created.CaptureStartingValues();
+		var originalPrefix = created.TranslationKeyPrefix();
+		var originalKeyName = created.TranslationKeyName();
+		var w = new CorruptionInteractionWindow( scenario, created, showCancelButton: true );
+		await w.ShowDialog( owner );
+		created.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+		return ( w.Accepted, created );
+	}
+
+	public static async Task<(bool accepted, MultiEventInteraction created)> TryCreateMultiEventInteractionAsync( Window owner, Scenario scenario )
+	{
+		var created = new MultiEventInteraction( "New Multi-Event" );
+		var originalValues = created.CaptureStartingValues();
+		var originalPrefix = created.TranslationKeyPrefix();
+		var originalKeyName = created.TranslationKeyName();
+		var w = new MultiEventInteractionWindow( scenario, created, showCancelButton: true );
 		await w.ShowDialog( owner );
 		created.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 		return ( w.Accepted, created );

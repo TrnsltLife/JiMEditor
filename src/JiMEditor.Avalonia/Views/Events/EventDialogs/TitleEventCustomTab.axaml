@@ -23,7 +23,7 @@
 					<TextBlock Classes="heading" Text="From this set of titles:"/>
 					<TextBlock Grid.Column="1"/>
 					<StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10">
-						<ComboBox x:Name="TitleSelectCombo" MinWidth="220">
+						<ComboBox x:Name="TitleSelectCombo" MinWidth="260">
 							<ComboBox.ItemTemplate>
 								<DataTemplate>
 									<TextBlock Text="{Binding titleName}" Foreground="White"/>
@@ -105,7 +105,7 @@
 			<StackPanel Spacing="6">
 				<TextBlock Classes="heading" Text="Or, if no titles can be given at all, Fire This Trigger instead of lore/xp/threat rewards (optional):"/>
 				<StackPanel Orientation="Horizontal" Spacing="10">
-					<ComboBox x:Name="FallbackTriggerCombo" MinWidth="260">
+					<ComboBox x:Name="FallbackTriggerCombo" MinWidth="280">
 						<ComboBox.ItemTemplate>
 							<DataTemplate>
 								<TextBlock Text="{Binding dataName}" Foreground="White"/>

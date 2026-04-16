@@ -2,8 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="JiMEditor.Avalonia.Views.Events.EventDialogs.EventTextFlavorSection"
              x:CompileBindings="False">
-	<Grid ColumnDefinitions="*,*" Margin="0,10,0,0">
-		<Border Grid.Column="0" Classes="callout" Margin="0,0,5,0">
+	<Grid ColumnDefinitions="*,*" Margin="0">
+		<Border x:Name="EventTextCallout" Grid.Column="0" Classes="callout" Margin="0,0,5,0">
 			<Grid ColumnDefinitions="*,Auto">
 				<StackPanel Grid.Column="0">
 					<TextBlock Classes="heading" Text="Event Text"/>

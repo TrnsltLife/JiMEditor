@@ -2,7 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="JiMEditor.Avalonia.Views.Events.EventDialogs.DialogEventCustomTab"
              x:CompileBindings="False">
-	<StackPanel Margin="0,5,0,0" Spacing="8">
+	<ScrollViewer Margin="0,5,0,0"
+	              HorizontalScrollBarVisibility="Disabled"
+	              VerticalScrollBarVisibility="Auto">
+	<StackPanel Spacing="10">
 		<Border Classes="callout">
 			<TextBlock Classes="subText"
 			           TextWrapping="Wrap"
@@ -118,4 +121,5 @@
 			</Grid>
 		</Border>
 	</StackPanel>
+	</ScrollViewer>
 </UserControl>

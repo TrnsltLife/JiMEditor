@@ -110,6 +110,34 @@ public static class EventDialogConfigFactory
 			FlavorText = EventSectionVis.Visible
 		};
 
+	public static EventDialogConfig Corruption() =>
+		new()
+		{
+			CustomTabTitle = "Corruption Event",
+			ForbiddenDefaultEventName = "New Corruption Event",
+			ThreatCallout = EventSectionVis.Visible,
+			EventNameGroup = EventSectionVis.Visible,
+			Rewards = EventSectionVis.Visible,
+			Token = EventSectionVis.Visible,
+			Triggers = EventSectionVis.Visible,
+			EventText = EventSectionVis.Visible,
+			FlavorText = EventSectionVis.Visible
+		};
+
+	public static EventDialogConfig MultiEvent() =>
+		new()
+		{
+			CustomTabTitle = "Multi-Event",
+			ForbiddenDefaultEventName = "New Multi-Event",
+			ThreatCallout = EventSectionVis.Visible,
+			EventNameGroup = EventSectionVis.Visible,
+			Rewards = EventSectionVis.Visible,
+			Token = EventSectionVis.Visible,
+			Triggers = EventSectionVis.Visible,
+			EventText = EventSectionVis.Visible,
+			FlavorText = EventSectionVis.Visible
+		};
+
 	static Control CreateRewardInstructions()
 	{
 		var text = new TextBlock

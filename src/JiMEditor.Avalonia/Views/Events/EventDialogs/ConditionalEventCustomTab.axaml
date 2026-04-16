@@ -17,7 +17,7 @@
 					<TextBlock Classes="heading" Text="After These Triggers Have Been Fired..."/>
 					<TextBlock Grid.Column="1"/>
 					<StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10">
-						<ComboBox x:Name="TriggerSelectCombo" MinWidth="220">
+						<ComboBox x:Name="TriggerSelectCombo" MinWidth="260">
 							<ComboBox.ItemTemplate>
 								<DataTemplate>
 									<TextBlock Text="{Binding dataName}" Foreground="White"/>
@@ -93,7 +93,7 @@
 			<StackPanel Spacing="6">
 				<TextBlock Classes="heading" Text="...Fire This Trigger (Required):"/>
 				<StackPanel Orientation="Horizontal" Spacing="10">
-					<ComboBox x:Name="FinishedTriggerCombo" MinWidth="260">
+					<ComboBox x:Name="FinishedTriggerCombo" MinWidth="280">
 						<ComboBox.ItemTemplate>
 							<DataTemplate>
 								<TextBlock Text="{Binding dataName}" Foreground="White"/>

@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="JiMEditor.Avalonia.Views.Events.EventDialogs.CorruptionEventCustomTab"
+             x:CompileBindings="False">
+	<ScrollViewer Margin="0,5,0,0"
+	              HorizontalScrollBarVisibility="Disabled"
+	              VerticalScrollBarVisibility="Auto">
+	<StackPanel Spacing="10">
+		<Border Classes="callout">
+			<TextBlock Classes="subText" TextWrapping="Wrap"
+			           Text="Corruption Events assign corruption when activated. Choose how much corruption to apply and who receives it."/>
+		</Border>
+
+		<Border Classes="callout">
+			<StackPanel Spacing="8">
+				<TextBlock Classes="heading" Text="Add Corruption"/>
+				<StackPanel Orientation="Horizontal" Spacing="10">
+					<TextBlock Classes="heading" Text="Amount:" VerticalAlignment="Center"/>
+					<ComboBox x:Name="CorruptionAmountCombo" MinWidth="100">
+						<ComboBoxItem Content="-3"/>
+						<ComboBoxItem Content="-2"/>
+						<ComboBoxItem Content="-1"/>
+						<ComboBoxItem Content="1"/>
+						<ComboBoxItem Content="2"/>
+						<ComboBoxItem Content="3"/>
+					</ComboBox>
+					<TextBlock Classes="heading" Text="Target:" VerticalAlignment="Center"/>
+					<ComboBox x:Name="CorruptionTargetCombo" MinWidth="280" SelectionChanged="CorruptionTargetCombo_OnSelectionChanged"/>
+				</StackPanel>
+				<TextBlock Classes="subText" TextWrapping="Wrap"
+				           Text="Positive numbers add corruption. Negative numbers remove corruption."/>
+			</StackPanel>
+		</Border>
+
+		<Border Classes="callout">
+			<StackPanel Spacing="6">
+				<TextBlock Classes="heading" Text="Instruction Text (Optional)"/>
+				<TextBlock Classes="subText" TextWrapping="Wrap"
+				           Text="Leave blank to use default instruction text."/>
+				<Button x:Name="EditInstructionsButton"
+				        HorizontalAlignment="Left"
+				        Background="#6495ED"
+				        Foreground="White"
+				        Content="Edit Instruction Text..."
+				        Click="EditInstructionsButton_OnClick"/>
+			</StackPanel>
+		</Border>
+	</StackPanel>
+	</ScrollViewer>
+</UserControl>

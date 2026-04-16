@@ -62,6 +62,8 @@ public partial class BaseEventDialogWindow : Window
 	{
 	}
 
+	public void SetEventTextSectionEnabled( bool enabled ) => TextFlavorSection.SetEventTextEnabled( enabled );
+
 	void OnWindowLoaded( object? sender, RoutedEventArgs e )
 	{
 		if ( _loaded )

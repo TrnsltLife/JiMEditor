@@ -15,10 +15,11 @@ public partial class StoryTextEditWindow : Window
 		InitializeComponent();
 	}
 
-	public StoryTextEditWindow( string? initialStoryText )
+	public StoryTextEditWindow( string? initialStoryText, string? watermark = null )
 		: this()
 	{
 		Editor.Text = initialStoryText ?? "";
+		Editor.Watermark = watermark ?? "";
 	}
 
 	void Ok_Click( object? sender, RoutedEventArgs e )

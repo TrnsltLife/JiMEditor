@@ -29,6 +29,11 @@ public partial class EventTextFlavorSection : UserControl
 		EditEventTextButton.IsVisible = !eventReadOnly;
 	}
 
+	public void SetEventTextEnabled( bool enabled )
+	{
+		EventTextCallout.IsEnabled = enabled;
+	}
+
 	async void EditEventText_OnClick( object? sender, RoutedEventArgs e )
 	{
 		if ( _interaction == null || _eventReadOnly )
