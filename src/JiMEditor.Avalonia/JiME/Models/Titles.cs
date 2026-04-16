@@ -47,7 +47,7 @@ namespace JiME
             new Title(29){originalName="Sly-Tongue", dataName="Sly-Tongue", collection=4},
             new Title(30){originalName="Spirit-Bonded", dataName="Spirit-Bonded", collection=4},
             new Title(31){originalName="Friend of Gondor", dataName="Friend of Gondor", collection=5},
-            new Title(32){originalName="Friend of Rohan", dataName="[Friend of Rohan", collection=5},
+            new Title(32){originalName="Friend of Rohan", dataName="Friend of Rohan", collection=5},
             new Title(33){originalName="Beast-Singer", dataName="Beast-Singer", collection=5}
         };
     }

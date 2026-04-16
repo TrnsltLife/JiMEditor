@@ -65,6 +65,9 @@ Many JiMEditor windows are **model-owned** (`Scenario`, `Objective`, interaction
 
 Reuse this checklist for each new popup: **Loaded hydrate → OK commit → combo suppress as needed → translation tail → `Accepted`.**
 
+7. **Scrollable custom tabs**
+   If a popup dialog tab can exceed the visible height (common for Event custom tabs), wrap the tab root content in a **`ScrollViewer`** with **`VerticalScrollBarVisibility="Auto"`** so users can reach controls without resizing the dialog.
+
 ## Quick reference: TODO tags
 
 | Tag | Meaning |

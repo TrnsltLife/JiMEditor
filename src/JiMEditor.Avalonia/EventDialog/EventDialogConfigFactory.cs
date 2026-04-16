@@ -82,6 +82,34 @@ public static class EventDialogConfigFactory
 			TriggerSectionOverrideFactory = CreateConditionalTriggerInfo
 		};
 
+	public static EventDialogConfig Item() =>
+		new()
+		{
+			CustomTabTitle = "Item Reward",
+			ForbiddenDefaultEventName = "New Item Event",
+			ThreatCallout = EventSectionVis.Visible,
+			EventNameGroup = EventSectionVis.Visible,
+			Rewards = EventSectionVis.Visible,
+			Token = EventSectionVis.Visible,
+			Triggers = EventSectionVis.Visible,
+			EventText = EventSectionVis.Visible,
+			FlavorText = EventSectionVis.Visible
+		};
+
+	public static EventDialogConfig Title() =>
+		new()
+		{
+			CustomTabTitle = "Title Reward",
+			ForbiddenDefaultEventName = "New Title Event",
+			ThreatCallout = EventSectionVis.Visible,
+			EventNameGroup = EventSectionVis.Visible,
+			Rewards = EventSectionVis.Visible,
+			Token = EventSectionVis.Visible,
+			Triggers = EventSectionVis.Visible,
+			EventText = EventSectionVis.Visible,
+			FlavorText = EventSectionVis.Visible
+		};
+
 	static Control CreateRewardInstructions()
 	{
 		var text = new TextBlock

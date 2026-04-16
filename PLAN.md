@@ -115,6 +115,21 @@ flowchart LR
 6. **Graph:** Rebuild visualization or temporarily hide feature behind a flag until a Skia/canvas solution exists.
 7. **Platform QA:** File paths currently assume `Environment.SpecialFolder.MyDocuments` + `"Your Journey"` — validate Linux/macOS locations and permissions.
 
+## Event editor port status (Avalonia)
+
+The shared event dialog framework is now in active use, and the following interaction editors are ported onto it:
+
+- Dialog Event (`DialogInteractionWindow`)
+- Reward Event (`RewardInteractionWindow`)
+- Persistent Event (`PersistentInteractionWindow`)
+- Conditional Event (`ConditionalInteractionWindow`)
+
+Current behavior parity notes:
+
+- Conditional Event: required completion trigger (`...Fire This Trigger...`) is now validated on save.
+- Persistent Event: required custom-tab trigger selections remain enforced on save.
+- Event Text edit button is hidden (not just disabled) when Event Text is permanently disabled by config (for Persistent and Conditional presets).
+
 ## `.jime` definition and validation (for parity with the playback app)
 
 **Goal:** Prove the new editor does not corrupt files the game consumes.

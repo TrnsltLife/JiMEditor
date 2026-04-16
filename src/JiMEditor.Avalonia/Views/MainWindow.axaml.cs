@@ -588,10 +588,16 @@ public partial class MainWindow : Window
 		persistentItem.Click += async (_, _) => await AddPersistentInteractionAsync();
 		var conditionalItem = new MenuItem { Header = "Conditional Event" };
 		conditionalItem.Click += async (_, _) => await AddConditionalInteractionAsync();
+		var itemItem = new MenuItem { Header = "Item Event" };
+		itemItem.Click += async (_, _) => await AddItemInteractionAsync();
+		var titleItem = new MenuItem { Header = "Title Event" };
+		titleItem.Click += async (_, _) => await AddTitleInteractionAsync();
 		flyout.Items.Add( dialogItem );
 		flyout.Items.Add( rewardItem );
 		flyout.Items.Add( persistentItem );
 		flyout.Items.Add( conditionalItem );
+		flyout.Items.Add( itemItem );
+		flyout.Items.Add( titleItem );
 		flyout.ShowAt( interactionsUC.AddInteractionButton );
 	}
 
@@ -619,6 +625,20 @@ public partial class MainWindow : Window
 	async Task AddConditionalInteractionAsync()
 	{
 		var (accepted, created) = await EventEditorFactory.TryCreateConditionalInteractionAsync( this, scenario );
+		if ( accepted )
+			scenario.AddInteraction( created );
+	}
+
+	async Task AddItemInteractionAsync()
+	{
+		var (accepted, created) = await EventEditorFactory.TryCreateItemInteractionAsync( this, scenario );
+		if ( accepted )
+			scenario.AddInteraction( created );
+	}
+
+	async Task AddTitleInteractionAsync()
+	{
+		var (accepted, created) = await EventEditorFactory.TryCreateTitleInteractionAsync( this, scenario );
 		if ( accepted )
 			scenario.AddInteraction( created );
 	}
@@ -691,6 +711,32 @@ public partial class MainWindow : Window
 				var originalPrefix = clone.TranslationKeyPrefix();
 				var originalKeyName = clone.TranslationKeyName();
 				var w = new ConditionalInteractionWindow( scenario, clone, showCancelButton: true );
+				await w.ShowDialog( this );
+				clone.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( clone );
+				break;
+			}
+			case ItemInteraction i:
+			{
+				var clone = i.Clone();
+				var originalValues = clone.CaptureStartingValues();
+				var originalPrefix = clone.TranslationKeyPrefix();
+				var originalKeyName = clone.TranslationKeyName();
+				var w = new ItemInteractionWindow( scenario, clone, showCancelButton: true );
+				await w.ShowDialog( this );
+				clone.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( clone );
+				break;
+			}
+			case TitleInteraction t:
+			{
+				var clone = t.Clone();
+				var originalValues = clone.CaptureStartingValues();
+				var originalPrefix = clone.TranslationKeyPrefix();
+				var originalKeyName = clone.TranslationKeyName();
+				var w = new TitleInteractionWindow( scenario, clone, showCancelButton: true );
 				await w.ShowDialog( this );
 				clone.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 				if ( w.Accepted )
@@ -786,6 +832,30 @@ public partial class MainWindow : Window
 				c.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 				if ( w.Accepted )
 					scenario.AddInteraction( c );
+				break;
+			}
+			case ItemInteraction i:
+			{
+				var originalValues = i.CaptureStartingValues();
+				var originalPrefix = i.TranslationKeyPrefix();
+				var originalKeyName = i.TranslationKeyName();
+				var w = new ItemInteractionWindow( scenario, i, showCancelButton: true );
+				await w.ShowDialog( this );
+				i.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( i );
+				break;
+			}
+			case TitleInteraction t:
+			{
+				var originalValues = t.CaptureStartingValues();
+				var originalPrefix = t.TranslationKeyPrefix();
+				var originalKeyName = t.TranslationKeyName();
+				var w = new TitleInteractionWindow( scenario, t, showCancelButton: true );
+				await w.ShowDialog( this );
+				t.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( t );
 				break;
 			}
 			default:

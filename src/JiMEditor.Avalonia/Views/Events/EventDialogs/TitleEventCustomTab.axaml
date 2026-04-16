@@ -1,0 +1,128 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="JiMEditor.Avalonia.Views.Events.EventDialogs.TitleEventCustomTab"
+             x:CompileBindings="False">
+	<ScrollViewer Margin="0,5,0,0"
+	              HorizontalScrollBarVisibility="Disabled"
+	              VerticalScrollBarVisibility="Auto">
+	<StackPanel Spacing="10">
+		<Border Classes="callout">
+			<StackPanel Spacing="4">
+				<TextBlock Classes="subText" TextWrapping="Wrap"
+				           Text="-When this event is triggered, it will try to give the players a random selection of the titles you specify below. If you want to definitely assign just a single title, only add one title to the list."/>
+				<TextBlock Classes="subText" TextWrapping="Wrap"
+				           Text="-If some of the titles you want to give the players cannot be given (because the players already have them), you can give fallback rewards of lore/xp/threat reduction instead."/>
+				<TextBlock Classes="subText" TextWrapping="Wrap"
+				           Text="-If none of the titles can be given, you can assign a fallback trigger to fire."/>
+			</StackPanel>
+		</Border>
+
+		<Border Classes="callout">
+			<StackPanel Spacing="6">
+				<Grid ColumnDefinitions="Auto,*,Auto">
+					<TextBlock Classes="heading" Text="From this set of titles:"/>
+					<TextBlock Grid.Column="1"/>
+					<StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10">
+						<ComboBox x:Name="TitleSelectCombo" MinWidth="220">
+							<ComboBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding titleName}" Foreground="White"/>
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+						<Button x:Name="AddSelectedTitleButton"
+						        Content="Add Selected Title"
+						        Background="#1E90FF"
+						        Foreground="White"
+						        IsEnabled="False"
+						        Click="AddSelectedTitle_OnClick"/>
+					</StackPanel>
+				</Grid>
+
+				<ItemsControl x:Name="SelectedTitlesItems">
+					<ItemsControl.ItemsPanel>
+						<ItemsPanelTemplate>
+							<WrapPanel/>
+						</ItemsPanelTemplate>
+					</ItemsControl.ItemsPanel>
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<Border Classes="callout" Background="{StaticResource bgButtonColor}" Margin="0,0,6,6">
+								<StackPanel Orientation="Horizontal" Spacing="8">
+									<TextBlock Classes="subText" Text="{Binding titleName}" VerticalAlignment="Center"/>
+									<Button Width="32"
+									        Height="32"
+									        Padding="4"
+									        Background="{StaticResource bgCancelDelete}"
+									        Click="RemoveTitle_OnClick"
+									        CommandParameter="{Binding}">
+										<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Stretch="Uniform"/>
+									</Button>
+								</StackPanel>
+							</Border>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+
+				<Grid ColumnDefinitions="Auto,*,Auto" Margin="0,4,0,0">
+					<StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
+						<TextBlock Classes="heading" Text="Randomly give this many titles:"/>
+						<TextBlock x:Name="RandomizedTitlesValueText" Classes="heading"/>
+					</StackPanel>
+					<TextBlock Grid.Column="1"/>
+					<StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+						<TextBlock Classes="heading" Text="One"/>
+						<Slider x:Name="RandomizedTitlesSlider"
+						        Width="280"
+						        Minimum="1"
+						        TickFrequency="1"
+						        TickPlacement="Outside"
+						        SmallChange="1"
+						        LargeChange="1"
+						        IsSnapToTickEnabled="True"
+						        ValueChanged="RandomizedTitlesSlider_OnValueChanged"/>
+						<TextBlock Classes="heading" Text="All"/>
+					</StackPanel>
+				</Grid>
+			</StackPanel>
+		</Border>
+
+		<Border Classes="callout">
+			<StackPanel Spacing="6">
+				<TextBlock Classes="heading" Text="Give the following rewards for each title above that cannot be given:"/>
+				<StackPanel Orientation="Horizontal" Spacing="10">
+					<TextBlock Classes="heading" Text="Lore:" VerticalAlignment="Center"/>
+					<TextBox x:Name="LoreFallbackTextBox" Width="40"/>
+					<TextBlock Classes="heading" Text="XP:" VerticalAlignment="Center"/>
+					<TextBox x:Name="XpFallbackTextBox" Width="40"/>
+					<TextBlock Classes="heading" Text="Threat Reduction:" VerticalAlignment="Center"/>
+					<TextBox x:Name="ThreatFallbackTextBox" Width="40"/>
+				</StackPanel>
+			</StackPanel>
+		</Border>
+
+		<Border Classes="callout">
+			<StackPanel Spacing="6">
+				<TextBlock Classes="heading" Text="Or, if no titles can be given at all, Fire This Trigger instead of lore/xp/threat rewards (optional):"/>
+				<StackPanel Orientation="Horizontal" Spacing="10">
+					<ComboBox x:Name="FallbackTriggerCombo" MinWidth="260">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding dataName}" Foreground="White"/>
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+					<Button x:Name="AddFallbackTriggerButton"
+					        Background="#3CB371"
+					        Width="32"
+					        Height="32"
+					        Padding="4"
+					        Click="AddFallbackTrigger_OnClick">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+					</Button>
+				</StackPanel>
+			</StackPanel>
+		</Border>
+	</StackPanel>
+	</ScrollViewer>
+</UserControl>
