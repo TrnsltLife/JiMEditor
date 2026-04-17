@@ -592,6 +592,8 @@ public partial class MainWindow : Window
 		itemItem.Click += async (_, _) => await AddItemInteractionAsync();
 		var titleItem = new MenuItem { Header = "Title Event" };
 		titleItem.Click += async (_, _) => await AddTitleInteractionAsync();
+		var decisionItem = new MenuItem { Header = "Decision Event" };
+		decisionItem.Click += async (_, _) => await AddDecisionInteractionAsync();
 		var corruptionItem = new MenuItem { Header = "Corruption Event" };
 		corruptionItem.Click += async (_, _) => await AddCorruptionInteractionAsync();
 		var multiItem = new MenuItem { Header = "Multi-Event" };
@@ -602,6 +604,7 @@ public partial class MainWindow : Window
 		flyout.Items.Add( conditionalItem );
 		flyout.Items.Add( itemItem );
 		flyout.Items.Add( titleItem );
+		flyout.Items.Add( decisionItem );
 		flyout.Items.Add( corruptionItem );
 		flyout.Items.Add( multiItem );
 		flyout.ShowAt( interactionsUC.AddInteractionButton );
@@ -652,6 +655,13 @@ public partial class MainWindow : Window
 	async Task AddCorruptionInteractionAsync()
 	{
 		var (accepted, created) = await EventEditorFactory.TryCreateCorruptionInteractionAsync( this, scenario );
+		if ( accepted )
+			scenario.AddInteraction( created );
+	}
+
+	async Task AddDecisionInteractionAsync()
+	{
+		var (accepted, created) = await EventEditorFactory.TryCreateDecisionInteractionAsync( this, scenario );
 		if ( accepted )
 			scenario.AddInteraction( created );
 	}
@@ -770,6 +780,19 @@ public partial class MainWindow : Window
 				var originalPrefix = clone.TranslationKeyPrefix();
 				var originalKeyName = clone.TranslationKeyName();
 				var w = new CorruptionInteractionWindow( scenario, clone, showCancelButton: true );
+				await w.ShowDialog( this );
+				clone.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( clone );
+				break;
+			}
+			case DecisionInteraction d:
+			{
+				var clone = d.Clone();
+				var originalValues = clone.CaptureStartingValues();
+				var originalPrefix = clone.TranslationKeyPrefix();
+				var originalKeyName = clone.TranslationKeyName();
+				var w = new DecisionInteractionWindow( scenario, clone, showCancelButton: true );
 				await w.ShowDialog( this );
 				clone.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 				if ( w.Accepted )
@@ -914,6 +937,18 @@ public partial class MainWindow : Window
 				c.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 				if ( w.Accepted )
 					scenario.AddInteraction( c );
+				break;
+			}
+			case DecisionInteraction d:
+			{
+				var originalValues = d.CaptureStartingValues();
+				var originalPrefix = d.TranslationKeyPrefix();
+				var originalKeyName = d.TranslationKeyName();
+				var w = new DecisionInteractionWindow( scenario, d, showCancelButton: true );
+				await w.ShowDialog( this );
+				d.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( d );
 				break;
 			}
 			case MultiEventInteraction m:

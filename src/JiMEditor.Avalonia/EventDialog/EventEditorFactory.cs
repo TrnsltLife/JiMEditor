@@ -90,6 +90,16 @@ public static class EventEditorFactory
 				c.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 				return w.Accepted;
 			}
+			case DecisionInteraction d:
+			{
+				var originalValues = d.CaptureStartingValues();
+				var originalPrefix = d.TranslationKeyPrefix();
+				var originalKeyName = d.TranslationKeyName();
+				var w = new DecisionInteractionWindow( scenario, d, showCancelButton: false );
+				await w.ShowDialog( owner );
+				d.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				return w.Accepted;
+			}
 			case MultiEventInteraction m:
 			{
 				var originalValues = m.CaptureStartingValues();
@@ -191,6 +201,18 @@ public static class EventEditorFactory
 		var originalPrefix = created.TranslationKeyPrefix();
 		var originalKeyName = created.TranslationKeyName();
 		var w = new CorruptionInteractionWindow( scenario, created, showCancelButton: true );
+		await w.ShowDialog( owner );
+		created.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+		return ( w.Accepted, created );
+	}
+
+	public static async Task<(bool accepted, DecisionInteraction created)> TryCreateDecisionInteractionAsync( Window owner, Scenario scenario )
+	{
+		var created = new DecisionInteraction( "New Decision Event" );
+		var originalValues = created.CaptureStartingValues();
+		var originalPrefix = created.TranslationKeyPrefix();
+		var originalKeyName = created.TranslationKeyName();
+		var w = new DecisionInteractionWindow( scenario, created, showCancelButton: true );
 		await w.ShowDialog( owner );
 		created.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 		return ( w.Accepted, created );

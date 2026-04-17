@@ -9,7 +9,7 @@
         x:Class="JiMEditor.Avalonia.Views.MainWindow"
         x:CompileBindings="False"
         Background="{StaticResource bgColor}"
-        Width="1200" Height="800">
+        Width="1200" Height="750">
 	<!--
 		Original WPF GraphX region (JiMEditor/MainWindow.xaml) — TODO-Avalonia-Reenable: replace with Avalonia graph or alternate layout.
 		<zoom:ZoomControl x:Name="zoomControl" Grid.Row="1" Grid.Column="1" ZoomBoxVisibility="Collapsed" Background="#FF1E1E1E">

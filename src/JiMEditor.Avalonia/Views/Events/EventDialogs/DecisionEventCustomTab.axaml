@@ -1,0 +1,148 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:sg="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             x:Class="JiMEditor.Avalonia.Views.Events.EventDialogs.DecisionEventCustomTab"
+             x:CompileBindings="False">
+	<ScrollViewer Margin="0,5,0,0"
+	              HorizontalScrollBarVisibility="Disabled"
+	              VerticalScrollBarVisibility="Auto">
+	<StackPanel Spacing="10">
+		<Border Classes="callout">
+			<TextBlock Classes="subText" TextWrapping="Wrap"
+			           Text="Decisions are Events that present a choice to the players. Use Event Text on the General Properties tab to describe the choice context. Buttons labeled by the choices below will be shown in the Companion App."/>
+		</Border>
+
+		<Border Classes="callout">
+			<sg:SpacedGrid Margin="4" RowSpacing="8" ColumnSpacing="4">
+				<sg:SpacedGrid.ColumnDefinitions>
+					<ColumnDefinition Width="auto"/>
+					<ColumnDefinition Width="auto"/>
+					<ColumnDefinition Width="auto"/>
+					<ColumnDefinition Width="auto"/>
+					<ColumnDefinition Width="auto"/>
+					<ColumnDefinition Width="auto"/>
+				</sg:SpacedGrid.ColumnDefinitions>
+				<sg:SpacedGrid.RowDefinitions>
+					<RowDefinition Height="auto"/>
+					<RowDefinition Height="auto"/>
+					<RowDefinition Height="auto"/>
+				</sg:SpacedGrid.RowDefinitions>
+
+				<TextBlock Grid.Row="0" Grid.Column="1"
+							Classes="heading"
+							Text="First Choice:"
+							VerticalAlignment="Center"/>
+				<TextBox Grid.Row="0" Grid.Column="2"
+							x:Name="Choice1TextBox"
+							Classes="campaignField"
+							Width="200" MaxWidth="200"
+							VerticalAlignment="Center"/>
+				<TextBlock Grid.Row="0" Grid.Column="3"
+							Classes="heading"
+							Text="  Set This Trigger (Required):"
+							VerticalAlignment="Center"
+							TextWrapping="Wrap"/>
+				<ComboBox Grid.Row="0" Grid.Column="4"
+							x:Name="Choice1TriggerCombo"
+							MinWidth="120"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Center">
+					<ComboBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding dataName}" Foreground="White"/>
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
+				</ComboBox>
+				<Button Grid.Row="0" Grid.Column="5"
+						x:Name="AddChoice1TriggerButton"
+						Width="32"
+						Height="32"
+						Padding="4"
+						Background="#3CB371"
+						VerticalAlignment="Center"
+						Click="AddChoice1TriggerButton_OnClick">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+				</Button>
+
+				<TextBlock Grid.Row="1" Grid.Column="1"
+							Classes="heading"
+							Text="Second Choice:"
+							VerticalAlignment="Center"/>
+				<TextBox Grid.Row="1" Grid.Column="2"
+							x:Name="Choice2TextBox"
+							Classes="campaignField"
+							Width="200" MaxWidth="200"
+							VerticalAlignment="Center"/>
+				<TextBlock Grid.Row="1" Grid.Column="3"
+							Classes="heading"
+							Text="  Set This Trigger (Required):"
+							VerticalAlignment="Center"
+							TextWrapping="Wrap"/>
+				<ComboBox Grid.Row="1" Grid.Column="4"
+							x:Name="Choice2TriggerCombo"
+							MinWidth="120"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Center">
+					<ComboBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding dataName}" Foreground="White"/>
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
+				</ComboBox>
+				<Button Grid.Row="1" Grid.Column="5"
+						x:Name="AddChoice2TriggerButton"
+						Width="32"
+						Height="32"
+						Padding="4"
+						Background="#3CB371"
+						VerticalAlignment="Center"
+						Click="AddChoice2TriggerButton_OnClick">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+				</Button>
+
+				<CheckBox Grid.Row="2" Grid.Column="0"
+							x:Name="ThirdChoiceCheckBox"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Center"
+							Checked="ThirdChoiceCheckBox_OnChanged"
+							Unchecked="ThirdChoiceCheckBox_OnChanged"/>
+				<TextBlock Grid.Row="2" Grid.Column="1"
+							Classes="heading"
+							Text="Third Choice:"
+							VerticalAlignment="Center"/>
+				<TextBox Grid.Row="2" Grid.Column="2"
+							x:Name="Choice3TextBox"
+							Classes="campaignField"
+							Width="200" MaxWidth="200"
+							VerticalAlignment="Center"/>
+				<TextBlock Grid.Row="2" Grid.Column="3"
+							Classes="heading"
+							Text="  Set This Trigger (Required):"
+							VerticalAlignment="Center"
+							TextWrapping="Wrap"/>
+				<ComboBox Grid.Row="2" Grid.Column="4"
+							x:Name="Choice3TriggerCombo"
+							MinWidth="120"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Center">
+					<ComboBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding dataName}" Foreground="White"/>
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
+				</ComboBox>
+				<Button Grid.Row="2" Grid.Column="5"
+						x:Name="AddChoice3TriggerButton"
+						Width="32"
+						Height="32"
+						Padding="4"
+						Background="#3CB371"
+						VerticalAlignment="Center"
+						Click="AddChoice3TriggerButton_OnClick">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+				</Button>
+			</sg:SpacedGrid>
+		</Border>
+	</StackPanel>
+	</ScrollViewer>
+</UserControl>

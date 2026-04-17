@@ -124,6 +124,20 @@ public static class EventDialogConfigFactory
 			FlavorText = EventSectionVis.Visible
 		};
 
+	public static EventDialogConfig Decision() =>
+		new()
+		{
+			CustomTabTitle = "Decision",
+			ForbiddenDefaultEventName = "New Decision Event",
+			ThreatCallout = EventSectionVis.Visible,
+			EventNameGroup = EventSectionVis.Visible,
+			Rewards = EventSectionVis.Visible,
+			Token = EventSectionVis.Visible,
+			Triggers = EventSectionVis.Visible,
+			EventText = EventSectionVis.Visible,
+			FlavorText = EventSectionVis.Visible
+		};
+
 	public static EventDialogConfig MultiEvent() =>
 		new()
 		{

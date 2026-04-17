@@ -6,6 +6,7 @@
         x:CompileBindings="False"
         Title="Scenario Settings"
         Width="800"
+        Height="650"
         MinWidth="720"
         MaxHeight="975"
         WindowStartupLocation="CenterOwner"
