@@ -166,6 +166,7 @@ public partial class ReplaceTokenCustomTab : UserControl, IEventCustomTab
 		flyout.Items.Add( CreateEventMenuItem( "Enemy Event", targetCombo, () => EventEditorFactory.TryCreateThreatInteractionAsync( owner, _scenario ) ) );
 		flyout.Items.Add( CreateEventMenuItem( "Story Branch", targetCombo, () => EventEditorFactory.TryCreateBranchInteractionAsync( owner, _scenario ) ) );
 		flyout.Items.Add( CreateEventMenuItem( "Replace Token Event", targetCombo, () => EventEditorFactory.TryCreateReplaceTokenInteractionAsync( owner, _scenario ) ) );
+		flyout.Items.Add( CreateEventMenuItem( "Stat Test Event", targetCombo, () => EventEditorFactory.TryCreateStatTestInteractionAsync( owner, _scenario ) ) );
 		flyout.ShowAt( anchor );
 	}
 

@@ -17,12 +17,13 @@ This is a list of things we need to do:
     x Item
     x Multi-Event
     x Persistent
+    x Replace Token
     x Reward
+    x Stat Test
     x Story Branch
     x Text Dialog
     x Title
-    * Replace Token
-    * Stat Test
+  * Enemy Event isn't respecting allowed enemy types based on scenario collections selected
 
   * App Version and Scenario Format Version in the status bar
 * Settings Dialog TODO:

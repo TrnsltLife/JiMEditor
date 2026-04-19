@@ -1,0 +1,273 @@
+<!-- Ported from: JiMEditor/Views/Interactions/TestInteractionWindow.xaml — Stat Test tab (2026-04-19). -->
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="JiMEditor.Avalonia.Views.Events.EventDialogs.TestStatCustomTab"
+             x:CompileBindings="False">
+	<ScrollViewer Margin="0,5,0,0"
+	              HorizontalScrollBarVisibility="Disabled"
+	              VerticalScrollBarVisibility="Auto">
+		<StackPanel Spacing="0">
+			<Border Classes="callout">
+				<TextBlock Classes="subText"
+				           TextWrapping="Wrap"
+				           VerticalAlignment="Center"
+				           Text="The Stat Test Event is used to test an Attribute (Might, Agility, Spirit, Wisdom, Wit) of the Hero the player is playing as. Two buttons labeled Pass and Fail are presented to the player in the companion app, which can be used to input the result of the test."/>
+			</Border>
+
+			<Border Classes="callout" Margin="0,10,0,5">
+				<StackPanel Spacing="8">
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Classes="heading" Text="Test Attribute:" Margin="0,0,10,0"/>
+						<RadioButton x:Name="MightRadio"
+						             GroupName="PrimaryStat"
+						             Content="Might"
+						             Foreground="White"
+						             VerticalAlignment="Center"/>
+						<RadioButton x:Name="AgilityRadio"
+						             GroupName="PrimaryStat"
+						             Content="Agility"
+						             Margin="10,0,0,0"
+						             Foreground="White"
+						             VerticalAlignment="Center"/>
+						<RadioButton x:Name="SpiritRadio"
+						             GroupName="PrimaryStat"
+						             Content="Spirit"
+						             Margin="10,0,0,0"
+						             Foreground="White"
+						             VerticalAlignment="Center"/>
+						<RadioButton x:Name="WisdomRadio"
+						             GroupName="PrimaryStat"
+						             Content="Wisdom"
+						             Margin="10,0,0,0"
+						             Foreground="White"
+						             VerticalAlignment="Center"/>
+						<RadioButton x:Name="WitRadio"
+						             GroupName="PrimaryStat"
+						             Content="Wit"
+						             Margin="10,0,0,0"
+						             Foreground="White"
+						             VerticalAlignment="Center"/>
+					</StackPanel>
+
+					<StackPanel x:Name="AlternateAttributesPanel" Orientation="Horizontal">
+						<TextBlock Classes="heading" Text="Alternate Test Attribute:" Margin="0,0,10,0"/>
+						<RadioButton x:Name="MightAltRadio"
+						             GroupName="AltStat"
+						             Content="Might"
+						             Foreground="White"
+						             VerticalAlignment="Center"/>
+						<RadioButton x:Name="AgilityAltRadio"
+						             GroupName="AltStat"
+						             Content="Agility"
+						             Margin="10,0,0,0"
+						             Foreground="White"
+						             VerticalAlignment="Center"/>
+						<RadioButton x:Name="SpiritAltRadio"
+						             GroupName="AltStat"
+						             Content="Spirit"
+						             Margin="10,0,0,0"
+						             Foreground="White"
+						             VerticalAlignment="Center"/>
+						<RadioButton x:Name="WisdomAltRadio"
+						             GroupName="AltStat"
+						             Content="Wisdom"
+						             Margin="10,0,0,0"
+						             Foreground="White"
+						             VerticalAlignment="Center"/>
+						<RadioButton x:Name="WitAltRadio"
+						             GroupName="AltStat"
+						             Content="Wit"
+						             Margin="10,0,0,0"
+						             Foreground="White"
+						             VerticalAlignment="Center"/>
+					</StackPanel>
+
+					<CheckBox x:Name="NoAlternateCheckBox"
+					          Foreground="White"
+					          VerticalAlignment="Center"
+					          Content="Don't use Alternate Test attribute"
+					          Checked="NoAlternateCheckBox_OnChanged"
+					          Unchecked="NoAlternateCheckBox_OnChanged"/>
+
+					<TextBlock Classes="subText"
+					           Margin="0,5,0,0"
+					           Text="If you enable the Alternate Test attribute, players can test EITHER attribute to pass the test."/>
+
+					<Border Classes="callout"
+					        Margin="0,5,0,0"
+					        Background="#FF2D2D30">
+						<StackPanel Spacing="6">
+							<StackPanel Orientation="Horizontal" Spacing="15">
+								<CheckBox x:Name="ProgressiveCheckBox"
+								          Foreground="White"
+								          Content="Progressive"
+								          Checked="ProgressiveCheckBox_OnChanged"
+								          Unchecked="ProgressiveCheckBox_OnChanged"/>
+								<CheckBox x:Name="SimplePassCheckBox"
+								          Foreground="White"
+								          Content="Simple Pass"
+								          IsEnabled="False"/>
+							</StackPanel>
+							<TextBlock Classes="subText"
+							           TextWrapping="Wrap"
+							           Text="A Progressive Test can be attempted any number of times, with each test value ADDED to any previous values. When the Success Value (below) is finally reached, it's considered a Success. A Progressive Test cannot be Failed."/>
+							<TextBlock Classes="subText"
+							           TextWrapping="Wrap"
+							           Margin="0,5,0,0"
+							           Text="If a Progressive Test is also marked 'Simple Pass', the player can still attempt the Test any number of times until it's successful, but WITHOUT ADDING up values over attempts. It must be successful on one attempt and cannot be completely failed. In this case, use the Progress Text to show temporary failure, such as 'Better luck next time, try again!'"/>
+						</StackPanel>
+					</Border>
+				</StackPanel>
+			</Border>
+
+			<Border Classes="callout" Margin="0,5,0,0">
+				<StackPanel Spacing="8">
+					<StackPanel Orientation="Horizontal" Spacing="10">
+						<TextBlock Classes="heading" Text="Success Value:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+						<TextBox x:Name="SuccessValueTextBox"
+						         Width="50"
+						         Classes="campaignField"/>
+						<Button x:Name="PassTextButton"
+						        Background="#3CB371"
+						        Height="40"
+						        Margin="15,0,10,0"
+						        Padding="8,4"
+						        Click="PassTextButton_OnClick">
+							<StackPanel Orientation="Horizontal" Spacing="6">
+								<TextBlock Classes="heading" Text="Pass Text" VerticalAlignment="Center" Foreground="White"/>
+								<Image Source="avares://JiMEditor.Avalonia/Assets/edit.png"
+								       Stretch="Uniform"
+								       Width="20"
+								       Height="20"/>
+							</StackPanel>
+						</Button>
+						<Button x:Name="FailTextButton"
+						        Background="{StaticResource bgCancelDelete}"
+						        Height="40"
+						        Margin="5,0"
+						        Padding="8,4"
+						        Click="FailTextButton_OnClick">
+							<StackPanel Orientation="Horizontal" Spacing="6">
+								<TextBlock Classes="heading" Text="Fail Text" VerticalAlignment="Center" Foreground="White"/>
+								<Image Source="avares://JiMEditor.Avalonia/Assets/edit.png"
+								       Stretch="Uniform"
+								       Width="20"
+								       Height="20"/>
+							</StackPanel>
+						</Button>
+						<Button x:Name="ProgressTextButton"
+						        Background="YellowGreen"
+						        Height="40"
+						        Margin="10,0,0,0"
+						        Padding="8,4"
+						        Click="ProgressTextButton_OnClick">
+							<StackPanel Orientation="Horizontal" Spacing="6">
+								<TextBlock Classes="heading" Text="Progress Text" VerticalAlignment="Center" Foreground="White"/>
+								<Image Source="avares://JiMEditor.Avalonia/Assets/edit.png"
+								       Stretch="Uniform"
+								       Width="20"
+								       Height="20"/>
+							</StackPanel>
+						</Button>
+					</StackPanel>
+					<TextBlock Classes="subText"
+					           Margin="0,5,0,0"
+					           Text="The Success Value is the number the player must test against for the Test to be a Success. Example: Test Might 2"/>
+					<TextBlock Classes="subText"
+					           Margin="0,5,0,0"
+					           TextWrapping="Wrap"
+					           Text="Pass Text is shown when the test succeeds. Fail Text is shown if the player fails the test. Progress Text is only shown if the Progressive option is checked and the current value is greater than 0 but less than the Success Value for completion. Use it as a way to indicate progress towards competing the Test."/>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Classes="subText" Text="Progress Text example: "/>
+						<TextBlock Classes="subText"
+						           FontStyle="Italic"
+						           TextWrapping="Wrap"
+						           Text="Almost there! Just a few more swings and the lock will be broken."/>
+					</StackPanel>
+				</StackPanel>
+			</Border>
+
+			<Grid ColumnDefinitions="*,*" Margin="0,10,0,0">
+				<Border Classes="callout" Grid.Column="0" Margin="0,0,10,0">
+					<StackPanel Spacing="6">
+						<TextBlock Classes="heading" Text="Rewards For Success"/>
+						<StackPanel Orientation="Horizontal" Margin="0,5,0,0" Spacing="10">
+							<TextBlock Classes="heading" Text="Lore / XP / Threat:" VerticalAlignment="Center"/>
+							<TextBox x:Name="RewardLoreTextBox" Width="40" Classes="campaignField"/>
+							<TextBox x:Name="RewardXPTextBox" Width="40" Classes="campaignField"/>
+							<TextBox x:Name="RewardThreatTextBox" Width="40" Classes="campaignField"/>
+						</StackPanel>
+						<TextBlock Classes="subText"
+						           TextWrapping="Wrap"
+						           Margin="0,5,0,0"
+						           Text="The Threat Reward REMOVES Threat from the current value."/>
+					</StackPanel>
+				</Border>
+
+				<Border x:Name="PenaltyForFailureBorder"
+				        Classes="callout"
+				        Grid.Column="1"
+				        Margin="10,0,0,0">
+					<StackPanel Spacing="6">
+						<TextBlock Classes="heading" Text="Penalty For Failure"/>
+						<StackPanel Orientation="Horizontal" Margin="0,5,0,0" Spacing="10">
+							<TextBlock Classes="heading" Text="Threat" VerticalAlignment="Center"/>
+							<TextBox x:Name="FailThreatTextBox" Width="40" Classes="campaignField"/>
+						</StackPanel>
+						<TextBlock Classes="subText"
+						           TextWrapping="Wrap"
+						           Margin="0,5,0,0"
+						           Text="The Threat Penalty ADDS Threat to the current value."/>
+					</StackPanel>
+				</Border>
+			</Grid>
+
+			<Border Classes="callout" Margin="0,10,0,0">
+				<Grid ColumnDefinitions="*,*">
+					<StackPanel Grid.Column="0" Margin="0,0,5,0">
+						<TextBlock Classes="heading" Text="Trigger On Pass (Optional):"/>
+						<StackPanel Orientation="Horizontal" Spacing="10">
+							<ComboBox x:Name="SuccessTriggerCombo"
+							          MinWidth="200"
+							          VerticalAlignment="Center">
+								<ComboBox.ItemTemplate>
+									<DataTemplate>
+										<TextBlock Text="{Binding dataName}" Foreground="White"/>
+									</DataTemplate>
+								</ComboBox.ItemTemplate>
+							</ComboBox>
+							<Button Background="#3CB371"
+							        Width="32"
+							        Height="32"
+							        Padding="4"
+							        Click="AddSuccessTriggerButton_OnClick">
+								<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+							</Button>
+						</StackPanel>
+					</StackPanel>
+					<StackPanel Grid.Column="1" Margin="5,0,0,0">
+						<TextBlock Classes="heading" Text="Trigger On Fail (Optional):"/>
+						<StackPanel Orientation="Horizontal" Spacing="10">
+							<ComboBox x:Name="FailTriggerCombo"
+							          MinWidth="200"
+							          VerticalAlignment="Center">
+								<ComboBox.ItemTemplate>
+									<DataTemplate>
+										<TextBlock Text="{Binding dataName}" Foreground="White"/>
+									</DataTemplate>
+								</ComboBox.ItemTemplate>
+							</ComboBox>
+							<Button Background="#3CB371"
+							        Width="32"
+							        Height="32"
+							        Padding="4"
+							        Click="AddFailTriggerButton_OnClick">
+								<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+							</Button>
+						</StackPanel>
+					</StackPanel>
+				</Grid>
+			</Border>
+		</StackPanel>
+	</ScrollViewer>
+</UserControl>

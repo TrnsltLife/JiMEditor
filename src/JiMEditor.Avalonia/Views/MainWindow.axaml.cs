@@ -580,47 +580,36 @@ public partial class MainWindow : Window
 	void OnAddInteraction( object? sender, EventArgs e )
 	{
 		var flyout = new MenuFlyout();
-		var dialogItem = new MenuItem { Header = "Dialog Event" };
-		dialogItem.Click += async (_, _) => await AddDialogInteractionAsync();
-		var textItem = new MenuItem { Header = "Text Event" };
-		textItem.Click += async (_, _) => await AddTextInteractionAsync();
-		var branchItem = new MenuItem { Header = "Story Branch" };
-		branchItem.Click += async (_, _) => await AddBranchInteractionAsync();
-		var rewardItem = new MenuItem { Header = "Reward Event" };
-		rewardItem.Click += async (_, _) => await AddRewardInteractionAsync();
-		var persistentItem = new MenuItem { Header = "Persistent Event" };
-		persistentItem.Click += async (_, _) => await AddPersistentInteractionAsync();
-		var conditionalItem = new MenuItem { Header = "Conditional Event" };
-		conditionalItem.Click += async (_, _) => await AddConditionalInteractionAsync();
-		var itemItem = new MenuItem { Header = "Item Event" };
-		itemItem.Click += async (_, _) => await AddItemInteractionAsync();
-		var titleItem = new MenuItem { Header = "Title Event" };
-		titleItem.Click += async (_, _) => await AddTitleInteractionAsync();
-		var decisionItem = new MenuItem { Header = "Decision Event" };
-		decisionItem.Click += async (_, _) => await AddDecisionInteractionAsync();
-		var corruptionItem = new MenuItem { Header = "Corruption Event" };
-		corruptionItem.Click += async (_, _) => await AddCorruptionInteractionAsync();
-		var multiItem = new MenuItem { Header = "Multi-Event" };
-		multiItem.Click += async (_, _) => await AddMultiEventInteractionAsync();
-		var enemyItem = new MenuItem { Header = "Enemy Event" };
-		enemyItem.Click += async (_, _) => await AddThreatInteractionAsync();
-		var replaceTokenItem = new MenuItem { Header = "Replace Token Event" };
-		replaceTokenItem.Click += async (_, _) => await AddReplaceTokenInteractionAsync();
-		flyout.Items.Add( dialogItem );
-		flyout.Items.Add( textItem );
-		flyout.Items.Add( branchItem );
-		flyout.Items.Add( rewardItem );
-		flyout.Items.Add( persistentItem );
-		flyout.Items.Add( conditionalItem );
-		flyout.Items.Add( itemItem );
-		flyout.Items.Add( titleItem );
-		flyout.Items.Add( decisionItem );
-		flyout.Items.Add( corruptionItem );
-		flyout.Items.Add( multiItem );
-		flyout.Items.Add( enemyItem );
-		flyout.Items.Add( replaceTokenItem );
-		flyout.ShowAt( interactionsUC.AddInteractionButton );
+		var entries = new (string Header, Func<Task> Add)[]
+		{
+			( "Conditional Event", AddConditionalInteractionAsync ),
+			( "Corruption Event", AddCorruptionInteractionAsync ),
+			( "Decision Event", AddDecisionInteractionAsync ),
+			( "Dialog Event", AddDialogInteractionAsync ),
+			( "Enemy Event", AddThreatInteractionAsync ),
+			( "Item Event", AddItemInteractionAsync ),
+			( "Multi-Event", AddMultiEventInteractionAsync ),
+			( "Persistent Event", AddPersistentInteractionAsync ),
+			( "Replace Token Event", AddReplaceTokenInteractionAsync ),
+			( "Reward Event", AddRewardInteractionAsync ),
+			( "Stat Test Event", AddStatTestInteractionAsync ),
+			( "Story Branch", AddBranchInteractionAsync ),
+			( "Text Event", AddTextInteractionAsync ),
+			( "Title Event", AddTitleInteractionAsync )
+		};
+		foreach ( var (header, add) in entries.OrderBy( x => x.Header, StringComparer.OrdinalIgnoreCase ) )
+		{
+			var item = new MenuItem { Header = header };
+			item.Click += async (_, _) => await add();
+			flyout.Items.Add( item );
+		}
+
+		var placement = sender as Control ?? interactionsUC.AddInteractionButton;
+		flyout.ShowAt( placement );
 	}
+
+	void AddEventToolbarButton_Click( object? sender, RoutedEventArgs e ) =>
+		OnAddInteraction( sender, e );
 
 	async Task AddDialogInteractionAsync()
 	{
@@ -702,6 +691,13 @@ public partial class MainWindow : Window
 	async Task AddThreatInteractionAsync()
 	{
 		var (accepted, created) = await EventEditorFactory.TryCreateThreatInteractionAsync( this, scenario );
+		if ( accepted )
+			scenario.AddInteraction( created );
+	}
+
+	async Task AddStatTestInteractionAsync()
+	{
+		var (accepted, created) = await EventEditorFactory.TryCreateStatTestInteractionAsync( this, scenario );
 		if ( accepted )
 			scenario.AddInteraction( created );
 	}
@@ -904,6 +900,19 @@ public partial class MainWindow : Window
 					scenario.AddInteraction( clone );
 				break;
 			}
+			case TestInteraction te:
+			{
+				var clone = te.Clone();
+				var originalValues = clone.CaptureStartingValues();
+				var originalPrefix = clone.TranslationKeyPrefix();
+				var originalKeyName = clone.TranslationKeyName();
+				var w = new TestInteractionWindow( scenario, clone, showCancelButton: true );
+				await w.ShowDialog( this );
+				clone.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( clone );
+				break;
+			}
 			default:
 				MessageBox.Show(
 					"Duplicating this event type is not implemented yet in Avalonia.",
@@ -993,6 +1002,18 @@ public partial class MainWindow : Window
 				rt.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 				if ( w.Accepted )
 					scenario.AddInteraction( rt );
+				break;
+			}
+			case TestInteraction te:
+			{
+				var originalValues = te.CaptureStartingValues();
+				var originalPrefix = te.TranslationKeyPrefix();
+				var originalKeyName = te.TranslationKeyName();
+				var w = new TestInteractionWindow( scenario, te, showCancelButton: true );
+				await w.ShowDialog( this );
+				te.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( te );
 				break;
 			}
 			case RewardInteraction r:

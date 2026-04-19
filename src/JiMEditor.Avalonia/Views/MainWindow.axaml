@@ -84,7 +84,12 @@
 						<TextBlock Text="New Objective" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
 					</StackPanel>
 				</Button>
-				<Button Classes="iconbutton" Height="32" Padding="4,0,4,0" IsEnabled="False" ToolTip.Tip="Add event (TODO)">
+				<Button x:Name="AddEventToolbarButton"
+				        Classes="iconbutton"
+				        Height="32"
+				        Padding="4,0,4,0"
+				        Click="AddEventToolbarButton_Click"
+				        ToolTip.Tip="New event">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/addevent.png" Width="24" Height="24"/>
 						<TextBlock Text="New Event" Foreground="White" FontSize="12" Margin="4,6,0,0"/>

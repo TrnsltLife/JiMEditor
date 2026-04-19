@@ -191,6 +191,7 @@ public partial class MultiEventCustomTab : UserControl, IEventCustomTab
 		flyout.Items.Add( CreateEventMenuItem( "Title Event", () => EventEditorFactory.TryCreateTitleInteractionAsync( owner, _scenario ) ) );
 		flyout.Items.Add( CreateEventMenuItem( "Corruption Event", () => EventEditorFactory.TryCreateCorruptionInteractionAsync( owner, _scenario ) ) );
 		flyout.Items.Add( CreateEventMenuItem( "Multi-Event", () => EventEditorFactory.TryCreateMultiEventInteractionAsync( owner, _scenario ) ) );
+		flyout.Items.Add( CreateEventMenuItem( "Stat Test Event", () => EventEditorFactory.TryCreateStatTestInteractionAsync( owner, _scenario ) ) );
 		flyout.ShowAt( AddEventButton );
 	}
 

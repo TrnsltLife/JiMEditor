@@ -150,6 +150,16 @@ public static class EventEditorFactory
 				rt.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 				return w.Accepted;
 			}
+			case TestInteraction te:
+			{
+				var originalValues = te.CaptureStartingValues();
+				var originalPrefix = te.TranslationKeyPrefix();
+				var originalKeyName = te.TranslationKeyName();
+				var w = new TestInteractionWindow( scenario, te, showCancelButton: false );
+				await w.ShowDialog( owner );
+				te.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				return w.Accepted;
+			}
 			default:
 				MessageBox.Show(
 					"This event type does not have an Avalonia editor yet.",
@@ -313,6 +323,18 @@ public static class EventEditorFactory
 		var originalPrefix = created.TranslationKeyPrefix();
 		var originalKeyName = created.TranslationKeyName();
 		var w = new ReplaceTokenInteractionWindow( scenario, created, showCancelButton: true );
+		await w.ShowDialog( owner );
+		created.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+		return ( w.Accepted, created );
+	}
+
+	public static async Task<(bool accepted, TestInteraction created)> TryCreateStatTestInteractionAsync( Window owner, Scenario scenario )
+	{
+		var created = new TestInteraction( "New Stat Test" );
+		var originalValues = created.CaptureStartingValues();
+		var originalPrefix = created.TranslationKeyPrefix();
+		var originalKeyName = created.TranslationKeyName();
+		var w = new TestInteractionWindow( scenario, created, showCancelButton: true );
 		await w.ShowDialog( owner );
 		created.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 		return ( w.Accepted, created );

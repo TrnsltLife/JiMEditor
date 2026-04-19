@@ -249,6 +249,7 @@ public partial class BranchEventCustomTab : UserControl, IEventCustomTab
 		flyout.Items.Add( CreateEventMenuItem( "Multi-Event", targetEventCombo, () => EventEditorFactory.TryCreateMultiEventInteractionAsync( owner, _scenario ) ) );
 		flyout.Items.Add( CreateEventMenuItem( "Enemy Event", targetEventCombo, () => EventEditorFactory.TryCreateThreatInteractionAsync( owner, _scenario ) ) );
 		flyout.Items.Add( CreateEventMenuItem( "Story Branch", targetEventCombo, () => EventEditorFactory.TryCreateBranchInteractionAsync( owner, _scenario ) ) );
+		flyout.Items.Add( CreateEventMenuItem( "Stat Test Event", targetEventCombo, () => EventEditorFactory.TryCreateStatTestInteractionAsync( owner, _scenario ) ) );
 		flyout.ShowAt( anchor );
 	}
 
