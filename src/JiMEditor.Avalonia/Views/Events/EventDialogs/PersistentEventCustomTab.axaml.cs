@@ -29,7 +29,11 @@ public partial class PersistentEventCustomTab : UserControl, IEventCustomTab
 
 	static IEnumerable<string> BuildEventOptions( Scenario scenario, PersistentTokenInteraction current ) =>
 		scenario.interactionObserver
-			.Where( x => x.isTokenInteraction && x.dataName != current.dataName && !Regex.IsMatch( x.dataName, @"\sGRP\d+$" ) )
+			.Where( x =>
+				x.isTokenInteraction
+				&& EventDialogInteractionLists.IncludeInReferenceDropdown( x )
+				&& x.dataName != current.dataName
+				&& !Regex.IsMatch( x.dataName, @"\sGRP\d+$" ) )
 			.Select( x => x.dataName )
 			.Prepend( "None" )
 			.Distinct()

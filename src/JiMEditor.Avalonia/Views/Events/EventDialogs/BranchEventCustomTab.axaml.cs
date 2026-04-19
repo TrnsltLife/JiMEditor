@@ -178,6 +178,7 @@ public partial class BranchEventCustomTab : UserControl, IEventCustomTab
 			yield break;
 		yield return "None";
 		foreach ( var name in _scenario.interactionObserver
+			         .Where( i => EventDialogInteractionLists.IncludeInReferenceDropdown( i ) )
 			         .Select( i => i.dataName )
 			         .Where( n =>
 				         n != _branch.dataName

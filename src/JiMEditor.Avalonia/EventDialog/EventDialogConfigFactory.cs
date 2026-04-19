@@ -197,6 +197,20 @@ public static class EventDialogConfigFactory
 			FlavorText = EventSectionVis.Visible
 		};
 
+	public static EventDialogConfig ReplaceToken() =>
+		new()
+		{
+			CustomTabTitle = "Replace Token",
+			ForbiddenDefaultEventName = "New Replace Token Event",
+			ThreatCallout = EventSectionVis.Visible,
+			EventNameGroup = EventSectionVis.Visible,
+			Rewards = EventSectionVis.Visible,
+			Token = EventSectionVis.Visible,
+			Triggers = EventSectionVis.Visible,
+			EventText = EventSectionVis.Visible,
+			FlavorText = EventSectionVis.Visible
+		};
+
 	static Control CreateRewardInstructions()
 	{
 		var text = new TextBlock

@@ -140,6 +140,16 @@ public static class EventEditorFactory
 				br.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 				return w.Accepted;
 			}
+			case ReplaceTokenInteraction rt:
+			{
+				var originalValues = rt.CaptureStartingValues();
+				var originalPrefix = rt.TranslationKeyPrefix();
+				var originalKeyName = rt.TranslationKeyName();
+				var w = new ReplaceTokenInteractionWindow( scenario, rt, showCancelButton: false );
+				await w.ShowDialog( owner );
+				rt.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				return w.Accepted;
+			}
 			default:
 				MessageBox.Show(
 					"This event type does not have an Avalonia editor yet.",
@@ -291,6 +301,18 @@ public static class EventEditorFactory
 		var originalPrefix = created.TranslationKeyPrefix();
 		var originalKeyName = created.TranslationKeyName();
 		var w = new BranchInteractionWindow( scenario, created, showCancelButton: true );
+		await w.ShowDialog( owner );
+		created.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+		return ( w.Accepted, created );
+	}
+
+	public static async Task<(bool accepted, ReplaceTokenInteraction created)> TryCreateReplaceTokenInteractionAsync( Window owner, Scenario scenario )
+	{
+		var created = new ReplaceTokenInteraction( "New Replace Token Event" );
+		var originalValues = created.CaptureStartingValues();
+		var originalPrefix = created.TranslationKeyPrefix();
+		var originalKeyName = created.TranslationKeyName();
+		var w = new ReplaceTokenInteractionWindow( scenario, created, showCancelButton: true );
 		await w.ShowDialog( owner );
 		created.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 		return ( w.Accepted, created );

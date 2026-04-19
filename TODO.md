@@ -18,11 +18,11 @@ This is a list of things we need to do:
     x Multi-Event
     x Persistent
     x Reward
+    x Story Branch
     x Text Dialog
     x Title
     * Replace Token
     * Stat Test
-    * Story Branch
 
   * App Version and Scenario Format Version in the status bar
 * Settings Dialog TODO:

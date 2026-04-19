@@ -62,7 +62,7 @@ public partial class MultiEventCustomTab : UserControl, IEventCustomTab
 
 	static List<string> BuildEventOptions( Scenario scenario, MultiEventInteraction current ) =>
 		scenario.interactionObserver
-			.Where( x => x.dataName != current.dataName )
+			.Where( x => x.dataName != current.dataName && EventDialogInteractionLists.IncludeInReferenceDropdown( x ) )
 			.Select( x => x.dataName )
 			.Prepend( "None" )
 			.Distinct()

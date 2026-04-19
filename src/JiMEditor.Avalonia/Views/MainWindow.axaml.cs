@@ -604,6 +604,8 @@ public partial class MainWindow : Window
 		multiItem.Click += async (_, _) => await AddMultiEventInteractionAsync();
 		var enemyItem = new MenuItem { Header = "Enemy Event" };
 		enemyItem.Click += async (_, _) => await AddThreatInteractionAsync();
+		var replaceTokenItem = new MenuItem { Header = "Replace Token Event" };
+		replaceTokenItem.Click += async (_, _) => await AddReplaceTokenInteractionAsync();
 		flyout.Items.Add( dialogItem );
 		flyout.Items.Add( textItem );
 		flyout.Items.Add( branchItem );
@@ -616,6 +618,7 @@ public partial class MainWindow : Window
 		flyout.Items.Add( corruptionItem );
 		flyout.Items.Add( multiItem );
 		flyout.Items.Add( enemyItem );
+		flyout.Items.Add( replaceTokenItem );
 		flyout.ShowAt( interactionsUC.AddInteractionButton );
 	}
 
@@ -699,6 +702,13 @@ public partial class MainWindow : Window
 	async Task AddThreatInteractionAsync()
 	{
 		var (accepted, created) = await EventEditorFactory.TryCreateThreatInteractionAsync( this, scenario );
+		if ( accepted )
+			scenario.AddInteraction( created );
+	}
+
+	async Task AddReplaceTokenInteractionAsync()
+	{
+		var (accepted, created) = await EventEditorFactory.TryCreateReplaceTokenInteractionAsync( this, scenario );
 		if ( accepted )
 			scenario.AddInteraction( created );
 	}
@@ -881,6 +891,19 @@ public partial class MainWindow : Window
 					scenario.AddInteraction( clone );
 				break;
 			}
+			case ReplaceTokenInteraction rt:
+			{
+				var clone = rt.Clone();
+				var originalValues = clone.CaptureStartingValues();
+				var originalPrefix = clone.TranslationKeyPrefix();
+				var originalKeyName = clone.TranslationKeyName();
+				var w = new ReplaceTokenInteractionWindow( scenario, clone, showCancelButton: true );
+				await w.ShowDialog( this );
+				clone.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( clone );
+				break;
+			}
 			default:
 				MessageBox.Show(
 					"Duplicating this event type is not implemented yet in Avalonia.",
@@ -958,6 +981,18 @@ public partial class MainWindow : Window
 				br.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 				if ( w.Accepted )
 					scenario.AddInteraction( br );
+				break;
+			}
+			case ReplaceTokenInteraction rt:
+			{
+				var originalValues = rt.CaptureStartingValues();
+				var originalPrefix = rt.TranslationKeyPrefix();
+				var originalKeyName = rt.TranslationKeyName();
+				var w = new ReplaceTokenInteractionWindow( scenario, rt, showCancelButton: true );
+				await w.ShowDialog( this );
+				rt.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( rt );
 				break;
 			}
 			case RewardInteraction r:
