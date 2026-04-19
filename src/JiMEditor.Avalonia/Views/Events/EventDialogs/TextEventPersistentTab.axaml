@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:jimeui="clr-namespace:JiMEditor.Avalonia"
+             x:Class="JiMEditor.Avalonia.Views.Events.EventDialogs.TextEventPersistentTab"
+             x:CompileBindings="False">
+	<ScrollViewer Margin="0,5,0,0"
+	              HorizontalScrollBarVisibility="Disabled"
+	              VerticalScrollBarVisibility="Auto">
+		<StackPanel Spacing="10">
+			<Border Classes="callout">
+				<TextBlock Classes="subText" TextWrapping="Wrap"
+				           Text="When this Event is a Token Interaction, you can keep its Token on the board after it activates and show alternate text on later interactions. Configure that behavior here."/>
+			</Border>
+			<Border x:Name="NotTokenHintBorder" Classes="callout">
+				<TextBlock Classes="subText" TextWrapping="Wrap"
+				           Text="Turn on &quot;This Event is a Token Interaction&quot; on the General tab to enable persistent token options."/>
+			</Border>
+			<Border Classes="callout">
+				<StackPanel Spacing="10">
+					<StackPanel Orientation="Horizontal" Spacing="10">
+						<CheckBox x:Name="TextPersistentCheckBox"
+						          Foreground="White"
+						          VerticalAlignment="Center"
+						          Content="This Event's Token is Persistent"
+						          Checked="TextPersistentCheckBox_OnIsCheckedChanged"
+						          Unchecked="TextPersistentCheckBox_OnIsCheckedChanged"/>
+						<Button x:Name="EditPersistentTextButton"
+						        Content="Edit Persistent Text..."
+						        Foreground="White"
+						        Background="#1E90FF"
+						        VerticalAlignment="Center"
+						        Click="EditPersistentText_OnClick"/>
+					</StackPanel>
+					<CheckBox x:Name="SkipInteractionCheckBox"
+					          Foreground="White"
+					          Checked="SkipInteractionCheckBox_OnIsCheckedChanged"
+					          Unchecked="SkipInteractionCheckBox_OnIsCheckedChanged">
+						<jimeui:PseudoHtmlPreviewTextBlock x:Name="SkipInteractionLabel"
+						                                   TextWrapping="Wrap"
+						                                   Classes="subText"/>
+					</CheckBox>
+				</StackPanel>
+			</Border>
+		</StackPanel>
+	</ScrollViewer>
+</UserControl>

@@ -124,6 +124,37 @@ public static class EventDialogConfigFactory
 			FlavorText = EventSectionVis.Visible
 		};
 
+	public static EventDialogConfig Text() =>
+		new()
+		{
+			CustomTabTitle = "Persistent Text",
+			ForbiddenDefaultEventName = "New Text Event",
+			ThreatCallout = EventSectionVis.Visible,
+			EventNameGroup = EventSectionVis.Visible,
+			Rewards = EventSectionVis.Visible,
+			Token = EventSectionVis.Visible,
+			Triggers = EventSectionVis.Visible,
+			EventText = EventSectionVis.Visible,
+			FlavorText = EventSectionVis.Visible,
+			ShowCustomTab = true
+		};
+
+	public static EventDialogConfig Branch() =>
+		new()
+		{
+			CustomTabTitle = "Story Branch",
+			ForbiddenDefaultEventName = "New Branch Event",
+			ThreatCallout = EventSectionVis.Visible,
+			EventNameGroup = EventSectionVis.Visible,
+			Rewards = EventSectionVis.Visible,
+			Token = EventSectionVis.Visible,
+			Triggers = EventSectionVis.Visible,
+			EventText = EventSectionVis.Visible,
+			FlavorText = EventSectionVis.Visible,
+			EventBodyText =
+				"Leave the Event Text blank to make this Event activate silently (default) without showing any text when it activates."
+		};
+
 	public static EventDialogConfig Decision() =>
 		new()
 		{

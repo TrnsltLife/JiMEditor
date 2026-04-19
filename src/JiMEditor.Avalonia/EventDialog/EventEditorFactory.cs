@@ -120,6 +120,26 @@ public static class EventEditorFactory
 				t.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 				return w.Accepted;
 			}
+			case TextInteraction tx:
+			{
+				var originalValues = tx.CaptureStartingValues();
+				var originalPrefix = tx.TranslationKeyPrefix();
+				var originalKeyName = tx.TranslationKeyName();
+				var w = new TextInteractionWindow( scenario, tx, showCancelButton: false );
+				await w.ShowDialog( owner );
+				tx.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				return w.Accepted;
+			}
+			case BranchInteraction br:
+			{
+				var originalValues = br.CaptureStartingValues();
+				var originalPrefix = br.TranslationKeyPrefix();
+				var originalKeyName = br.TranslationKeyName();
+				var w = new BranchInteractionWindow( scenario, br, showCancelButton: false );
+				await w.ShowDialog( owner );
+				br.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				return w.Accepted;
+			}
 			default:
 				MessageBox.Show(
 					"This event type does not have an Avalonia editor yet.",
@@ -247,6 +267,30 @@ public static class EventEditorFactory
 		var originalPrefix = created.TranslationKeyPrefix();
 		var originalKeyName = created.TranslationKeyName();
 		var w = new ThreatInteractionWindow( scenario, created, showCancelButton: true );
+		await w.ShowDialog( owner );
+		created.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+		return ( w.Accepted, created );
+	}
+
+	public static async Task<(bool accepted, TextInteraction created)> TryCreateTextInteractionAsync( Window owner, Scenario scenario )
+	{
+		var created = new TextInteraction( "New Text Event" );
+		var originalValues = created.CaptureStartingValues();
+		var originalPrefix = created.TranslationKeyPrefix();
+		var originalKeyName = created.TranslationKeyName();
+		var w = new TextInteractionWindow( scenario, created, showCancelButton: true );
+		await w.ShowDialog( owner );
+		created.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+		return ( w.Accepted, created );
+	}
+
+	public static async Task<(bool accepted, BranchInteraction created)> TryCreateBranchInteractionAsync( Window owner, Scenario scenario )
+	{
+		var created = new BranchInteraction( "New Branch Event" );
+		var originalValues = created.CaptureStartingValues();
+		var originalPrefix = created.TranslationKeyPrefix();
+		var originalKeyName = created.TranslationKeyName();
+		var w = new BranchInteractionWindow( scenario, created, showCancelButton: true );
 		await w.ShowDialog( owner );
 		created.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 		return ( w.Accepted, created );

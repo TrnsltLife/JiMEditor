@@ -21,7 +21,7 @@ public partial class EventTokenSection : UserControl
 	static readonly TokenType[] s_selectableTokenTypes =
 	{
 		TokenType.Search, TokenType.Person, TokenType.Threat, TokenType.Darkness,
-		TokenType.DifficultGround, TokenType.Fortified, TokenType.Terrain, TokenType.None
+		TokenType.DifficultGround, TokenType.Fortified, TokenType.Terrain
 	};
 
 	public EventTokenSection()
@@ -58,6 +58,8 @@ public partial class EventTokenSection : UserControl
 	void OnInteractionPropertyChanged( object? sender, PropertyChangedEventArgs e )
 	{
 		if ( !string.IsNullOrEmpty( e.PropertyName ) && e.PropertyName != nameof( PersistentInteractionBase.isPersistent ) )
+			return;
+		if ( _interaction is TextInteraction )
 			return;
 		if ( _interaction is not PersistentInteractionBase p )
 			return;
@@ -118,11 +120,14 @@ public partial class EventTokenSection : UserControl
 			IsTokenInteractionCheckBox.IsChecked = _interaction.isTokenInteraction;
 			TokenInteractionTextBox.Text = _interaction.tokenInteractionText ?? "";
 			PopulateTokenTypeCombo();
-			TokenTypeCombo.SelectedItem = _interaction.tokenType;
 			PersonTypeCombo.SelectedItem = _interaction.personType == PersonType.None ? PersonType.Human : _interaction.personType;
 			TerrainTypeCombo.SelectedItem = _interaction.terrainType == TerrainType.None ? TerrainType.Boulder : _interaction.terrainType;
 			UpdateDetailVisibility();
-			if ( _interaction is PersistentInteractionBase p )
+			if ( _interaction is TextInteraction )
+			{
+				TokenPersistentRow.IsVisible = false;
+			}
+			else if ( _interaction is PersistentInteractionBase p )
 			{
 				TokenPersistentRow.IsVisible = true;
 				TokenPersistentCheckBox.IsChecked = p.isPersistent;
@@ -159,7 +164,7 @@ public partial class EventTokenSection : UserControl
 		if ( TerrainTypeRow.IsVisible && TerrainTypeCombo.SelectedItem is TerrainType tr )
 			_interaction.terrainType = tr;
 
-		if ( _interaction is PersistentInteractionBase p2 )
+		if ( _interaction is PersistentInteractionBase p2 && _interaction is not TextInteraction )
 			p2.isPersistent = TokenPersistentCheckBox.IsChecked == true;
 	}
 
@@ -191,7 +196,7 @@ public partial class EventTokenSection : UserControl
 
 	void TokenPersistentCheckBox_OnIsCheckedChanged( object? sender, RoutedEventArgs e )
 	{
-		if ( _suppress )
+		if ( _suppress || _interaction is TextInteraction )
 			return;
 		if ( _interaction is PersistentInteractionBase p )
 			p.isPersistent = TokenPersistentCheckBox.IsChecked == true;
@@ -214,6 +219,8 @@ public partial class EventTokenSection : UserControl
 
 	async void EditPersistentFromToken_OnClick( object? sender, RoutedEventArgs e )
 	{
+		if ( _interaction is TextInteraction )
+			return;
 		if ( _interaction is not PersistentInteractionBase p )
 			return;
 		var owner = TopLevel.GetTopLevel( this ) as Window;

@@ -1,0 +1,172 @@
+<!-- Ported from: JiMEditor/Views/Interactions/BranchInteractionWindow.xaml — Story Branch tab (2026-04-18). -->
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="JiMEditor.Avalonia.Views.Events.EventDialogs.BranchEventCustomTab"
+             x:CompileBindings="False">
+	<ScrollViewer Margin="0,5,0,0"
+	              HorizontalScrollBarVisibility="Disabled"
+	              VerticalScrollBarVisibility="Auto">
+		<StackPanel Spacing="10">
+			<Border Classes="callout">
+				<TextBlock Classes="subText" TextWrapping="Wrap"
+				           Text="A Story Branch is a special kind of Event that tests whether a specified Trigger has been set, then fires additional Triggers or Events based on the result. By default, it activates silently without showing its Event Text."/>
+			</Border>
+
+			<Border Classes="callout">
+				<StackPanel Orientation="Horizontal" Spacing="10">
+					<TextBlock Classes="heading"
+					           Text="If this Trigger has been set..."
+					           VerticalAlignment="Center"/>
+					<ComboBox x:Name="TriggerTestCombo"
+					          MinWidth="200"
+					          VerticalAlignment="Center"
+					          SelectionChanged="TriggerTestCombo_OnSelectionChanged">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding dataName}" Foreground="White"/>
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+					<Button x:Name="AddTriggerTestButton"
+					        Background="#3CB371"
+					        Width="32"
+					        Height="32"
+					        Padding="4"
+					        VerticalAlignment="Center"
+					        Click="AddTriggerTestButton_OnClick">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+					</Button>
+				</StackPanel>
+			</Border>
+
+			<StackPanel Orientation="Horizontal" Spacing="10">
+				<RadioButton x:Name="EventBranchRadio"
+				             GroupName="BranchMode"
+				             VerticalAlignment="Top"
+				             Margin="0,4,0,0"
+				             IsCheckedChanged="BranchModeRadio_IsCheckedChanged"/>
+				<Border x:Name="EventModeBox"
+				        Classes="callout"
+				        HorizontalAlignment="Stretch"
+				        MinWidth="400">
+					<StackPanel Spacing="10">
+						<TextBlock Classes="heading" Text="...Activate One Of These Events:"/>
+						<Grid ColumnDefinitions="*,*" RowDefinitions="Auto">
+							<Border Grid.Row="0" Grid.Column="0" Margin="0,0,6,0" BorderBrush="#555" BorderThickness="1" CornerRadius="2" Padding="8">
+								<StackPanel Spacing="8">
+									<TextBlock Text="If It's Set (True)..." Classes="heading" FontWeight="Normal"/>
+									<StackPanel Orientation="Horizontal" Spacing="8">
+										<ComboBox x:Name="EventTrueCombo"
+										          HorizontalAlignment="Stretch"
+										          MinWidth="200"
+										          FontSize="12"/>
+										<Button x:Name="AddEventTrueButton"
+										        Background="#3CB371"
+										        Width="32"
+										        Height="32"
+										        Padding="4"
+										        Click="AddEventTrueButton_OnClick">
+											<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+										</Button>
+									</StackPanel>
+								</StackPanel>
+							</Border>
+							<Border Grid.Row="0" Grid.Column="1" Margin="6,0,0,0" BorderBrush="#555" BorderThickness="1" CornerRadius="2" Padding="8">
+								<StackPanel Spacing="8">
+									<TextBlock Text="If It's Not Set (False)..." Classes="heading" FontWeight="Normal"/>
+									<StackPanel Orientation="Horizontal" Spacing="8">
+										<ComboBox x:Name="EventFalseCombo"
+										          HorizontalAlignment="Stretch"
+										          MinWidth="200"
+										          FontSize="12"/>
+										<Button x:Name="AddEventFalseButton"
+										        Background="#3CB371"
+										        Width="32"
+										        Height="32"
+										        Padding="4"
+										        Click="AddEventFalseButton_OnClick">
+											<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+										</Button>
+									</StackPanel>
+								</StackPanel>
+							</Border>
+						</Grid>
+					</StackPanel>
+				</Border>
+			</StackPanel>
+
+			<TextBlock Classes="heading"
+			           Text="-OR-"
+			           HorizontalAlignment="Center"
+			           Margin="0,4"/>
+
+			<StackPanel Orientation="Horizontal" Spacing="10">
+				<RadioButton x:Name="TriggerBranchRadio"
+				             GroupName="BranchMode"
+				             VerticalAlignment="Top"
+				             Margin="0,4,0,0"
+				             IsCheckedChanged="BranchModeRadio_IsCheckedChanged"/>
+				<Border x:Name="TriggerModeBox"
+				        Classes="callout"
+				        HorizontalAlignment="Stretch"
+				        MinWidth="400">
+					<StackPanel Spacing="10">
+						<TextBlock Classes="heading" Text="...Fire One Of These Triggers:"/>
+						<Grid ColumnDefinitions="*,*" RowDefinitions="Auto">
+							<Border Grid.Row="0" Grid.Column="0" Margin="0,0,6,0" BorderBrush="#555" BorderThickness="1" CornerRadius="2" Padding="8">
+								<StackPanel Spacing="8">
+									<TextBlock Text="If It's Set (True)..." Classes="heading" FontWeight="Normal"/>
+									<StackPanel Orientation="Horizontal" Spacing="8">
+										<ComboBox x:Name="TriggerTrueCombo"
+										          HorizontalAlignment="Stretch"
+										          MinWidth="200"
+										          FontSize="12">
+											<ComboBox.ItemTemplate>
+												<DataTemplate>
+													<TextBlock Text="{Binding dataName}" Foreground="White"/>
+												</DataTemplate>
+											</ComboBox.ItemTemplate>
+										</ComboBox>
+										<Button x:Name="AddTriggerTrueButton"
+										        Background="#3CB371"
+										        Width="32"
+										        Height="32"
+										        Padding="4"
+										        Click="AddTriggerTrueButton_OnClick">
+											<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+										</Button>
+									</StackPanel>
+								</StackPanel>
+							</Border>
+							<Border Grid.Row="0" Grid.Column="1" Margin="6,0,0,0" BorderBrush="#555" BorderThickness="1" CornerRadius="2" Padding="8">
+								<StackPanel Spacing="8">
+									<TextBlock Text="If It's Not Set (False)..." Classes="heading" FontWeight="Normal"/>
+									<StackPanel Orientation="Horizontal" Spacing="8">
+										<ComboBox x:Name="TriggerFalseCombo"
+										          HorizontalAlignment="Stretch"
+										          MinWidth="200"
+										          FontSize="12">
+											<ComboBox.ItemTemplate>
+												<DataTemplate>
+													<TextBlock Text="{Binding dataName}" Foreground="White"/>
+												</DataTemplate>
+											</ComboBox.ItemTemplate>
+										</ComboBox>
+										<Button x:Name="AddTriggerFalseButton"
+										        Background="#3CB371"
+										        Width="32"
+										        Height="32"
+										        Padding="4"
+										        Click="AddTriggerFalseButton_OnClick">
+											<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Stretch="Uniform"/>
+										</Button>
+									</StackPanel>
+								</StackPanel>
+							</Border>
+						</Grid>
+					</StackPanel>
+				</Border>
+			</StackPanel>
+		</StackPanel>
+	</ScrollViewer>
+</UserControl>

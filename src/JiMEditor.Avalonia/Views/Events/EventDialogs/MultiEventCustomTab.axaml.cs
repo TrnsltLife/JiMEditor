@@ -182,6 +182,8 @@ public partial class MultiEventCustomTab : UserControl, IEventCustomTab
 
 		var flyout = new MenuFlyout();
 		flyout.Items.Add( CreateEventMenuItem( "Dialog Event", () => EventEditorFactory.TryCreateDialogInteractionAsync( owner, _scenario ) ) );
+		flyout.Items.Add( CreateEventMenuItem( "Text Event", () => EventEditorFactory.TryCreateTextInteractionAsync( owner, _scenario ) ) );
+		flyout.Items.Add( CreateEventMenuItem( "Story Branch", () => EventEditorFactory.TryCreateBranchInteractionAsync( owner, _scenario ) ) );
 		flyout.Items.Add( CreateEventMenuItem( "Reward Event", () => EventEditorFactory.TryCreateRewardInteractionAsync( owner, _scenario ) ) );
 		flyout.Items.Add( CreateEventMenuItem( "Persistent Event", () => EventEditorFactory.TryCreatePersistentInteractionAsync( owner, _scenario ) ) );
 		flyout.Items.Add( CreateEventMenuItem( "Conditional Event", () => EventEditorFactory.TryCreateConditionalInteractionAsync( owner, _scenario ) ) );

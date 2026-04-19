@@ -582,6 +582,10 @@ public partial class MainWindow : Window
 		var flyout = new MenuFlyout();
 		var dialogItem = new MenuItem { Header = "Dialog Event" };
 		dialogItem.Click += async (_, _) => await AddDialogInteractionAsync();
+		var textItem = new MenuItem { Header = "Text Event" };
+		textItem.Click += async (_, _) => await AddTextInteractionAsync();
+		var branchItem = new MenuItem { Header = "Story Branch" };
+		branchItem.Click += async (_, _) => await AddBranchInteractionAsync();
 		var rewardItem = new MenuItem { Header = "Reward Event" };
 		rewardItem.Click += async (_, _) => await AddRewardInteractionAsync();
 		var persistentItem = new MenuItem { Header = "Persistent Event" };
@@ -601,6 +605,8 @@ public partial class MainWindow : Window
 		var enemyItem = new MenuItem { Header = "Enemy Event" };
 		enemyItem.Click += async (_, _) => await AddThreatInteractionAsync();
 		flyout.Items.Add( dialogItem );
+		flyout.Items.Add( textItem );
+		flyout.Items.Add( branchItem );
 		flyout.Items.Add( rewardItem );
 		flyout.Items.Add( persistentItem );
 		flyout.Items.Add( conditionalItem );
@@ -616,6 +622,20 @@ public partial class MainWindow : Window
 	async Task AddDialogInteractionAsync()
 	{
 		var (accepted, created) = await EventEditorFactory.TryCreateDialogInteractionAsync( this, scenario );
+		if ( accepted )
+			scenario.AddInteraction( created );
+	}
+
+	async Task AddTextInteractionAsync()
+	{
+		var (accepted, created) = await EventEditorFactory.TryCreateTextInteractionAsync( this, scenario );
+		if ( accepted )
+			scenario.AddInteraction( created );
+	}
+
+	async Task AddBranchInteractionAsync()
+	{
+		var (accepted, created) = await EventEditorFactory.TryCreateBranchInteractionAsync( this, scenario );
 		if ( accepted )
 			scenario.AddInteraction( created );
 	}
@@ -835,6 +855,32 @@ public partial class MainWindow : Window
 					scenario.AddInteraction( clone );
 				break;
 			}
+			case TextInteraction tx:
+			{
+				var clone = tx.Clone();
+				var originalValues = clone.CaptureStartingValues();
+				var originalPrefix = clone.TranslationKeyPrefix();
+				var originalKeyName = clone.TranslationKeyName();
+				var w = new TextInteractionWindow( scenario, clone, showCancelButton: true );
+				await w.ShowDialog( this );
+				clone.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( clone );
+				break;
+			}
+			case BranchInteraction br:
+			{
+				var clone = br.Clone();
+				var originalValues = clone.CaptureStartingValues();
+				var originalPrefix = clone.TranslationKeyPrefix();
+				var originalKeyName = clone.TranslationKeyName();
+				var w = new BranchInteractionWindow( scenario, clone, showCancelButton: true );
+				await w.ShowDialog( this );
+				clone.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( clone );
+				break;
+			}
 			default:
 				MessageBox.Show(
 					"Duplicating this event type is not implemented yet in Avalonia.",
@@ -888,6 +934,30 @@ public partial class MainWindow : Window
 				d.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 				if ( w.Accepted )
 					scenario.AddInteraction( d );
+				break;
+			}
+			case TextInteraction tx:
+			{
+				var originalValues = tx.CaptureStartingValues();
+				var originalPrefix = tx.TranslationKeyPrefix();
+				var originalKeyName = tx.TranslationKeyName();
+				var w = new TextInteractionWindow( scenario, tx, showCancelButton: true );
+				await w.ShowDialog( this );
+				tx.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( tx );
+				break;
+			}
+			case BranchInteraction br:
+			{
+				var originalValues = br.CaptureStartingValues();
+				var originalPrefix = br.TranslationKeyPrefix();
+				var originalKeyName = br.TranslationKeyName();
+				var w = new BranchInteractionWindow( scenario, br, showCancelButton: true );
+				await w.ShowDialog( this );
+				br.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( br );
 				break;
 			}
 			case RewardInteraction r:
