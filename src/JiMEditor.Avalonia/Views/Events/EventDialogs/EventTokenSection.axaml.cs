@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using JiMEditor.Avalonia.EventDialog;
 using JiME;
 
 namespace JiMEditor.Avalonia.Views.Events.EventDialogs;
@@ -18,17 +19,11 @@ public partial class EventTokenSection : UserControl
 	InteractionBase? _interaction;
 	PropertyChangedEventHandler? _interactionPropertyHandler;
 
-	static readonly TokenType[] s_selectableTokenTypes =
-	{
-		TokenType.Search, TokenType.Person, TokenType.Threat, TokenType.Darkness,
-		TokenType.DifficultGround, TokenType.Fortified, TokenType.Terrain
-	};
-
 	public EventTokenSection()
 	{
 		InitializeComponent();
 		PersonTypeCombo.ItemsSource = new[] { PersonType.Human, PersonType.Elf, PersonType.Hobbit, PersonType.Dwarf };
-		TerrainTypeCombo.ItemsSource = Enum.GetValues<TerrainType>().Where( t => t != TerrainType.None ).ToArray();
+		TerrainTypeCombo.ItemsSource = Array.Empty<TerrainType>();
 	}
 
 	public void Attach( Scenario scenario, InteractionBase interaction, bool isThreatTriggered )
@@ -77,32 +72,61 @@ public partial class EventTokenSection : UserControl
 
 	void PopulateTokenTypeCombo()
 	{
-		var list = new List<TokenType>();
-		foreach ( var tt in s_selectableTokenTypes )
-		{
-			if ( tt is TokenType.DifficultGround or TokenType.Fortified )
-			{
-				var enabled = _scenario?.collectionObserver.Any( c =>
-					( tt == TokenType.DifficultGround && c.DifficultGround ) ||
-					( tt == TokenType.Fortified && c.Fortified ) ) == true;
-				if ( !enabled )
-					continue;
-			}
-
-			if ( tt == TokenType.Terrain && _scenario is { scenarioTypeJourney: true } )
-				continue;
-
-			list.Add( tt );
-		}
+		if ( _scenario == null || _interaction == null )
+			return;
+		ScenarioCollectionAvailability.CoerceInteractionTokenForScenario( _interaction, _scenario, _scenario.scenarioTypeJourney );
+		var list = ScenarioCollectionAvailability.GetSelectableTokenTypes( _scenario, _scenario.scenarioTypeJourney ).ToList();
 
 		_suppress = true;
 		try
 		{
 			TokenTypeCombo.ItemsSource = list;
-			if ( _interaction != null && list.Contains( _interaction.tokenType ) )
+			if ( list.Contains( _interaction.tokenType ) )
 				TokenTypeCombo.SelectedItem = _interaction.tokenType;
 			else if ( list.Count > 0 )
 				TokenTypeCombo.SelectedItem = list.Contains( TokenType.Search ) ? TokenType.Search : list[0];
+			SyncTerrainComboForScenario();
+		}
+		finally
+		{
+			_suppress = false;
+		}
+	}
+
+	void SyncTerrainComboForScenario()
+	{
+		if ( _scenario == null || _interaction == null )
+			return;
+		var terrains = ScenarioCollectionAvailability.GetSelectableTerrainTypes( _scenario ).ToList();
+		if ( terrains.Count == 0 )
+			terrains.Add( TerrainType.Boulder );
+		_suppress = true;
+		try
+		{
+			TerrainTypeCombo.ItemsSource = terrains;
+			if ( !terrains.Contains( _interaction.terrainType ) )
+				_interaction.terrainType = terrains[0];
+			TerrainTypeCombo.SelectedItem = _interaction.terrainType;
+		}
+		finally
+		{
+			_suppress = false;
+		}
+	}
+
+	/// <summary>Re-applies scenario collection rules to token type / terrain lists (called from <see cref="BaseEventDialogWindow"/>).</summary>
+	public void ApplyScenarioCollectionAvailability( Scenario scenario )
+	{
+		_scenario = scenario;
+		if ( _interaction == null )
+			return;
+		PopulateTokenTypeCombo();
+		_suppress = true;
+		try
+		{
+			PersonTypeCombo.SelectedItem = _interaction.personType == PersonType.None ? PersonType.Human : _interaction.personType;
+			SyncTerrainComboForScenario();
+			UpdateDetailVisibility();
 		}
 		finally
 		{
@@ -121,7 +145,7 @@ public partial class EventTokenSection : UserControl
 			TokenInteractionTextBox.Text = _interaction.tokenInteractionText ?? "";
 			PopulateTokenTypeCombo();
 			PersonTypeCombo.SelectedItem = _interaction.personType == PersonType.None ? PersonType.Human : _interaction.personType;
-			TerrainTypeCombo.SelectedItem = _interaction.terrainType == TerrainType.None ? TerrainType.Boulder : _interaction.terrainType;
+			SyncTerrainComboForScenario();
 			UpdateDetailVisibility();
 			if ( _interaction is TextInteraction )
 			{
@@ -207,6 +231,8 @@ public partial class EventTokenSection : UserControl
 	{
 		if ( _suppress )
 			return;
+		if ( TokenTypeCombo.SelectedItem is TokenType.Terrain )
+			SyncTerrainComboForScenario();
 		UpdateDetailVisibility();
 	}
 

@@ -61,6 +61,9 @@
 			<Setter Property="Margin" Value="2,0,0,0"/>
 			<Setter Property="FontFamily" Value="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
 		</Style>
+		<Style Selector="RadioButton.enemyTypeOption:disabled">
+			<Setter Property="FontStyle" Value="Italic"/>
+		</Style>
 	</Window.Styles>
 	<Grid RowDefinitions="*,Auto">
 		<ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
@@ -115,7 +118,7 @@
 								<RowDefinition Height="Auto"/>
 							</sg:SpacedGrid.RowDefinitions>
 							<Rectangle Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="7" Fill="DarkGreen" />
-							<StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+							<StackPanel x:Name="CoreSetEnemyTypeHeaderPanel" Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
 								<TextBlock Classes="enemyTypeCollectionIcon" Text="r" Foreground="White"/>
 								<TextBlock Classes="enemyTypeHeader" Text="Core Set:" FontWeight="Bold" Foreground="White" Margin="0,1,4,0"/>
 							</StackPanel>
@@ -128,7 +131,7 @@
 							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="1" Grid.Column="4" x:Name="WightRadio" Content=" Wight x3" GroupName="MonsterType" Tag="6"/>
 
 							<Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="7" Fill="SaddleBrown" />
-							<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+							<StackPanel x:Name="VillainsEnemyTypeHeaderPanel" Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
 								<TextBlock Classes="enemyTypeCollectionIcon" Text="v" Foreground="White"/>
 								<TextBlock Classes="enemyTypeHeader" Text="Villains of Eriajar:" FontWeight="Bold" Foreground="White" Margin="0,1,4,0"/>
 							</StackPanel>
@@ -137,7 +140,7 @@
 							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="2" Grid.Column="4" x:Name="GargletargRadio" Content=" Gargletarg" GroupName="MonsterType" Tag="8"/>
 
 							<Rectangle Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="7" Fill="Black" />
-							<StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+							<StackPanel x:Name="ShadedPathsEnemyTypeHeaderPanel" Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
 								<TextBlock Classes="enemyTypeCollectionIcon" Text="p" Foreground="White"/>
 								<TextBlock Classes="enemyTypeHeader" Text="Shaded Paths:" FontWeight="Bold" Foreground="White" Margin="0,1,4,0"/>
 							</StackPanel>
@@ -151,7 +154,7 @@
 							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="4" Grid.Column="5" x:Name="SpawnOfUglygiantRadio" Content=" Spawn of Uglygiant" GroupName="MonsterType" Tag="17"/>
 
 							<Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="7" Fill="Purple" />
-							<StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
+							<StackPanel x:Name="DenizensEnemyTypeHeaderPanel" Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
 								<TextBlock Classes="enemyTypeCollectionIcon" Text="d" Foreground="White"/>
 								<TextBlock Classes="enemyTypeHeader" Text="Denizens in Darkness:" FontWeight="Bold" Foreground="White" Margin="0,1,4,0"/>
 							</StackPanel>
@@ -160,7 +163,7 @@
 							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="2" HorizontalAlignment="Left" x:Name="SupplicantRadio" Content=" Supplicant of More-Goth" GroupName="MonsterType" Tag="18"/>
 
 							<Rectangle Grid.Row="6" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="7" Fill="DarkRed" />
-							<StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
+							<StackPanel x:Name="UnfurlingWarEnemyTypeHeaderPanel" Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
 								<TextBlock Classes="enemyTypeCollectionIcon" Text="w" Foreground="White"/>
 								<TextBlock Classes="enemyTypeHeader" Text="Unfurling War:" FontWeight="Bold" Foreground="White" Margin="0,1,4,0"/>
 							</StackPanel>
@@ -172,7 +175,7 @@
 							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="7" Grid.Column="3" x:Name="VargRiderRadio" Content=" Varg Rider x3" GroupName="MonsterType" Tag="22"/>
 
 							<Rectangle Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="7" Fill="YellowGreen" />
-							<StackPanel Grid.Row="8" Grid.Column="1" Orientation="Horizontal" Margin="0,1,4,0">
+							<StackPanel x:Name="ScorchersEnemyTypeHeaderPanel" Grid.Row="8" Grid.Column="1" Orientation="Horizontal" Margin="0,1,4,0">
 								<TextBlock Classes="enemyTypeCollectionIcon" Text="c" Foreground="White"/>
 								<TextBlock Classes="enemyTypeHeader" Text="Scorchers" FontWeight="Bold" Foreground="White"/>
 								<TextBlock Text=" of the " FontWeight="Bold" Foreground="White" FontSize="9" VerticalAlignment="Top"/>

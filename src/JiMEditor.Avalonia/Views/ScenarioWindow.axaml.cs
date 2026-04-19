@@ -18,6 +18,7 @@ public partial class ScenarioWindow : Window
 	bool _suppressObjectiveCombo;
 	bool _suppressLastStandCombo;
 	bool _suppressScenarioTypeRadio;
+	bool _suppressCollectionCheck;
 
 	public Scenario scenario { get; }
 	public bool Accepted { get; private set; }
@@ -76,13 +77,21 @@ public partial class ScenarioWindow : Window
 			scenario.RefilterGlobalTilePool();
 		}
 
-		CoreSetCheckBox.IsChecked = true;
-		VillainsOfEriadorCheckBox.IsChecked = scenario.collectionObserver.Contains( Collection.VILLAINS_OF_ERIAJAR );
-		ShadedPathsCheckBox.IsChecked = scenario.collectionObserver.Contains( Collection.SHADED_PATHS );
-		DenizensInDarknessCheckBox.IsChecked = scenario.collectionObserver.Contains( Collection.DENIZENS_IN_DARKNESS );
-		UnfurlingWarCheckBox.IsChecked = scenario.collectionObserver.Contains( Collection.UNFURLING_WAR );
-		ScorchersOfTheWildsCheckBox.IsChecked = scenario.collectionObserver.Contains( Collection.SCORCHERS_OF_THE_WILDS );
-		CustomCheckBox.IsChecked = scenario.collectionObserver.Contains( Collection.CUSTOM );
+		_suppressCollectionCheck = true;
+		try
+		{
+			CoreSetCheckBox.IsChecked = true;
+			VillainsOfEriadorCheckBox.IsChecked = scenario.collectionObserver.Contains( Collection.VILLAINS_OF_ERIAJAR );
+			ShadedPathsCheckBox.IsChecked = scenario.collectionObserver.Contains( Collection.SHADED_PATHS );
+			DenizensInDarknessCheckBox.IsChecked = scenario.collectionObserver.Contains( Collection.DENIZENS_IN_DARKNESS );
+			UnfurlingWarCheckBox.IsChecked = scenario.collectionObserver.Contains( Collection.UNFURLING_WAR );
+			ScorchersOfTheWildsCheckBox.IsChecked = scenario.collectionObserver.Contains( Collection.SCORCHERS_OF_THE_WILDS );
+			CustomCheckBox.IsChecked = scenario.collectionObserver.Contains( Collection.CUSTOM );
+		}
+		finally
+		{
+			_suppressCollectionCheck = false;
+		}
 	}
 
 	void OkButton_Click( object? sender, RoutedEventArgs e )
@@ -147,16 +156,44 @@ public partial class ScenarioWindow : Window
 
 	void CollectionCheckBox_Changed( object? sender, RoutedEventArgs e )
 	{
+		if ( _suppressCollectionCheck )
+			return;
 		if ( sender is not CheckBox cb || cb.Content is not string name )
 			return;
 		var collection = Collection.FromName( name );
-		bool check = cb.IsChecked == true;
+		var nowChecked = cb.IsChecked == true;
 
-		if ( !check )
-			scenario.collectionObserver.Remove( collection );
-		else if ( !scenario.collectionObserver.Contains( collection ) )
-			scenario.collectionObserver.Add( collection );
+		if ( nowChecked )
+		{
+			if ( !scenario.collectionObserver.Contains( collection ) )
+				scenario.collectionObserver.Add( collection );
+			scenario.RefilterGlobalTilePool();
+			return;
+		}
 
+		// Unchecking: confirm before removing from the scenario.
+		if ( !scenario.collectionObserver.Contains( collection ) )
+			return;
+
+		const string body =
+			"ALL THIS COLLECTION'S TILES, TOKENS, ENEMIES, ITEMS, AND TITLES WILL BE REMOVED FROM THE SCENARIO IF YOU REMOVE THIS COLLECTION.\n\n"
+			+ "Are you sure you want to remove this Collection from the scenario?";
+		var ret = MessageBox.Show( body, "Remove Collection?", MessageBoxButton.YesNo, MessageBoxImage.Question );
+		if ( ret != MessageBoxResult.Yes )
+		{
+			_suppressCollectionCheck = true;
+			try
+			{
+				cb.IsChecked = true;
+			}
+			finally
+			{
+				_suppressCollectionCheck = false;
+			}
+			return;
+		}
+
+		scenario.collectionObserver.Remove( collection );
 		scenario.RefilterGlobalTilePool();
 	}
 

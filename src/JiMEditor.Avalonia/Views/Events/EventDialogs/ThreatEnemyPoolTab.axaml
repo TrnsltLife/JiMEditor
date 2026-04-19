@@ -63,6 +63,12 @@
 		<Style Selector="CheckBox.enemyPoolCollectionHeader">
 			<Setter Property="FontWeight" Value="Bold"/>
 		</Style>
+		<Style Selector="CheckBox.enemyPoolOption:disabled">
+			<Setter Property="FontStyle" Value="Italic"/>
+		</Style>
+		<Style Selector="CheckBox.enemyPoolCollectionHeader:disabled TextBlock">
+			<Setter Property="FontStyle" Value="Italic"/>
+		</Style>
 	</UserControl.Styles>
 	<ScrollViewer VerticalScrollBarVisibility="Auto">
 		<StackPanel Margin="8" Spacing="10">
@@ -118,7 +124,7 @@
 						</sg:SpacedGrid.RowDefinitions>
 
 						<Rectangle Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="7" Fill="DarkGreen"/>
-						<StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+						<StackPanel x:Name="CoreSetPoolHeaderPanel" Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
 							<TextBlock Classes="enemyTypeCollectionIcon" Text="r" Foreground="White"/>
 							<CheckBox x:Name="CoreSetCheckBox" Classes="enemyPoolOption enemyPoolCollectionHeader" Content="Core Set:" IsCheckedChanged="CollectionCheckBox_OnChanged"/>
 						</StackPanel>
@@ -131,7 +137,7 @@
 						<CheckBox x:Name="WightCheckBox" Grid.Row="1" Grid.Column="4" Classes="enemyPoolOption" Content="Wight x3 (17)"/>
 
 						<Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="7" Fill="SaddleBrown"/>
-						<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+						<StackPanel x:Name="VillainsPoolHeaderPanel" Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
 							<TextBlock Classes="enemyTypeCollectionIcon" Text="v" Foreground="White"/>
 							<CheckBox x:Name="VillainsCheckBox" Classes="enemyPoolOption enemyPoolCollectionHeader" Content="Villains of Eriajar:" IsCheckedChanged="CollectionCheckBox_OnChanged"/>
 						</StackPanel>
@@ -140,7 +146,7 @@
 						<CheckBox x:Name="GargletargCheckBox" Grid.Row="2" Grid.Column="4" Classes="enemyPoolOption" Content="Gargletarg (X)"/>
 
 						<Rectangle Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="7" Fill="Black"/>
-						<StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+						<StackPanel x:Name="ShadedPathsPoolHeaderPanel" Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
 							<TextBlock Classes="enemyTypeCollectionIcon" Text="p" Foreground="White"/>
 							<CheckBox x:Name="ShadedPathsCheckBox" Classes="enemyPoolOption enemyPoolCollectionHeader" Content="Shaded Paths:" IsCheckedChanged="CollectionCheckBox_OnChanged"/>
 						</StackPanel>
@@ -154,7 +160,7 @@
 						<CheckBox x:Name="SpawnOfUglygiantCheckBox" Grid.Row="4" Grid.Column="5" Classes="enemyPoolOption" Content="Spawn of Uglygiant (X)"/>
 
 						<Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="7" Fill="Purple"/>
-						<StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
+						<StackPanel x:Name="DenizensPoolHeaderPanel" Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
 							<TextBlock Classes="enemyTypeCollectionIcon" Text="d" Foreground="White"/>
 							<CheckBox x:Name="DenizensCheckBox" Classes="enemyPoolOption enemyPoolCollectionHeader" Content="Denizens in Darkness:" IsCheckedChanged="CollectionCheckBox_OnChanged"/>
 						</StackPanel>
@@ -163,7 +169,7 @@
 						<CheckBox x:Name="SupplicantCheckBox" Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="2" Classes="enemyPoolOption" Content="Supplicant of More-Goth (X)"/>
 
 						<Rectangle Grid.Row="6" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="7" Fill="DarkRed"/>
-						<StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
+						<StackPanel x:Name="UnfurlingWarPoolHeaderPanel" Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
 							<TextBlock Classes="enemyTypeCollectionIcon" Text="w" Foreground="White"/>
 							<CheckBox x:Name="UnfurlingWarCheckBox" Classes="enemyPoolOption enemyPoolCollectionHeader" Content="Unfurling War:" IsCheckedChanged="CollectionCheckBox_OnChanged"/>
 						</StackPanel>
@@ -175,7 +181,7 @@
 						<CheckBox x:Name="VargRiderCheckBox" Grid.Row="7" Grid.Column="3" Classes="enemyPoolOption" Content="Varg Rider x3 (14)"/>
 
 						<Rectangle Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="7" Fill="YellowGreen"/>
-						<StackPanel Grid.Row="8" Grid.Column="1" Orientation="Horizontal" Margin="0,1,4,0">
+						<StackPanel x:Name="ScorchersPoolHeaderPanel" Grid.Row="8" Grid.Column="1" Orientation="Horizontal" Margin="0,1,4,0">
 							<TextBlock Classes="enemyTypeCollectionIcon" Text="c" Foreground="White"/>
 							<CheckBox x:Name="ScorchersCheckBox" Classes="enemyPoolOption enemyPoolCollectionHeader" IsCheckedChanged="CollectionCheckBox_OnChanged">
 								<StackPanel Orientation="Horizontal">

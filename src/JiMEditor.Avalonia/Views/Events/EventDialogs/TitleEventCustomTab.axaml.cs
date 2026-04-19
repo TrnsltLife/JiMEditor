@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using JiMEditor.Avalonia.EventDialog;
 using JiME;
 
 namespace JiMEditor.Avalonia.Views.Events.EventDialogs;
@@ -52,6 +53,16 @@ public partial class TitleEventCustomTab : UserControl, IEventCustomTab
 		LoreFallbackTextBox.Text = _titleInteraction.loreFallback.ToString( CultureInfo.InvariantCulture );
 		XpFallbackTextBox.Text = _titleInteraction.xpFallback.ToString( CultureInfo.InvariantCulture );
 		ThreatFallbackTextBox.Text = _titleInteraction.threatFallback.ToString( CultureInfo.InvariantCulture );
+		RefreshSliderBounds();
+	}
+
+	public void ApplyScenarioCollectionAvailability( Scenario scenario )
+	{
+		if ( _titleInteraction == null )
+			return;
+		ScenarioCollectionAvailability.PruneTitleInteraction( _titleInteraction, scenario );
+		_availableTitles = BuildTitleOptions( scenario );
+		TitleSelectCombo.ItemsSource = _availableTitles;
 		RefreshSliderBounds();
 	}
 

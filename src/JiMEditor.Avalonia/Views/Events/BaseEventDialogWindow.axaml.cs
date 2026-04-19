@@ -109,8 +109,20 @@ public partial class BaseEventDialogWindow : Window
 		CustomTabHost.Content = customControl;
 		_customTab?.Hydrate();
 
+		ApplyScenarioCollectionAvailability();
+
 		NameGroupSection.NameTextBox.Focus();
 		NameGroupSection.NameTextBox.SelectAll();
+	}
+
+	/// <summary>
+	/// Applies scenario collection rules to token UI, custom tab content (items/titles), and derived editors.
+	/// Threat enemy pool tab calls <see cref="ThreatEnemyPoolTab.ApplyScenarioCollectionAvailability"/> after hydrate (see <see cref="ThreatInteractionWindow"/>).
+	/// </summary>
+	protected virtual void ApplyScenarioCollectionAvailability()
+	{
+		TokenSection.ApplyScenarioCollectionAvailability( Scenario );
+		_customTab?.ApplyScenarioCollectionAvailability( Scenario );
 	}
 
 	bool IsThreatTriggered() =>

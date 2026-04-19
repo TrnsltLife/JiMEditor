@@ -9,6 +9,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
+using JiMEditor.Avalonia.EventDialog;
 using JiMEditor.Avalonia.Views;
 using JiME;
 
@@ -19,6 +20,7 @@ public partial class ThreatEnemyPoolTab : UserControl
 	Scenario? _scenario;
 	ThreatInteraction? _interaction;
 	bool _suppress;
+	bool _suppressCollectionUi;
 	List<CheckBox> _all = new();
 	List<CheckBox> _core = new();
 	List<CheckBox> _villains = new();
@@ -55,6 +57,16 @@ public partial class ThreatEnemyPoolTab : UserControl
 		SetDefeatedTrigger( _interaction.triggerDefeatedName );
 	}
 
+	internal IReadOnlyList<CheckBox> CoreMonsterCheckBoxes => _core;
+	internal IReadOnlyList<CheckBox> VillainsMonsterCheckBoxes => _villains;
+	internal IReadOnlyList<CheckBox> ShadedMonsterCheckBoxes => _shaded;
+	internal IReadOnlyList<CheckBox> DenizensMonsterCheckBoxes => _denizens;
+	internal IReadOnlyList<CheckBox> UnfurlingMonsterCheckBoxes => _unfurling;
+	internal IReadOnlyList<CheckBox> ScorchersMonsterCheckBoxes => _scorchers;
+
+	internal void BeginSuppressCollectionUi() => _suppressCollectionUi = true;
+	internal void EndSuppressCollectionUi() => _suppressCollectionUi = false;
+
 	public void Commit()
 	{
 		if ( _interaction == null )
@@ -80,6 +92,14 @@ public partial class ThreatEnemyPoolTab : UserControl
 		finally { _suppress = false; }
 	}
 
+	/// <summary>Matches WPF ThreatInteractionWindow: enable only enemies whose collection is selected on the scenario.</summary>
+	public void ApplyScenarioCollectionAvailability()
+	{
+		if ( _scenario == null )
+			return;
+		ScenarioCollectionAvailability.ApplyThreatEnemyPool( _scenario, this );
+	}
+
 	void WireLists()
 	{
 		_core = new() { RuffianCheckBox, GoblinScoutCheckBox, OrcHunterCheckBox, OrcMarauderCheckBox, HungryVargCheckBox, HillTrollCheckBox, WightCheckBox };
@@ -99,6 +119,8 @@ public partial class ThreatEnemyPoolTab : UserControl
 
 	void CollectionCheckBox_OnChanged( object? sender, RoutedEventArgs e )
 	{
+		if ( _suppressCollectionUi )
+			return;
 		if ( sender is not CheckBox cb )
 			return;
 		List<CheckBox>? target = cb == CoreSetCheckBox ? _core

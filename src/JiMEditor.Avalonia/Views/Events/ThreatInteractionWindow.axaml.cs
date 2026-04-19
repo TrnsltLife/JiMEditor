@@ -49,6 +49,7 @@ public sealed class ThreatInteractionWindow : BaseEventDialogWindow
 		_poolTab = new ThreatEnemyPoolTab();
 		_poolTab.Attach( Scenario, _threat );
 		_poolTab.Hydrate();
+		_poolTab.ApplyScenarioCollectionAvailability();
 		_poolTab.DefeatedTriggerChanged += OnDefeatedTriggerChangedFromPool;
 		rootTabs.Items.Add( new TabItem
 		{

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using JiMEditor.Avalonia.EventDialog;
 using JiME;
 
 namespace JiMEditor.Avalonia.Views;
@@ -44,7 +45,38 @@ public partial class ScriptedEnemyGroupEditorWindow : Window
 		ModifierCombo.ItemsSource = _scenario.monsterModifierObserver;
 		ModifiersItems.ItemsSource = _monster.modifierList;
 		FillUiFromMonster();
+		ScenarioCollectionAvailability.ApplyScriptedEnemyGroupEditor( _scenario, this );
+		EnsureEnabledMonsterTypeSelected();
 		_isInitializing = false;
+	}
+
+	/// <summary>If the current monster type was cleared because its collection is disabled, select the first enabled type (WPF parity).</summary>
+	void EnsureEnabledMonsterTypeSelected()
+	{
+		var ok = MonsterTypeButtons().FirstOrDefault( rb => rb.IsChecked == true && rb.IsEnabled );
+		if ( ok != null )
+		{
+			_lastSelectedMonsterTypeId = SelectedMonsterTypeId();
+			return;
+		}
+		var prev = _lastSelectedMonsterTypeId;
+		for ( var mid = 0; mid < 30; mid++ )
+		{
+			var rb = FindMonsterTypeRadio( mid );
+			if ( rb is { IsEnabled: true } )
+			{
+				rb.IsChecked = true;
+				SyncStatsFromMonsterType( mid, prev );
+				_lastSelectedMonsterTypeId = mid;
+				return;
+			}
+		}
+	}
+
+	RadioButton? FindMonsterTypeRadio( int monsterTypeId )
+	{
+		var s = monsterTypeId.ToString( CultureInfo.InvariantCulture );
+		return MonsterTypeButtons().FirstOrDefault( rb => string.Equals( rb.Tag?.ToString(), s, StringComparison.Ordinal ) );
 	}
 
 	void FillUiFromMonster()
