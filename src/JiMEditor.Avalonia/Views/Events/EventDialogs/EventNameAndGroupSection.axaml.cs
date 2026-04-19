@@ -1,5 +1,4 @@
 // Ported from: JiMEditor/Views/Interactions/DialogInteractionWindow.xaml — name/group row (2026-04-13).
-using System.Text.RegularExpressions;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using JiME;
@@ -8,8 +7,6 @@ namespace JiMEditor.Avalonia.Views.Events.EventDialogs;
 
 public partial class EventNameAndGroupSection : UserControl
 {
-	static readonly Regex s_groupSuffix = new( @"\sGRP\d+$", RegexOptions.Compiled );
-
 	InteractionBase? _interaction;
 
 	public EventNameAndGroupSection()
@@ -50,10 +47,10 @@ public partial class EventNameAndGroupSection : UserControl
 	void UpdateGroupUi()
 	{
 		var name = _interaction?.dataName ?? "";
-		var matches = s_groupSuffix.Matches( name );
-		if ( matches.Count > 0 )
+		var groupKey = InteractionGroupNaming.TryGetGroupKey( name );
+		if ( groupKey != null )
 		{
-			GroupInfoText.Text = "This Event is in the following group: " + matches[0].Value.Trim();
+			GroupInfoText.Text = "This Event is in the following group: " + groupKey;
 			IsReusableCheckBox.IsVisible = true;
 		}
 		else

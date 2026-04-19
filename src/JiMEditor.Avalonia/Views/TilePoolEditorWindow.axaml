@@ -1,0 +1,205 @@
+<!-- Ported from: JiMEditor/Views/TilePoolEditorWindow.xaml (2026-04-17) — Avalonia; scrollable body. -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:jime="using:JiME"
+        xmlns:conv="using:JiMEditor.Avalonia.Converters"
+        x:Class="JiMEditor.Avalonia.Views.TilePoolEditorWindow"
+        x:CompileBindings="False"
+        Title="Random Tile Editor"
+		Width="500"
+        MinWidth="500"
+		Height="600"
+        MinHeight="560"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource bgColor}">
+
+	<Window.Resources>
+		<conv:SelectedIndexToBoolConverter x:Key="sb"/>
+		<conv:TileCollectionTextConverter x:Key="tileCollection"/>
+	</Window.Resources>
+
+	<Grid RowDefinitions="*,Auto">
+		<ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+			<StackPanel Margin="5" Spacing="8">
+				<Border Classes="callout">
+					<TextBlock Text="Add 1 to 5 Tiles to the Random Tile Pool for this Chapter. These Tiles will be randomly fitted together in the Companion App." Classes="subText" TextWrapping="Wrap"/>
+				</Border>
+
+				<Border Classes="callout">
+					<StackPanel Spacing="10">
+						<Grid MinHeight="200" ColumnDefinitions="*,Auto,*">
+							<Border Grid.Column="0" BorderBrush="#77777d" BorderThickness="1" Padding="4" Margin="0,0,10,10">
+								<StackPanel>
+									<TextBlock Text="Global Tile Pool" Classes="heading" Margin="0,0,0,4"/>
+									<ListBox x:Name="GlobalList"
+									         Background="{StaticResource bgColorLight}"
+									         Foreground="White"
+									         Height="200"
+									         ItemsSource="{Binding scenario.filteredGlobalTilePool}"
+									         DoubleTapped="GlobalList_OnDoubleTapped">
+										<ListBox.ItemTemplate>
+											<DataTemplate>
+												<TextBlock Text="{Binding Converter={StaticResource tileCollection}}"
+												           FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+											</DataTemplate>
+										</ListBox.ItemTemplate>
+									</ListBox>
+								</StackPanel>
+							</Border>
+
+							<StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="8">
+								<Button x:Name="ToRandomButton"
+								        Background="MediumSeaGreen"
+								        Click="ToRandomButton_Click"
+								        IsEnabled="{Binding #GlobalList.SelectedIndex, Converter={StaticResource sb}}">
+									<Image Source="avares://JiMEditor.Avalonia/Assets/arrow.png"/>
+								</Button>
+								<Button x:Name="ToPoolButton"
+								        Background="{StaticResource bgCancelDelete}"
+								        Click="ToPoolButton_Click"
+								        IsEnabled="{Binding #RandomList.SelectedIndex, Converter={StaticResource sb}}">
+									<Image Source="avares://JiMEditor.Avalonia/Assets/arrow.png">
+										<Image.RenderTransform>
+											<ScaleTransform ScaleX="-1"/>
+										</Image.RenderTransform>
+									</Image>
+								</Button>
+							</StackPanel>
+
+							<Border Grid.Column="2" BorderBrush="#77777d" BorderThickness="1" Padding="4" Margin="10,0,0,10">
+								<StackPanel>
+									<TextBlock Text="Random Tile Pool" Classes="heading" Margin="0,0,0,4"/>
+									<ListBox x:Name="RandomList"
+									         Background="{StaticResource bgColorLight}"
+									         Foreground="White"
+									         Height="200"
+									         ItemsSource="{Binding chapter.tileObserver}"
+									         SelectionChanged="RandomList_OnSelectionChanged"
+									         DoubleTapped="RandomList_OnDoubleTapped">
+										<ListBox.ItemTemplate>
+											<DataTemplate>
+												<TextBlock Text="{Binding Converter={StaticResource tileCollection}}"
+												           FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+											</DataTemplate>
+										</ListBox.ItemTemplate>
+									</ListBox>
+								</StackPanel>
+							</Border>
+						</Grid>
+
+						<Grid ColumnDefinitions="*,Auto,*">
+							<Border Grid.Column="0" Classes="callout" Background="{StaticResource bgButtonColor}">
+								<StackPanel Spacing="8">
+									<Button x:Name="TileGalleryButton"
+									        Background="DodgerBlue"
+									        Foreground="White"
+									        Content="Add From Tile Gallery..."
+									        Width="200"
+									        Height="36"
+									        FontSize="14"
+									        FontWeight="Bold"
+									        Click="TileGalleryButton_Click"/>
+									<TextBlock Text="The Global Tile Pool represents all the available tiles in the game. Tiles placed into the Random Tile Pool for this Chapter will be removed from the Global Pool so they can't accidentally be used again in another Chapter."
+									           TextWrapping="Wrap" Classes="subText"/>
+								</StackPanel>
+							</Border>
+
+							<TextBlock Grid.Column="1" Width="64"/>
+
+							<Border Grid.Column="2" Classes="callout" Background="{StaticResource bgButtonColor}">
+								<StackPanel Spacing="6">
+									<StackPanel Orientation="Horizontal" Spacing="10">
+										<TextBlock Text="Selected Tile:" Classes="heading"/>
+										<TextBlock Text="{Binding selected.idNumber, Converter={StaticResource tileCollection}}" Classes="subText" VerticalAlignment="Center"
+										           FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+									</StackPanel>
+
+									<StackPanel Orientation="Horizontal" Spacing="10">
+										<TextBlock Text="Tile Side:" Classes="heading" Margin="0,5,10,0"/>
+										<RadioButton x:Name="SideA" Content="A" Foreground="White" GroupName="poolSide" Click="SideA_Click" IsEnabled="False"/>
+										<RadioButton x:Name="SideB" Content="B" Foreground="White" GroupName="poolSide" Margin="20,0" Click="SideB_Click" IsEnabled="False"/>
+										<RadioButton x:Name="SideRandom" Content="Random" Foreground="White" GroupName="poolSide" Click="SideRandom_Click" IsEnabled="False"/>
+									</StackPanel>
+
+									<TextBlock Text="Fire This Trigger When Explored (Optional):" Classes="heading" Margin="0,15,0,0" TextWrapping="Wrap"/>
+									<Grid ColumnDefinitions="*,Auto" Margin="0,0,0,15">
+										<ComboBox x:Name="ExploreTriggerCombo"
+										          Grid.Column="0"
+										          VerticalAlignment="Center"
+										          SelectionChanged="ExploreTriggerCombo_OnSelectionChanged">
+										<ComboBox.ItemTemplate>
+											<DataTemplate DataType="jime:Trigger">
+												<TextBlock Text="{Binding dataName}"/>
+											</DataTemplate>
+										</ComboBox.ItemTemplate>
+									</ComboBox>
+										<Button Grid.Column="1"
+										        Background="MediumSeaGreen"
+										        Margin="5,0,0,0"
+										        Height="32"
+										        Width="32"
+										        Click="AddExploredTriggerButton_Click">
+											<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png"/>
+										</Button>
+									</Grid>
+
+									<CheckBox x:Name="StartingTileCheck"
+									          Content="Is Starting Tile"
+									          Foreground="White"
+									          IsVisible="{Binding chapter.isStart}"
+									          Checked="StartingTile_OnChecked"
+									          Unchecked="StartingTile_OnUnchecked"/>
+
+									<Grid ColumnDefinitions="Auto,*" Margin="0,5">
+										<Button x:Name="TokenEditButton"
+										        Grid.Column="0"
+										        Background="DodgerBlue"
+										        Margin="0,10,0,10"
+										        Content="Token Editor..."
+										        Foreground="White"
+										        HorizontalAlignment="Left"
+										        VerticalAlignment="Center"
+										        IsEnabled="False"
+										        Height="36"
+										        FontSize="14"
+										        FontWeight="Bold"
+										        Click="TokenEditButton_Click"/>
+										<TextBlock Grid.Column="1" Classes="subText" VerticalAlignment="Center" Margin="10,0,0,0" TextWrapping="Wrap"
+										           Text="If the Tile Side is Random or the Tile Block uses Random Groups, Tokens will be randomly placed for you."/>
+									</Grid>
+
+									<TextBlock Classes="subText" TextWrapping="Wrap" Text="Exploration Text is shown after a player explores this tile. To avoid showing the text, leave it empty."/>
+									<Button x:Name="AddFlavorButton"
+									        Background="DodgerBlue"
+									        Margin="0,5,0,0"
+									        Foreground="White"
+									        Content="Edit Exploration Text..."
+									        IsEnabled="False"
+									        Height="36"
+									        FontSize="14"
+									        FontWeight="Bold"
+									        HorizontalAlignment="Center"
+									        Click="AddFlavorButton_Click"/>
+									<TextBlock x:Name="ExploreStatus"
+									           Text="Exploration Text is Empty"
+									           Classes="subText"
+									           Margin="0,5,0,0"
+									           HorizontalAlignment="Center"
+									           IsVisible="False"/>
+								</StackPanel>
+							</Border>
+						</Grid>
+					</StackPanel>
+				</Border>
+			</StackPanel>
+		</ScrollViewer>
+
+		<Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Silver" HorizontalAlignment="Stretch" Background="#FF46464A">
+			<WrapPanel HorizontalAlignment="Right">
+				<Button x:Name="OkButton" Margin="10" Background="MediumSeaGreen" Click="OkButton_Click" IsDefault="True">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+			</WrapPanel>
+		</Border>
+	</Grid>
+</Window>

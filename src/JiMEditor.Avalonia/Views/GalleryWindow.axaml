@@ -1,0 +1,109 @@
+<!-- Ported from: JiMEditor/Views/GalleryWindow.xaml (2026-04-17) — Avalonia; scrollable body. -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:jime="using:JiME"
+        xmlns:conv="using:JiMEditor.Avalonia.Converters"
+        x:Class="JiMEditor.Avalonia.Views.GalleryWindow"
+        x:CompileBindings="False"
+        Title="Tile Gallery"
+        Width="875"
+        MinWidth="640"
+        MinHeight="560"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource bgColor}">
+
+	<Window.Resources>
+		<conv:BoolToSelectionBrushConverter x:Key="b2c"/>
+		<conv:TileCollectionTextConverter x:Key="tileCollection"/>
+	</Window.Resources>
+
+	<Grid RowDefinitions="*,Auto">
+		<ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+			<Grid Margin="5" ColumnDefinitions="*,Auto">
+				<ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+					<ItemsControl x:Name="items" Padding="5" MinHeight="400" ItemsSource="{Binding tileObserver}">
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<WrapPanel Orientation="Horizontal"/>
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<StackPanel>
+									<Button x:Name="tileButton"
+									        Background="{Binding selected, Converter={StaticResource b2c}}"
+									        Width="300"
+									        Height="300"
+									        Padding="4"
+									        Click="TileButton_Click"
+									        IsEnabled="{Binding enabled}">
+										<Image Source="{Binding source}" Stretch="Uniform"/>
+									</Button>
+									<StackPanel Orientation="Horizontal" Margin="0,5,0,10" HorizontalAlignment="Center" Spacing="6">
+										<TextBlock Text="{Binding id}" Classes="heading"/>
+										<TextBlock Text="{Binding side}" Classes="heading"/>
+										<TextBlock Text="{Binding collectionChar}" Classes="heading"
+										           FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+									</StackPanel>
+								</StackPanel>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</ScrollViewer>
+
+				<Border Grid.Column="1" Width="200" Classes="callout" Margin="10,0,0,0">
+					<StackPanel Spacing="6">
+						<Border Classes="callout" Background="{StaticResource bgColor}">
+							<StackPanel>
+								<TextBlock Classes="heading" Text="Selected Tiles" HorizontalAlignment="Center"/>
+								<TextBlock Classes="subText" Text="{Binding selectedTiles}" HorizontalAlignment="Center" TextWrapping="Wrap" FontSize="14"/>
+								<TextBlock Text="{Binding max}" Classes="subText" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+							</StackPanel>
+						</Border>
+
+						<TextBlock Text="Toggle A/B Sides" Classes="heading" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+
+						<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
+							<RadioButton x:Name="sideA" Content="Side A" GroupName="gallerySide" Foreground="White" IsChecked="True" Click="SideA_Click"/>
+							<RadioButton x:Name="sideB" Content="Side B" GroupName="gallerySide" Foreground="White" Click="SideB_Click"/>
+						</StackPanel>
+
+						<TextBlock Classes="subText" TextWrapping="Wrap"
+						           Text="You can add a mix of A and B sided Tiles by using the A/B radio buttons above. As you select Tiles, they will 'lock in' their side as you toggle the rest of the Gallery back and forth."/>
+
+						<TextBlock Margin="0,10,0,0" Classes="subText" TextWrapping="Wrap"
+						           Text="Hover over a tile to show a zoomed in popup. Hold the right mouse button down to disable the zoom feature."/>
+
+						<Button x:Name="addTilesButton" Click="AddTilesButton_Click" Background="DodgerBlue" Foreground="White" Margin="0,10,0,0" Height="36" IsDefault="True">
+							<StackPanel Orientation="Horizontal" Margin="5,0" Spacing="6">
+								<TextBlock Text="Add Selected Tiles" Classes="heading" VerticalAlignment="Center"/>
+								<Image Source="avares://JiMEditor.Avalonia/Assets/add.png" Height="24"/>
+							</StackPanel>
+						</Button>
+					</StackPanel>
+				</Border>
+			</Grid>
+		</ScrollViewer>
+
+		<Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Silver" HorizontalAlignment="Stretch" Background="#FF46464A">
+			<Grid ColumnDefinitions="Auto,Auto,Auto,*">
+				<StackPanel Orientation="Horizontal" Grid.Column="0" Spacing="0">
+					<Button x:Name="left" Margin="10" Background="DodgerBlue" Click="Left_Click">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/left.png" Stretch="Uniform" Width="32" Margin="5"/>
+					</Button>
+					<Button x:Name="right" Margin="10" Background="DodgerBlue" Click="Right_Click">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/right.png" Stretch="Uniform" Width="32" Margin="5"/>
+					</Button>
+				</StackPanel>
+				<TextBlock Text="Page: " Grid.Column="1" VerticalAlignment="Center" Classes="heading"/>
+				<TextBlock Text="{Binding page}" Grid.Column="2" VerticalAlignment="Center" Classes="heading"/>
+
+				<WrapPanel Grid.Column="3" FlowDirection="RightToLeft" HorizontalAlignment="Right">
+					<Button x:Name="okButton" Margin="10" Background="{StaticResource bgCancelDelete}" Click="OkButton_Click" IsCancel="True">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Stretch="Uniform" Width="32" Margin="5"/>
+					</Button>
+				</WrapPanel>
+			</Grid>
+		</Border>
+	</Grid>
+</Window>

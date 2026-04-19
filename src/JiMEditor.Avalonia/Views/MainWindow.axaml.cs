@@ -221,6 +221,80 @@ public partial class MainWindow : Window
 
 	async void AddTriggerToolbarButton_Click( object? sender, RoutedEventArgs e ) => await AddTriggerAsync();
 
+	async void NewTileBlockToolbarButton_Click( object? sender, RoutedEventArgs e )
+	{
+		var cw = new ChapterPropertiesWindow( scenario, null );
+		var originalValues = cw.chapter.CaptureStartingValues();
+		var originalPrefix = cw.chapter.TranslationKeyPrefix();
+		var originalKeyName = cw.chapter.TranslationKeyName();
+		await cw.ShowDialog( this );
+		cw.chapter.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+		if ( cw.Accepted )
+			scenario.AddChapter( cw.chapter );
+	}
+
+	async void TileEditButton_Click( object? sender, RoutedEventArgs e )
+	{
+		if ( sender is not Button b || b.DataContext is not Chapter c )
+			return;
+		await OpenChapterTileEditorAsync( c );
+	}
+
+	async void ChapterPropsButton_Click( object? sender, RoutedEventArgs e )
+	{
+		if ( sender is not Button b || b.DataContext is not Chapter c )
+			return;
+		await OpenChapterPropertiesEditorAsync( c );
+	}
+
+	void RemoveChapterButton_Click( object? sender, RoutedEventArgs e )
+	{
+		if ( sender is not Button b || b.DataContext is not Chapter c )
+			return;
+		var ret = MessageBox.Show(
+			"Are you sure you want to delete this Tile Block?\n\nALL TILES AND TOKENS WILL BE DELETED.",
+			"Delete Tile Block",
+			MessageBoxButton.YesNo,
+			MessageBoxImage.Question );
+		if ( ret != MessageBoxResult.Yes )
+			return;
+
+		foreach ( var tile in c.tileObserver )
+			scenario.globalTilePool.Add( tile.idNumber );
+		var sorter = new TileSorter();
+		var foo = scenario.globalTilePool.ToList();
+		foo.Sort( sorter );
+		scenario.globalTilePool.Clear();
+		foreach ( var n in foo )
+			scenario.globalTilePool.Add( n );
+		scenario.RemoveData( c );
+	}
+
+	async Task OpenChapterPropertiesEditorAsync( Chapter c )
+	{
+		var originalValues = c.CaptureStartingValues();
+		var originalPrefix = c.TranslationKeyPrefix();
+		var originalKeyName = c.TranslationKeyName();
+		var cw = new ChapterPropertiesWindow( scenario, c );
+		await cw.ShowDialog( this );
+		c.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+	}
+
+	async Task OpenChapterTileEditorAsync( Chapter c )
+	{
+		if ( scenario.scenarioTypeJourney )
+		{
+			// Random tile pool editor. Chapters default isRandomTiles=false in the model until Properties is used;
+			// the fixed/manual hex layout editor is not ported yet (TODO-Avalonia-Reenable).
+			var tp = new TilePoolEditorWindow( scenario, c );
+			await tp.ShowDialog( this );
+		}
+		else
+		{
+			// TODO-Avalonia-Reenable: TileEditorWindow for battle maps.
+		}
+	}
+
 	async void OnAddTrigger( object? sender, EventArgs e ) => await AddTriggerAsync();
 
 	async void AddObjectiveToolbarButton_Click( object? sender, RoutedEventArgs e ) => await AddObjectiveAsync();

@@ -1,7 +1,6 @@
 // Ported from: JiMEditor/Views/Interactions/PersistentInteractionWindow.xaml — Persistent tab (2026-04-14).
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -33,7 +32,7 @@ public partial class PersistentEventCustomTab : UserControl, IEventCustomTab
 				x.isTokenInteraction
 				&& EventDialogInteractionLists.IncludeInReferenceDropdown( x )
 				&& x.dataName != current.dataName
-				&& !Regex.IsMatch( x.dataName, @"\sGRP\d+$" ) )
+				&& !InteractionGroupNaming.HasGroupSuffix( x.dataName ) )
 			.Select( x => x.dataName )
 			.Prepend( "None" )
 			.Distinct()

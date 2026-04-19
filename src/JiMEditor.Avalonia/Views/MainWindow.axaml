@@ -4,12 +4,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:jime="using:JiME"
         xmlns:uc="using:JiMEditor.Avalonia.UserControls"
+        xmlns:conv="using:JiMEditor.Avalonia.Converters"
         mc:Ignorable="d"
         d:DesignWidth="1200" d:DesignHeight="800"
         x:Class="JiMEditor.Avalonia.Views.MainWindow"
         x:CompileBindings="False"
         Background="{StaticResource bgColor}"
         Width="1200" Height="750">
+
+	<Window.Resources>
+		<conv:BoolInvertValueConverter x:Key="chapterStartInvert"/>
+	</Window.Resources>
 	<!--
 		Original WPF GraphX region (JiMEditor/MainWindow.xaml) — TODO-Avalonia-Reenable: replace with Avalonia graph or alternate layout.
 		<zoom:ZoomControl x:Name="zoomControl" Grid.Row="1" Grid.Column="1" ZoomBoxVisibility="Collapsed" Background="#FF1E1E1E">
@@ -67,7 +72,12 @@
 					</StackPanel>
 				</Button>
 				<Rectangle Width="1" Height="24" Fill="{StaticResource bgButtonColor}" Margin="4,0"/>
-				<Button Classes="iconbutton" Height="32" Padding="4,0,4,0" IsEnabled="False" ToolTip.Tip="Add tile block (TODO)">
+				<Button x:Name="NewTileBlockToolbarButton"
+				        Classes="iconbutton"
+				        Height="32"
+				        Padding="4,0,4,0"
+				        Click="NewTileBlockToolbarButton_Click"
+				        ToolTip.Tip="Add tile block">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/addtileblock.png" Width="24" Height="24"/>
 						<TextBlock Text="New Tile Block" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
@@ -178,30 +188,69 @@
 				</ScrollViewer>
 			</Border>
 
-			<!-- Main: chapters + graph placeholder -->
-			<Grid Grid.Column="1" RowDefinitions="Auto,*">
-				<Border Grid.Row="0" Background="{StaticResource bgColor}" Padding="8">
-					<StackPanel>
-						<TextBlock Text="Chapters" Foreground="White" FontWeight="Bold" Margin="0,0,0,4"/>
-						<ItemsControl ItemsSource="{Binding chapterObserver}">
-							<ItemsControl.ItemsPanel>
-								<ItemsPanelTemplate>
-									<StackPanel Orientation="Horizontal" Spacing="8"/>
-								</ItemsPanelTemplate>
-							</ItemsControl.ItemsPanel>
-							<ItemsControl.ItemTemplate>
-								<DataTemplate DataType="jime:Chapter">
-									<Border Classes="callout" MinWidth="120">
-										<TextBlock Text="{Binding dataName}" Foreground="White" TextWrapping="Wrap"/>
-									</Border>
-								</DataTemplate>
-							</ItemsControl.ItemTemplate>
-						</ItemsControl>
-					</StackPanel>
-				</Border>
+			<!-- Main: tile block list (WPF) + map / graph placeholder -->
+			<Grid Grid.Column="1" ColumnDefinitions="Auto,*">
+				<ScrollViewer Grid.Column="0"
+				              VerticalScrollBarVisibility="Auto"
+				              HorizontalScrollBarVisibility="Disabled"
+				              VerticalAlignment="Stretch">
+					<ItemsControl Padding="5" ItemsSource="{Binding chapterObserver}" Width="280">
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<WrapPanel Orientation="Vertical"/>
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+						<ItemsControl.ItemTemplate>
+							<DataTemplate DataType="jime:Chapter">
+								<Border Classes="callout" Margin="0,0,5,5" MinWidth="240">
+									<StackPanel Spacing="4">
+										<TextBlock Text="{Binding dataName}"
+										           Classes="heading"
+										           TextTrimming="CharacterEllipsis"
+										           HorizontalAlignment="Center"/>
+										<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="4">
+											<Button Background="DodgerBlue"
+											        Margin="2,5"
+											        Click="TileEditButton_Click"
+											        DataContext="{Binding}">
+												<TextBlock Foreground="White" Text="Tile Editor..."/>
+											</Button>
+											<Button Background="DodgerBlue"
+											        Margin="2,5"
+											        Click="ChapterPropsButton_Click"
+											        DataContext="{Binding}">
+												<TextBlock Foreground="White" Text="Properties..."/>
+											</Button>
+										</StackPanel>
+										<Button Background="{StaticResource bgCancelDelete}"
+										        HorizontalAlignment="Stretch"
+										        Click="RemoveChapterButton_Click"
+										        DataContext="{Binding}"
+										        IsEnabled="{Binding isStart, Converter={StaticResource chapterStartInvert}}">
+											<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8">
+												<TextBlock Foreground="White" Text="Remove Block" VerticalAlignment="Center"/>
+												<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Width="24"/>
+											</StackPanel>
+										</Button>
+									</StackPanel>
+								</Border>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</ScrollViewer>
 
-				<Border Grid.Row="1" Background="#FF1E1E1E" BorderBrush="{StaticResource bgButtonColor}" BorderThickness="1" Margin="8">
-					<TextBlock Text="Map / graph (GraphX not ported — see comment in MainWindow.axaml)" Foreground="#888" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" Margin="16"/>
+				<Border Grid.Column="1"
+				        Background="#FF1E1E1E"
+				        BorderBrush="{StaticResource bgButtonColor}"
+				        BorderThickness="1"
+				        Margin="8">
+					<TextBlock Text="Map / graph (GraphX not ported — see comment in MainWindow.axaml)"
+					           Foreground="#888"
+					           HorizontalAlignment="Center"
+					           VerticalAlignment="Center"
+					           TextAlignment="Center"
+					           TextWrapping="Wrap"
+					           Margin="16"/>
 				</Border>
 			</Grid>
 		</Grid>

@@ -1,0 +1,390 @@
+<!-- Ported from: JiMEditor/Views/ChapterPropertiesWindow.xaml (2026-04-17) — Avalonia; scrollable body. -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:jime="using:JiME"
+        xmlns:prev="using:JiMEditor.Avalonia"
+        xmlns:conv="using:JiMEditor.Avalonia.Converters"
+        x:Class="JiMEditor.Avalonia.Views.ChapterPropertiesWindow"
+        x:CompileBindings="False"
+        Title="Tile Block Properties"
+        Width="750"
+        MinWidth="640"
+		Height="700"
+        MinHeight="560"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource bgColor}">
+
+	<Window.Resources>
+		<conv:BoolInvertValueConverter x:Key="binv"/>
+	</Window.Resources>
+
+	<Window.Styles>
+		<Style Selector="TextBox.campaignField">
+			<Setter Property="Background" Value="#333337"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#77777d"/>
+			<Setter Property="Padding" Value="6,4"/>
+		</Style>
+		<Style Selector="ComboBox">
+			<Setter Property="Background" Value="#333337"/>
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+		<!-- Match WPF ToolTipService.InitialShowDelay="0": all help icons use Image + ToolTip.Tip. -->
+		<Style Selector="Image">
+			<Setter Property="ToolTip.ShowDelay" Value="0"/>
+		</Style>
+	</Window.Styles>
+
+	<Grid RowDefinitions="*,Auto">
+		<ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+			<StackPanel Margin="5,5,5,10" Spacing="0">
+				<TextBlock Classes="subText" TextWrapping="Wrap"
+				           Text="In the Companion App, a Tile Block first shows the Flavor Text, if any, followed by the random or fixed Tile layout for this Block."/>
+
+				<Border Classes="callout" Margin="0,8,0,0">
+					<StackPanel Spacing="8">
+						<Grid ColumnDefinitions="*,*">
+							<StackPanel Grid.Column="0" Spacing="4">
+								<TextBlock Classes="heading" Text="Tile Block Name:"/>
+								<TextBlock Classes="subText" TextWrapping="Wrap">
+									A short name used within the Editor. Required
+								</TextBlock>
+								<TextBox x:Name="NameTextBox"
+								         Width="250"
+								         HorizontalAlignment="Left"
+								         Margin="0,5,0,0"
+								         Classes="campaignField"
+								         Text="{Binding chapter.dataName}"
+								         IsEnabled="{Binding chapter.isStart, Converter={StaticResource binv}}"/>
+							</StackPanel>
+							<StackPanel Grid.Column="1" Spacing="4">
+								<TextBlock Text="Triggered By:" Classes="heading"/>
+								<TextBlock Classes="subText" Text="Required"/>
+								<StackPanel Orientation="Horizontal" Spacing="10">
+									<ComboBox x:Name="TriggeredByCombo"
+									          Width="200"
+									          HorizontalAlignment="Left"
+									          IsEnabled="{Binding chapter.isEmpty, Converter={StaticResource binv}}">
+										<ComboBox.ItemTemplate>
+											<DataTemplate DataType="jime:Trigger">
+												<TextBlock Text="{Binding dataName}"/>
+											</DataTemplate>
+										</ComboBox.ItemTemplate>
+									</ComboBox>
+									<Button x:Name="AddTriggerByButton"
+									        Background="MediumSeaGreen"
+									        Height="32"
+									        Width="32"
+									        Click="AddTriggerByButton_Click"
+									        IsEnabled="{Binding chapter.isEmpty, Converter={StaticResource binv}}">
+										<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png"/>
+									</Button>
+								</StackPanel>
+							</StackPanel>
+						</Grid>
+					</StackPanel>
+				</Border>
+
+				<Border Classes="callout" Margin="0,8,0,0">
+					<StackPanel Spacing="8">
+						<TextBlock Text="Block Tiles" Classes="heading"/>
+						<StackPanel Orientation="Horizontal" Spacing="10">
+							<CheckBox x:Name="RandomToggleCheckBox"
+							          Content="This Block uses random Tiles."
+							          Foreground="White"
+							          IsChecked="True"
+							          IsEnabled="False"/>
+							<Button x:Name="TileEditButton"
+							        Background="DodgerBlue"
+							        Foreground="White"
+							        Height="36"
+							        Click="TileEditButton_Click">
+								<StackPanel Orientation="Horizontal" Margin="5,0" Spacing="6">
+									<TextBlock Text="Tile Editor..." Classes="heading" VerticalAlignment="Center"/>
+									<Image Source="avares://JiMEditor.Avalonia/Assets/edit.png" Height="24"/>
+								</StackPanel>
+							</Button>
+							<TextBlock Classes="subText" VerticalAlignment="Center" TextWrapping="Wrap"
+							           Text="Use the Tile Editor to define which tiles are in this Block."/>
+						</StackPanel>
+
+						<StackPanel x:Name="PreExplorePanel" Orientation="Horizontal" Spacing="10" IsVisible="False">
+							<CheckBox x:Name="PreExploreCheckBox"
+							          Content="This Block starts already Explored (Start Block only)"
+							          Foreground="White"
+							          IsChecked="{Binding chapter.isPreExplored}"/>
+							<Image Source="avares://JiMEditor.Avalonia/Assets/help.png" Width="24" Height="24" VerticalAlignment="Bottom" Stretch="Uniform">
+								<ToolTip.Tip>
+									<ToolTip MaxWidth="420">
+										<TextBlock TextWrapping="Wrap" Foreground="White" FontSize="12">
+											If this is the Start Block, you can decide whether the tiles are pre-explored. With this<LineBreak/>
+											option CHECKED (default), the Block begins with its tiles already Explored (no Explore Token on them),<LineBreak/>
+											and any Interactive Tokens on its tiles start revealed. With this option NOT CHECKED, all tiles in the<LineBreak/>
+											Block except the one marked as the player start tile are unexplored, and any Interactive Tokens start unrevealed.
+										</TextBlock>
+									</ToolTip>
+								</ToolTip.Tip>
+							</Image>
+						</StackPanel>
+
+						<StackPanel Orientation="Horizontal" Spacing="10" Margin="0,5,0,0"
+						            IsVisible="{Binding chapter.isRandomTiles}">
+							<TextBlock Text="Tile Density:" Classes="heading"/>
+							<ComboBox x:Name="TileDensityCombo"
+							          ItemsSource="{Binding DensityPreferenceValues}"
+							          SelectedItem="{Binding chapter.tileDensityPreference}"
+							          IsEnabled="True"
+							          VerticalAlignment="Center">
+								<ComboBox.ItemTemplate>
+									<DataTemplate>
+										<TextBlock Text="{Binding}"/>
+									</DataTemplate>
+								</ComboBox.ItemTemplate>
+							</ComboBox>
+							<Image Source="avares://JiMEditor.Avalonia/Assets/help.png" Width="24" Height="24" VerticalAlignment="Bottom">
+								<ToolTip.Tip>
+									<ToolTip MaxWidth="480">
+										<TextBlock TextWrapping="Wrap" Foreground="White" FontSize="12">
+											You can choose how well one Tile will try to fit to the other Tiles in the Tile Block<LineBreak/>
+											when using random Tiles.<LineBreak/><LineBreak/>
+											"First" will take the first viable connection. This is and has been the default behavior<LineBreak/><LineBreak/>
+											All the other options will first test all available connections and then randomly choose<LineBreak/>
+											one viable placment where the number of attachments match the option you chose.<LineBreak/><LineBreak/>
+											As an example, if the Tile finds valid placemnts with 1, 2, 3, 4, 5, or 6 attachments to<LineBreak/>
+											the rest of the Tiles in the Tile Block, the various options would go like this:<LineBreak/><LineBreak/>
+											LOWEST: randomly choose an option with only 1 connection<LineBreak/>
+											LOW Range: randomly choose an option with 1 or 2 connections<LineBreak/>
+											LOW-MEDIUM Range: randomly choose an option with 1, 2, 3, or 4 connections<LineBreak/>
+											MEDIAN: randomly choose an option with 3 connections<LineBreak/>
+											MEDIUM Range: randomly choose an option with 3 or 4 connections<LineBreak/>
+											MEDIUM-HIGH Range: randomly choose an option with 3, 4, 5, or 6 connections<LineBreak/>
+											HIGH Range: randomly choose an option with 5 or 6 connections<LineBreak/>
+											HIGHEST: randomly choose an option with 6 connections<LineBreak/>
+										</TextBlock>
+									</ToolTip>
+								</ToolTip.Tip>
+							</Image>
+						</StackPanel>
+					</StackPanel>
+				</Border>
+
+				<Border x:Name="HintBlock" Classes="callout" Margin="0,8,0,0">
+					<StackPanel Spacing="8">
+						<TextBlock Text="Tile Block Attachment Hinting Options:" Classes="heading"/>
+
+						<StackPanel Orientation="Horizontal" Spacing="8" Margin="0,5,0,5">
+							<CheckBox Foreground="White" Content="This Block is Dynamic" VerticalAlignment="Center"
+							          IsChecked="{Binding chapter.isDynamic}"/>
+							<Image Source="avares://JiMEditor.Avalonia/Assets/help.png" Width="24" Height="24" VerticalAlignment="Bottom" Stretch="Uniform">
+								<ToolTip.Tip>
+									<ToolTip MaxWidth="480">
+										<TextBlock TextWrapping="Wrap" Foreground="White" FontSize="12">
+											If a Tile Block MAY or MAY NOT be activated during a Scenario, mark it as Dynamic. For example, this is
+											useful for optional side quests that may not always appear during a Scenario. This helps the Companion App
+											build the Scenario properly.<LineBreak/>
+											Dynamic Blocks don't have a Fog of War.<LineBreak/>
+											The Start Block cannot be Dynamic.
+										</TextBlock>
+									</ToolTip>
+								</ToolTip.Tip>
+							</Image>
+						</StackPanel>
+
+						<StackPanel Orientation="Horizontal" Spacing="8">
+							<TextBlock Text="Attach to Tile Block:" Classes="heading" VerticalAlignment="Center"/>
+							<ComboBox x:Name="AttachHintCombo"
+							          Width="250"
+							          IsEnabled="{Binding chapter.isStart, Converter={StaticResource binv}}"
+							          SelectionChanged="AttachHintCombo_OnSelectionChanged">
+								<ComboBox.ItemTemplate>
+									<DataTemplate DataType="jime:Chapter">
+										<TextBlock Text="{Binding dataName}"/>
+									</DataTemplate>
+								</ComboBox.ItemTemplate>
+							</ComboBox>
+							<Image Source="avares://JiMEditor.Avalonia/Assets/help.png" Width="24" Height="24" VerticalAlignment="Bottom" Stretch="Uniform">
+								<ToolTip.Tip>
+									<ToolTip MaxWidth="480">
+										<TextBlock TextWrapping="Wrap" Foreground="White" FontSize="12">
+											By default, Tile Blocks will try to attach to the Start Block first and if that doesn't work
+											they will try to attach to a subsequent Block following the order they are listed in this Editor.<LineBreak/>
+											<LineBreak/>
+											You may optionally choose the Block you'd prefer this Tile Block to attach to in the Companion App.<LineBreak/>
+											During Scenario creation, the Companion App will attempt to attach this Tile Block to the selected Block.<LineBreak/>
+											If it can't (because it doesn't fit) it will try to attach to Start or a subsequent block in order.<LineBreak/>
+											<LineBreak/>
+											If you select 'Random', this Tile Block will be attached to a Block chosen at random.
+										</TextBlock>
+									</ToolTip>
+								</ToolTip.Tip>
+							</Image>
+						</StackPanel>
+
+						<StackPanel Orientation="Horizontal" Spacing="8">
+							<TextBlock Text="Attach to Specific Tile:" Classes="heading" VerticalAlignment="Center"/>
+							<ComboBox x:Name="AttachToTileCombo"
+							          Width="120"
+							          IsEnabled="{Binding chapter.isStart, Converter={StaticResource binv}}">
+								<ComboBox.ItemTemplate>
+									<DataTemplate DataType="jime:BaseTile">
+										<TextBlock Text="{Binding idNumber}"/>
+									</DataTemplate>
+								</ComboBox.ItemTemplate>
+							</ComboBox>
+							<Image Source="avares://JiMEditor.Avalonia/Assets/help.png" Width="24" Height="24" VerticalAlignment="Bottom" Stretch="Uniform">
+								<ToolTip.Tip>
+									<ToolTip MaxWidth="480">
+										<TextBlock TextWrapping="Wrap" Foreground="White" FontSize="12">
+											You can pick a specific tile that belongs to the 'Attach to Tile Block' above.<LineBreak/>
+											The Companion App will first try to attach this Tile Block to that exact Tile.<LineBreak/>
+											If the Tile Block can't be attached to that Tile, the Companion App will then<LineBreak/>
+											try to attach it to other Tiles from the 'Attach to Tile Block'.<LineBreak/>
+											<LineBreak/>
+											Leave the selection blank or select '0' if you don't want this Tile Block to<LineBreak/>
+											attach to a specific Tile.
+										</TextBlock>
+									</ToolTip>
+								</ToolTip.Tip>
+							</Image>
+						</StackPanel>
+					</StackPanel>
+				</Border>
+
+				<Border x:Name="RandomTokenBlock" Classes="callout" Margin="0,8,0,0">
+					<StackPanel Spacing="8">
+						<StackPanel Orientation="Horizontal" Spacing="12">
+							<TextBlock Classes="heading" Text="Random Token Interaction Group"/>
+							<CheckBox x:Name="UseRandomCheckBox"
+							          Content="This Block uses randomly assigned Tokens"
+							          Foreground="White"
+							          IsChecked="{Binding chapter.usesRandomGroups}"
+							          Click="UseRandomCheckBox_OnClick"/>
+							<Button Background="#FFC98800" Width="32" Height="32" Click="GroupHelp_Click">
+								<Image Source="avares://JiMEditor.Avalonia/Assets/help.png" Stretch="Uniform"/>
+							</Button>
+						</StackPanel>
+						<TextBlock Classes="subText" TextWrapping="Wrap"
+						           Text="Event must be a Token Interaction with a Token Type assigned. Event name must end in GRP#, e.g. GRP1, GRP2, etc."/>
+						<Grid ColumnDefinitions="*,*">
+							<StackPanel Orientation="Horizontal" Spacing="6">
+								<ComboBox x:Name="RandInterCombo"
+								          MinWidth="290"
+								          VerticalAlignment="Center"
+								          SelectionChanged="RandInterCombo_OnSelectionChanged"
+								          IsEnabled="{Binding chapter.usesRandomGroups}"/>
+								<Image Source="avares://JiMEditor.Avalonia/Assets/warning.png" Width="24" Height="24" VerticalAlignment="Center"
+								       ToolTip.Tip="NOTE: If you set this Group and later change one or more Events in the Group to no longer be a Token Interaction, the Group will no longer be a valid Token Interaction Group."/>
+								<Image Source="avares://JiMEditor.Avalonia/Assets/help.png" Width="24" Height="24" VerticalAlignment="Center">
+									<ToolTip.Tip>
+										<ToolTip MaxWidth="480">
+											<TextBlock TextWrapping="Wrap" Foreground="White" FontSize="12">
+												Select an Interaction Group from the list. Then designate how many of the Eventsin the group will be randomly used. 
+												A mix of Fixed and Random Token Interactions can be used in a Block<LineBreak/>
+												Only Events that are marked Token Interaction can be in a Group.
+											</TextBlock>
+										</ToolTip>
+									</ToolTip.Tip>
+								</Image>
+							</StackPanel>
+							<StackPanel Grid.Column="1" Margin="10,0,0,0" Spacing="4">
+								<TextBlock x:Name="SelectedInfoText" Classes="subText" TextWrapping="Wrap" FontWeight="Bold"/>
+								<TextBlock x:Name="FixedCountText" Classes="subText" FontWeight="Bold"/>
+							</StackPanel>
+						</Grid>
+						<TextBlock x:Name="SpaceInfoText" Classes="heading" Margin="0,5,0,0"/>
+						<StackPanel Orientation="Horizontal" Spacing="8">
+							<TextBlock x:Name="NumIntersUsedLabel" Classes="subText" VerticalAlignment="Center" TextWrapping="Wrap"/>
+							<TextBox x:Name="NumIntersUsedTextBox"
+							         Width="40"
+							         Height="28"
+							         Classes="campaignField"
+							         TextChanged="NumIntersUsedTextBox_OnTextChanged"
+							         IsEnabled="{Binding chapter.usesRandomGroups}"/>
+						</StackPanel>
+					</StackPanel>
+				</Border>
+
+				<Border x:Name="FlavorBox" Classes="callout" Margin="0,8,0,0" IsEnabled="{Binding chapter.isEmpty, Converter={StaticResource binv}}">
+					<StackPanel Spacing="8">
+						<TextBlock Text="Flavor Text" Classes="heading"/>
+						<TextBlock Classes="subText" TextWrapping="Wrap"
+						           Text="This text is shown when the Tile Block is activated. It is only shown once. Optional"/>
+						<Grid ColumnDefinitions="*,Auto" IsVisible="{Binding chapter.noFlavorText, Converter={StaticResource binv}}">
+							<Border Grid.Column="0" BorderBrush="White" BorderThickness="1" Padding="5" Margin="0,5">
+								<prev:PseudoHtmlPreviewTextBlock x:Name="FlavorPreview"
+								                                 MaxHeight="80"
+								                                 Foreground="White"
+								                                 TextWrapping="Wrap"/>
+							</Border>
+							<Button Grid.Column="1"
+							        Background="CornflowerBlue"
+							        Margin="10,0,0,0"
+							        Width="46"
+							        Height="46"
+							        Click="EditFlavorButton_Click">
+								<Image Source="avares://JiMEditor.Avalonia/Assets/edit.png"/>
+							</Button>
+						</Grid>
+						<CheckBox x:Name="NoFlavorCheckBox"
+						          Content="No Flavor Text"
+						          Foreground="White"
+						          IsChecked="{Binding chapter.noFlavorText}"/>
+					</StackPanel>
+				</Border>
+
+				<Border x:Name="ExploreFirstBox" Classes="callout" Margin="0,8,0,0" IsEnabled="{Binding chapter.isEmpty, Converter={StaticResource binv}}">
+					<StackPanel Spacing="8">
+						<TextBlock Text="Trigger On First Exploration (Optional):" Classes="heading"/>
+						<TextBlock Classes="subText" TextWrapping="Wrap"
+						           Text="This Trigger is set when any Tile in this Block is first explored. It is only triggered once."/>
+						<StackPanel Orientation="Horizontal" Spacing="10">
+							<ComboBox x:Name="ExploreTriggerCombo"
+							          MinWidth="250">
+								<ComboBox.ItemTemplate>
+									<DataTemplate DataType="jime:Trigger">
+										<TextBlock Text="{Binding dataName}"/>
+									</DataTemplate>
+								</ComboBox.ItemTemplate>
+							</ComboBox>
+							<Button Background="MediumSeaGreen" Height="32" Width="32" Click="AddExploreTriggerButton_Click">
+								<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png"/>
+							</Button>
+						</StackPanel>
+					</StackPanel>
+				</Border>
+
+				<Border x:Name="ExploreAllBox" Classes="callout" Margin="0,8,0,0">
+					<StackPanel Spacing="8">
+						<TextBlock Text="Trigger After Exploring All Tiles (Optional):" Classes="heading"/>
+						<TextBlock Classes="subText" TextWrapping="Wrap"
+						           Text="This Trigger is set when all Tiles in this Block have been explored. It is only triggered once."/>
+						<StackPanel Orientation="Horizontal" Spacing="10">
+							<ComboBox x:Name="ExploredAllTilesTriggerCombo"
+							          MinWidth="250">
+								<ComboBox.ItemTemplate>
+									<DataTemplate DataType="jime:Trigger">
+										<TextBlock Text="{Binding dataName}"/>
+									</DataTemplate>
+								</ComboBox.ItemTemplate>
+							</ComboBox>
+							<Button Background="MediumSeaGreen" Height="32" Width="32" Click="AddExploredAllTilesTriggerButton_Click">
+								<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png"/>
+							</Button>
+						</StackPanel>
+					</StackPanel>
+				</Border>
+			</StackPanel>
+		</ScrollViewer>
+
+		<Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Silver" Background="#FF46464A">
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="8">
+				<Button x:Name="OkButton" Background="MediumSeaGreen" Click="OkButton_Click" IsDefault="True">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+				<Button x:Name="CancelButton" Background="{StaticResource bgCancelDelete}" Click="CancelButton_Click" IsCancel="True" IsVisible="False">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+			</StackPanel>
+		</Border>
+	</Grid>
+</Window>
