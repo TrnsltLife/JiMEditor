@@ -1,0 +1,226 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:sg="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+             x:Class="JiMEditor.Avalonia.Views.Events.EventDialogs.ThreatEnemyPoolTab"
+             x:CompileBindings="False">
+	<UserControl.Styles>
+		<Style Selector="TextBlock"><Setter Property="Foreground" Value="White"/></Style>
+		<Style Selector="CheckBox"><Setter Property="Foreground" Value="White"/></Style>
+		<Style Selector="RadioButton"><Setter Property="Foreground" Value="White"/></Style>
+		<Style Selector="TextBlock.enemyTypeHeader">
+			<Setter Property="FontSize" Value="12"/>
+		</Style>
+		<Style Selector="TextBlock.enemyTypeCollectionIcon">
+			<Setter Property="FontSize" Value="20"/>
+			<Setter Property="Width" Value="20"/>
+			<Setter Property="Margin" Value="2,0,0,0"/>
+			<Setter Property="FontFamily" Value="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+		</Style>
+		<Style Selector="CheckBox.enemyPoolOption">
+			<Setter Property="FontSize" Value="12"/>
+			<Setter Property="Margin" Value="0,0,0,-2"/>
+			<Setter Property="Padding" Value="0"/>
+			<Setter Property="MinHeight" Value="0"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="Template">
+				<ControlTemplate>
+					<Grid ColumnDefinitions="Auto,*" VerticalAlignment="Center">
+						<Panel Grid.Column="0" Width="10" Height="10" VerticalAlignment="Center" Margin="0,0,4,0">
+							<Border x:Name="CheckBoxBorder"
+							        BorderBrush="{TemplateBinding Foreground}" BorderThickness="1.5" CornerRadius="1.5"
+							        Background="Transparent" Width="10" Height="10" VerticalAlignment="Center"/>
+							<Path x:Name="CheckGlyph"
+							      Data="M 1.9,5.35 L 4.35,8.05 L 8.5,2.05 L 7.88,1.45 L 4.32,7.5 L 2.2,4.95 Z"
+							      Fill="Black"
+							      Stroke="Black"
+							      StrokeThickness="0.35"
+							      IsVisible="False"
+							      IsHitTestVisible="False"
+							      VerticalAlignment="Center"
+							      HorizontalAlignment="Center"
+							      RenderTransformOrigin="0.5,0.5">
+								<Path.RenderTransform>
+									<ScaleTransform ScaleX="0.55" ScaleY="0.55"/>
+								</Path.RenderTransform>
+							</Path>
+						</Panel>
+						<ContentPresenter Grid.Column="1"
+						                  Content="{TemplateBinding Content}"
+						                  ContentTemplate="{TemplateBinding ContentTemplate}"
+						                  VerticalAlignment="Center"/>
+					</Grid>
+				</ControlTemplate>
+			</Setter>
+		</Style>
+		<Style Selector="CheckBox.enemyPoolOption:checked /template/ Border#CheckBoxBorder">
+			<Setter Property="Background" Value="White"/>
+		</Style>
+		<Style Selector="CheckBox.enemyPoolOption:checked /template/ Path#CheckGlyph">
+			<Setter Property="IsVisible" Value="True"/>
+			<Setter Property="Fill" Value="Black"/>
+			<Setter Property="Stroke" Value="Black"/>
+		</Style>
+		<Style Selector="CheckBox.enemyPoolCollectionHeader">
+			<Setter Property="FontWeight" Value="Bold"/>
+		</Style>
+	</UserControl.Styles>
+	<ScrollViewer VerticalScrollBarVisibility="Auto">
+		<StackPanel Margin="8" Spacing="10">
+			<Border Classes="callout">
+				<StackPanel Spacing="6">
+					<TextBlock Classes="heading" Text="Enemy Pool System"/>
+					<TextBlock Classes="subText" TextWrapping="Wrap">
+						<Run Text="The "/><Bold>Enemy Pool</Bold><Run Text=" guides the Companion App in generating random, balanced encounters for this Event."/>
+					</TextBlock>
+					<StackPanel Orientation="Horizontal" Spacing="10">
+						<TextBlock Classes="heading" Text="Base Pool Points:" VerticalAlignment="Center"/>
+						<TextBox x:Name="BasePoolPointsTextBox" Classes="campaignField" Width="48" Text="10"/>
+					</StackPanel>
+					<TextBlock Classes="subText" TextWrapping="Wrap" Margin="10,0,0,0">
+						<Run Text="This value provides a baseline for determining the difficulty of the Enemies generated for this Event. It defaults to 10, representing "/>
+						<Bold>1 Hero at Normal Difficulty</Bold>
+						<Run Text=", and is automatically scaled by Easy/Hard Difficulty and additional Heroes in the Companion App. See "/>
+						<Bold>Event Help</Bold>
+						<Run Text=" for details."/>
+					</TextBlock>
+					<StackPanel Orientation="Horizontal" Spacing="12">
+						<TextBlock Classes="heading" Text="Difficulty Bias:" VerticalAlignment="Center"/>
+						<RadioButton x:Name="BiasLightRadio" Content="Light (+3/Hero)" GroupName="Bias"/>
+						<RadioButton x:Name="BiasMediumRadio" Content="Medium (+5/Hero)" GroupName="Bias"/>
+						<RadioButton x:Name="BiasHeavyRadio" Content="Heavy (+7/Hero)" GroupName="Bias"/>
+					</StackPanel>
+					<TextBlock Classes="subText" TextWrapping="Wrap"
+					           Text="Difficulty Bias changes how the Companion App increases the Pool Points based on Hero Counts above 1."/>
+					<TextBlock Classes="heading" Text="Include These Enemies (Point Value in Parentheses):" Margin="0,6,0,0"/>
+					<sg:SpacedGrid RowSpacing="1"
+					               ColumnSpacing="20"
+					               HorizontalAlignment="Left"
+					               Margin="0,3,0,6">
+						<sg:SpacedGrid.ColumnDefinitions>
+							<ColumnDefinition Width="8"/>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="8"/>
+						</sg:SpacedGrid.ColumnDefinitions>
+						<sg:SpacedGrid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition Height="Auto"/>
+						</sg:SpacedGrid.RowDefinitions>
+
+						<Rectangle Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="7" Fill="DarkGreen"/>
+						<StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+							<TextBlock Classes="enemyTypeCollectionIcon" Text="r" Foreground="White"/>
+							<CheckBox x:Name="CoreSetCheckBox" Classes="enemyPoolOption enemyPoolCollectionHeader" Content="Core Set:" IsCheckedChanged="CollectionCheckBox_OnChanged"/>
+						</StackPanel>
+						<CheckBox x:Name="GoblinScoutCheckBox" Grid.Row="0" Grid.Column="2" Classes="enemyPoolOption" Content="Goblin Scout x6 (4)"/>
+						<CheckBox x:Name="HillTrollCheckBox" Grid.Row="0" Grid.Column="3" Classes="enemyPoolOption" Content="Hill Troll (25)"/>
+						<CheckBox x:Name="OrcHunterCheckBox" Grid.Row="0" Grid.Column="4" Classes="enemyPoolOption" Content="Orc Hunter x3 (10)"/>
+						<CheckBox x:Name="OrcMarauderCheckBox" Grid.Row="0" Grid.Column="5" Classes="enemyPoolOption" Content="Orc Marauder x3 (9)"/>
+						<CheckBox x:Name="RuffianCheckBox" Grid.Row="1" Grid.Column="2" Classes="enemyPoolOption" Content="Ruffian x6 (7)"/>
+						<CheckBox x:Name="HungryVargCheckBox" Grid.Row="1" Grid.Column="3" Classes="enemyPoolOption" Content="Hungry Varg x3 (14)"/>
+						<CheckBox x:Name="WightCheckBox" Grid.Row="1" Grid.Column="4" Classes="enemyPoolOption" Content="Wight x3 (17)"/>
+
+						<Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="7" Fill="SaddleBrown"/>
+						<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+							<TextBlock Classes="enemyTypeCollectionIcon" Text="v" Foreground="White"/>
+							<CheckBox x:Name="VillainsCheckBox" Classes="enemyPoolOption enemyPoolCollectionHeader" Content="Villains of Eriajar:" IsCheckedChanged="CollectionCheckBox_OnChanged"/>
+						</StackPanel>
+						<CheckBox x:Name="AtariCheckBox" Grid.Row="2" Grid.Column="2" Classes="enemyPoolOption" Content="Atari (X)"/>
+						<CheckBox x:Name="ChartoothCheckBox" Grid.Row="2" Grid.Column="3" Classes="enemyPoolOption" Content="Chartooth (X)"/>
+						<CheckBox x:Name="GargletargCheckBox" Grid.Row="2" Grid.Column="4" Classes="enemyPoolOption" Content="Gargletarg (X)"/>
+
+						<Rectangle Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="7" Fill="Black"/>
+						<StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+							<TextBlock Classes="enemyTypeCollectionIcon" Text="p" Foreground="White"/>
+							<CheckBox x:Name="ShadedPathsCheckBox" Classes="enemyPoolOption enemyPoolCollectionHeader" Content="Shaded Paths:" IsCheckedChanged="CollectionCheckBox_OnChanged"/>
+						</StackPanel>
+						<CheckBox x:Name="BalerockCheckBox" Grid.Row="3" Grid.Column="2" Classes="enemyPoolOption" Content="Balerock (X)"/>
+						<CheckBox x:Name="CaveTrollCheckBox" Grid.Row="3" Grid.Column="3" Classes="enemyPoolOption" Content="Cave Troll x2 (20)"/>
+						<CheckBox x:Name="GiantSpiderCheckBox" Grid.Row="3" Grid.Column="4" Classes="enemyPoolOption" Content="Giant Spider x6 (5)"/>
+						<CheckBox x:Name="AnonymousThingCheckBox" Grid.Row="3" Grid.Column="5" Classes="enemyPoolOption" Content="Anonymous Thing x3 (27)"/>
+						<CheckBox x:Name="OrcTaskmasterCheckBox" Grid.Row="4" Grid.Column="2" Classes="enemyPoolOption" Content="Orc Taskmaster x6 (14)"/>
+						<CheckBox x:Name="PitGoblinCheckBox" Grid.Row="4" Grid.Column="3" Classes="enemyPoolOption" Content="Pit Goblin x6 (4)"/>
+						<CheckBox x:Name="ShadowmanCheckBox" Grid.Row="4" Grid.Column="4" Classes="enemyPoolOption" Content="Shadowman x3 (17)"/>
+						<CheckBox x:Name="SpawnOfUglygiantCheckBox" Grid.Row="4" Grid.Column="5" Classes="enemyPoolOption" Content="Spawn of Uglygiant (X)"/>
+
+						<Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="7" Fill="Purple"/>
+						<StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
+							<TextBlock Classes="enemyTypeCollectionIcon" Text="d" Foreground="White"/>
+							<CheckBox x:Name="DenizensCheckBox" Classes="enemyPoolOption enemyPoolCollectionHeader" Content="Denizens in Darkness:" IsCheckedChanged="CollectionCheckBox_OnChanged"/>
+						</StackPanel>
+						<CheckBox x:Name="OliverCheckBox" Grid.Row="5" Grid.Column="2" Classes="enemyPoolOption" Content="Oliver (X)"/>
+						<CheckBox x:Name="UrsulaCheckBox" Grid.Row="5" Grid.Column="3" Classes="enemyPoolOption" Content="Ursula (X)"/>
+						<CheckBox x:Name="SupplicantCheckBox" Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="2" Classes="enemyPoolOption" Content="Supplicant of More-Goth (X)"/>
+
+						<Rectangle Grid.Row="6" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="7" Fill="DarkRed"/>
+						<StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
+							<TextBlock Classes="enemyTypeCollectionIcon" Text="w" Foreground="White"/>
+							<CheckBox x:Name="UnfurlingWarCheckBox" Classes="enemyPoolOption enemyPoolCollectionHeader" Content="Unfurling War:" IsCheckedChanged="CollectionCheckBox_OnChanged"/>
+						</StackPanel>
+						<CheckBox x:Name="FoulBeastCheckBox" Grid.Row="6" Grid.Column="2" Classes="enemyPoolOption" Content="Foul Beast x3 (24)"/>
+						<CheckBox x:Name="SiegeEngineCheckBox" Grid.Row="6" Grid.Column="3" Classes="enemyPoolOption" Content="Siege Engine x2 (22)"/>
+						<CheckBox x:Name="SoldierCheckBox" Grid.Row="6" Grid.Column="4" Classes="enemyPoolOption" Content="Soldier x6 (8)"/>
+						<CheckBox x:Name="HighOrcWarriorCheckBox" Grid.Row="6" Grid.Column="5" Classes="enemyPoolOption" Content="High-Orc Warrior x6 (11)"/>
+						<CheckBox x:Name="WarElephantCheckBox" Grid.Row="7" Grid.Column="2" Classes="enemyPoolOption" Content="War Elephant (30)"/>
+						<CheckBox x:Name="VargRiderCheckBox" Grid.Row="7" Grid.Column="3" Classes="enemyPoolOption" Content="Varg Rider x3 (14)"/>
+
+						<Rectangle Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="7" Fill="YellowGreen"/>
+						<StackPanel Grid.Row="8" Grid.Column="1" Orientation="Horizontal" Margin="0,1,4,0">
+							<TextBlock Classes="enemyTypeCollectionIcon" Text="c" Foreground="White"/>
+							<CheckBox x:Name="ScorchersCheckBox" Classes="enemyPoolOption enemyPoolCollectionHeader" IsCheckedChanged="CollectionCheckBox_OnChanged">
+								<StackPanel Orientation="Horizontal">
+									<TextBlock Text="Scorchers" FontSize="12" FontWeight="Bold" VerticalAlignment="Center"/>
+									<TextBlock Text=" of the " FontSize="9" VerticalAlignment="Center"/>
+									<TextBlock Text="Wilds:" FontSize="12" FontWeight="Bold" VerticalAlignment="Center"/>
+								</StackPanel>
+							</CheckBox>
+						</StackPanel>
+						<CheckBox x:Name="LordJavelinCheckBox" Grid.Row="8" Grid.Column="2" Classes="enemyPoolOption" Content="Lord Javelin (X)"/>
+						<CheckBox x:Name="EndrisCheckBox" Grid.Row="8" Grid.Column="3" Classes="enemyPoolOption" Content="Endris (X)"/>
+						<CheckBox x:Name="LichKingCheckBox" Grid.Row="8" Grid.Column="4" Grid.ColumnSpan="2" Classes="enemyPoolOption" Content="Lich-King (X)"/>
+					</sg:SpacedGrid>
+					<TextBlock Classes="subText" TextWrapping="Wrap" Margin="0,5,0,0"
+					           Text="The Companion App will randomly spend the Base Pool Points to create Enemy Groups using the Enemies you check above."/>
+					<Button x:Name="SimulateButton" Content="Simulate..." HorizontalAlignment="Left" Margin="0,10,0,0" Background="DodgerBlue" Foreground="White" Click="SimulateButton_OnClick"/>
+				</StackPanel>
+			</Border>
+
+			<Border Classes="callout">
+				<StackPanel Spacing="4">
+					<TextBlock Classes="heading" Text="When All Enemies (Scripted and Pool) Have Been Defeated, Fire This Trigger (Optional):"/>
+					<StackPanel Orientation="Horizontal" Spacing="10">
+						<ComboBox x:Name="DefeatedTriggerCombo" Width="250" SelectionChanged="DefeatedTriggerCombo_OnSelectionChanged">
+							<ComboBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding dataName}" Foreground="White"/>
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+						<Button x:Name="AddDefeatedTriggerButton" Background="MediumSeaGreen" Width="32" Height="32" Click="AddDefeatedTriggerButton_OnClick">
+							<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png"/>
+						</Button>
+					</StackPanel>
+					<TextBlock Classes="subText" TextWrapping="Wrap" Margin="0,5,0,0">
+						<Run Text="In the General Properties, the "/>
+						<Bold>Set Trigger After Event Is Resolved</Bold>
+						<Run Text=" Trigger fires immediately after this Enemy Threat is "/>
+						<Bold>spawned</Bold>
+						<Run Text=", NOT after it's defeated. Set the Trigger above to fire when the Threat is "/>
+						<Bold>defeated</Bold>
+						<Run Text="."/>
+					</TextBlock>
+				</StackPanel>
+			</Border>
+		</StackPanel>
+	</ScrollViewer>
+</UserControl>

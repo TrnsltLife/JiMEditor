@@ -17,3 +17,6 @@ This is a list of things we need to do:
       *  TODO-Avalonia-Reenable: Resolution editor flow is not ported yet.
     *  Intro editing is wired to existing StoryTextEditWindow as a practical interim.
     *  If you want, next I can port the full resolution editor workflow (the WPF TextEditorWindow-based behavior) so those three buttons become fully functional too.
+* Enemy Pool Simulation
+  * Does not respect maximum enemy count
+  * In general seems to create too many enemies. What's the normal amount?

@@ -110,6 +110,16 @@ public static class EventEditorFactory
 				m.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 				return w.Accepted;
 			}
+			case ThreatInteraction t:
+			{
+				var originalValues = t.CaptureStartingValues();
+				var originalPrefix = t.TranslationKeyPrefix();
+				var originalKeyName = t.TranslationKeyName();
+				var w = new ThreatInteractionWindow( scenario, t, showCancelButton: false );
+				await w.ShowDialog( owner );
+				t.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				return w.Accepted;
+			}
 			default:
 				MessageBox.Show(
 					"This event type does not have an Avalonia editor yet.",
@@ -225,6 +235,18 @@ public static class EventEditorFactory
 		var originalPrefix = created.TranslationKeyPrefix();
 		var originalKeyName = created.TranslationKeyName();
 		var w = new MultiEventInteractionWindow( scenario, created, showCancelButton: true );
+		await w.ShowDialog( owner );
+		created.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+		return ( w.Accepted, created );
+	}
+
+	public static async Task<(bool accepted, ThreatInteraction created)> TryCreateThreatInteractionAsync( Window owner, Scenario scenario )
+	{
+		var created = new ThreatInteraction( "New Threat Event" );
+		var originalValues = created.CaptureStartingValues();
+		var originalPrefix = created.TranslationKeyPrefix();
+		var originalKeyName = created.TranslationKeyName();
+		var w = new ThreatInteractionWindow( scenario, created, showCancelButton: true );
 		await w.ShowDialog( owner );
 		created.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 		return ( w.Accepted, created );

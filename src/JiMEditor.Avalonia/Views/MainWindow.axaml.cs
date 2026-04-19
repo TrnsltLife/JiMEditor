@@ -598,6 +598,8 @@ public partial class MainWindow : Window
 		corruptionItem.Click += async (_, _) => await AddCorruptionInteractionAsync();
 		var multiItem = new MenuItem { Header = "Multi-Event" };
 		multiItem.Click += async (_, _) => await AddMultiEventInteractionAsync();
+		var enemyItem = new MenuItem { Header = "Enemy Event" };
+		enemyItem.Click += async (_, _) => await AddThreatInteractionAsync();
 		flyout.Items.Add( dialogItem );
 		flyout.Items.Add( rewardItem );
 		flyout.Items.Add( persistentItem );
@@ -607,6 +609,7 @@ public partial class MainWindow : Window
 		flyout.Items.Add( decisionItem );
 		flyout.Items.Add( corruptionItem );
 		flyout.Items.Add( multiItem );
+		flyout.Items.Add( enemyItem );
 		flyout.ShowAt( interactionsUC.AddInteractionButton );
 	}
 
@@ -669,6 +672,13 @@ public partial class MainWindow : Window
 	async Task AddMultiEventInteractionAsync()
 	{
 		var (accepted, created) = await EventEditorFactory.TryCreateMultiEventInteractionAsync( this, scenario );
+		if ( accepted )
+			scenario.AddInteraction( created );
+	}
+
+	async Task AddThreatInteractionAsync()
+	{
+		var (accepted, created) = await EventEditorFactory.TryCreateThreatInteractionAsync( this, scenario );
 		if ( accepted )
 			scenario.AddInteraction( created );
 	}
@@ -806,6 +816,19 @@ public partial class MainWindow : Window
 				var originalPrefix = clone.TranslationKeyPrefix();
 				var originalKeyName = clone.TranslationKeyName();
 				var w = new MultiEventInteractionWindow( scenario, clone, showCancelButton: true );
+				await w.ShowDialog( this );
+				clone.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( clone );
+				break;
+			}
+			case ThreatInteraction t:
+			{
+				var clone = t.Clone();
+				var originalValues = clone.CaptureStartingValues();
+				var originalPrefix = clone.TranslationKeyPrefix();
+				var originalKeyName = clone.TranslationKeyName();
+				var w = new ThreatInteractionWindow( scenario, clone, showCancelButton: true );
 				await w.ShowDialog( this );
 				clone.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 				if ( w.Accepted )
@@ -961,6 +984,18 @@ public partial class MainWindow : Window
 				m.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 				if ( w.Accepted )
 					scenario.AddInteraction( m );
+				break;
+			}
+			case ThreatInteraction t:
+			{
+				var originalValues = t.CaptureStartingValues();
+				var originalPrefix = t.TranslationKeyPrefix();
+				var originalKeyName = t.TranslationKeyName();
+				var w = new ThreatInteractionWindow( scenario, t, showCancelButton: true );
+				await w.ShowDialog( this );
+				t.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
+				if ( w.Accepted )
+					scenario.AddInteraction( t );
 				break;
 			}
 			default:

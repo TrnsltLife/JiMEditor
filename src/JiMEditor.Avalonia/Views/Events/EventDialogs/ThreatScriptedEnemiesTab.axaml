@@ -1,0 +1,98 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="JiMEditor.Avalonia.Views.Events.EventDialogs.ThreatScriptedEnemiesTab"
+             x:CompileBindings="False">
+	<ScrollViewer VerticalScrollBarVisibility="Auto">
+		<StackPanel Margin="8" Spacing="10">
+			<Border Classes="callout">
+				<Grid ColumnDefinitions="*,Auto">
+					<TextBlock Classes="subText" TextWrapping="Wrap">
+						<Bold>Scripted Enemy Groups</Bold>
+						<Run Text=" allow you to design unique, non-standard Enemies with your own values for Health, Damage/Fear and Elite Modifiers. The "/>
+						<Bold>Enemy Pool System</Bold>
+						<Run Text=" automates the creation of Enemy Events that are random yet balanced, and automatically scale with Player Count and Game Difficulty."/>
+					</TextBlock>
+					<Button Grid.Column="1" x:Name="HelpButton" Background="#FFC98800" Height="32" Padding="8,4" Click="HelpButton_OnClick">
+						<StackPanel Orientation="Horizontal" Spacing="6">
+							<Image Source="avares://JiMEditor.Avalonia/Assets/help.png" Stretch="Uniform"/>
+							<TextBlock Classes="heading" Text="Event Help"/>
+						</StackPanel>
+					</Button>
+				</Grid>
+			</Border>
+
+			<Button x:Name="AddScriptedEnemyButton" Background="DodgerBlue" HorizontalAlignment="Left" Click="AddScriptedEnemyButton_OnClick">
+				<StackPanel Orientation="Horizontal" Spacing="6">
+					<TextBlock Classes="heading" Text="Add Scripted Enemy Group..."/>
+					<Image Source="avares://JiMEditor.Avalonia/Assets/add.png" Width="24"/>
+				</StackPanel>
+			</Button>
+
+			<ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="240">
+				<ItemsControl x:Name="ScriptedEnemiesItems">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<Border Classes="callout" Margin="0,2">
+								<Grid ColumnDefinitions="*,Auto">
+									<WrapPanel VerticalAlignment="Center">
+										<TextBlock Text="{Binding dataName}" Classes="heading"/>
+										<Border Width="32" Height="32" Margin="10,0" BorderThickness="2" BorderBrush="White" CornerRadius="50">
+											<TextBlock Text="{Binding count}" Classes="heading" HorizontalAlignment="Center"/>
+										</Border>
+										<Border Width="32" Height="32">
+											<Border.Background>
+												<ImageBrush Source="avares://JiMEditor.Avalonia/Assets/health.png" Stretch="UniformToFill"/>
+											</Border.Background>
+											<TextBlock Text="{Binding health}" Classes="heading" HorizontalAlignment="Center" Margin="0,0,0,4"/>
+										</Border>
+										<TextBlock Text="{Binding bonuses}" Margin="20,0,0,0" Foreground="Silver"/>
+										<Image Source="avares://JiMEditor.Avalonia/Assets/damage.png" Height="32" Margin="20,0,0,0"/>
+										<TextBlock Text="/" Margin="5,0,0,0"/>
+										<Image Source="avares://JiMEditor.Avalonia/Assets/fear.png" Height="32"/>
+										<TextBlock Text="{Binding damage}"/>
+										<TextBlock Classes="heading" Text="Elite" Margin="15,0,0,0" Foreground="Red" IsVisible="{Binding isElite}"/>
+									</WrapPanel>
+									<StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="5">
+										<Button Background="CornflowerBlue" Width="40" Height="40" Click="EditButton_OnClick">
+											<Image Source="avares://JiMEditor.Avalonia/Assets/edit.png" Stretch="Uniform"/>
+										</Button>
+										<Button Background="{StaticResource bgCancelDelete}" Width="40" Height="40" Click="DeleteButton_OnClick">
+											<Image Source="avares://JiMEditor.Avalonia/Assets/remove.png" Stretch="Uniform"/>
+										</Button>
+									</StackPanel>
+								</Grid>
+							</Border>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</ScrollViewer>
+
+			<Border Classes="callout">
+				<StackPanel Spacing="4">
+					<TextBlock Classes="heading" Text="When All Enemies (Scripted and Pool) Have Been Defeated, Fire This Trigger (Optional):"/>
+					<StackPanel Orientation="Horizontal" Spacing="10">
+						<ComboBox x:Name="DefeatedTriggerCombo" Width="250" SelectionChanged="DefeatedTriggerCombo_OnSelectionChanged">
+							<ComboBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding dataName}" Foreground="White"/>
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+						<Button x:Name="AddDefeatedTriggerButton" Background="MediumSeaGreen" Width="32" Height="32" Click="AddDefeatedTriggerButton_OnClick">
+							<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png"/>
+						</Button>
+					</StackPanel>
+					<TextBlock Classes="subText" TextWrapping="Wrap" Margin="0,5,0,0">
+						<Run Text="In the General Properties, the "/>
+						<Bold>Set Trigger After Event Is Resolved</Bold>
+						<Run Text=" Trigger fires immediately after this Enemy Threat is "/>
+						<Bold>spawned</Bold>
+						<Run Text=", NOT after it's defeated. Set the Trigger above to fire when the Threat is "/>
+						<Bold>defeated</Bold>
+						<Run Text="."/>
+					</TextBlock>
+				</StackPanel>
+			</Border>
+		</StackPanel>
+	</ScrollViewer>
+</UserControl>

@@ -1,0 +1,76 @@
+<!-- Ported from: JiMEditor/Views/EnemyCalculator.xaml (2026-04-16) -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="JiMEditor.Avalonia.Views.EnemyCalculatorWindow"
+        x:CompileBindings="False"
+        Title="Enemy Simulator"
+        Width="750"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource bgColor}">
+	<Grid RowDefinitions="Auto,*,Auto">
+		<Border Classes="callout" Margin="5">
+			<StackPanel Spacing="6">
+				<StackPanel Orientation="Horizontal">
+					<TextBlock x:Name="BasePointsText" Classes="heading" Text="Base Pool Points: 10"/>
+					<TextBlock x:Name="BiasText" Classes="heading" Text="Difficulty Bias: Medium" Margin="50,0,0,0"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Classes="heading" Text="Scaled Pool Points:"/>
+					<TextBlock x:Name="ScaledPointsText" Classes="heading" Margin="5,0"/>
+					<TextBlock Classes="heading" Text="Points For Modifiers:" Margin="50,0,0,0"/>
+					<TextBlock x:Name="ModPointsText" Classes="heading" Margin="5,0"/>
+					<TextBlock Classes="heading" Text="Points Left Over:" Margin="50,0,0,0"/>
+					<TextBlock x:Name="LeftOversText" Classes="heading" Margin="5,0"/>
+				</StackPanel>
+				<TextBlock Classes="subText" TextWrapping="Wrap"
+				           Text="Simulated encounters are generated using the same algorithm as the Companion App. Hero Count, Difficulty mode and Difficulty Bias affect the scaling of Enemy Events."/>
+				<TextBlock x:Name="SimulatorWarningText" Classes="subText" TextWrapping="Wrap" Foreground="#FFD0A000" Margin="0,4,0,0" IsVisible="False"/>
+				<Grid ColumnDefinitions="*,Auto,Auto">
+					<Button Content="Re-Roll This Encounter" Background="DodgerBlue" Foreground="White" HorizontalAlignment="Left" Height="36" FontWeight="Bold" FontSize="14" Click="RerollButton_OnClick"/>
+					<ComboBox x:Name="PlayersCombo" Grid.Column="1" Width="130" Margin="10,0,0,0" SelectedIndex="0"
+					          SelectionChanged="PlayersCombo_OnSelectionChanged">
+						<ComboBoxItem Content="1 Player"/>
+						<ComboBoxItem Content="2 Players"/>
+						<ComboBoxItem Content="3 Players"/>
+						<ComboBoxItem Content="4 Players"/>
+						<ComboBoxItem Content="5 Players"/>
+					</ComboBox>
+					<ComboBox x:Name="DifficultyCombo" Grid.Column="2" Width="100" Margin="10,0,0,0" SelectedIndex="1"
+					          SelectionChanged="DifficultyCombo_OnSelectionChanged">
+						<ComboBoxItem Content="Easy"/>
+						<ComboBoxItem Content="Normal"/>
+						<ComboBoxItem Content="Hard"/>
+					</ComboBox>
+				</Grid>
+			</StackPanel>
+		</Border>
+
+		<ItemsControl Grid.Row="1" x:Name="ResultsItems" Margin="5">
+			<ItemsControl.ItemsPanel>
+				<ItemsPanelTemplate>
+					<WrapPanel />
+				</ItemsPanelTemplate>
+			</ItemsControl.ItemsPanel>
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<Border Classes="callout" Margin="0,0,5,5">
+						<StackPanel>
+							<TextBlock Text="{Binding dataName}" Classes="heading"/>
+							<StackPanel Orientation="Horizontal"><TextBlock Text="Enemy Count:" Classes="heading"/><TextBlock Text="{Binding count}" Classes="heading" Margin="5,0"/></StackPanel>
+							<StackPanel Orientation="Horizontal"><TextBlock Text="Group Cost:" Classes="heading"/><TextBlock Text="{Binding cost}" Classes="heading" Margin="5,0"/></StackPanel>
+							<StackPanel Orientation="Horizontal"><TextBlock Text="Elite Modifiers:" Classes="heading"/><TextBlock Text="{Binding specialAbility}" Classes="heading" Margin="5,0"/></StackPanel>
+						</StackPanel>
+					</Border>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+
+		<Border Grid.Row="2" BorderThickness="0,1,0,0" BorderBrush="Silver" Background="#FF46464A">
+			<WrapPanel HorizontalAlignment="Right">
+				<Button Margin="10" Background="MediumSeaGreen" Click="OkButton_OnClick">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+			</WrapPanel>
+		</Border>
+	</Grid>
+</Window>

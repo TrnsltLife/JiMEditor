@@ -79,32 +79,39 @@
 						<StackPanel>
 							<TextBlock Text="Enable these Collections:" Classes="heading"/>
 							<Grid Margin="0,5,0,10" ColumnDefinitions="Auto,Auto,Auto" RowDefinitions="Auto,Auto,Auto">
+								<Rectangle Grid.Row="0" Grid.Column="0" Fill="DarkGreen"/>
 								<StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" Margin="0,0,10,0">
 									<TextBlock Text="r" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
 									<CheckBox x:Name="CoreSetCheckBox" Content="Core Set" FontWeight="Bold" IsEnabled="False" IsChecked="True"/>
 								</StackPanel>
+								<Rectangle Grid.Row="0" Grid.Column="1" Fill="Black"/>
 								<StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="0,0,10,0">
 									<TextBlock Text="p" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
 									<CheckBox x:Name="ShadedPathsCheckBox" Content="Shaded Paths" IsCheckedChanged="CollectionCheckBox_Changed"/>
 								</StackPanel>
+								<Rectangle Grid.Row="0" Grid.Column="2" Fill="DarkRed"/>
 								<StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal">
 									<TextBlock Text="w" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
 									<CheckBox x:Name="UnfurlingWarCheckBox" Content="Unfurling War" IsCheckedChanged="CollectionCheckBox_Changed"/>
 								</StackPanel>
 
+								<Rectangle Grid.Row="1" Grid.Column="0" Fill="SaddleBrown"/>
 								<StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="0,0,10,0">
 									<TextBlock Text="v" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
 									<CheckBox x:Name="VillainsOfEriadorCheckBox" Content="Villains of Eriador" IsCheckedChanged="CollectionCheckBox_Changed"/>
 								</StackPanel>
+								<Rectangle Grid.Row="1" Grid.Column="1" Fill="Purple"/>
 								<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="0,0,10,0">
 									<TextBlock Text="d" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
 									<CheckBox x:Name="DenizensInDarknessCheckBox" Content="Denizens in Darkness" IsCheckedChanged="CollectionCheckBox_Changed"/>
 								</StackPanel>
+								<Rectangle Grid.Row="1" Grid.Column="2" Fill="YellowGreen"/>
 								<StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal">
 									<TextBlock Text="c" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
 									<CheckBox x:Name="ScorchersOfTheWildsCheckBox" Content="Scorchers of the Wilds" IsCheckedChanged="CollectionCheckBox_Changed"/>
 								</StackPanel>
 
+								<Rectangle Grid.Row="2" Grid.Column="0" Fill="Transparent"/>
 								<StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Margin="0,0,10,0">
 									<TextBlock Text="/" Foreground="White" FontSize="20" Margin="2,0" Width="20" FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
 									<CheckBox x:Name="CustomCheckBox" Content="Custom" IsCheckedChanged="CollectionCheckBox_Changed"/>

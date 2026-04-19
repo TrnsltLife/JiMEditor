@@ -1,0 +1,331 @@
+<!-- Ported from: JiMEditor/Views/MonsterEditorWindow.xaml (2026-04-16) -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sg="clr-namespace:SpacedGridControl.Avalonia;assembly=SpacedGridControl.Avalonia"
+        x:Class="JiMEditor.Avalonia.Views.ScriptedEnemyGroupEditorWindow"
+        x:CompileBindings="False"
+        Title="Enemy Editor"
+        Width="800"
+		Height="700"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource bgColor}">
+	<Window.Styles>
+		<Style Selector="TextBlock"><Setter Property="Foreground" Value="White"/></Style>
+		<Style Selector="CheckBox"><Setter Property="Foreground" Value="White"/></Style>
+		<Style Selector="RadioButton"><Setter Property="Foreground" Value="White"/><Setter Property="Margin" Value="0,5"/></Style>
+		<Style Selector="TextBox:disabled"><Setter Property="Foreground" Value="White"/></Style>
+		<Style Selector="TextBox.campaignField">
+			<Setter Property="Background" Value="#333337"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#77777d"/>
+			<Setter Property="Padding" Value="6,4"/>
+		</Style>
+		<Style Selector="TextBox.compactStatField">
+			<Setter Property="MinWidth" Value="0"/>
+			<Setter Property="Width" Value="26"/>
+			<Setter Property="MaxWidth" Value="26"/>
+			<Setter Property="Padding" Value="2,0"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		</Style>
+		<Style Selector="RadioButton.enemyTypeOption">
+			<Setter Property="FontSize" Value="12"/>
+			<Setter Property="Margin" Value="0,0,0,-2"/>
+			<Setter Property="Padding" Value="0"/>
+			<Setter Property="MinHeight" Value="0"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="Template">
+				<ControlTemplate>
+					<Grid ColumnDefinitions="Auto,*" VerticalAlignment="Center">
+						<Grid Width="10" Height="10" VerticalAlignment="Center" Margin="0,0,2,0">
+							<Ellipse Stroke="{TemplateBinding Foreground}" StrokeThickness="1.5" Fill="Transparent"/>
+							<Ellipse x:Name="InnerDot" Width="4" Height="4" Fill="{TemplateBinding Foreground}"
+							         HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="False"/>
+						</Grid>
+						<ContentPresenter Grid.Column="1"
+						                  Content="{TemplateBinding Content}"
+						                  ContentTemplate="{TemplateBinding ContentTemplate}"
+						                  VerticalAlignment="Center"/>
+					</Grid>
+				</ControlTemplate>
+			</Setter>
+		</Style>
+		<Style Selector="RadioButton.enemyTypeOption:checked /template/ Ellipse#InnerDot">
+			<Setter Property="IsVisible" Value="True"/>
+		</Style>
+		<Style Selector="TextBlock.enemyTypeHeader">
+			<Setter Property="FontSize" Value="12"/>
+		</Style>
+		<Style Selector="TextBlock.enemyTypeCollectionIcon">
+			<Setter Property="FontSize" Value="20"/>
+			<Setter Property="Width" Value="20"/>
+			<Setter Property="Margin" Value="2,0,0,0"/>
+			<Setter Property="FontFamily" Value="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+		</Style>
+	</Window.Styles>
+	<Grid RowDefinitions="*,Auto">
+		<ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+			<StackPanel Margin="5" Spacing="8">
+				<Border Classes="callout">
+					<StackPanel Spacing="4">
+						<TextBlock Classes="heading" Text="Enemy Name:"/>
+						<TextBlock Classes="subText" TextWrapping="Wrap">
+							<Run Text="The Enemy Name defaults to the Enemy Type. Customize a name for a special enemy with a unique name, otherwise leave it blank to use the default."/>
+						</TextBlock>
+						<StackPanel Orientation="Horizontal" Margin="0,5,0,0" Spacing="10">
+							<TextBox x:Name="NameTextBox" Classes="campaignField" Width="350"/>
+							<TextBlock Classes="heading" Text="Enemy Count:" VerticalAlignment="Center"/>
+							<ComboBox x:Name="CountCombo" Width="70" SelectedIndex="0">
+								<ComboBoxItem Content="1"/>
+								<ComboBoxItem Content="2"/>
+								<ComboBoxItem Content="3"/>
+							</ComboBox>
+							<TextBlock Classes="heading" Text="Lore Reward:" VerticalAlignment="Center"/>
+							<TextBox x:Name="LoreRewardTextBox" Classes="campaignField" Width="35" Text="0"/>
+						</StackPanel>
+						<TextBlock Classes="subText" TextWrapping="Wrap"
+						           Text="This Lore Reward is only awarded for defeating this particular Enemy Group. The Lore Reward in the Event's General Properties is still awarded for defeating all Groups in the Event."/>
+					</StackPanel>
+				</Border>
+
+				<Border Classes="callout">
+					<StackPanel Spacing="6">
+						<TextBlock Classes="heading" Text="Enemy Type:"/>
+						<sg:SpacedGrid RowSpacing="1"
+						               ColumnSpacing="20"
+						               HorizontalAlignment="Left"
+						               Margin="0,3,0,6">
+							<sg:SpacedGrid.ColumnDefinitions>
+								<ColumnDefinition Width="8"/>
+								<ColumnDefinition Width="Auto"/>
+								<ColumnDefinition Width="Auto"/>
+								<ColumnDefinition Width="Auto"/>
+								<ColumnDefinition Width="Auto"/>
+								<ColumnDefinition Width="Auto"/>
+								<ColumnDefinition Width="8"/>
+							</sg:SpacedGrid.ColumnDefinitions>
+							<sg:SpacedGrid.RowDefinitions>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+							</sg:SpacedGrid.RowDefinitions>
+							<Rectangle Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="7" Fill="DarkGreen" />
+							<StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+								<TextBlock Classes="enemyTypeCollectionIcon" Text="r" Foreground="White"/>
+								<TextBlock Classes="enemyTypeHeader" Text="Core Set:" FontWeight="Bold" Foreground="White" Margin="0,1,4,0"/>
+							</StackPanel>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="0" Grid.Column="2" x:Name="GoblinScoutRadio" Content=" Goblin Scout x6" GroupName="MonsterType" Tag="1"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="0" Grid.Column="3" x:Name="HillTrollRadio" Content=" Hill Troll" GroupName="MonsterType" Tag="5"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="0" Grid.Column="4" x:Name="OrcHunterRadio" Content=" Orc Hunter x3" GroupName="MonsterType" Tag="2"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="0" Grid.Column="5" x:Name="OrcMarauderRadio" Content=" Orc Marauder x3" GroupName="MonsterType" Tag="3"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="1" Grid.Column="2" x:Name="RuffianRadio" Content=" Ruffian x6" GroupName="MonsterType" Tag="0"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="1" Grid.Column="3" x:Name="HungryVargRadio" Content=" Hungry Varg x3" GroupName="MonsterType" Tag="4"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="1" Grid.Column="4" x:Name="WightRadio" Content=" Wight x3" GroupName="MonsterType" Tag="6"/>
+
+							<Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="7" Fill="SaddleBrown" />
+							<StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+								<TextBlock Classes="enemyTypeCollectionIcon" Text="v" Foreground="White"/>
+								<TextBlock Classes="enemyTypeHeader" Text="Villains of Eriajar:" FontWeight="Bold" Foreground="White" Margin="0,1,4,0"/>
+							</StackPanel>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="2" Grid.Column="2" x:Name="AtariRadio" Content=" Atari" GroupName="MonsterType" Tag="7"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="2" Grid.Column="3" x:Name="ChartoothRadio" Content=" Chartooth" GroupName="MonsterType" Tag="9"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="2" Grid.Column="4" x:Name="GargletargRadio" Content=" Gargletarg" GroupName="MonsterType" Tag="8"/>
+
+							<Rectangle Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="7" Fill="Black" />
+							<StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+								<TextBlock Classes="enemyTypeCollectionIcon" Text="p" Foreground="White"/>
+								<TextBlock Classes="enemyTypeHeader" Text="Shaded Paths:" FontWeight="Bold" Foreground="White" Margin="0,1,4,0"/>
+							</StackPanel>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="3" Grid.Column="2" x:Name="BalerockRadio" Content=" Balerock" GroupName="MonsterType" Tag="16"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="3" Grid.Column="3" x:Name="CaveTrollRadio" Content=" Cave Troll x2" GroupName="MonsterType" Tag="15"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="3" Grid.Column="4" x:Name="GiantSpiderRadio" Content=" Giant Spider x6" GroupName="MonsterType" Tag="10"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="3" Grid.Column="5" x:Name="AnonymousThingRadio" Content=" Anonymous Thing x3" GroupName="MonsterType" Tag="14"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="4" Grid.Column="2" x:Name="OrcTaskmasterRadio" Content=" Orc Taskmaster x6" GroupName="MonsterType" Tag="12"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="4" Grid.Column="3" x:Name="PitGoblinRadio" Content=" Pit Goblin x6" GroupName="MonsterType" Tag="11"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="4" Grid.Column="4" x:Name="ShadowmanRadio" Content=" Shadowman x3" GroupName="MonsterType" Tag="13"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="4" Grid.Column="5" x:Name="SpawnOfUglygiantRadio" Content=" Spawn of Uglygiant" GroupName="MonsterType" Tag="17"/>
+
+							<Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="7" Fill="Purple" />
+							<StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
+								<TextBlock Classes="enemyTypeCollectionIcon" Text="d" Foreground="White"/>
+								<TextBlock Classes="enemyTypeHeader" Text="Denizens in Darkness:" FontWeight="Bold" Foreground="White" Margin="0,1,4,0"/>
+							</StackPanel>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="5" Grid.Column="2" x:Name="OliverRadio" Content=" Oliver" GroupName="MonsterType" Tag="20"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="5" Grid.Column="3" x:Name="UrsulaRadio" Content=" Ursula" GroupName="MonsterType" Tag="19"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="2" HorizontalAlignment="Left" x:Name="SupplicantRadio" Content=" Supplicant of More-Goth" GroupName="MonsterType" Tag="18"/>
+
+							<Rectangle Grid.Row="6" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="7" Fill="DarkRed" />
+							<StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
+								<TextBlock Classes="enemyTypeCollectionIcon" Text="w" Foreground="White"/>
+								<TextBlock Classes="enemyTypeHeader" Text="Unfurling War:" FontWeight="Bold" Foreground="White" Margin="0,1,4,0"/>
+							</StackPanel>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="6" Grid.Column="2" x:Name="FoulBeastRadio" Content=" Foul Beast x3" GroupName="MonsterType" Tag="21"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="6" Grid.Column="3" x:Name="SiegeEngineRadio" Content=" Siege Engine x2" GroupName="MonsterType" Tag="23"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="6" Grid.Column="4" x:Name="SoldierRadio" Content=" Soldier x6" GroupName="MonsterType" Tag="25"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="6" Grid.Column="5" x:Name="HighOrcWarriorRadio" Content=" High-Orc Warrior x6" GroupName="MonsterType" Tag="26"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="7" Grid.Column="2" x:Name="WarElephantRadio" Content=" War Elephant" GroupName="MonsterType" Tag="24"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="7" Grid.Column="3" x:Name="VargRiderRadio" Content=" Varg Rider x3" GroupName="MonsterType" Tag="22"/>
+
+							<Rectangle Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="7" Fill="YellowGreen" />
+							<StackPanel Grid.Row="8" Grid.Column="1" Orientation="Horizontal" Margin="0,1,4,0">
+								<TextBlock Classes="enemyTypeCollectionIcon" Text="c" Foreground="White"/>
+								<TextBlock Classes="enemyTypeHeader" Text="Scorchers" FontWeight="Bold" Foreground="White"/>
+								<TextBlock Text=" of the " FontWeight="Bold" Foreground="White" FontSize="9" VerticalAlignment="Top"/>
+								<TextBlock Classes="enemyTypeHeader" Text="Wilds:" FontWeight="Bold" Foreground="White"/>
+							</StackPanel>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="8" Grid.Column="2" x:Name="LordJavelinRadio" Content=" Lord Javelin" GroupName="MonsterType" Tag="27"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="8" Grid.Column="3" x:Name="EndrisRadio" Content=" Endris" GroupName="MonsterType" Tag="29"/>
+							<RadioButton Classes="enemyTypeOption" IsCheckedChanged="MonsterTypeRadio_OnIsCheckedChanged" Grid.Row="8" Grid.Column="4" Grid.ColumnSpan="2" x:Name="LichKingRadio" Content=" Lich-King" GroupName="MonsterType" Tag="28"/>
+						</sg:SpacedGrid>
+					</StackPanel>
+				</Border>
+
+				<Border Classes="callout">
+					<Grid ColumnDefinitions="Auto,*,Auto,Auto" RowDefinitions="Auto,Auto">
+						<StackPanel Grid.Column="0" Grid.Row="0">
+							<TextBlock Classes="heading" Text="Base Enemy Stats:"/>
+							<CheckBox x:Name="UseDefaultCheckBox" Content="Use Default Stats" Margin="0,10,0,0" IsCheckedChanged="UseDefaultCheckBox_OnIsCheckedChanged"/>
+							<TextBlock x:Name="SpecialTextBlock" Classes="subText" TextWrapping="Wrap" MaxWidth="110" Margin="0,10,0,0"/>
+						</StackPanel>
+						<StackPanel x:Name="Stats1Panel" Grid.Column="1" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+							<StackPanel>
+								<TextBlock Classes="heading" Text="Enemy Health:" Margin="0,0,5,10"/>
+								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+									<Image Source="avares://JiMEditor.Avalonia/Assets/health.png" Height="32" Margin="0,0,5,0"/>
+									<TextBox x:Name="HealthTextBox" Classes="campaignField compactStatField"/>
+								</StackPanel>
+							</StackPanel>
+						</StackPanel>
+						<StackPanel Grid.Column="2" Grid.Row="0" MaxWidth="250" HorizontalAlignment="Center">
+							<TextBlock Classes="heading" Text="Total Default Attack Value:" Margin="0,0,5,10"/>
+							<StackPanel Orientation="Horizontal" Margin="10,0" HorizontalAlignment="Center">
+								<Image Source="avares://JiMEditor.Avalonia/Assets/damage.png" Height="40" Margin="10,0,5,0"/>
+								<TextBox x:Name="DamageTextBox" Classes="campaignField compactStatField"/>
+								<Image Source="avares://JiMEditor.Avalonia/Assets/fear.png" Height="40" Margin="10,0,5,0"/>
+							</StackPanel>
+						</StackPanel>
+						<StackPanel x:Name="Stats2Panel" Grid.Column="3" Grid.Row="0">
+							<StackPanel Orientation="Horizontal" Margin="10,0,0,10">
+								<StackPanel Margin="0,5,0,0">
+									<TextBlock Classes="heading" Text="Shield:"/>
+									<TextBox x:Name="ShieldTextBox" Classes="campaignField compactStatField"/>
+								</StackPanel>
+								<StackPanel Margin="15,5,0,0">
+									<TextBlock Classes="heading" Text="Sorcery:"/>
+									<TextBox x:Name="SorceryTextBox" Classes="campaignField compactStatField"/>
+								</StackPanel>
+								<StackPanel Margin="15,5,0,0">
+									<TextBlock Classes="heading" Text="Movement:"/>
+									<StackPanel Orientation="Horizontal">
+										<TextBox x:Name="MoveATextBox" Classes="campaignField compactStatField" Margin="0,0,10,0"/>
+										<TextBlock Classes="heading" Text="/ " FontSize="18"/>
+										<TextBox x:Name="MoveBTextBox" Classes="campaignField compactStatField"/>
+									</StackPanel>
+								</StackPanel>
+							</StackPanel>
+							<CheckBox x:Name="IsRangedCheckBox" Content="Ranged" Margin="8,0,0,0"/>
+						</StackPanel>
+						<StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+							<TextBlock Classes="heading" Text="Enemy Attack Group Descriptions:"/>
+							<ComboBox x:Name="ActivationCombo" Margin="3" MinWidth="220">
+								<ComboBox.ItemTemplate>
+									<DataTemplate>
+										<TextBlock Text="{Binding dataName}" Foreground="White"/>
+									</DataTemplate>
+								</ComboBox.ItemTemplate>
+							</ComboBox>
+						</StackPanel>
+						<TextBlock Grid.Row="1" Grid.Column="2" Classes="subText" MaxWidth="200" Margin="10,0,10,0" TextWrapping="Wrap"
+						           Text="Damage and Fear share one value randomly split between them."/>
+					</Grid>
+				</Border>
+
+				<Border Classes="callout">
+					<StackPanel>
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Classes="heading" Text="Elite Bonuses (7 max):"/>
+							<ComboBox x:Name="ModifierCombo" Margin="20,0,0,0" MinWidth="200" SelectionChanged="ModifierCombo_OnSelectionChanged">
+								<ComboBox.ItemTemplate>
+									<DataTemplate>
+										<TextBlock Text="{Binding dataName}" Foreground="White"/>
+									</DataTemplate>
+								</ComboBox.ItemTemplate>
+							</ComboBox>
+							<Button x:Name="AddSelectedModifierButton" Content="Add Selected Bonus" Background="DodgerBlue" Foreground="White" Margin="10,0,0,0" IsEnabled="False" Click="AddSelectedModifierButton_OnClick"/>
+							<Button x:Name="AddModifierButton" Background="MediumSeaGreen" Margin="10,0,0,0" Height="32" Width="32" Click="AddModifierButton_OnClick">
+								<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png"/>
+							</Button>
+						</StackPanel>
+
+						<ItemsControl x:Name="ModifiersItems" Padding="5" MinHeight="30">
+							<ItemsControl.ItemsPanel>
+								<ItemsPanelTemplate>
+									<WrapPanel />
+								</ItemsPanelTemplate>
+							</ItemsControl.ItemsPanel>
+							<ItemsControl.ItemTemplate>
+								<DataTemplate>
+									<Border Classes="callout" Background="{StaticResource bgButtonColor}" Margin="0,0,5,5">
+										<StackPanel Orientation="Horizontal">
+											<TextBlock Text="{Binding dataName}" Classes="subText" Foreground="White" VerticalAlignment="Center"/>
+											<Button Background="{StaticResource bgCancelDelete}" Foreground="White" Margin="10,0,0,0" Height="32" Width="32" Click="RemoveModifierButton_OnClick">
+												<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png"/>
+											</Button>
+										</StackPanel>
+									</Border>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
+
+						<TextBlock x:Name="ModifierDescriptionText" Classes="heading" TextWrapping="Wrap"/>
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Classes="heading" Text="Randomize number of bonuses or use them all:"/>
+							<TextBlock x:Name="RandomizedCountText" Classes="heading" Margin="10,0,0,0"/>
+							<WrapPanel Orientation="Horizontal">
+								<TextBlock Classes="heading" Text="One" Margin="30,0,0,0"/>
+								<Slider x:Name="RandomizedModifiersSlider" Width="280" Margin="10,0,10,0"
+								        Minimum="1" Maximum="7"
+								        TickFrequency="1"
+								        TickPlacement="Outside"
+								        SmallChange="1"
+								        LargeChange="1"
+								        IsSnapToTickEnabled="True"
+								        ValueChanged="RandomizedModifiersSlider_OnValueChanged"/>
+								<TextBlock Classes="heading" Text="All"/>
+							</WrapPanel>
+						</StackPanel>
+					</StackPanel>
+				</Border>
+
+				<Border Classes="callout">
+					<StackPanel>
+						<TextBlock Classes="heading" Text="Custom Difficulty Setting:"/>
+						<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+							<TextBlock Classes="subText" Text="This Group appears in the following Difficulties:"/>
+							<CheckBox x:Name="EasyCheckBox" Content="Easy" Foreground="Green" Margin="10,0,0,0" FontWeight="Bold"/>
+							<CheckBox x:Name="NormalCheckBox" Content="Normal" Foreground="Yellow" Margin="10,0,0,0" FontWeight="Bold"/>
+							<CheckBox x:Name="HardCheckBox" Content="Hard" Foreground="Red" Margin="10,0,0,0" FontWeight="Bold"/>
+						</StackPanel>
+						<TextBlock Classes="subText" TextWrapping="Wrap" Margin="0,5,0,0"
+						           Text="This setting allows the design of flexible encounters with the creation of Groups that only appear in specific Difficulty modes. No matter which Difficulties you select, always design the Group for Normal Difficulty with 2 Players. The Companion App will modify the Group automatically."/>
+					</StackPanel>
+				</Border>
+			</StackPanel>
+		</ScrollViewer>
+		<Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Silver" Background="#FF46464A">
+			<WrapPanel HorizontalAlignment="Right">
+				<Button Margin="10" Background="MediumSeaGreen" Click="OkButton_Click" IsDefault="True">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+				<Button Margin="0,10,10,10" Background="{StaticResource bgCancelDelete}" Click="CancelButton_Click" IsCancel="True">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+			</WrapPanel>
+		</Border>
+	</Grid>
+</Window>

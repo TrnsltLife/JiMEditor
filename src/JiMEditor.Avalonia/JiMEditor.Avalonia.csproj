@@ -30,25 +30,8 @@
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\TilesB\**\*.png" Link="Assets\TilesB\%(RecursiveDir)%(Filename)%(Extension)" />
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\Tokens\*.png" Link="Assets\Tokens\%(Filename)%(Extension)" />
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\Terrain\*.png" Link="Assets\Terrain\%(Filename)%(Extension)" />
-    <!-- Campaign window toolbar icons (JiMEditor/Assets) -->
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\add2.png" Link="Assets\add2.png" />
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\addpage.png" Link="Assets\addpage.png" />
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\dice.png" Link="Assets\dice.png" />
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\arrow.png" Link="Assets\arrow.png" />
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\edit.png" Link="Assets\edit.png" />
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\package.png" Link="Assets\package.png" />
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\help.png" Link="Assets\help.png" />
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\ok.png" Link="Assets\ok.png" />
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\save.png" Link="Assets\save.png" />
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\cancel.png" Link="Assets\cancel.png" />
-    <!-- MainWindow sidebar (JiMEditor/Assets) -->
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\add.png" Link="Assets\add.png" />
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\addtrigger.png" Link="Assets\addtrigger.png" />
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\addobjective.png" Link="Assets\addobjective.png" />
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\remove.png" Link="Assets\remove.png" />
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\duplicate.png" Link="Assets\duplicate.png" />
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\import.png" Link="Assets\import.png" />
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\export.png" Link="Assets\export.png" />
+    <!-- Link all top-level JiMEditor/Assets PNG icons (dialogs, toolbars, enemy editor icons, etc.). -->
+    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\*.png" Link="Assets\%(Filename)%(Extension)" />
     <AvaloniaResource Include="..\..\..\JiMEditor\Assets\LoTR-JiME-Icons.ttf" Link="Assets\LoTR-JiME-Icons.ttf" />
   </ItemGroup>
 
