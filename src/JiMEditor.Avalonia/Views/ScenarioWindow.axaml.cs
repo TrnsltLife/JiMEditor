@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using JiMEditor.Avalonia.EventDialog;
 using JiME;
 using MessageBox = System.Windows.MessageBox;
 using MessageBoxButton = System.Windows.MessageBoxButton;
@@ -175,9 +176,14 @@ public partial class ScenarioWindow : Window
 		if ( !scenario.collectionObserver.Contains( collection ) )
 			return;
 
-		const string body =
-			"ALL THIS COLLECTION'S TILES, TOKENS, ENEMIES, ITEMS, AND TITLES WILL BE REMOVED FROM THE SCENARIO IF YOU REMOVE THIS COLLECTION.\n\n"
-			+ "Are you sure you want to remove this Collection from the scenario?";
+		var impact = ScenarioCollectionRemovalImpact.GetImpactForRemovingCollection( scenario, collection );
+		var impactText = CollectionRemovalImpact.FormatForDialog( impact );
+		var body = "ALL THIS COLLECTION'S TILES, TOKENS, ENEMIES, ITEMS, AND TITLES WILL BE REMOVED FROM THE SCENARIO IF YOU REMOVE THIS COLLECTION.\n\n";
+		if ( string.IsNullOrWhiteSpace( impactText ) )
+			body += "No matching references were found in Events (tiles elsewhere are not scanned yet).\n\n";
+		else
+			body += impactText + "\n\n";
+		body += "Are you sure you want to remove this Collection from the scenario?";
 		var ret = MessageBox.Show( body, "Remove Collection?", MessageBoxButton.YesNo, MessageBoxImage.Question );
 		if ( ret != MessageBoxResult.Yes )
 		{

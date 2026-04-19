@@ -10,6 +10,7 @@ This is a list of things we need to do:
 * Main  Window
   * Enable New Campaign button
   * Enable Save button
+    * Save should use similar logic to ScenarioCollectionRemovalImpact and remove any disallowed items base on currently selected Collections
   * Create Save As button?
   * Enable Load button
     * Have its dialog ask if you want to Save First, Open, or Cancel
