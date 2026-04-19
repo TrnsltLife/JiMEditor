@@ -8,22 +8,17 @@ This is a list of things we need to do:
   * Add Existing Scenario... button needs to work
   * Add Procedurally Generated Scenario... button should launch the random scenario editor
 * Main  Window
-  * Enable Events in the sidebar. Enable event types one by one.
-    x Conditional
-    x Corruption
-    x Decision
-    x Dialog
-    x Enemy
-    x Item
-    x Multi-Event
-    x Persistent
-    x Replace Token
-    x Reward
-    x Stat Test
-    x Story Branch
-    x Text Dialog
-    x Title
+  * Enable New Campaign button
+  * Enable Save button
+  * Create Save As button?
+  * Enable Load button
+    * Have its dialog ask if you want to Save First, Open, or Cancel
   * Enemy Event isn't respecting allowed enemy types based on scenario collections selected
+  * Graph capabilities ported - check if libraries support Mac/Linux:
+    * to FlowGraph?
+      * https://github.com/prismify-co/FlowGraph
+    * to NodeEditor?
+      * https://wieslawsoltes.github.io/NodeEditor/
 
   * App Version and Scenario Format Version in the status bar
 * Settings Dialog TODO:

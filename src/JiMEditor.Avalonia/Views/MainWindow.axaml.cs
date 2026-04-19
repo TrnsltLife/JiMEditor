@@ -44,6 +44,8 @@ public partial class MainWindow : Window
 	{
 		scenario = s;
 		DataContext = scenario;
+		appVersion.Text = Utils.appVersion;
+		formatVersion.Text = Utils.formatVersion;
 		WireSidebarLists();
 		SyncTitleFromScenario();
 		ScenarioNameEdit.Text = scenario.scenarioName ?? "";

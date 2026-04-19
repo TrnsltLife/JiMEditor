@@ -25,13 +25,17 @@
 	</UserControl.Styles>
 
 	<ScrollViewer VerticalScrollBarVisibility="Auto">
-		<StackPanel Spacing="0">
+		<StackPanel Spacing="0" HorizontalAlignment="Stretch">
 			<TextBlock HorizontalAlignment="Center"
 			           FontWeight="Bold"
 			           Foreground="White"
 			           Text="{Binding Title}"/>
+			<!-- Min width = sidebar column (300) minus 40; stretch so the box uses full row width instead of sizing to the selected item. -->
 			<ComboBox x:Name="dataListView"
 			          Margin="3"
+			          MinWidth="240"
+			          MaxWidth="240"
+			          HorizontalContentAlignment="Left"
 			          SelectionChanged="DataListView_OnSelectionChanged">
 				<ComboBox.ItemTemplate>
 					<DataTemplate>

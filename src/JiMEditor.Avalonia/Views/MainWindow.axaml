@@ -109,13 +109,31 @@
 			</StackPanel>
 		</Border>
 
-		<!-- Status bar -->
-		<Border DockPanel.Dock="Bottom" Background="{StaticResource bgColorLight}" Padding="8,4">
-			<TextBlock x:Name="StatusText" Foreground="White" Text="Ready"/>
+		<!-- Status bar (ported from JiMEditor/MainWindow.xaml bottom bar) -->
+		<Border DockPanel.Dock="Bottom"
+		        Background="{StaticResource bgColorLight}"
+		        MinHeight="30"
+		        BorderBrush="Black"
+		        BorderThickness="0,1,0,0"
+		        Padding="4,2">
+			<UniformGrid Columns="2">
+				<StackPanel Orientation="Horizontal"
+				            HorizontalAlignment="Center"
+				            VerticalAlignment="Center">
+					<TextBlock Foreground="White" Text="App Version:  "/>
+					<TextBlock x:Name="appVersion" Foreground="White"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal"
+				            HorizontalAlignment="Center"
+				            VerticalAlignment="Center">
+					<TextBlock Foreground="White" Text="Scenario Format Version:  "/>
+					<TextBlock x:Name="formatVersion" Foreground="White"/>
+				</StackPanel>
+			</UniformGrid>
 		</Border>
 
 		<!-- Sidebar + main -->
-		<Grid ColumnDefinitions="260,*">
+		<Grid ColumnDefinitions="280,*">
 			<!-- Left sidebar lists -->
 			<Border Grid.Column="0" Background="{StaticResource bgColorLight}" Padding="4">
 				<ScrollViewer>
