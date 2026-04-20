@@ -26,7 +26,7 @@ This is a list of things we need to do:
       * https://github.com/Oaz/AvaloniaGraphControl
 
   * Graphic Hex Tile Editor
-    * Journey flow is now primary path (Tile Editor / Token Editor). Battle/Square tile editor routing and behavior remain TODO-Avalonia-Reenable.
+    * Journey flow: Tile Editor / Token Editor. Battle scenarios: `TileEditorWindow` opens with square tiles (998/999), 25px drag grid, diamond cell geometry; parity polish may still be needed vs WPF.
     * Graphic Primitives: https://docs.avaloniaui.net/docs/graphics-animation/drawing-graphics
     * Shapes & Geometry: https://docs.avaloniaui.net/docs/graphics-animation/shapes-and-geometries
     * Image Brush: https://docs.avaloniaui.net/docs/graphics-animation/brushes
@@ -45,3 +45,9 @@ This is a list of things we need to do:
 
 * Translations
   * I don't think all the Event editors are getting wired up for translations. Need to do this eventually.
+
+* Verification status (2026-04-19)
+  * Journey tile/token `.jime` roundtrip numeric parity is covered by tests in `TileTokenSerializationRoundTripTests`.
+  * Journey translation-tail parity now includes tests for chapter rename key migration and changed explored-text decertification via `ApplyTranslationUpdatesAfterEditorDialog`.
+  * Event translation-tail parity: `EventEditorTranslationTailTests` covers `TextInteraction` and `DialogInteraction` rename-key migration and decertify-on-text-change (same post-dialog helper as `EventEditorFactory`).
+  * Battle/square: first-pass `TileEditorWindow` + gallery (998/999) are wired; deep WPF parity (image scale, exact hit feel) may need follow-up.

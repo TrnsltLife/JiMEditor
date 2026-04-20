@@ -443,15 +443,12 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 	{
 		if ( !_tokenShapes.TryGetValue( token, out var shape ) )
 			return;
+		// WPF TokenEditorWindow path: translate + rotate with CenterX/Y = position (see JiMEditor/Models/Token.cs).
+		// Avalonia: use canvas top-left for position and rotate around shape center so the pivot matches WPF visually.
+		Canvas.SetLeft( shape, token.position.X );
+		Canvas.SetTop( shape, token.position.Y );
 		shape.RenderTransformOrigin = RelativePoint.Center;
-		shape.RenderTransform = new TransformGroup
-		{
-			Children = new Transforms
-			{
-				new TranslateTransform( token.position.X, token.position.Y ),
-				new RotateTransform( token.angle )
-			}
-		};
+		shape.RenderTransform = new RotateTransform( token.angle );
 	}
 
 	Shape CreateTokenShape( Token token )

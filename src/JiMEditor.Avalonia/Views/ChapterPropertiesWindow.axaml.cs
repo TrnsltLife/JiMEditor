@@ -320,11 +320,9 @@ public partial class ChapterPropertiesWindow : Window
 	{
 		if ( !scenario.scenarioTypeJourney )
 		{
-			MessageBox.Show(
-				"Tile Block editing for battle maps is not ported yet in Avalonia.",
-				"Not Yet Implemented",
-				MessageBoxButton.OK,
-				MessageBoxImage.Information );
+			var tw = new TileEditorWindow( scenario, chapter );
+			await tw.ShowDialog( this );
+			UpdateTexts();
 			return;
 		}
 

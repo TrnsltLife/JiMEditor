@@ -1,9 +1,10 @@
-// Ported from: JiMEditor/Views/TileEditorWindow.xaml.cs (2026-04-20) — Avalonia journey fixed-layout first pass.
+// Ported from: JiMEditor/Views/TileEditorWindow.xaml.cs (2026-04-20) — Avalonia journey + battle (square) tile editor.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Avalonia;
+using WinPoint = System.Windows.Point;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Input;
@@ -25,8 +26,11 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 	const double HexOriginY = 27.7128128d;
 	const double HexCellX = 48d;
 	const double HexCellY = 55.4256256d / 2d;
+	/// <summary>WPF <see cref="SquareTile.Drag"/> / <see cref="SquareTile.Move"/> use a 25px grid on the battle canvas.</summary>
+	const double SquareDragSnap = 25d;
 
 	readonly Dictionary<BaseTile, TileVisual> _visuals = new();
+	bool _isJourney;
 	readonly List<TilePoolOption> _tilePoolOptions = new();
 	readonly Dictionary<string, IBrush> _tokenImageBrushCache = new();
 	bool _dragging;
@@ -66,6 +70,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 	{
 		scenario = s;
 		chapter = c ?? new Chapter( "New Block" );
+		_isJourney = scenario.scenarioTypeJourney;
 		DataContext = this;
 
 		scenario.RefilterGlobalTilePool();
@@ -95,7 +100,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 			return;
 		var id = sel.Id;
 
-		var tile = new HexTile( id );
+		BaseTile tile = _isJourney ? new HexTile( id ) : new SquareTile( id );
 		tile.useGraphic = UseGraphicsCheck.IsChecked ?? scenario.useTileGraphics;
 		tile.ChangeColor( GetUnusedColor() );
 		EnsurePathRoot( tile );
@@ -165,10 +170,10 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 		EnsurePathRoot( selected );
 		if ( _visuals.TryGetValue( selected, out var tv ) )
 		{
-			var hexGeo = BuildHexGeometries( selected );
-			tv.Honeycomb.Data = hexGeo.Honeycomb;
-			tv.Outline.Data = hexGeo.Outline;
-			tv.HitFill = hexGeo.HitFill;
+			var geo = selected.tileType == TileType.Square ? BuildSquareGeometries( selected ) : BuildHexGeometries( selected );
+			tv.Honeycomb.Data = geo.Honeycomb;
+			tv.Outline.Data = geo.Outline;
+			tv.HitFill = geo.HitFill;
 			ConfigureTileImage( selected, tv );
 		}
 		ApplyTileTransform( selected );
@@ -249,8 +254,17 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 			return;
 		var centerX = 950d / 2d;
 		var centerY = 750d / 2d;
-		var snapX = Utils.dragSnapX.OrderBy( x => Math.Abs( x - centerX ) ).FirstOrDefault();
-		var snapY = Utils.dragSnapY.OrderBy( y => Math.Abs( y - centerY ) ).FirstOrDefault();
+		double snapX, snapY;
+		if ( _isJourney )
+		{
+			snapX = Utils.dragSnapX.OrderBy( x => Math.Abs( x - centerX ) ).FirstOrDefault();
+			snapY = Utils.dragSnapY.OrderBy( y => Math.Abs( y - centerY ) ).FirstOrDefault();
+		}
+		else
+		{
+			snapX = Utils.sqrSnapX.OrderBy( x => Math.Abs( x - centerX ) ).FirstOrDefault();
+			snapY = Utils.sqrSnapY.OrderBy( y => Math.Abs( y - centerY ) ).FirstOrDefault();
+		}
 		selected.position = new System.Windows.Vector( snapX, snapY );
 		ApplyTileTransform( selected );
 		SyncComboSelection();
@@ -268,8 +282,6 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 			if ( chapter.tileObserver.Count >= 5 )
 				break;
 			var tile = BaseTile.CreateTile( t.Item1 );
-			if ( tile is not HexTile )
-				continue;
 			tile.useGraphic = UseGraphicsCheck.IsChecked ?? scenario.useTileGraphics;
 			tile.ChangeColor( GetUnusedColor() );
 			tile.tileSide = t.Item2;
@@ -328,10 +340,20 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 			return;
 		}
 		var clickPoint = new System.Windows.Vector( p.X - _dragClickOffset.X, p.Y - _dragClickOffset.Y );
-		var snappedX = Utils.dragSnapX.FirstOrDefault( snapx => Math.Abs( clickPoint.X - snapx ) <= Utils.tolerance );
-		var snappedY = Utils.dragSnapY.FirstOrDefault( snapy => Math.Abs( clickPoint.Y - snapy ) <= Utils.tolerance );
-		if ( Math.Abs( clickPoint.X - snappedX ) <= Utils.tolerance && Math.Abs( clickPoint.Y - snappedY ) <= Utils.tolerance )
+		if ( _isJourney )
 		{
+			var snappedX = Utils.dragSnapX.FirstOrDefault( snapx => Math.Abs( clickPoint.X - snapx ) <= Utils.tolerance );
+			var snappedY = Utils.dragSnapY.FirstOrDefault( snapy => Math.Abs( clickPoint.Y - snapy ) <= Utils.tolerance );
+			if ( Math.Abs( clickPoint.X - snappedX ) <= Utils.tolerance && Math.Abs( clickPoint.Y - snappedY ) <= Utils.tolerance )
+			{
+				_dragTile.position = new System.Windows.Vector( snappedX, snappedY );
+				ApplyTileTransform( _dragTile );
+			}
+		}
+		else
+		{
+			var snappedX = (int)( clickPoint.X / SquareDragSnap ) * SquareDragSnap;
+			var snappedY = (int)( clickPoint.Y / SquareDragSnap ) * SquareDragSnap;
 			_dragTile.position = new System.Windows.Vector( snappedX, snappedY );
 			ApplyTileTransform( _dragTile );
 		}
@@ -381,25 +403,29 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 		}
 		else if ( e.Key == Key.Up )
 		{
-			selected.position = new System.Windows.Vector( selected.position.X, selected.position.Y - HexCellY );
+			var dy = _isJourney ? HexCellY : SquareDragSnap;
+			selected.position = new System.Windows.Vector( selected.position.X, selected.position.Y - dy );
 			ApplyTileTransform( selected );
 			e.Handled = true;
 		}
 		else if ( e.Key == Key.Down )
 		{
-			selected.position = new System.Windows.Vector( selected.position.X, selected.position.Y + HexCellY );
+			var dy = _isJourney ? HexCellY : SquareDragSnap;
+			selected.position = new System.Windows.Vector( selected.position.X, selected.position.Y + dy );
 			ApplyTileTransform( selected );
 			e.Handled = true;
 		}
 		else if ( e.Key == Key.Left )
 		{
-			selected.position = new System.Windows.Vector( selected.position.X - HexCellX, selected.position.Y );
+			var dx = _isJourney ? HexCellX : SquareDragSnap;
+			selected.position = new System.Windows.Vector( selected.position.X - dx, selected.position.Y );
 			ApplyTileTransform( selected );
 			e.Handled = true;
 		}
 		else if ( e.Key == Key.Right )
 		{
-			selected.position = new System.Windows.Vector( selected.position.X + HexCellX, selected.position.Y );
+			var dx = _isJourney ? HexCellX : SquareDragSnap;
+			selected.position = new System.Windows.Vector( selected.position.X + dx, selected.position.Y );
 			ApplyTileTransform( selected );
 			e.Handled = true;
 		}
@@ -426,10 +452,10 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 			var tv = _visuals[tile];
 			if ( !TileCanvas.Children.Contains( tv.Host ) )
 				TileCanvas.Children.Add( tv.Host );
-			var hexGeo = BuildHexGeometries( tile );
-			tv.Honeycomb.Data = hexGeo.Honeycomb;
-			tv.Outline.Data = hexGeo.Outline;
-			tv.HitFill = hexGeo.HitFill;
+			var shapeGeo = tile.tileType == TileType.Square ? BuildSquareGeometries( tile ) : BuildHexGeometries( tile );
+			tv.Honeycomb.Data = shapeGeo.Honeycomb;
+			tv.Outline.Data = shapeGeo.Outline;
+			tv.HitFill = shapeGeo.HitFill;
 			ConfigureTileImage( tile, tv );
 			tv.Image.IsVisible = tile.useGraphic;
 			tv.Honeycomb.IsVisible = !tile.useGraphic;
@@ -443,15 +469,31 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 
 	void DrawGrid()
 	{
-		for ( int x = 0; x < 950; x += 48 )
+		if ( _isJourney )
 		{
-			var l = new Line { StartPoint = new Point( x, 0 ), EndPoint = new Point( x, 750 ), Stroke = Brushes.Gray, StrokeThickness = 1, Opacity = 0.2 };
-			TileCanvas.Children.Add( l );
+			for ( var x = 0; x < 950; x += 48 )
+			{
+				var l = new Line { StartPoint = new Point( x, 0 ), EndPoint = new Point( x, 750 ), Stroke = Brushes.Gray, StrokeThickness = 1, Opacity = 0.2 };
+				TileCanvas.Children.Add( l );
+			}
+			for ( double y = 0; y < 750; y += HexCellY )
+			{
+				var l = new Line { StartPoint = new Point( 0, y ), EndPoint = new Point( 950, y ), Stroke = Brushes.Gray, StrokeThickness = 1, Opacity = 0.2 };
+				TileCanvas.Children.Add( l );
+			}
 		}
-		for ( double y = 0; y < 750; y += HexCellY )
+		else
 		{
-			var l = new Line { StartPoint = new Point( 0, y ), EndPoint = new Point( 950, y ), Stroke = Brushes.Gray, StrokeThickness = 1, Opacity = 0.2 };
-			TileCanvas.Children.Add( l );
+			for ( var x = 0; x < 950; x += (int)SquareDragSnap )
+			{
+				var l = new Line { StartPoint = new Point( x, 0 ), EndPoint = new Point( x, 750 ), Stroke = Brushes.Gray, StrokeThickness = 1, Opacity = 0.25 };
+				TileCanvas.Children.Add( l );
+			}
+			for ( var y = 0; y < 750; y += (int)SquareDragSnap )
+			{
+				var l = new Line { StartPoint = new Point( 0, y ), EndPoint = new Point( 950, y ), Stroke = Brushes.Gray, StrokeThickness = 1, Opacity = 0.25 };
+				TileCanvas.Children.Add( l );
+			}
 		}
 	}
 
@@ -466,17 +508,17 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 		{
 			Width = dims.X,
 			Height = dims.Y,
-			ClipToBounds = true,
+			ClipToBounds = tile.tileType != TileType.Square,
 			DataContext = tile
 		};
 		var img = new Image
 		{
 			DataContext = tile
 		};
-		var hexGeo = BuildHexGeometries( tile );
+		var shapeGeo = tile.tileType == TileType.Square ? BuildSquareGeometries( tile ) : BuildHexGeometries( tile );
 		var honeycomb = new Path
 		{
-			Data = hexGeo.Honeycomb,
+			Data = shapeGeo.Honeycomb,
 			Fill = GetTileFillBrush( tile.color ),
 			Stroke = Brushes.White,
 			StrokeThickness = 2,
@@ -484,7 +526,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 		};
 		var outline = new Path
 		{
-			Data = hexGeo.Outline,
+			Data = shapeGeo.Outline,
 			Fill = Brushes.Transparent,
 			Stroke = Brushes.White,
 			StrokeThickness = 2,
@@ -494,7 +536,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 		host.Children.Add( img );
 		host.Children.Add( honeycomb );
 		host.Children.Add( outline );
-		_visuals[tile] = new TileVisual( host, img, honeycomb, outline, hexGeo.HitFill, dims.X, dims.Y );
+		_visuals[tile] = new TileVisual( host, img, honeycomb, outline, shapeGeo.HitFill, dims.X, dims.Y );
 		ConfigureTileImage( tile, _visuals[tile] );
 	}
 
@@ -522,6 +564,15 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 	{
 		if ( !_visuals.TryGetValue( tile, out var tv ) )
 			return;
+
+		if ( tile.tileType == TileType.Square )
+		{
+			Canvas.SetLeft( tv.Host, tile.position.X );
+			Canvas.SetTop( tv.Host, tile.position.Y );
+			tv.Host.RenderTransformOrigin = new RelativePoint( 0.5, 0.5, RelativeUnit.Relative );
+			tv.Host.RenderTransform = new RotateTransform( tile.angle );
+			return;
+		}
 
 		var left = tile.position.X - HexOriginX;
 		var top = tile.position.Y - HexOriginY;
@@ -602,14 +653,21 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 
 	void EnsurePathRoot( BaseTile tile )
 	{
-		if ( tile is not HexTile )
-			return;
 		var dict = tile.tileSide == "A" ? Utils.tileDictionary : Utils.tileDictionaryB;
 		if ( !dict.TryGetValue( tile.idNumber, out var data ) )
 			return;
-		var hexPoints = BaseTileData.ExtractCoords( data.coords );
-		if ( hexPoints.Length > 0 )
-			tile.pathRoot = new System.Windows.Vector( hexPoints[0].X, hexPoints[0].Y );
+		if ( tile is HexTile )
+		{
+			var hexPoints = BaseTileData.ExtractCoords( data.coords );
+			if ( hexPoints.Length > 0 )
+				tile.pathRoot = new System.Windows.Vector( hexPoints[0].X, hexPoints[0].Y );
+		}
+		else if ( tile.tileType == TileType.Square )
+		{
+			var sqrPoints = BaseTileData.ExtractCoords( data.coords );
+			if ( sqrPoints.Length > 0 )
+				tile.pathRoot = new System.Windows.Vector( sqrPoints[0].X, sqrPoints[0].Y );
+		}
 	}
 
 	System.Windows.Vector GetTileDims( BaseTile tile )
@@ -664,18 +722,20 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 
 	void ApplyTokenPreviewTransform( BaseTile parentTile, Token token, Shape shape, double canvasW, double canvasH )
 	{
+		// Same semantics as JiMEditor/Models/Token.cs (parentTile != null): position is top-left in 512 space,
+		// mapped to the tile canvas; scale then rotate around the scaled token center (explicit pivot, default origin).
 		var scale = parentTile.tileType == TileType.Square ? 0.8d : 0.5d;
 		var positionScale = Math.Max( canvasW, canvasH ) / 512d;
 		var widthOffset = canvasW > canvasH ? 0d : ( canvasH - canvasW ) / 2d;
 		var heightOffset = canvasH > canvasW ? 0d : ( canvasW - canvasH ) / 2d;
-		// TokenEditor stores token position at the token center. Convert to top-left for the tile preview.
-		var left = token.position.X * positionScale - widthOffset - ( shape.Width * scale / 2d );
-		var top = token.position.Y * positionScale - heightOffset - ( shape.Height * scale / 2d );
-		Canvas.SetLeft( shape, left );
-		Canvas.SetTop( shape, top );
+		var cx = token.position.X * positionScale - widthOffset;
+		var cy = token.position.Y * positionScale - heightOffset;
 
+		Canvas.SetLeft( shape, cx );
+		Canvas.SetTop( shape, cy );
 		var centerOffsetX = ( shape.Width / 2d ) * scale;
 		var centerOffsetY = ( shape.Height / 2d ) * scale;
+		shape.RenderTransformOrigin = new RelativePoint( 0, 0, RelativeUnit.Relative );
 		shape.RenderTransform = new TransformGroup
 		{
 			Children = new Transforms
@@ -822,18 +882,34 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 
 	static bool HitTile( BaseTile tile, TileVisual tv, Point canvasPoint )
 	{
-		var left = tile.position.X - HexOriginX;
-		var top = tile.position.Y - HexOriginY;
-		var localX = canvasPoint.X - left;
-		var localY = canvasPoint.Y - top;
-		var cx = tile.pathRoot.X * 32d + HexOriginX;
-		var cy = tile.pathRoot.Y * HexOriginY + HexOriginY;
-		var radians = -tile.angle * Math.PI / 180d;
-		var dx = localX - cx;
-		var dy = localY - cy;
+		if ( tile.tileType == TileType.Square )
+		{
+			var left = tile.position.X;
+			var top = tile.position.Y;
+			var localX = canvasPoint.X - left;
+			var localY = canvasPoint.Y - top;
+			var cx = tv.Width / 2d;
+			var cy = tv.Height / 2d;
+			var radians = -tile.angle * Math.PI / 180d;
+			var dx = localX - cx;
+			var dy = localY - cy;
+			var lx = cx + dx * Math.Cos( radians ) - dy * Math.Sin( radians );
+			var ly = cy + dx * Math.Sin( radians ) + dy * Math.Cos( radians );
+			return tv.HitFill.FillContains( new Point( lx, ly ) );
+		}
+
+		var leftH = tile.position.X - HexOriginX;
+		var topH = tile.position.Y - HexOriginY;
+		var localXh = canvasPoint.X - leftH;
+		var localYh = canvasPoint.Y - topH;
+		var cxh = tile.pathRoot.X * 32d + HexOriginX;
+		var cyh = tile.pathRoot.Y * HexOriginY + HexOriginY;
+		var radiansH = -tile.angle * Math.PI / 180d;
+		var dxh = localXh - cxh;
+		var dyh = localYh - cyh;
 		var unrotated = new Point(
-			cx + dx * Math.Cos( radians ) - dy * Math.Sin( radians ),
-			cy + dx * Math.Sin( radians ) + dy * Math.Cos( radians ) );
+			cxh + dxh * Math.Cos( radiansH ) - dyh * Math.Sin( radiansH ),
+			cyh + dxh * Math.Sin( radiansH ) + dyh * Math.Cos( radiansH ) );
 		return tv.HitFill.FillContains( unrotated );
 	}
 
@@ -920,6 +996,116 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 			}
 		}
 		return new HexGeometries( honeycomb, outline, honeycomb );
+	}
+
+	/// <summary>Battle-map tile visuals: diamond cells from <see cref="SquareTile"/> WPF geometry (ported 2026-04-20).</summary>
+	static HexGeometries BuildSquareGeometries( BaseTile tile )
+	{
+		var dict = tile.tileSide == "A" ? Utils.tileDictionary : Utils.tileDictionaryB;
+		if ( !dict.TryGetValue( tile.idNumber, out var sqrdata ) )
+		{
+			var empty = Geometry.Parse( "M 0 0" );
+			return new HexGeometries( empty, empty, empty );
+		}
+
+		if ( !Utils.tileDictionary.TryGetValue( tile.idNumber, out var dimA ) )
+		{
+			var empty = Geometry.Parse( "M 0 0" );
+			return new HexGeometries( empty, empty, empty );
+		}
+
+		const double img2PathScale = 4d / 3d;
+		var radius = Math.Sqrt( sqrdata.width / 3d * sqrdata.width / 3d + sqrdata.height / 3d + sqrdata.height / 3d ) / 2d * img2PathScale;
+		radius += 4d;
+
+		var sqrCenterPositions = BaseTileData.ConvertSquareCoords( sqrdata.coords, dimA.width, dimA.height );
+		var cellCorners = new List<Point[]>();
+		for ( var i = 0; i < sqrdata.tileCount && i < sqrCenterPositions.Length; i++ )
+			cellCorners.Add( SquareDiamondCorners( sqrCenterPositions[i], radius ) );
+
+		var honeycomb = new StreamGeometry();
+		using ( var ctx = honeycomb.Open() )
+		{
+			foreach ( var corners in cellCorners )
+			{
+				ctx.BeginFigure( corners[0], true );
+				for ( var j = 1; j < corners.Length; j++ )
+					ctx.LineTo( corners[j] );
+				ctx.EndFigure( true );
+			}
+		}
+
+		var edgeCounts = new Dictionary<string, (Point A, Point B, int Count)>();
+		foreach ( var corners in cellCorners )
+		{
+			var n = corners.Length;
+			for ( var i = 0; i < n; i++ )
+			{
+				var a = corners[i];
+				var b = corners[( i + 1 ) % n];
+				var key = CanonicalEdgeKey( a, b );
+				edgeCounts.TryGetValue( key, out var existing );
+				edgeCounts[key] = ( a, b, existing.Count + 1 );
+			}
+		}
+
+		var boundaryEdges = edgeCounts.Values.Where( e => e.Count == 1 ).ToList();
+		var adjacency = new Dictionary<string, List<Point>>();
+		foreach ( var e in boundaryEdges )
+		{
+			var ka = PointKey( e.A );
+			var kb = PointKey( e.B );
+			if ( !adjacency.ContainsKey( ka ) )
+				adjacency[ka] = new List<Point>();
+			if ( !adjacency.ContainsKey( kb ) )
+				adjacency[kb] = new List<Point>();
+			adjacency[ka].Add( e.B );
+			adjacency[kb].Add( e.A );
+		}
+
+		var outline = new StreamGeometry();
+		var used = new HashSet<string>();
+		using ( var ctx = outline.Open() )
+		{
+			foreach ( var edge in boundaryEdges )
+			{
+				var seedKey = CanonicalEdgeKey( edge.A, edge.B );
+				if ( used.Contains( seedKey ) )
+					continue;
+				var loop = new List<Point> { edge.A, edge.B };
+				used.Add( seedKey );
+				while ( true )
+				{
+					var current = loop[^1];
+					var prev = loop[^2];
+					var next = adjacency[PointKey( current )]
+						.FirstOrDefault( p => PointKey( p ) != PointKey( prev ) && !used.Contains( CanonicalEdgeKey( current, p ) ) );
+					if ( PointKey( next ) == PointKey( default ) )
+						break;
+					used.Add( CanonicalEdgeKey( current, next ) );
+					if ( PointKey( next ) == PointKey( loop[0] ) )
+						break;
+					loop.Add( next );
+				}
+				ctx.BeginFigure( loop[0], false );
+				for ( var i = 1; i < loop.Count; i++ )
+					ctx.LineTo( loop[i] );
+				ctx.EndFigure( true );
+			}
+		}
+
+		return new HexGeometries( honeycomb, outline, honeycomb );
+	}
+
+	static Point[] SquareDiamondCorners( WinPoint c, double r )
+	{
+		var corners = new Point[4];
+		for ( var k = 0; k < 4; k++ )
+		{
+			var ang = Math.PI / 4d + k * Math.PI / 2d;
+			corners[k] = new Point( c.X + r * Math.Cos( ang ), c.Y + r * Math.Sin( ang ) );
+		}
+		return corners;
 	}
 
 	static Point HexCorner( double centerX, double centerY, int corner )

@@ -1,26 +1,20 @@
 using System.Linq;
-using System.Threading;
 using System.Windows;
-using Avalonia;
+using System.Collections.ObjectModel;
 using JiME;
-using JiMEditor.Avalonia;
 using Newtonsoft.Json;
 using Xunit;
-using Xunit.Sdk;
 
 namespace JiMEditor.Avalonia.Tests;
 
 public class TileTokenSerializationRoundTripTests
 {
-	static readonly object AvaloniaInitLock = new();
-	static bool AvaloniaInitialized;
-
 	[Fact]
 	public void JourneyTile_RoundTrip_PreservesNumericState()
 	{
-		RunInSta( () =>
+		ModelTestEnvironment.RunInSta( () =>
 		{
-			SetupMinimalUtilsForModelTests();
+			ModelTestEnvironment.SetupMinimalUtilsForModelTests();
 
 			var scenario = new Scenario( "RoundTrip Scenario" );
 			var chapter = new Chapter( "Chapter A" );
@@ -58,9 +52,9 @@ public class TileTokenSerializationRoundTripTests
 	[Fact]
 	public void JourneyTile_TranslationCollection_IncludesTileExploredText()
 	{
-		RunInSta( () =>
+		ModelTestEnvironment.RunInSta( () =>
 		{
-			SetupMinimalUtilsForModelTests();
+			ModelTestEnvironment.SetupMinimalUtilsForModelTests();
 
 			var scenario = new Scenario( "Translation Scenario" );
 			var chapter = new Chapter( "Chapter A" );
@@ -81,9 +75,9 @@ public class TileTokenSerializationRoundTripTests
 	[Fact]
 	public void JourneyTileToken_RoundTrip_PreservesTokenNumericState()
 	{
-		RunInSta( () =>
+		ModelTestEnvironment.RunInSta( () =>
 		{
-			SetupMinimalUtilsForModelTests();
+			ModelTestEnvironment.SetupMinimalUtilsForModelTests();
 
 			var scenario = new Scenario( "Token RoundTrip Scenario" );
 			var chapter = new Chapter( "Chapter A" );
@@ -122,9 +116,9 @@ public class TileTokenSerializationRoundTripTests
 	[Fact]
 	public void RenameTrigger_UpdatesScenarioReferences_AndTriggerMetadata()
 	{
-		RunInSta( () =>
+		ModelTestEnvironment.RunInSta( () =>
 		{
-			SetupMinimalUtilsForModelTests();
+			ModelTestEnvironment.SetupMinimalUtilsForModelTests();
 
 			var scenario = new Scenario( "Rename Trigger Scenario" );
 			var objective = new Objective( "Obj" ) { triggerName = "OldTrigger", nextTrigger = "OldTrigger", triggeredByName = "OldTrigger" };
@@ -154,9 +148,9 @@ public class TileTokenSerializationRoundTripTests
 	[Fact]
 	public void RenameTrigger_ReturnsFalse_WhenNewNameAlreadyExists()
 	{
-		RunInSta( () =>
+		ModelTestEnvironment.RunInSta( () =>
 		{
-			SetupMinimalUtilsForModelTests();
+			ModelTestEnvironment.SetupMinimalUtilsForModelTests();
 
 			var scenario = new Scenario( "Duplicate Trigger Scenario" );
 			scenario.triggersObserver.Add( new JiME.Trigger( "OldTrigger" ) );
@@ -170,49 +164,71 @@ public class TileTokenSerializationRoundTripTests
 		} );
 	}
 
-	static void RunInSta( Action action )
+	[Fact]
+	public void ChapterTranslationTail_RenamesTranslationKeys_WhenChapterNameChanges()
 	{
-		Exception? threadException = null;
-		var thread = new Thread( () =>
+		ModelTestEnvironment.RunInSta( () =>
 		{
-			try
+			ModelTestEnvironment.SetupMinimalUtilsForModelTests();
+
+			var chapter = new Chapter( "OldChapter" )
 			{
-				action();
-			}
-			catch ( Exception ex )
+				noFlavorText = false
+			};
+			chapter.flavorBookData.pages[0] = "Chapter flavor";
+
+			var translation = new Translation( "en" )
 			{
-				threadException = ex;
-			}
+				translationItems = new ObservableCollection<TranslationItem>
+				{
+					new( "chapter.OldChapter.exploredText", "Translated chapter flavor", translationOK: true )
+				}
+			};
+			var translations = new ObservableCollection<Translation> { translation };
+
+			var originalValues = chapter.CaptureStartingValues();
+			var originalPrefix = chapter.TranslationKeyPrefix();
+			var originalKeyName = chapter.TranslationKeyName();
+
+			chapter.dataName = "RenamedChapter";
+			chapter.ApplyTranslationUpdatesAfterEditorDialog( translations, originalValues, originalPrefix, originalKeyName );
+
+			Assert.DoesNotContain( translation.translationItems, i => i.key == "chapter.OldChapter.exploredText" );
+			Assert.Contains( translation.translationItems, i => i.key == "chapter.RenamedChapter.exploredText" );
 		} );
-		thread.SetApartmentState( ApartmentState.STA );
-		thread.Start();
-		thread.Join();
-		if ( threadException != null )
-			throw new XunitException( threadException.ToString() );
 	}
 
-	static void SetupMinimalUtilsForModelTests()
+	[Fact]
+	public void ChapterTranslationTail_DecertifiesUpdatedFlavorText()
 	{
-		EnsureAvaloniaInitialized();
-		Utils.dragSnapX = new[] { 0d, 48d, 96d, 144d, 192d, 240d };
-		Utils.dragSnapY = new[] { 0d, 27.7128128d, 55.4256256d, 83.1384384d, 110.8512512d, 138.564064d };
-		Utils.defaultStats = [];
-		Utils.defaultActivations = [];
-		Utils.defaultTerrainInteractions = [];
-	}
-
-	static void EnsureAvaloniaInitialized()
-	{
-		if ( AvaloniaInitialized )
-			return;
-		lock ( AvaloniaInitLock )
+		ModelTestEnvironment.RunInSta( () =>
 		{
-			if ( AvaloniaInitialized )
-				return;
-			AppBuilder.Configure<App>()
-				.UsePlatformDetect()
-				.SetupWithoutStarting();
-			AvaloniaInitialized = true;
-		}
+			ModelTestEnvironment.SetupMinimalUtilsForModelTests();
+
+			var chapter = new Chapter( "ChapterA" )
+			{
+				noFlavorText = false
+			};
+			chapter.flavorBookData.pages[0] = "Original flavor";
+
+			var translation = new Translation( "en" )
+			{
+				translationItems = new ObservableCollection<TranslationItem>
+				{
+					new( "chapter.ChapterA.exploredText", "Translated chapter flavor", translationOK: true )
+				}
+			};
+			var translations = new ObservableCollection<Translation> { translation };
+
+			var originalValues = chapter.CaptureStartingValues();
+			var originalPrefix = chapter.TranslationKeyPrefix();
+			var originalKeyName = chapter.TranslationKeyName();
+
+			chapter.flavorBookData.pages[0] = "Updated flavor";
+			chapter.ApplyTranslationUpdatesAfterEditorDialog( translations, originalValues, originalPrefix, originalKeyName );
+
+			var translatedItem = translation.translationItems.Single( i => i.key == "chapter.ChapterA.exploredText" );
+			Assert.False( translatedItem.translationOK );
+		} );
 	}
 }

@@ -1,4 +1,4 @@
-<!-- Ported from: JiMEditor/Views/TileEditorWindow.xaml (2026-04-20) — Avalonia journey fixed-layout first pass. -->
+<!-- Ported from: JiMEditor/Views/TileEditorWindow.xaml (2026-04-20) — Avalonia journey + battle (square) tile editor. -->
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:jime="using:JiME"

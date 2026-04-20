@@ -297,11 +297,8 @@ public partial class MainWindow : Window
 		}
 		else
 		{
-			MessageBox.Show(
-				"Tile Block editing for battle maps is not ported yet in Avalonia.",
-				"Not Yet Implemented",
-				MessageBoxButton.OK,
-				MessageBoxImage.Information );
+			var tw = new TileEditorWindow( scenario, c );
+			await tw.ShowDialog( this );
 		}
 	}
 

@@ -16,7 +16,7 @@ namespace JiME
 	{
 		public SquareTile()
 		{
-			tileType = TileType.Hex;
+			tileType = TileType.Square;
 			rotationAngle = 90;
 		}
 
