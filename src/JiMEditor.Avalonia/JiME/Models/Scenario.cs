@@ -869,18 +869,21 @@ namespace JiME
 					defaultTranslations.AddRange( objective.CollectTranslationItems() );
 			} );
 
+			// Same order as WPF Scenario.CollectAllTranslationItems: modifiers before chapters.
+			SafeCollect( "monster modifiers", () =>
+			{
+				foreach ( var modifier in monsterModifierObserver )
+					defaultTranslations.AddRange( CollectModifierTranslationItems( modifier ) );
+			} );
+
 			SafeCollect( "chapters", () =>
 			{
 				foreach ( var chapter in chapterObserver )
+				{
 					defaultTranslations.AddRange( chapter.CollectTranslationItems() );
+					defaultTranslations.AddRange( chapter.tileObserver.ToList().ConvertAll( tile => ( (BaseTile)tile ).CollectTranslationItems() ).SelectMany( list => list ) );
+				}
 			} );
-
-			/* TODO-Avalonia-Reenable: per-tile strings when tile/chapter editors are ported (was WPF chapter.tileObserver → BaseTile.CollectTranslationItems). */
-			// SafeCollect( "chapter tiles", () =>
-			// {
-			// 	foreach ( var chapter in chapterObserver )
-			// 		defaultTranslations.AddRange( chapter.tileObserver.ToList().ConvertAll( tile => ( (BaseTile)tile ).CollectTranslationItems() ).SelectMany( list => list ) );
-			// } );
 
 			SafeCollect( "resolutions", () =>
 			{
@@ -888,23 +891,16 @@ namespace JiME
 					defaultTranslations.AddRange( resolution.CollectTranslationItems() );
 			} );
 
-			/* TODO-Avalonia-Reenable: events / interactions when interaction editors are fully available in Avalonia. */
-			// SafeCollect( "interactions", () =>
-			// {
-			// 	foreach ( var interaction in interactionObserver )
-			// 		defaultTranslations.AddRange( CollectInteractionTranslationItems( interaction ) );
-			// } );
-
 			SafeCollect( "activations", () =>
 			{
 				foreach ( var activation in activationsObserver )
 					defaultTranslations.AddRange( CollectActivationTranslationItems( activation ) );
 			} );
 
-			SafeCollect( "monster modifiers", () =>
+			SafeCollect( "interactions", () =>
 			{
-				foreach ( var modifier in monsterModifierObserver )
-					defaultTranslations.AddRange( CollectModifierTranslationItems( modifier ) );
+				foreach ( var interaction in interactionObserver )
+					defaultTranslations.AddRange( CollectInteractionTranslationItems( interaction ) );
 			} );
 
 			//remove default translations with empty value
