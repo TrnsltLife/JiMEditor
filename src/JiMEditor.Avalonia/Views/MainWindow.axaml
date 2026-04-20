@@ -26,21 +26,41 @@
 		<!-- Toolbar -->
 		<Border DockPanel.Dock="Top" Background="{StaticResource bgColorLight}" Padding="6">
 			<StackPanel Orientation="Horizontal" Spacing="4">
-				<Button Classes="iconbutton" Height="32" Padding="4,0,4,0" IsEnabled="False" ToolTip.Tip="New scenario (TODO)">
+				<Button Classes="iconbutton"
+				        Height="32"
+				        Padding="4,0,4,0"
+				        Click="NewProjectToolbarButton_Click"
+				        ToolTip.Tip="New project (return to project list)">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/newcampaign.png" Width="24" Height="24"/>
 					</StackPanel>
 				</Button>
-				<Button Classes="iconbutton" Height="32" Padding="4,0,4,0" IsEnabled="False" ToolTip.Tip="Open (TODO)">
+				<Button Classes="iconbutton"
+				        Height="32"
+				        Padding="4,0,4,0"
+				        Click="OpenToolbarButton_Click"
+				        ToolTip.Tip="Open a different project (project list)">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/open.png" Width="24" Height="24"/>
 					</StackPanel>
 				</Button>
-				<Button Classes="iconbutton" Height="32" Padding="4,0,4,0" IsEnabled="False" ToolTip.Tip="Save (TODO)">
+				<SplitButton x:Name="SaveSplitButton"
+				             Classes="iconbutton"
+				             Height="32"
+				             Padding="4,0,4,0"
+				             Click="SaveSplitButton_Click"
+				             ToolTip.Tip="Save project">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/save.png" Width="24" Height="24"/>
 					</StackPanel>
-				</Button>
+					<SplitButton.Flyout>
+						<MenuFlyout Placement="BottomEdgeAlignedLeft">
+							<MenuItem Header="Save" Click="SaveMenuItem_Click"/>
+							<MenuItem Header="Save As…" Click="SaveAsMenuItem_Click"/>
+							<MenuItem Header="Save Copy…" Click="SaveCopyMenuItem_Click"/>
+						</MenuFlyout>
+					</SplitButton.Flyout>
+				</SplitButton>
 				<Rectangle Width="1" Height="24" Fill="{StaticResource bgButtonColor}" Margin="4,0"/>
 				<Grid Width="200" VerticalAlignment="Center">
 					<TextBlock x:Name="ScenarioNameText"

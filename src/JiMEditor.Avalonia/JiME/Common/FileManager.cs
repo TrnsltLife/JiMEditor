@@ -111,6 +111,56 @@ namespace JiME
 		}
 
 		/// <summary>
+		/// Standalone scenarios save under the Your Journey base path; campaign scenarios save under
+		/// <c>…/Your Journey/{campaignGUID}/</c>. Matches <see cref="Save()"/> folder selection.
+		/// </summary>
+		public static string GetScenarioSaveDirectory( Scenario source )
+		{
+			if ( source.campaignGUID == Guid.Empty )
+				return UserJourneyPaths.GetBasePath();
+			return Path.Combine( UserJourneyPaths.GetBasePath(), source.campaignGUID.ToString() );
+		}
+
+		/// <summary>
+		/// Serializes <paramref name="scenario"/> to <paramref name="fullDestinationPath"/>.
+		/// When <paramref name="updateScenarioAfterWrite"/> is true, updates <see cref="Scenario.fileName"/>,
+		/// <see cref="Scenario.saveDate"/>, and clears dirty via <see cref="Scenario.TriggerTitleChange"/> (same as WPF after save).
+		/// When false (Save Copy), the open document path and dirty state are unchanged; the file on disk still gets a fresh
+		/// <c>saveDate</c> and a <c>fileName</c> field matching the copy’s basename.
+		/// </summary>
+		public static bool TryWriteScenarioToPath( Scenario scenario, string fullDestinationPath, bool updateScenarioAfterWrite, out string errorMessage )
+		{
+			errorMessage = "";
+			try
+			{
+				var directory = Path.GetDirectoryName( fullDestinationPath );
+				if ( !string.IsNullOrEmpty( directory ) && !Directory.Exists( directory ) )
+					Directory.CreateDirectory( directory );
+
+				var fm = new FileManager( scenario );
+				fm.saveDate = DateTime.Now.ToString( "M/d/yyyy" );
+				fm.fileName = Path.GetFileName( fullDestinationPath );
+
+				var output = JsonConvert.SerializeObject( fm, Formatting.Indented );
+				File.WriteAllText( fullDestinationPath, output );
+
+				if ( updateScenarioAfterWrite )
+				{
+					scenario.fileName = fm.fileName;
+					scenario.saveDate = fm.saveDate;
+					scenario.TriggerTitleChange();
+				}
+
+				return true;
+			}
+			catch ( Exception ex )
+			{
+				errorMessage = ex.Message;
+				return false;
+			}
+		}
+
+		/// <summary>
 		/// saves Scenario. Detects if scenario is part of campaign, saves to proper folder
 		/// </summary>
 		public bool Save()

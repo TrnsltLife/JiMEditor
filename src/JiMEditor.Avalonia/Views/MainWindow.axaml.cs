@@ -2,12 +2,17 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
 using JiMEditor.Avalonia.EventDialog;
+using JiMEditor.Avalonia;
 using JiMEditor.Avalonia.Views.Events;
 using JiME;
 using MessageBox = System.Windows.MessageBox;
@@ -658,6 +663,207 @@ public partial class MainWindow : Window
 	{
 		var w = new ThreatsWindow( scenario );
 		await w.ShowDialog( this );
+	}
+
+	void OpenToolbarButton_Click( object? sender, RoutedEventArgs e ) =>
+		NavigateToProjectWindow(
+			"Are you sure you want to close this Project and open a different one?",
+			"Open Project" );
+
+	void NewProjectToolbarButton_Click( object? sender, RoutedEventArgs e ) =>
+		NavigateToProjectWindow(
+			"Are you sure you want to close this Project and start a new one?",
+			"New Project" );
+
+	/// <summary>Ported from WPF <c>CommandOpenProject_Executed</c> / <c>CommandNewProject_Executed</c>: show project list and close this window.</summary>
+	void NavigateToProjectWindow( string message, string title )
+	{
+		if ( MessageBox.Show( message, title, MessageBoxButton.YesNo, MessageBoxImage.Question )
+		     != MessageBoxResult.Yes )
+			return;
+
+		if ( Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop )
+			return;
+
+		var pw = new ProjectWindow();
+		desktop.MainWindow = pw;
+		pw.Show();
+		Close();
+	}
+
+	async void SaveSplitButton_Click( object? sender, RoutedEventArgs e ) => await SaveScenarioNormalAsync();
+
+	async void SaveMenuItem_Click( object? sender, RoutedEventArgs e ) => await SaveScenarioNormalAsync();
+
+	async void SaveCopyMenuItem_Click( object? sender, RoutedEventArgs e ) => await SaveScenarioCopyAsync();
+
+	async void SaveAsMenuItem_Click( object? sender, RoutedEventArgs e ) => await SaveScenarioSaveAsAsync();
+
+	/// <summary>
+	/// Matches WPF <c>FileManager.SaveAs()</c> / <c>CommandSaveProjectAs</c>: always prompts; writes under the Your Journey
+	/// <b>base</b> folder (not the campaign subfolder), then rebinds <see cref="Scenario.fileName"/> so future saves use the new name.
+	/// </summary>
+	async Task SaveScenarioSaveAsAsync()
+	{
+		try
+		{
+			// WPF: SaveAs() → Save(true, UserJourneyPaths.GetBasePath()) — not the campaign GUID directory.
+			var baseDir = UserJourneyPaths.GetBasePath();
+			var suggested = string.IsNullOrWhiteSpace( scenario.fileName )
+				? ( string.IsNullOrWhiteSpace( scenario.scenarioName ) ? "NewScenario.jime" : $"{SanitizeFileName( scenario.scenarioName )}.jime" )
+				: scenario.fileName;
+			var picked = await PickSaveFileNameAsync(
+				"Save Project As",
+				suggested,
+				await StorageProvider.TryGetFolderFromPathAsync( baseDir ) );
+			if ( picked == null )
+				return;
+			var name = Path.GetFileName( picked );
+			if ( string.IsNullOrWhiteSpace( name ) )
+				return;
+			if ( !name.EndsWith( ".jime", StringComparison.OrdinalIgnoreCase ) )
+				name += ".jime";
+			var fullPath = Path.Combine( baseDir, name );
+
+			if ( !Directory.Exists( baseDir ) )
+				Directory.CreateDirectory( baseDir );
+
+			if ( !FileManager.TryWriteScenarioToPath( scenario, fullPath, updateScenarioAfterWrite: true, out var err ) )
+			{
+				MessageBox.Show(
+					"Could not save the project file.\r\n\r\n" + err,
+					"App Exception",
+					MessageBoxButton.OK,
+					MessageBoxImage.Error );
+			}
+		}
+		catch ( Exception ex )
+		{
+			MessageBox.Show(
+				"Could not save the project file.\r\n\r\nException:\r\n" + ex.Message,
+				"App Exception",
+				MessageBoxButton.OK,
+				MessageBoxImage.Error );
+		}
+	}
+
+	/// <summary>
+	/// Saves to the scenario’s project folder (standalone or campaign), matching WPF: first save only uses the picker
+	/// to choose a file name; the file is always written under <see cref="FileManager.GetScenarioSaveDirectory"/>.
+	/// </summary>
+	async Task SaveScenarioNormalAsync()
+	{
+		try
+		{
+			var baseDir = FileManager.GetScenarioSaveDirectory( scenario );
+			string fullPath;
+			if ( string.IsNullOrWhiteSpace( scenario.fileName ) )
+			{
+				var picked = await PickSaveFileNameAsync(
+					"Save Project",
+					string.IsNullOrWhiteSpace( scenario.scenarioName ) ? "NewScenario.jime" : $"{SanitizeFileName( scenario.scenarioName )}.jime",
+					await StorageProvider.TryGetFolderFromPathAsync( baseDir ) );
+				if ( picked == null )
+					return;
+				var name = Path.GetFileName( picked );
+				if ( string.IsNullOrWhiteSpace( name ) )
+					return;
+				if ( !name.EndsWith( ".jime", StringComparison.OrdinalIgnoreCase ) )
+					name += ".jime";
+				fullPath = Path.Combine( baseDir, name );
+			}
+			else
+				fullPath = Path.Combine( baseDir, scenario.fileName );
+
+			if ( !Directory.Exists( baseDir ) )
+				Directory.CreateDirectory( baseDir );
+
+			if ( !FileManager.TryWriteScenarioToPath( scenario, fullPath, updateScenarioAfterWrite: true, out var err ) )
+			{
+				MessageBox.Show(
+					"Could not save the project file.\r\n\r\n" + err,
+					"App Exception",
+					MessageBoxButton.OK,
+					MessageBoxImage.Error );
+				return;
+			}
+		}
+		catch ( Exception ex )
+		{
+			MessageBox.Show(
+				"Could not save the project file.\r\n\r\nException:\r\n" + ex.Message,
+				"App Exception",
+				MessageBoxButton.OK,
+				MessageBoxImage.Error );
+		}
+	}
+
+	/// <summary>Writes a copy to a user-chosen path; does not change the open document’s <see cref="Scenario.fileName"/> or dirty flag.</summary>
+	async Task SaveScenarioCopyAsync()
+	{
+		try
+		{
+			var docs = Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments );
+			var startFolder = await StorageProvider.TryGetFolderFromPathAsync( docs );
+			var suggested = string.IsNullOrWhiteSpace( scenario.fileName )
+				? ( string.IsNullOrWhiteSpace( scenario.scenarioName ) ? "Scenario-Copy.jime" : $"{SanitizeFileName( scenario.scenarioName )}-Copy.jime" )
+				: Path.GetFileNameWithoutExtension( scenario.fileName ) + "-Copy.jime";
+
+			var picked = await PickSaveFileNameAsync( "Save Copy", suggested, startFolder );
+			if ( picked == null )
+				return;
+			if ( !picked.EndsWith( ".jime", StringComparison.OrdinalIgnoreCase ) )
+				picked += ".jime";
+
+			var parent = Path.GetDirectoryName( picked );
+			if ( !string.IsNullOrEmpty( parent ) ) Directory.CreateDirectory( parent );
+
+			if ( !FileManager.TryWriteScenarioToPath( scenario, picked, updateScenarioAfterWrite: false, out var err ) )
+			{
+				MessageBox.Show(
+					"Could not save a copy of the project file.\r\n\r\n" + err,
+					"App Exception",
+					MessageBoxButton.OK,
+					MessageBoxImage.Error );
+			}
+		}
+		catch ( Exception ex )
+		{
+			MessageBox.Show(
+				"Could not save a copy of the project file.\r\n\r\nException:\r\n" + ex.Message,
+				"App Exception",
+				MessageBoxButton.OK,
+				MessageBoxImage.Error );
+		}
+	}
+
+	async Task<string?> PickSaveFileNameAsync( string title, string suggestedFileName, IStorageFolder? suggestedStartLocation )
+	{
+		var file = await StorageProvider.SaveFilePickerAsync( new FilePickerSaveOptions
+		{
+			Title = title,
+			SuggestedFileName = suggestedFileName,
+			SuggestedStartLocation = suggestedStartLocation,
+			DefaultExtension = "jime",
+			FileTypeChoices = new[]
+			{
+				new FilePickerFileType( "Journey File (*.jime)" ) { Patterns = new[] { "*.jime" } }
+			}
+		} );
+		if ( file == null )
+			return null;
+		var uri = file.Path;
+		if ( uri.IsAbsoluteUri && uri.IsFile )
+			return uri.LocalPath;
+		return uri.ToString();
+	}
+
+	static string SanitizeFileName( string name )
+	{
+		var invalid = Path.GetInvalidFileNameChars();
+		var chars = name.Select( c => invalid.Contains( c ) ? '_' : c ).ToArray();
+		var s = new string( chars ).Trim();
+		return string.IsNullOrEmpty( s ) ? "Scenario" : s;
 	}
 
 	void OnAddInteraction( object? sender, EventArgs e )
