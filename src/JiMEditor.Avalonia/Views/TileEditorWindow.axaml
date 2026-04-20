@@ -17,7 +17,7 @@
 		<ScrollViewer Grid.Column="0"
 		              Grid.Row="0"
 		              Margin="10,10,8,10"
-		              HorizontalScrollBarVisibility="Auto"
+		              HorizontalScrollBarVisibility="Disabled"
 		              VerticalScrollBarVisibility="Disabled">
 			<Border BorderBrush="#77777d" BorderThickness="1" HorizontalAlignment="Left">
 				<Canvas x:Name="TileCanvas"
@@ -45,7 +45,21 @@
 						<StackPanel Spacing="6">
 							<TextBlock Text="Select A Tile To Add:" Classes="heading"/>
 							<Grid ColumnDefinitions="*,Auto">
-								<ComboBox x:Name="TilePoolCombo" VerticalAlignment="Center" SelectedIndex="0"/>
+								<ComboBox x:Name="TilePoolCombo"
+								          VerticalAlignment="Center"
+								          MinWidth="210"
+								          HorizontalAlignment="Stretch"
+								          SelectedIndex="0">
+									<ComboBox.ItemTemplate>
+										<DataTemplate>
+											<StackPanel Orientation="Horizontal" Spacing="4">
+												<TextBlock Text="{Binding Id}"/>
+												<TextBlock Text="{Binding CollectionIcon}"
+												           FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+											</StackPanel>
+										</DataTemplate>
+									</ComboBox.ItemTemplate>
+								</ComboBox>
 								<Button Grid.Column="1"
 								        Margin="5,0,0,0"
 								        Width="32"
@@ -61,6 +75,7 @@
 							        Content="Add From Tile Gallery..."
 							        Foreground="White"
 							        Click="TileGalleryButton_Click"
+							        HorizontalAlignment="Stretch"
 							        Height="36"/>
 
 							<CheckBox x:Name="UseGraphicsCheck"
@@ -77,6 +92,8 @@
 					<Grid ColumnDefinitions="*,Auto">
 						<ComboBox x:Name="InChapterCombo"
 						          VerticalAlignment="Center"
+						          MinWidth="210"
+						          HorizontalAlignment="Stretch"
 						          SelectionChanged="InChapterCombo_OnSelectionChanged">
 							<ComboBox.ItemTemplate>
 								<DataTemplate DataType="jime:BaseTile">
@@ -98,10 +115,15 @@
 						</Button>
 					</Grid>
 
-					<Border Classes="callout" Background="{StaticResource bgColor}" Margin="0,8,0,0">
+					<Border x:Name="SelectedTilePanel" Classes="callout" Background="{StaticResource bgColor}" Margin="0,8,0,0" IsVisible="False">
 						<StackPanel Spacing="8">
 							<TextBlock Text="Selected Tile" Classes="heading" HorizontalAlignment="Center"/>
-							<TextBlock x:Name="SelectedTileText" Classes="subText" HorizontalAlignment="Center"/>
+							<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="4">
+								<TextBlock x:Name="SelectedTileNumberText" Classes="subText"/>
+								<TextBlock x:Name="SelectedTileCollectionIconText"
+								           Classes="subText"
+								           FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+							</StackPanel>
 
 							<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
 								<RadioButton x:Name="SideARadio" Content="Side A" Foreground="White" GroupName="tileside" Checked="SideARadio_OnChecked"/>
@@ -113,6 +135,8 @@
 							<Grid ColumnDefinitions="*,Auto">
 								<ComboBox x:Name="ExploredTriggerCombo"
 								          VerticalAlignment="Center"
+								          MinWidth="210"
+								          HorizontalAlignment="Stretch"
 								          SelectionChanged="ExploredTriggerCombo_OnSelectionChanged">
 									<ComboBox.ItemTemplate>
 										<DataTemplate DataType="jime:Trigger">
@@ -142,7 +166,15 @@
 							        Foreground="White"
 							        Content="Token Editor..."
 							        Click="EditTokenButton_Click"
+							        HorizontalAlignment="Stretch"
 							        Height="36"/>
+							<Button x:Name="RecenterTileButton"
+							        Background="#FF607D8B"
+							        Foreground="White"
+							        Content="Recenter Tile"
+							        Click="RecenterTileButton_Click"
+							        HorizontalAlignment="Stretch"
+							        Height="32"/>
 						</StackPanel>
 					</Border>
 				</StackPanel>

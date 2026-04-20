@@ -5,141 +5,179 @@
         x:Class="JiMEditor.Avalonia.Views.TokenEditorWindow"
         x:CompileBindings="False"
         Title="Token Editor"
-        Width="760"
-        MinWidth="720"
-        Height="620"
-        MinHeight="560"
+        Width="860"
+        MinWidth="860"
+        Height="700"
+        MinHeight="680"
         WindowStartupLocation="CenterOwner"
         Background="{StaticResource bgColor}">
 
 	<Grid RowDefinitions="*,Auto">
-		<ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
-			<StackPanel Margin="8" Spacing="8">
+		<Grid Grid.Row="0" Margin="10" ColumnDefinitions="Auto,320">
+			<Border Grid.Column="0" BorderBrush="#77777d" BorderThickness="1">
+				<Canvas x:Name="TokenCanvas"
+				        Width="512"
+				        Height="512"
+				        Background="{StaticResource bgColorLight}"
+				        PointerPressed="TokenCanvas_OnPointerPressed"
+				        PointerMoved="TokenCanvas_OnPointerMoved"
+				        PointerReleased="TokenCanvas_OnPointerReleased"
+				        PointerWheelChanged="TokenCanvas_OnPointerWheelChanged">
+					<Image x:Name="TileImage" Width="512" Height="512" IsHitTestVisible="False"/>
+				</Canvas>
+			</Border>
+
+			<ScrollViewer Grid.Column="1" Margin="10,0,0,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
 				<Border Classes="callout">
-					<TextBlock Classes="subText" TextWrapping="Wrap"
-					           Text="First-pass Avalonia Token Editor: token list, interaction assignment, trigger assignment, and numeric position/angle editing. Canvas drag/shape parity will follow in the next chunk."/>
-				</Border>
-
-				<Grid ColumnDefinitions="260,*">
-					<Border Grid.Column="0" Classes="callout">
-						<StackPanel Spacing="6">
-							<TextBlock Classes="heading" Text="Tile Tokens"/>
-							<ListBox x:Name="TokenList"
-							         Height="260"
-							         Background="{StaticResource bgColorLight}"
-							         Foreground="White"
-							         ItemsSource="{Binding tile.tokenList}"
-							         SelectionChanged="TokenList_OnSelectionChanged">
-								<ListBox.ItemTemplate>
-									<DataTemplate DataType="jime:Token">
-										<TextBlock Text="{Binding dataName}"/>
-									</DataTemplate>
-								</ListBox.ItemTemplate>
-							</ListBox>
-							<StackPanel Orientation="Horizontal" Spacing="8">
-								<Button x:Name="AddTokenButton"
-								        Background="MediumSeaGreen"
-								        Click="AddTokenButton_Click"
-								        Content="Add Token"/>
-								<Button x:Name="RemoveTokenButton"
-								        Background="{StaticResource bgCancelDelete}"
-								        Click="RemoveTokenButton_Click"
-								        Content="Remove Token"/>
-							</StackPanel>
-							<TextBlock x:Name="CapacityText" Classes="subText"/>
-						</StackPanel>
-					</Border>
-
-					<Border Grid.Column="1" Classes="callout" Margin="10,0,0,0">
-						<StackPanel Spacing="8">
-							<Border BorderBrush="#77777d" BorderThickness="1" HorizontalAlignment="Left">
-								<Canvas x:Name="TokenCanvas"
-								        Width="512"
-								        Height="512"
-								        Background="{StaticResource bgColorLight}"
-								        PointerPressed="TokenCanvas_OnPointerPressed"
-								        PointerMoved="TokenCanvas_OnPointerMoved"
-								        PointerReleased="TokenCanvas_OnPointerReleased"
-								        PointerWheelChanged="TokenCanvas_OnPointerWheelChanged">
-									<Image x:Name="TileImage" Width="512" Height="512" IsHitTestVisible="False"/>
-								</Canvas>
-							</Border>
-
-							<TextBlock Classes="heading" Text="Selected Token Settings"/>
-							<TextBlock x:Name="SelectedTokenText" Classes="subText"/>
-
-							<TextBlock Classes="heading" Text="Interaction Event"/>
-							<ComboBox x:Name="InteractionCombo"
-							          SelectionChanged="InteractionCombo_OnSelectionChanged">
-								<ComboBox.ItemTemplate>
-									<DataTemplate DataType="jime:IInteraction">
-										<TextBlock Text="{Binding dataName}"/>
-									</DataTemplate>
-								</ComboBox.ItemTemplate>
-							</ComboBox>
-
-							<TextBlock Classes="heading" Text="Triggered By (Optional)"/>
-							<Grid ColumnDefinitions="*,Auto">
-								<ComboBox x:Name="TriggeredByCombo"
-								          Grid.Column="0"
-								          SelectionChanged="TriggeredByCombo_OnSelectionChanged">
-									<ComboBox.ItemTemplate>
-										<DataTemplate DataType="jime:Trigger">
-											<TextBlock Text="{Binding dataName}"/>
-										</DataTemplate>
-									</ComboBox.ItemTemplate>
-								</ComboBox>
-								<Button Grid.Column="1"
-								        Background="MediumSeaGreen"
-								        Margin="6,0,0,0"
-								        Width="32"
-								        Height="32"
-								        Click="AddTriggerButton_Click">
-									<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png"/>
-								</Button>
-							</Grid>
-
-							<Grid ColumnDefinitions="Auto,120,Auto,120,Auto,120,Auto" RowDefinitions="Auto,Auto">
-								<TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Classes="heading" Text="X:"/>
-								<TextBox Grid.Row="0" Grid.Column="1" x:Name="PosXText"/>
-								<TextBlock Grid.Row="0" Grid.Column="2" Margin="6,0,0,0" VerticalAlignment="Center" Classes="heading" Text="Y:"/>
-								<TextBox Grid.Row="0" Grid.Column="3" Margin="6,0,0,0" x:Name="PosYText"/>
-								<TextBlock Grid.Row="0" Grid.Column="4" Margin="6,0,0,0" VerticalAlignment="Center" Classes="heading" Text="Angle:"/>
-								<TextBox Grid.Row="0" Grid.Column="5" Margin="6,0,0,0" x:Name="AngleText"/>
-								<Button Grid.Row="0" Grid.Column="6"
-								        Background="DodgerBlue"
-								        Margin="6,0,0,0"
-								        Content="Apply"
-								        Click="ApplyTransformButton_Click"/>
-								<TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="7"
-								           Classes="subText"
-								           TextWrapping="Wrap"
-								           Text="These are stored model values used for scenario output. Visual drag UI parity is part of the next chunk."/>
-							</Grid>
-
-							<Border x:Name="ExplorationPanel" Classes="callout" Margin="0,8,0,0">
-								<StackPanel Spacing="6">
-									<TextBlock Classes="heading" Text="Exploration Text"/>
-									<TextBlock x:Name="ExploreStatusText" Classes="subText"/>
-									<Button x:Name="EditExplorationButton"
-									        Background="DodgerBlue"
-									        Foreground="White"
-									        Content="Edit Exploration Text..."
-									        Click="EditExplorationButton_Click"/>
+					<StackPanel Spacing="8">
+						<Border Classes="callout" Background="{StaticResource bgColor}">
+							<StackPanel Spacing="6">
+								<TextBlock Classes="heading" Text="Selected Tile" HorizontalAlignment="Center"/>
+								<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="4">
+									<TextBlock Classes="subText" Text="{Binding tile.idNumber}"/>
+									<TextBlock Classes="subText"
+									           Text="{Binding tile.collection.FontCharacter}"
+									           FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
 								</StackPanel>
-							</Border>
-						</StackPanel>
-					</Border>
-				</Grid>
-			</StackPanel>
-		</ScrollViewer>
+								<TextBlock x:Name="CapacityText" Classes="heading" HorizontalAlignment="Center"/>
+								<Button x:Name="AddTokenButton"
+								        Background="DodgerBlue"
+								        Foreground="White"
+								        Height="36"
+								        Click="AddTokenButton_Click"
+								        HorizontalAlignment="Stretch">
+									<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="6">
+										<TextBlock Text="Add Token To Tile" Classes="heading" VerticalAlignment="Center"/>
+										<Image Source="avares://JiMEditor.Avalonia/Assets/add.png" Height="20"/>
+									</StackPanel>
+								</Button>
+							</StackPanel>
+						</Border>
+
+						<Border Classes="callout" Background="{StaticResource bgColor}">
+							<StackPanel Spacing="6">
+								<TextBlock Text="Selected Token:" Classes="heading" HorizontalAlignment="Center"/>
+								<Grid ColumnDefinitions="*,Auto">
+									<ComboBox x:Name="TokenList"
+									          Grid.Column="0"
+									          MinWidth="230"
+									          Background="{StaticResource bgColorLight}"
+									          Foreground="White"
+									          ItemsSource="{Binding tile.tokenList}"
+									          SelectionChanged="TokenList_OnSelectionChanged">
+										<ComboBox.ItemTemplate>
+											<DataTemplate DataType="jime:Token">
+												<TextBlock Text="{Binding dataName}"/>
+											</DataTemplate>
+										</ComboBox.ItemTemplate>
+									</ComboBox>
+									<Button x:Name="RemoveTokenButton"
+									        Grid.Column="1"
+									        Background="{StaticResource bgCancelDelete}"
+									        Margin="6,0,0,0"
+									        Width="32"
+									        Height="32"
+									        VerticalAlignment="Top"
+									        Click="RemoveTokenButton_Click">
+										<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png"/>
+									</Button>
+								</Grid>
+								<TextBlock x:Name="SelectedTokenText" Classes="subText" TextWrapping="Wrap"/>
+
+								<TextBlock Text="Activate This Event:" Classes="heading" HorizontalAlignment="Center"/>
+								<Grid ColumnDefinitions="*,Auto">
+									<ComboBox x:Name="InteractionCombo"
+									          Grid.Column="0"
+									          MinWidth="230"
+									          SelectionChanged="InteractionCombo_OnSelectionChanged">
+										<ComboBox.ItemTemplate>
+											<DataTemplate DataType="jime:IInteraction">
+												<TextBlock Text="{Binding dataName}"/>
+											</DataTemplate>
+										</ComboBox.ItemTemplate>
+									</ComboBox>
+									<Button Grid.Column="1"
+									        x:Name="AddInteractionButton"
+									        Background="MediumSeaGreen"
+									        Margin="6,0,0,0"
+									        Width="32"
+									        Height="32"
+									        Click="AddInteractionButton_Click">
+										<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png"/>
+									</Button>
+								</Grid>
+								<TextBlock Classes="subText" TextWrapping="Wrap"
+								           Text="This is the Event this Token activates when Players click on it. Only Events marked as Token Interactions appear in this dropdown."/>
+
+								<TextBlock Text="Triggered By:" Classes="heading" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+								<Grid ColumnDefinitions="*,Auto">
+									<ComboBox x:Name="TriggeredByCombo"
+									          Grid.Column="0"
+									          MinWidth="230"
+									          SelectionChanged="TriggeredByCombo_OnSelectionChanged">
+										<ComboBox.ItemTemplate>
+											<DataTemplate DataType="jime:Trigger">
+												<TextBlock Text="{Binding dataName}"/>
+											</DataTemplate>
+										</ComboBox.ItemTemplate>
+									</ComboBox>
+									<Button Grid.Column="1"
+									        Background="MediumSeaGreen"
+									        Margin="6,0,0,0"
+									        Width="32"
+									        Height="32"
+									        Click="AddTriggerButton_Click">
+										<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png"/>
+									</Button>
+								</Grid>
+								<TextBlock Classes="subText" TextWrapping="Wrap"
+								           Text="Tokens with this set only spawn when triggered, instead of when the Tile Block is explored."/>
+							</StackPanel>
+						</Border>
+
+						<Border x:Name="ExplorationPanel" Classes="callout" Background="{StaticResource bgColor}">
+							<StackPanel Spacing="6">
+								<TextBlock Classes="subText" TextWrapping="Wrap"
+								           Text="Exploration text is shown after a player explores this tile. Leave it empty to skip."/>
+								<Button x:Name="EditExplorationButton"
+								        Background="DodgerBlue"
+								        Foreground="White"
+								        Height="36"
+								        HorizontalAlignment="Center"
+								        Click="EditExplorationButton_Click">
+									<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="6">
+										<TextBlock Text="Edit Exploration Text..." Classes="heading" VerticalAlignment="Center"/>
+										<Image Source="avares://JiMEditor.Avalonia/Assets/edit.png" Height="20"/>
+									</StackPanel>
+								</Button>
+								<TextBlock x:Name="ExploreStatusText" Classes="subText" HorizontalAlignment="Center"/>
+							</StackPanel>
+						</Border>
+					</StackPanel>
+				</Border>
+			</ScrollViewer>
+		</Grid>
 
 		<Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Silver" Background="#FF46464A">
-			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="8">
-				<Button x:Name="OkButton" Background="MediumSeaGreen" Click="OkButton_Click" IsDefault="True">
+			<Grid ColumnDefinitions="*,*,*,Auto" Margin="8">
+				<TextBlock Grid.Column="0"
+				           VerticalAlignment="Center"
+				           Classes="heading"
+				           Text="Remove Token: Delete"/>
+				<TextBlock Grid.Column="1"
+				           VerticalAlignment="Center"
+				           HorizontalAlignment="Center"
+				           Classes="heading"
+				           Text="Rotate Terrain: Pg Up / Pg Dn / Mouse Wheel"/>
+				<TextBlock Grid.Column="2"
+				           VerticalAlignment="Center"
+				           HorizontalAlignment="Center"
+				           Classes="heading"
+				           Text="Nudge: Up / Down / Left / Right"/>
+				<Button Grid.Column="3" x:Name="OkButton" Background="MediumSeaGreen" Click="OkButton_Click" IsDefault="True">
 					<Image Source="avares://JiMEditor.Avalonia/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
 				</Button>
-			</StackPanel>
+			</Grid>
 		</Border>
 	</Grid>
 </Window>

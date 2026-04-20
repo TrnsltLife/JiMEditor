@@ -27,6 +27,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 	const double HexCellY = 55.4256256d / 2d;
 
 	readonly Dictionary<BaseTile, TileVisual> _visuals = new();
+	readonly List<TilePoolOption> _tilePoolOptions = new();
 	bool _dragging;
 	BaseTile? _dragTile;
 	Point _dragClickOffset;
@@ -67,7 +68,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 		DataContext = this;
 
 		scenario.RefilterGlobalTilePool();
-		TilePoolCombo.ItemsSource = scenario.filteredGlobalTilePool;
+		RefreshTilePoolOptions();
 		InChapterCombo.ItemsSource = chapter.tileObserver;
 		ExploredTriggerCombo.ItemsSource = scenario.triggersObserver
 			.OrderByDescending( t => t.isEmpty )
@@ -87,10 +88,11 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 
 	void AddTileButton_Click( object? sender, RoutedEventArgs e )
 	{
-		if ( TilePoolCombo.SelectedItem is not int id )
+		if ( TilePoolCombo.SelectedItem is not TilePoolOption sel )
 			return;
 		if ( chapter.tileObserver.Count >= 5 )
 			return;
+		var id = sel.Id;
 
 		var tile = new HexTile( id );
 		tile.useGraphic = UseGraphicsCheck.IsChecked ?? scenario.useTileGraphics;
@@ -102,6 +104,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 		RedrawAll();
 		selected = tile;
 		SyncComboSelection();
+		RefreshTilePoolOptions();
 	}
 
 	void RemoveTileButton_Click( object? sender, RoutedEventArgs e ) => DeleteSelectedTile();
@@ -126,6 +129,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 		SortGlobalTilePool();
 		RedrawAll();
 		SyncComboSelection();
+		RefreshTilePoolOptions();
 	}
 
 	void SyncComboSelection()
@@ -235,6 +239,19 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 		UpdateSelectedUi();
 	}
 
+	void RecenterTileButton_Click( object? sender, RoutedEventArgs e )
+	{
+		if ( selected == null )
+			return;
+		var centerX = 950d / 2d;
+		var centerY = 750d / 2d;
+		var snapX = Utils.dragSnapX.OrderBy( x => Math.Abs( x - centerX ) ).FirstOrDefault();
+		var snapY = Utils.dragSnapY.OrderBy( y => Math.Abs( y - centerY ) ).FirstOrDefault();
+		selected.position = new System.Windows.Vector( snapX, snapY );
+		ApplyTileTransform( selected );
+		SyncComboSelection();
+	}
+
 	async void TileGalleryButton_Click( object? sender, RoutedEventArgs e )
 	{
 		var gw = new GalleryWindow( scenario, chapter.tileObserver.Count );
@@ -261,6 +278,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 
 		RedrawAll();
 		SyncComboSelection();
+		RefreshTilePoolOptions();
 	}
 
 	void TileCanvas_OnPointerPressed( object? sender, PointerPressedEventArgs e )
@@ -298,6 +316,13 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 			return;
 
 		var p = e.GetPosition( TileCanvas );
+		if ( p.X < 0 || p.Y < 0 || p.X > TileCanvas.Width || p.Y > TileCanvas.Height )
+		{
+			_dragging = false;
+			_dragTile = null;
+			e.Pointer.Capture( null );
+			return;
+		}
 		var clickPoint = new System.Windows.Vector( p.X - _dragClickOffset.X, p.Y - _dragClickOffset.Y );
 		var snappedX = Utils.dragSnapX.FirstOrDefault( snapx => Math.Abs( clickPoint.X - snapx ) <= Utils.tolerance );
 		var snappedY = Utils.dragSnapY.FirstOrDefault( snapy => Math.Abs( clickPoint.Y - snapy ) <= Utils.tolerance );
@@ -528,7 +553,9 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 	{
 		if ( selected == null )
 		{
-			SelectedTileText.Text = "";
+			SelectedTilePanel.IsVisible = false;
+			SelectedTileNumberText.Text = "";
+			SelectedTileCollectionIconText.Text = "";
 			TokenCountText.Text = "Tokens in Tile: 0";
 			EditTokenButton.IsEnabled = false;
 			SideARadio.IsChecked = false;
@@ -537,7 +564,9 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 			return;
 		}
 
-		SelectedTileText.Text = selected.idNumberAndCollection;
+		SelectedTilePanel.IsVisible = true;
+		SelectedTileNumberText.Text = selected.idNumber.ToString();
+		SelectedTileCollectionIconText.Text = selected.collection.FontCharacter;
 		TokenCountText.Text = $"Tokens in Tile: {selected.tokenList.Count}";
 		EditTokenButton.IsEnabled = true;
 		SideARadio.IsChecked = selected.tileSide == "A";
@@ -553,6 +582,17 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 		scenario.globalTilePool.Clear();
 		foreach ( var n in sorted )
 			scenario.globalTilePool.Add( n );
+	}
+
+	void RefreshTilePoolOptions()
+	{
+		scenario.RefilterGlobalTilePool();
+		_tilePoolOptions.Clear();
+		foreach ( var id in scenario.filteredGlobalTilePool )
+			_tilePoolOptions.Add( new TilePoolOption( id, Collection.FromTileNumber( id ).FontCharacter ) );
+		TilePoolCombo.ItemsSource = _tilePoolOptions;
+		if ( _tilePoolOptions.Count > 0 )
+			TilePoolCombo.SelectedIndex = 0;
 	}
 
 	void EnsurePathRoot( BaseTile tile )
@@ -754,4 +794,5 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 		public double Height { get; } = height;
 	}
 	readonly record struct HexGeometries( Geometry Honeycomb, Geometry Outline, Geometry HitFill );
+	readonly record struct TilePoolOption( int Id, string CollectionIcon );
 }

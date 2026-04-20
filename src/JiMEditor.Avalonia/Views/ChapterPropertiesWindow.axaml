@@ -92,8 +92,8 @@
 							<CheckBox x:Name="RandomToggleCheckBox"
 							          Content="This Block uses random Tiles."
 							          Foreground="White"
-							          IsChecked="True"
-							          IsEnabled="False"/>
+							          IsChecked="{Binding chapter.isRandomTiles}"
+							          Click="RandomToggleCheckBox_OnClick"/>
 							<Button x:Name="TileEditButton"
 							        Background="DodgerBlue"
 							        Foreground="White"

@@ -52,10 +52,6 @@ public partial class ChapterPropertiesWindow : Window
 		// Set DataContext after chapter/scenario assignment so initial bindings (e.g. chapter.dataName) hydrate correctly.
 		DataContext = this;
 
-		chapter.isRandomTiles = true;
-		RandomToggleCheckBox.IsChecked = true;
-		RandomToggleCheckBox.IsEnabled = false;
-
 		if ( chapter.dataName != "Start" )
 			PreExplorePanel.IsVisible = false;
 		else
@@ -385,6 +381,24 @@ public partial class ChapterPropertiesWindow : Window
 			_suppressNumText = true;
 			NumIntersUsedTextBox.Text = "0";
 			_suppressNumText = false;
+		}
+	}
+
+	void RandomToggleCheckBox_OnClick( object? sender, RoutedEventArgs e )
+	{
+		if ( chapter.isRandomTiles )
+			return;
+
+		MessageBox.Show(
+			"Switching back to fixed tiles will automatically change any random tiles using a Random Side to Side A.\n\nReminder: Be sure to use the Tile Editor to properly place your tiles, now that they will be in fixed, user-defined positions.",
+			"Switching to Fixed Tiles",
+			MessageBoxButton.OK,
+			MessageBoxImage.Information );
+
+		foreach ( var tile in chapter.tileObserver.OfType<HexTile>() )
+		{
+			if ( tile.tileSide == "Random" )
+				tile.tileSide = "A";
 		}
 	}
 

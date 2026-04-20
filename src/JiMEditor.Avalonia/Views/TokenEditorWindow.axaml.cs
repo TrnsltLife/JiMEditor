@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Avalonia;
@@ -16,6 +15,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using JiMEditor.Avalonia.EventDialog;
 using JiME;
 using Rectangle = Avalonia.Controls.Shapes.Rectangle;
 
@@ -115,7 +115,7 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 
 	void UpdateCapacityUi()
 	{
-		CapacityText.Text = $"Tokens on tile: {tile.tokenList.Count} / {tile.tokenCount}";
+		CapacityText.Text = $"Token Slots Available: {tile.tokenList.Count} / {tile.tokenCount}";
 		AddTokenButton.IsEnabled = tile.tokenList.Count < tile.tokenCount;
 		RemoveTokenButton.IsEnabled = selected != null;
 	}
@@ -125,18 +125,12 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 		if ( selected == null )
 		{
 			SelectedTokenText.Text = "No token selected.";
-			PosXText.Text = "";
-			PosYText.Text = "";
-			AngleText.Text = "";
 			InteractionCombo.SelectedItem = null;
 			TriggeredByCombo.SelectedItem = null;
 			return;
 		}
 
 		SelectedTokenText.Text = $"{selected.dataName} ({selected.tokenType})";
-		PosXText.Text = selected.position.X.ToString( "0.###", CultureInfo.InvariantCulture );
-		PosYText.Text = selected.position.Y.ToString( "0.###", CultureInfo.InvariantCulture );
-		AngleText.Text = selected.angle.ToString( "0.###", CultureInfo.InvariantCulture );
 		InteractionCombo.SelectedItem = tokenInteractions.FirstOrDefault( x => x.dataName == selected.triggerName );
 		if ( TriggeredByCombo.ItemsSource is System.Collections.IEnumerable src )
 			TriggeredByCombo.SelectedItem = src.Cast<Trigger>().FirstOrDefault( t => t.dataName == selected.triggeredByName );
@@ -214,6 +208,53 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 		selected.triggeredByName = t.dataName;
 	}
 
+	async void AddInteractionButton_Click( object? sender, RoutedEventArgs e )
+	{
+		var flyout = new MenuFlyout();
+		AddEventMenuItem( flyout, "Dialog Event", EventEditorFactory.TryCreateDialogInteractionAsync );
+		AddEventMenuItem( flyout, "Text Event", EventEditorFactory.TryCreateTextInteractionAsync );
+		AddEventMenuItem( flyout, "Reward Event", EventEditorFactory.TryCreateRewardInteractionAsync );
+		AddEventMenuItem( flyout, "Persistent Event", EventEditorFactory.TryCreatePersistentInteractionAsync );
+		AddEventMenuItem( flyout, "Conditional Event", EventEditorFactory.TryCreateConditionalInteractionAsync );
+		AddEventMenuItem( flyout, "Item Event", EventEditorFactory.TryCreateItemInteractionAsync );
+		AddEventMenuItem( flyout, "Title Event", EventEditorFactory.TryCreateTitleInteractionAsync );
+		AddEventMenuItem( flyout, "Corruption Event", EventEditorFactory.TryCreateCorruptionInteractionAsync );
+		AddEventMenuItem( flyout, "Decision Event", EventEditorFactory.TryCreateDecisionInteractionAsync );
+		AddEventMenuItem( flyout, "Multi-Event", EventEditorFactory.TryCreateMultiEventInteractionAsync );
+		AddEventMenuItem( flyout, "Enemy Event", EventEditorFactory.TryCreateThreatInteractionAsync );
+		AddEventMenuItem( flyout, "Story Branch", EventEditorFactory.TryCreateBranchInteractionAsync );
+		AddEventMenuItem( flyout, "Stat Test Event", EventEditorFactory.TryCreateStatTestInteractionAsync );
+		flyout.ShowAt( AddInteractionButton );
+		await System.Threading.Tasks.Task.CompletedTask;
+	}
+
+	void AddEventMenuItem<TInteraction>(
+		MenuFlyout flyout,
+		string title,
+		Func<Window, Scenario, System.Threading.Tasks.Task<(bool accepted, TInteraction created)>> factory )
+		where TInteraction : IInteraction
+	{
+		var item = new MenuItem { Header = title };
+		item.Click += async (_, _) =>
+		{
+			var ( accepted, created ) = await factory( this, scenario );
+			if ( !accepted )
+				return;
+			scenario.AddInteraction( created );
+			RefreshTokenInteractions();
+			InteractionCombo.SelectedItem = tokenInteractions.FirstOrDefault( x => x.dataName == created.dataName );
+			if ( selected == null )
+				return;
+			selected.triggerName = created.dataName;
+			selected.tokenType = created.tokenType;
+			selected.personType = created.personType;
+			selected.terrainType = created.terrainType;
+			RebuildTokenCanvas();
+			UpdateSelectedUi();
+		};
+		flyout.Items.Add( item );
+	}
+
 	async void AddTriggerButton_Click( object? sender, RoutedEventArgs e )
 	{
 		if ( selected == null )
@@ -227,22 +268,6 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 			.ThenBy( t => t.dataName )
 			.ToList();
 		selected.triggeredByName = tw.EnteredTriggerName;
-		UpdateSelectedUi();
-	}
-
-	void ApplyTransformButton_Click( object? sender, RoutedEventArgs e )
-	{
-		if ( selected == null )
-			return;
-		if ( !Double.TryParse( PosXText.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out var x ) )
-			x = selected.position.X;
-		if ( !Double.TryParse( PosYText.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out var y ) )
-			y = selected.position.Y;
-		if ( !Double.TryParse( AngleText.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out var a ) )
-			a = selected.angle;
-		selected.position = new System.Windows.Vector( x, y );
-		selected.angle = a;
-		ApplyTokenTransform( selected );
 		UpdateSelectedUi();
 	}
 
