@@ -8,9 +8,6 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using JiME;
-using MessageBox = System.Windows.MessageBox;
-using MessageBoxButton = System.Windows.MessageBoxButton;
-using MessageBoxImage = System.Windows.MessageBoxImage;
 
 namespace JiMEditor.Avalonia.Views;
 
@@ -157,13 +154,7 @@ public partial class TilePoolEditorWindow : Window, INotifyPropertyChanged
 	{
 		if ( selected == null )
 			return;
-		// TODO-Avalonia-Reenable: TokenEditorWindow for random-pool tiles.
-		await Task.CompletedTask;
-		MessageBox.Show(
-			"The Token Editor is not ported to Avalonia yet.",
-			"Token Editor",
-			MessageBoxButton.OK,
-			MessageBoxImage.Information );
+		await OpenTokenEditorAsync();
 	}
 
 	void RandomList_OnSelectionChanged( object? sender, SelectionChangedEventArgs e )
@@ -268,13 +259,16 @@ public partial class TilePoolEditorWindow : Window, INotifyPropertyChanged
 	{
 		if ( selected == null )
 			return;
-		// TODO-Avalonia-Reenable: TokenEditorWindow
-		await Task.CompletedTask;
-		MessageBox.Show(
-			"The Token Editor is not ported to Avalonia yet.",
-			"Token Editor",
-			MessageBoxButton.OK,
-			MessageBoxImage.Information );
+		await OpenTokenEditorAsync();
+	}
+
+	async Task OpenTokenEditorAsync()
+	{
+		if ( selected == null )
+			return;
+		var w = new TokenEditorWindow( selected, scenario, true );
+		await w.ShowDialog( this );
+		ShowExploreStatus();
 	}
 
 	void SideA_Click( object? sender, RoutedEventArgs e )

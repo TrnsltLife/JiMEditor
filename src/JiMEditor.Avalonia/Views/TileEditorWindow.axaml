@@ -1,0 +1,169 @@
+<!-- Ported from: JiMEditor/Views/TileEditorWindow.xaml (2026-04-20) — Avalonia journey fixed-layout first pass. -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:jime="using:JiME"
+        x:Class="JiMEditor.Avalonia.Views.TileEditorWindow"
+        x:CompileBindings="False"
+        Title="Tile Editor"
+        Width="1220"
+        MinWidth="1100"
+        Height="800"
+        MinHeight="740"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource bgColor}">
+
+	<!-- WPF used 9* / 16* but canvas is fixed 950px wide; star ratio gave ~36% to canvas → clipping. Canvas gets *; toolbar Auto width. -->
+	<Grid ColumnDefinitions="*,Auto" RowDefinitions="*,Auto">
+		<ScrollViewer Grid.Column="0"
+		              Grid.Row="0"
+		              Margin="10,10,8,10"
+		              HorizontalScrollBarVisibility="Auto"
+		              VerticalScrollBarVisibility="Disabled">
+			<Border BorderBrush="#77777d" BorderThickness="1" HorizontalAlignment="Left">
+				<Canvas x:Name="TileCanvas"
+				        Width="950"
+				        Height="750"
+				        Focusable="True"
+				        Background="{StaticResource bgColorLight}"
+				        PointerPressed="TileCanvas_OnPointerPressed"
+				        PointerMoved="TileCanvas_OnPointerMoved"
+				        PointerReleased="TileCanvas_OnPointerReleased"
+				        PointerWheelChanged="TileCanvas_OnPointerWheelChanged"/>
+			</Border>
+		</ScrollViewer>
+
+		<ScrollViewer Grid.Column="1"
+		              Grid.Row="0"
+		              Margin="0,10,10,10"
+		              HorizontalAlignment="Left"
+		              VerticalScrollBarVisibility="Auto">
+			<Border Classes="callout"
+			        Width="280"
+			        HorizontalAlignment="Left">
+				<StackPanel Spacing="8">
+					<Border Classes="callout" Background="{StaticResource bgColor}">
+						<StackPanel Spacing="6">
+							<TextBlock Text="Select A Tile To Add:" Classes="heading"/>
+							<Grid ColumnDefinitions="*,Auto">
+								<ComboBox x:Name="TilePoolCombo" VerticalAlignment="Center" SelectedIndex="0"/>
+								<Button Grid.Column="1"
+								        Margin="5,0,0,0"
+								        Width="32"
+								        Height="32"
+								        Background="MediumSeaGreen"
+								        Click="AddTileButton_Click">
+									<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png"/>
+								</Button>
+							</Grid>
+
+							<Button Background="DodgerBlue"
+							        Margin="0,10,0,0"
+							        Content="Add From Tile Gallery..."
+							        Foreground="White"
+							        Click="TileGalleryButton_Click"
+							        Height="36"/>
+
+							<CheckBox x:Name="UseGraphicsCheck"
+							          Content="Use Tile Graphics"
+							          Foreground="White"
+							          Margin="0,8,0,0"
+							          IsChecked="{Binding scenario.useTileGraphics}"
+							          Checked="UseGraphicsCheck_OnChanged"
+							          Unchecked="UseGraphicsCheck_OnChanged"/>
+						</StackPanel>
+					</Border>
+
+					<TextBlock Text="Tiles In Block" Classes="heading" HorizontalAlignment="Center" Margin="0,8,0,2"/>
+					<Grid ColumnDefinitions="*,Auto">
+						<ComboBox x:Name="InChapterCombo"
+						          VerticalAlignment="Center"
+						          SelectionChanged="InChapterCombo_OnSelectionChanged">
+							<ComboBox.ItemTemplate>
+								<DataTemplate DataType="jime:BaseTile">
+									<StackPanel Orientation="Horizontal" Spacing="4">
+										<TextBlock Text="{Binding idNumber}"/>
+										<TextBlock Text="{Binding collection.FontCharacter}"
+										           FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+									</StackPanel>
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+						<Button Grid.Column="1"
+						        Margin="5,0,0,0"
+						        Width="32"
+						        Height="32"
+						        Background="{StaticResource bgCancelDelete}"
+						        Click="RemoveTileButton_Click">
+							<Image Source="avares://JiMEditor.Avalonia/Assets/remove.png"/>
+						</Button>
+					</Grid>
+
+					<Border Classes="callout" Background="{StaticResource bgColor}" Margin="0,8,0,0">
+						<StackPanel Spacing="8">
+							<TextBlock Text="Selected Tile" Classes="heading" HorizontalAlignment="Center"/>
+							<TextBlock x:Name="SelectedTileText" Classes="subText" HorizontalAlignment="Center"/>
+
+							<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
+								<RadioButton x:Name="SideARadio" Content="Side A" Foreground="White" GroupName="tileside" Checked="SideARadio_OnChecked"/>
+								<RadioButton x:Name="SideBRadio" Content="Side B" Foreground="White" GroupName="tileside" Checked="SideBRadio_OnChecked"/>
+							</StackPanel>
+
+							<TextBlock x:Name="TokenCountText" Classes="heading" HorizontalAlignment="Center"/>
+							<TextBlock Text="Fire This Trigger When Explored (Optional):" Classes="heading" TextWrapping="Wrap"/>
+							<Grid ColumnDefinitions="*,Auto">
+								<ComboBox x:Name="ExploredTriggerCombo"
+								          VerticalAlignment="Center"
+								          SelectionChanged="ExploredTriggerCombo_OnSelectionChanged">
+									<ComboBox.ItemTemplate>
+										<DataTemplate DataType="jime:Trigger">
+											<TextBlock Text="{Binding dataName}"/>
+										</DataTemplate>
+									</ComboBox.ItemTemplate>
+								</ComboBox>
+								<Button Grid.Column="1"
+								        Margin="5,0,0,0"
+								        Width="32"
+								        Height="32"
+								        Background="MediumSeaGreen"
+								        Click="AddExploredTriggerButton_Click">
+									<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png"/>
+								</Button>
+							</Grid>
+
+							<CheckBox x:Name="StartingTileCheck"
+							          Content="Is Starting Tile"
+							          Foreground="White"
+							          IsVisible="{Binding chapter.isStart}"
+							          Checked="StartingTileCheck_OnChecked"
+							          Unchecked="StartingTileCheck_OnUnchecked"/>
+
+							<Button x:Name="EditTokenButton"
+							        Background="DodgerBlue"
+							        Foreground="White"
+							        Content="Token Editor..."
+							        Click="EditTokenButton_Click"
+							        Height="36"/>
+						</StackPanel>
+					</Border>
+				</StackPanel>
+			</Border>
+		</ScrollViewer>
+
+		<Border Grid.ColumnSpan="2" Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Silver" Background="#FF46464A">
+			<Grid ColumnDefinitions="*,Auto">
+				<TextBlock Grid.Column="0"
+				           Margin="10,6"
+				           Classes="heading"
+				           Text="Add up to 5 tiles. Remove: Delete key. Rotate: Mouse wheel or Page Up/Down. Nudge: Arrow keys. Edit Tokens: Double-click tile."/>
+				<Button Grid.Column="1"
+				        x:Name="OkButton"
+				        Margin="10"
+				        Background="MediumSeaGreen"
+				        Click="OkButton_Click"
+				        IsDefault="True">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/ok.png" Stretch="Uniform" Width="32" Margin="5"/>
+				</Button>
+			</Grid>
+		</Border>
+	</Grid>
+</Window>

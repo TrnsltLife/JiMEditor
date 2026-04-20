@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using JiME;
 
 namespace JiMEditor.Avalonia.Views;
@@ -107,7 +109,7 @@ public partial class GalleryWindow : Window, INotifyPropertyChanged
 		{
 			_galleryTiles[i] = new GalleryTile();
 			_galleryTiles[i].id = ids[i];
-			_galleryTiles[i].source = Utils.tileSourceA![i + _indexOffset];
+			_galleryTiles[i].source = LoadGalleryTileBitmap( _galleryTiles[i].id, "A" );
 			_galleryTiles[i].enabled = _galleryTiles[i].enabled && scenario.IsCollectionEnabled( _galleryTiles[i].collection );
 		}
 
@@ -149,12 +151,12 @@ public partial class GalleryWindow : Window, INotifyPropertyChanged
 		{
 			if ( !_galleryTiles[i].selected && _side )
 			{
-				_galleryTiles[i].source = Utils.tileSourceA![i + _indexOffset];
+				_galleryTiles[i].source = LoadGalleryTileBitmap( _galleryTiles[i].id, "A" );
 				_galleryTiles[i].side = "A";
 			}
 			else if ( !_galleryTiles[i].selected && !_side )
 			{
-				_galleryTiles[i].source = Utils.tileSourceB![i + _indexOffset];
+				_galleryTiles[i].source = LoadGalleryTileBitmap( _galleryTiles[i].id, "B" );
 				_galleryTiles[i].side = "B";
 			}
 		}
@@ -240,5 +242,19 @@ public partial class GalleryWindow : Window, INotifyPropertyChanged
 		selectedData = ( from gt in _galleryTiles where gt.selected select Tuple.Create( gt.id, gt.side ) ).ToArray();
 		Accepted = true;
 		Close();
+	}
+
+	static Bitmap? LoadGalleryTileBitmap( int tileId, string side )
+	{
+		try
+		{
+			var uri = new Uri( $"avares://JiMEditor.Avalonia/Assets/Tiles{side}/{tileId}.png" );
+			using var stream = AssetLoader.Open( uri );
+			return new Bitmap( stream );
+		}
+		catch
+		{
+			return null;
+		}
 	}
 }

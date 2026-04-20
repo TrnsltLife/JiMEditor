@@ -328,6 +328,12 @@ public partial class ChapterPropertiesWindow : Window
 			await tp.ShowDialog( this );
 			UpdateTexts();
 		}
+		else
+		{
+			var tw = new TileEditorWindow( scenario, chapter );
+			await tw.ShowDialog( this );
+			UpdateTexts();
+		}
 	}
 
 	async void AddTriggerByButton_Click( object? sender, RoutedEventArgs e )

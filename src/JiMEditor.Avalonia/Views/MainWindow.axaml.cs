@@ -284,10 +284,16 @@ public partial class MainWindow : Window
 	{
 		if ( scenario.scenarioTypeJourney )
 		{
-			// Random tile pool editor. Chapters default isRandomTiles=false in the model until Properties is used;
-			// the fixed/manual hex layout editor is not ported yet (TODO-Avalonia-Reenable).
-			var tp = new TilePoolEditorWindow( scenario, c );
-			await tp.ShowDialog( this );
+			if ( c.isRandomTiles )
+			{
+				var tp = new TilePoolEditorWindow( scenario, c );
+				await tp.ShowDialog( this );
+			}
+			else
+			{
+				var tw = new TileEditorWindow( scenario, c );
+				await tw.ShowDialog( this );
+			}
 		}
 		else
 		{

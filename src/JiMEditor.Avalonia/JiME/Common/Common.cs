@@ -314,7 +314,7 @@ namespace JiME
 				collectionChar = collection.FontCharacter;
 			} 
 		}
-		public ImageSource source { get; set; }
+		public object? source { get; set; }
 		public Collection collection { get; set; }
 		public string collectionChar { get; set; }
 		public bool selected
