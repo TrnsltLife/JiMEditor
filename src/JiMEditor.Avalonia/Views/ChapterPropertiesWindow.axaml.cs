@@ -318,6 +318,16 @@ public partial class ChapterPropertiesWindow : Window
 
 	async void TileEditButton_Click( object? sender, RoutedEventArgs e )
 	{
+		if ( !scenario.scenarioTypeJourney )
+		{
+			MessageBox.Show(
+				"Tile Block editing for battle maps is not ported yet in Avalonia.",
+				"Not Yet Implemented",
+				MessageBoxButton.OK,
+				MessageBoxImage.Information );
+			return;
+		}
+
 		if ( chapter.isRandomTiles )
 		{
 			var tp = new TilePoolEditorWindow( scenario, chapter );

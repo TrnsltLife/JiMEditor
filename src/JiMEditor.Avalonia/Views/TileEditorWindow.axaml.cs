@@ -28,6 +28,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 
 	readonly Dictionary<BaseTile, TileVisual> _visuals = new();
 	readonly List<TilePoolOption> _tilePoolOptions = new();
+	readonly Dictionary<string, IBrush> _tokenImageBrushCache = new();
 	bool _dragging;
 	BaseTile? _dragTile;
 	Point _dragClickOffset;
@@ -218,6 +219,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 				otherTile.tokenList.Remove( st );
 		}
 		selected.isStartTile = true;
+		RedrawAll();
 	}
 
 	void StartingTileCheck_OnUnchecked( object? sender, RoutedEventArgs e )
@@ -228,6 +230,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 		if ( st != null )
 			selected.tokenList.Remove( st );
 		selected.isStartTile = false;
+		RedrawAll();
 	}
 
 	async void EditTokenButton_Click( object? sender, RoutedEventArgs e )
@@ -236,6 +239,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 			return;
 		var tw = new TokenEditorWindow( selected, scenario );
 		await tw.ShowDialog( this );
+		RedrawAll();
 		UpdateSelectedUi();
 	}
 
@@ -431,6 +435,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 			tv.Honeycomb.IsVisible = !tile.useGraphic;
 			tv.Outline.IsVisible = tile.useGraphic;
 			tv.Honeycomb.Fill = GetTileFillBrush( tile.color );
+			RenderTileTokens( tile, tv );
 			ApplyTileTransform( tile );
 		}
 		UpdateVisualSelection();
@@ -634,8 +639,157 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 	{
 		if ( _visuals.TryGetValue( tile, out var tv ) )
 		{
+			tv.TokenShapes.Clear();
 			TileCanvas.Children.Remove( tv.Host );
 			_visuals.Remove( tile );
+		}
+	}
+
+	void RenderTileTokens( BaseTile tile, TileVisual tv )
+	{
+		foreach ( var shape in tv.TokenShapes )
+			tv.Host.Children.Remove( shape );
+		tv.TokenShapes.Clear();
+
+		foreach ( var token in tile.tokenList )
+		{
+			var shape = CreateTokenPreviewShape( token );
+			shape.IsHitTestVisible = false;
+			shape.DataContext = token;
+			ApplyTokenPreviewTransform( tile, token, shape, tv.Width, tv.Height );
+			tv.Host.Children.Add( shape );
+			tv.TokenShapes.Add( shape );
+		}
+	}
+
+	void ApplyTokenPreviewTransform( BaseTile parentTile, Token token, Shape shape, double canvasW, double canvasH )
+	{
+		var scale = parentTile.tileType == TileType.Square ? 0.8d : 0.5d;
+		var positionScale = Math.Max( canvasW, canvasH ) / 512d;
+		var widthOffset = canvasW > canvasH ? 0d : ( canvasH - canvasW ) / 2d;
+		var heightOffset = canvasH > canvasW ? 0d : ( canvasW - canvasH ) / 2d;
+		// TokenEditor stores token position at the token center. Convert to top-left for the tile preview.
+		var left = token.position.X * positionScale - widthOffset - ( shape.Width * scale / 2d );
+		var top = token.position.Y * positionScale - heightOffset - ( shape.Height * scale / 2d );
+		Canvas.SetLeft( shape, left );
+		Canvas.SetTop( shape, top );
+
+		var centerOffsetX = ( shape.Width / 2d ) * scale;
+		var centerOffsetY = ( shape.Height / 2d ) * scale;
+		shape.RenderTransform = new TransformGroup
+		{
+			Children = new Transforms
+			{
+				new ScaleTransform( scale, scale ),
+				new RotateTransform( token.angle, centerOffsetX, centerOffsetY )
+			}
+		};
+	}
+
+	Shape CreateTokenPreviewShape( Token token )
+	{
+		Shape shape;
+		if ( token.tokenType == TokenType.Terrain )
+		{
+			var terrain = token.terrainType;
+			if ( new[] { TerrainType.Barrels, TerrainType.Barricade, TerrainType.Chest, TerrainType.Elevation, TerrainType.Log, TerrainType.Table }.Contains( terrain ) )
+				shape = new Rectangle { Width = 62, Height = 140 };
+			else if ( new[] { TerrainType.Fence, TerrainType.Stream, TerrainType.Trench, TerrainType.Wall }.Contains( terrain ) )
+				shape = new Rectangle { Width = 27, Height = 170 };
+			else if ( new[] { TerrainType.Boulder, TerrainType.Bush, TerrainType.FirePit, TerrainType.Rubble, TerrainType.Statue, TerrainType.Web }.Contains( terrain ) )
+				shape = new Ellipse { Width = 74, Height = 74 };
+			else if ( new[] { TerrainType.Fountain, TerrainType.Mist, TerrainType.Pit, TerrainType.Pond }.Contains( terrain ) )
+				shape = new Rectangle { Width = 150, Height = 150, RadiusX = 50, RadiusY = 50 };
+			else
+				shape = new Ellipse { Width = 50, Height = 50 };
+		}
+		else
+		{
+			shape = new Ellipse { Width = 50, Height = 50 };
+		}
+
+		shape.Stroke = Brushes.White;
+		shape.StrokeThickness = 4;
+		shape.Fill = BuildTokenFill( token );
+		return shape;
+	}
+
+	IBrush BuildTokenFill( Token token )
+	{
+		if ( token.tokenType == TokenType.Person )
+		{
+			var person = token.personType switch
+			{
+				PersonType.Human => "Human.png",
+				PersonType.Elf => "Elf.png",
+				PersonType.Hobbit => "Hobbit.png",
+				PersonType.Dwarf => "Dwarf.png",
+				_ => null
+			};
+			if ( person != null )
+				return ImageBrushFromAssets( $"Tokens/{person}" );
+		}
+
+		if ( token.tokenType == TokenType.Terrain )
+		{
+			var terrain = token.terrainType switch
+			{
+				TerrainType.Barrels => "Barrels.png",
+				TerrainType.Boulder => "Boulder.png",
+				TerrainType.Bush => "Bush.png",
+				TerrainType.FirePit => "FirePit.png",
+				TerrainType.Mist => "Mist.png",
+				TerrainType.Pit => "Pit.png",
+				TerrainType.Statue => "Statue.png",
+				TerrainType.Stream => "Stream.png",
+				TerrainType.Table => "Table.png",
+				TerrainType.Wall => "Wall.png",
+				TerrainType.Elevation => "Elevation.png",
+				TerrainType.Log => "Log.png",
+				TerrainType.Rubble => "Rubble.png",
+				TerrainType.Web => "Web.png",
+				TerrainType.Barricade => "Barricade.png",
+				TerrainType.Chest => "Chest.png",
+				TerrainType.Fence => "Fence.png",
+				TerrainType.Fountain => "Fountain.png",
+				TerrainType.Pond => "Pond.png",
+				TerrainType.Trench => "Trench.png",
+				_ => null
+			};
+			if ( terrain != null )
+				return ImageBrushFromAssets( $"Terrain/{terrain}" );
+			return Brushes.Brown;
+		}
+
+		return token.tokenType switch
+		{
+			TokenType.Search => ImageBrushFromAssets( "Tokens/Search.png" ),
+			TokenType.Person => ImageBrushFromAssets( "Tokens/Person.png" ),
+			TokenType.Threat => ImageBrushFromAssets( "Tokens/Threat.png" ),
+			TokenType.Darkness => ImageBrushFromAssets( "Tokens/Darkness.png" ),
+			TokenType.DifficultGround => ImageBrushFromAssets( "Tokens/DifficultGround.png" ),
+			TokenType.Fortified => ImageBrushFromAssets( "Tokens/Fortified.png" ),
+			TokenType.Start => ImageBrushFromAssets( "Tokens/marker-start.png" ),
+			_ => Brushes.Gray
+		};
+	}
+
+	IBrush ImageBrushFromAssets( string relPath )
+	{
+		if ( _tokenImageBrushCache.TryGetValue( relPath, out var brush ) )
+			return brush;
+		try
+		{
+			var uri = new Uri( $"avares://JiMEditor.Avalonia/Assets/{relPath}" );
+			using var stream = AssetLoader.Open( uri );
+			var bmp = new Bitmap( stream );
+			var imgBrush = new ImageBrush( bmp ) { Stretch = Stretch.Fill };
+			_tokenImageBrushCache[relPath] = imgBrush;
+			return imgBrush;
+		}
+		catch
+		{
+			return Brushes.Gray;
 		}
 	}
 
@@ -792,6 +946,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 		public Geometry HitFill { get; set; } = hitFill;
 		public double Width { get; } = width;
 		public double Height { get; } = height;
+		public List<Shape> TokenShapes { get; } = new();
 	}
 	readonly record struct HexGeometries( Geometry Honeycomb, Geometry Outline, Geometry HitFill );
 	readonly record struct TilePoolOption( int Id, string CollectionIcon );

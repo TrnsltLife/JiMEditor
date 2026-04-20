@@ -1,4 +1,4 @@
-// Ported from: JiMEditor/MainWindow.xaml.cs (2026-04-04) — Avalonia shell; editor logic TODO-Avalonia-Reenable.
+// Ported from: JiMEditor/MainWindow.xaml.cs (2026-04-04) — Avalonia shell with journey editor routing.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -297,7 +297,11 @@ public partial class MainWindow : Window
 		}
 		else
 		{
-			// TODO-Avalonia-Reenable: TileEditorWindow for battle maps.
+			MessageBox.Show(
+				"Tile Block editing for battle maps is not ported yet in Avalonia.",
+				"Not Yet Implemented",
+				MessageBoxButton.OK,
+				MessageBoxImage.Information );
 		}
 	}
 

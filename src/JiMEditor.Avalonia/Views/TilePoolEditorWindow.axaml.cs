@@ -8,6 +8,9 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using JiME;
+using MessageBox = System.Windows.MessageBox;
+using MessageBoxButton = System.Windows.MessageBoxButton;
+using MessageBoxImage = System.Windows.MessageBoxImage;
 
 namespace JiMEditor.Avalonia.Views;
 
@@ -266,6 +269,16 @@ public partial class TilePoolEditorWindow : Window, INotifyPropertyChanged
 	{
 		if ( selected == null )
 			return;
+		if ( selected.tileSide == "Random" )
+		{
+			MessageBox.Show(
+				"Switch this tile to Side A or Side B before editing token placement.",
+				"Cannot Edit Tokens",
+				MessageBoxButton.OK,
+				MessageBoxImage.Information );
+			return;
+		}
+
 		var w = new TokenEditorWindow( selected, scenario, true );
 		await w.ShowDialog( this );
 		ShowExploreStatus();
