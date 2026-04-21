@@ -12,6 +12,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using JiMEditor.Avalonia.EventDialog;
+using JiMEditor.Avalonia.ScenarioGraph;
 using JiMEditor.Avalonia;
 using JiMEditor.Avalonia.Views.Events;
 using JiME;
@@ -22,7 +23,7 @@ using MessageBoxResult = System.Windows.MessageBoxResult;
 
 namespace JiMEditor.Avalonia.Views;
 
-public partial class MainWindow : Window
+public partial class MainWindow : Window, IScenarioGraphInteractionSink
 {
 	public Scenario scenario { get; private set; } = null!;
 
@@ -55,6 +56,8 @@ public partial class MainWindow : Window
 		SyncTitleFromScenario();
 		ScenarioNameEdit.Text = scenario.scenarioName ?? "";
 		scenario.PropertyChanged += OnScenarioPropertyChanged;
+		ScenarioChapterFlowGraph.SetInteractionSink( this );
+		ScenarioChapterFlowGraph.Attach( scenario );
 	}
 
 	void WireSidebarLists()
@@ -304,6 +307,97 @@ public partial class MainWindow : Window
 		{
 			var tw = new TileEditorWindow( scenario, c );
 			await tw.ShowDialog( this );
+		}
+	}
+
+	public async Task OnNodeActivatedAsync( ScenarioGraphNode node )
+	{
+		switch ( node.Kind )
+		{
+			case ScenarioGraphNodeKind.Chapter:
+			{
+				var chapter = scenario.chapterObserver.FirstOrDefault( c =>
+					ScenarioGraphFullScenarioDocumentBuilder.ChapterId( c.dataName ) == node.Id );
+				if ( chapter != null )
+					await OpenChapterPropertiesEditorAsync( chapter );
+				break;
+			}
+			case ScenarioGraphNodeKind.Tile:
+			{
+				BaseTile? selectedTile = null;
+				foreach ( var chapter in scenario.chapterObserver )
+				{
+					selectedTile = chapter.tileObserver
+						.OfType<BaseTile>()
+						.FirstOrDefault( t => ScenarioGraphFullScenarioDocumentBuilder.TileId( t.GUID ) == node.Id );
+					if ( selectedTile != null )
+						break;
+				}
+
+				if ( selectedTile != null )
+				{
+					var w = new TokenEditorWindow( selectedTile, scenario );
+					await w.ShowDialog( this );
+				}
+				break;
+			}
+			case ScenarioGraphNodeKind.Objective:
+			{
+				var objective = scenario.objectiveObserver.FirstOrDefault( o =>
+					ScenarioGraphFullScenarioDocumentBuilder.ObjectiveId( o.dataName ) == node.Id );
+				if ( objective != null )
+					await OpenObjectiveEditorAsync( objective );
+				break;
+			}
+			case ScenarioGraphNodeKind.Trigger:
+			{
+				var trigger = scenario.triggersObserver.FirstOrDefault( t =>
+					ScenarioGraphFullScenarioDocumentBuilder.TriggerId( t.dataName ) == node.Id );
+				if ( trigger != null )
+				{
+					var w = new TriggerEditorWindow( scenario, trigger.dataName );
+					await w.ShowDialog( this );
+				}
+				break;
+			}
+			case ScenarioGraphNodeKind.Interaction:
+			{
+				var interaction = scenario.interactionObserver.FirstOrDefault( i =>
+					ScenarioGraphFullScenarioDocumentBuilder.InteractionId( i.dataName ) == node.Id );
+				if ( interaction != null )
+				{
+					await EventEditorFactory.TryEditInteractionAsync( this, scenario, interaction );
+					interactionsUC.RefreshSortedItems();
+				}
+				break;
+			}
+			case ScenarioGraphNodeKind.Token:
+			{
+				BaseTile? parentTile = null;
+				Token? selectedToken = null;
+				foreach ( var chapter in scenario.chapterObserver )
+				{
+					foreach ( var tile in chapter.tileObserver.OfType<BaseTile>() )
+					{
+						selectedToken = tile.tokenList
+							.FirstOrDefault( tok => ScenarioGraphFullScenarioDocumentBuilder.TokenId( tok.GUID ) == node.Id );
+						if ( selectedToken == null )
+							continue;
+						parentTile = tile;
+						break;
+					}
+
+					if ( parentTile != null )
+						break;
+				}
+
+				if ( parentTile != null && selectedToken != null )
+				{
+					var w = new TokenEditorWindow( parentTile, scenario, highlightToken: selectedToken );
+					await w.ShowDialog( this );
+				}
+				break;
+			}
 		}
 	}
 
@@ -1459,6 +1553,8 @@ public partial class MainWindow : Window
 	protected override void OnClosing( WindowClosingEventArgs e )
 	{
 		DetachSidebarLists();
+		ScenarioChapterFlowGraph.SetInteractionSink( null );
+		ScenarioChapterFlowGraph.Detach();
 		if ( scenario != null )
 			scenario.PropertyChanged -= OnScenarioPropertyChanged;
 		base.OnClosing( e );

@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:fg="using:FlowGraph.Avalonia"
+             xmlns:fgc="using:FlowGraph.Avalonia.Controls"
+             x:Class="JiMEditor.Avalonia.Views.ScenarioChapterFlowGraphView"
+             x:CompileBindings="False">
+	<Panel>
+		<fgc:FlowBackground x:Name="FlowDotsBackground" Variant="Dots" Gap="20" />
+		<fg:FlowCanvas x:Name="FlowHostCanvas" />
+		<fgc:FlowPanel Position="BottomLeft" Margin="8">
+			<StackPanel Orientation="Horizontal" Spacing="6">
+				<fgc:FlowControls TargetCanvas="{Binding #FlowHostCanvas}" />
+				<Button Content="↻"
+				        Width="32"
+				        Height="32"
+				        FontSize="16"
+				        FontWeight="Bold"
+				        ToolTip.Tip="Refresh graph from Scenario"
+				        Click="RefreshGraphButton_Click" />
+			</StackPanel>
+		</fgc:FlowPanel>
+		<fgc:FlowPanel Position="BottomRight" Margin="8">
+			<fgc:FlowMinimap x:Name="FlowGraphMinimap"
+			                 Width="200"
+			                 Height="140"
+			                 TargetCanvas="{Binding #FlowHostCanvas}" />
+		</fgc:FlowPanel>
+	</Panel>
+</UserControl>

@@ -5,6 +5,7 @@
         xmlns:jime="using:JiME"
         xmlns:uc="using:JiMEditor.Avalonia.UserControls"
         xmlns:conv="using:JiMEditor.Avalonia.Converters"
+        xmlns:flowPreview="using:JiMEditor.Avalonia.Views"
         mc:Ignorable="d"
         d:DesignWidth="1200" d:DesignHeight="800"
         x:Class="JiMEditor.Avalonia.Views.MainWindow"
@@ -274,14 +275,9 @@
 				        Background="#FF1E1E1E"
 				        BorderBrush="{StaticResource bgButtonColor}"
 				        BorderThickness="1"
-				        Margin="8">
-					<TextBlock Text="Map / graph (GraphX not ported — see comment in MainWindow.axaml)"
-					           Foreground="#888"
-					           HorizontalAlignment="Center"
-					           VerticalAlignment="Center"
-					           TextAlignment="Center"
-					           TextWrapping="Wrap"
-					           Margin="16"/>
+				        Margin="8"
+				        ClipToBounds="True">
+					<flowPreview:ScenarioChapterFlowGraphView x:Name="ScenarioChapterFlowGraph" />
 				</Border>
 			</Grid>
 		</Grid>
