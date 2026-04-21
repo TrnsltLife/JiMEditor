@@ -231,7 +231,7 @@ public partial class ScenarioWindow : Window
 		scenario.PruneScenarioEnd();
 	}
 
-	void CollectionCheckBox_Changed( object? sender, RoutedEventArgs e )
+	async void CollectionCheckBox_Changed( object? sender, RoutedEventArgs e )
 	{
 		if ( _suppressCollectionCheck )
 			return;
@@ -263,20 +263,20 @@ public partial class ScenarioWindow : Window
 		var ret = MessageBox.Show( body, "Remove Collection?", MessageBoxButton.YesNo, MessageBoxImage.Question );
 		if ( ret != MessageBoxResult.Yes )
 		{
-			_suppressCollectionCheck = true;
-			try
-			{
-				cb.IsChecked = true;
-			}
-			finally
-			{
-				_suppressCollectionCheck = false;
-			}
+			SetCollectionCheckBoxState( cb, true );
 			return;
 		}
 
+		if ( !await MaybeSaveCopyBeforeDestructiveChangeAsync( async () =>
+		     {
+			     SetCollectionCheckBoxState( cb, true );
+			     await Task.CompletedTask;
+		     } ) )
+			return;
+
 		scenario.collectionObserver.Remove( collection );
 		scenario.RefilterGlobalTilePool();
+		SetCollectionCheckBoxState( cb, false );
 	}
 
 	void ObjectiveComboBox_SelectionChanged( object? sender, SelectionChangedEventArgs e )
@@ -297,7 +297,7 @@ public partial class ScenarioWindow : Window
 	}
 
 	// WPF uses Click (once per click target). IsCheckedChanged on both radios fired twice per switch and re-ran this logic.
-	void RadioType_Checked( object? sender, RoutedEventArgs e )
+	async void RadioType_Checked( object? sender, RoutedEventArgs e )
 	{
 		if ( _suppressScenarioTypeRadio )
 			return;
@@ -305,7 +305,8 @@ public partial class ScenarioWindow : Window
 		if ( scenario.scenarioTypeJourney == _currentType )
 			return;
 
-		var msg = scenario.scenarioTypeJourney
+		var requestedType = scenario.scenarioTypeJourney;
+		var msg = requestedType
 			? "The default Terrain: events will be removed since they are not needed for a Journey map."
 			: "New default Terrain: events will be added since they can be useful for a Battle map.";
 		var ret = MessageBox.Show(
@@ -313,6 +314,23 @@ public partial class ScenarioWindow : Window
 			"Change Scenario Type", MessageBoxButton.YesNo, MessageBoxImage.Question );
 		if ( ret == MessageBoxResult.Yes )
 		{
+			if ( !await MaybeSaveCopyBeforeDestructiveChangeAsync( async () =>
+			     {
+				     RestoreScenarioTypeUiToCurrent();
+				     await Task.CompletedTask;
+			     } ) )
+				return;
+
+			_suppressScenarioTypeRadio = true;
+			try
+			{
+				scenario.scenarioTypeJourney = requestedType;
+			}
+			finally
+			{
+				_suppressScenarioTypeRadio = false;
+			}
+
 			_currentType = scenario.scenarioTypeJourney;
 			scenario.WipeChapters();
 			if ( scenario.scenarioTypeJourney )
@@ -330,15 +348,58 @@ public partial class ScenarioWindow : Window
 		}
 		else
 		{
-			_suppressScenarioTypeRadio = true;
-			try
-			{
-				scenario.scenarioTypeJourney = _currentType;
-			}
-			finally
-			{
-				_suppressScenarioTypeRadio = false;
-			}
+			RestoreScenarioTypeUiToCurrent();
 		}
+	}
+
+	void SetCollectionCheckBoxState( CheckBox cb, bool isChecked )
+	{
+		_suppressCollectionCheck = true;
+		try
+		{
+			cb.IsChecked = isChecked;
+		}
+		finally
+		{
+			_suppressCollectionCheck = false;
+		}
+	}
+
+	void RestoreScenarioTypeUiToCurrent()
+	{
+		_suppressScenarioTypeRadio = true;
+		try
+		{
+			scenario.scenarioTypeJourney = _currentType;
+		}
+		finally
+		{
+			_suppressScenarioTypeRadio = false;
+		}
+	}
+
+	async Task<bool> MaybeSaveCopyBeforeDestructiveChangeAsync( Func<Task> restoreStateBeforeSaveAsync )
+	{
+		var ret = MessageBox.Show(
+			"Do you want to save a copy first before continuing?",
+			"Save Copy First?",
+			MessageBoxButton.YesNo,
+			MessageBoxImage.Question );
+		if ( ret != MessageBoxResult.Yes )
+			return true;
+
+		await restoreStateBeforeSaveAsync();
+
+		if ( Owner is not MainWindow mw )
+		{
+			MessageBox.Show(
+				"Could not open Save Copy from this window.",
+				"Save Copy",
+				MessageBoxButton.OK,
+				MessageBoxImage.Error );
+			return false;
+		}
+
+		return await mw.SaveScenarioCopyForSafeguardAsync();
 	}
 }

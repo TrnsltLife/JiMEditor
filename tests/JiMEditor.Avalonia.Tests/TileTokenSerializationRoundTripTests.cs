@@ -1,4 +1,5 @@
 using System.Linq;
+using System.IO;
 using System.Windows;
 using System.Collections.ObjectModel;
 using JiME;
@@ -110,6 +111,81 @@ public class TileTokenSerializationRoundTripTests
 			Assert.Equal( 45, roundTrippedToken.angle, 6 );
 			Assert.Equal( "TokenReveal", roundTrippedToken.triggerName );
 			Assert.Equal( "TokenTriggerBy", roundTrippedToken.triggeredByName );
+		} );
+	}
+
+	[Fact]
+	public void Save_PrunesCollectionLockedContent_FromScenarioModel_BeforeWrite()
+	{
+		ModelTestEnvironment.RunInSta( () =>
+		{
+			ModelTestEnvironment.SetupMinimalUtilsForModelTests();
+
+			var scenario = new Scenario( "Prune Save Scenario" );
+			scenario.collectionObserver.Clear();
+			scenario.collectionObserver.Add( Collection.CORE_SET );
+			scenario.globalTilePool.Clear();
+			scenario.globalTilePool.Add( 100 ); // Core tile
+			scenario.globalTilePool.Add( 213 ); // Shaded Paths tile
+
+			var itemInteraction = new ItemInteraction( "Item Event" )
+			{
+				randomizedItemsCount = 2
+			};
+			itemInteraction.itemList.Add( Items.FromID( 1 )! ); // Core
+			itemInteraction.itemList.Add( Items.FromID( 26 )! ); // Shaded Paths
+			scenario.interactionObserver.Add( itemInteraction );
+
+			var titleInteraction = new TitleInteraction( "Title Event" )
+			{
+				randomizedTitlesCount = 2
+			};
+			titleInteraction.titleList.Add( Titles.FromID( 1 )! ); // Core
+			titleInteraction.titleList.Add( Titles.FromID( 25 )! ); // Shaded Paths
+			scenario.interactionObserver.Add( titleInteraction );
+
+			var threat = new ThreatInteraction( "Threat Event" );
+			threat.includedEnemies[0] = true; // Core
+			threat.includedEnemies[10] = true; // Shaded Paths
+			threat.monsterCollection.Add( new Monster( 0 ) ); // Core
+			threat.monsterCollection.Add( new Monster( 10 ) ); // Shaded Paths
+			scenario.interactionObserver.Add( threat );
+
+			var tokenInteraction = new ItemInteraction( "Token Event" )
+			{
+				isTokenInteraction = true,
+				tokenType = TokenType.Terrain,
+				terrainType = TerrainType.Log // Shaded Paths terrain
+			};
+			scenario.interactionObserver.Add( tokenInteraction );
+
+			var outPath = Path.Combine( Path.GetTempPath(), "jime-prune-save-" + Guid.NewGuid() + ".jime" );
+			try
+			{
+				var ok = FileManager.TryWriteScenarioToPath( scenario, outPath, updateScenarioAfterWrite: false, out var err );
+				Assert.True( ok, err );
+
+				Assert.Single( itemInteraction.itemList );
+				Assert.All( itemInteraction.itemList, i => Assert.Equal( Collection.CORE_SET, Collection.FromID( i.collection ) ) );
+
+				Assert.Single( titleInteraction.titleList );
+				Assert.All( titleInteraction.titleList, t => Assert.Equal( Collection.CORE_SET, Collection.FromID( t.collection ) ) );
+
+				Assert.True( threat.includedEnemies[0] );
+				Assert.False( threat.includedEnemies[10] );
+				Assert.Single( threat.monsterCollection );
+				Assert.Contains( threat.monsterCollection, m => m.id == 0 );
+				Assert.DoesNotContain( threat.monsterCollection, m => m.id == 10 );
+
+				Assert.Equal( TokenType.Search, tokenInteraction.tokenType );
+				Assert.DoesNotContain( scenario.filteredGlobalTilePool, x => x == 213 );
+				Assert.Contains( 100, scenario.filteredGlobalTilePool );
+			}
+			finally
+			{
+				if ( File.Exists( outPath ) )
+					File.Delete( outPath );
+			}
 		} );
 	}
 

@@ -8,6 +8,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using JiMEditor.Avalonia;
+using JiMEditor.Avalonia.EventDialog;
 using JiME;
 using Newtonsoft.Json;
 using MessageBox = System.Windows.MessageBox;
@@ -266,6 +267,7 @@ public partial class CampaignWindow : Window
 			return;
 
 		scenario.campaignGUID = campaign.campaignGUID;
+		ScenarioCollectionAvailability.PruneScenarioForEnabledCollections( scenario );
 		var fm = new FileManager( scenario );
 		fm.Save();
 
@@ -317,6 +319,7 @@ public partial class CampaignWindow : Window
 			{
 				scenario.campaignGUID = Guid.Empty;
 				scenario.projectType = ProjectType.Standalone;
+				ScenarioCollectionAvailability.PruneScenarioForEnabledCollections( scenario );
 				var fm = new FileManager( scenario );
 				fm.Save();
 			}
@@ -352,6 +355,7 @@ public partial class CampaignWindow : Window
 				if ( s == null )
 					continue;
 				s.campaignGUID = Guid.Empty;
+				ScenarioCollectionAvailability.PruneScenarioForEnabledCollections( s );
 				var fm = new FileManager( s );
 				fm.Save();
 			}

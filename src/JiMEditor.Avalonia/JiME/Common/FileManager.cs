@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using JiMEditor.Avalonia.EventDialog;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 
@@ -128,11 +129,15 @@ namespace JiME
 		/// When false (Save Copy), the open document path and dirty state are unchanged; the file on disk still gets a fresh
 		/// <c>saveDate</c> and a <c>fileName</c> field matching the copy’s basename.
 		/// </summary>
-		public static bool TryWriteScenarioToPath( Scenario scenario, string fullDestinationPath, bool updateScenarioAfterWrite, out string errorMessage )
+		/// <param name="pruneCollectionsBeforeWrite">When true (Save / Save As), strips catalog references for disabled collections before serializing. Save Copy passes false so the open document is not mutated.</param>
+		public static bool TryWriteScenarioToPath( Scenario scenario, string fullDestinationPath, bool updateScenarioAfterWrite, out string errorMessage, bool pruneCollectionsBeforeWrite = true )
 		{
 			errorMessage = "";
 			try
 			{
+				if ( pruneCollectionsBeforeWrite )
+					ScenarioCollectionAvailability.PruneScenarioForEnabledCollections( scenario );
+
 				var directory = Path.GetDirectoryName( fullDestinationPath );
 				if ( !string.IsNullOrEmpty( directory ) && !Directory.Exists( directory ) )
 					Directory.CreateDirectory( directory );

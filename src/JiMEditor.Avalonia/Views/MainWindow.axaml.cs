@@ -818,8 +818,11 @@ public partial class MainWindow : Window
 		}
 	}
 
+	/// <summary>Used by <see cref="ScenarioWindow"/> safeguard flow to reuse the existing Save Copy picker and write logic.</summary>
+	public async Task<bool> SaveScenarioCopyForSafeguardAsync() => await SaveScenarioCopyAsync();
+
 	/// <summary>Writes a copy to a user-chosen path; does not change the open document’s <see cref="Scenario.fileName"/> or dirty flag.</summary>
-	async Task SaveScenarioCopyAsync()
+	async Task<bool> SaveScenarioCopyAsync()
 	{
 		try
 		{
@@ -831,21 +834,23 @@ public partial class MainWindow : Window
 
 			var picked = await PickSaveFileNameAsync( "Save Copy", suggested, startFolder );
 			if ( picked == null )
-				return;
+				return false;
 			if ( !picked.EndsWith( ".jime", StringComparison.OrdinalIgnoreCase ) )
 				picked += ".jime";
 
 			var parent = Path.GetDirectoryName( picked );
 			if ( !string.IsNullOrEmpty( parent ) ) Directory.CreateDirectory( parent );
 
-			if ( !FileManager.TryWriteScenarioToPath( scenario, picked, updateScenarioAfterWrite: false, out var err ) )
+			if ( !FileManager.TryWriteScenarioToPath( scenario, picked, updateScenarioAfterWrite: false, out var err, pruneCollectionsBeforeWrite: false ) )
 			{
 				MessageBox.Show(
 					"Could not save a copy of the project file.\r\n\r\n" + err,
 					"App Exception",
 					MessageBoxButton.OK,
 					MessageBoxImage.Error );
+				return false;
 			}
+			return true;
 		}
 		catch ( Exception ex )
 		{
@@ -854,6 +859,7 @@ public partial class MainWindow : Window
 				"App Exception",
 				MessageBoxButton.OK,
 				MessageBoxImage.Error );
+			return false;
 		}
 	}
 

@@ -220,4 +220,74 @@ public static class ScenarioCollectionAvailability
 		if ( count == 0 )
 			interaction.randomizedTitlesCount = 1;
 	}
+
+	/// <summary>
+	/// Clears enemy / token / item / title picks that belong to collections not enabled on the scenario, including inside
+	/// events that were never opened in the editor. Safe to call repeatedly (e.g. before every save).
+	/// </summary>
+	public static void PruneScenarioForEnabledCollections( Scenario scenario )
+	{
+		if ( scenario == null )
+			return;
+		var journeyMap = scenario.scenarioTypeJourney;
+		foreach ( var inter in scenario.interactionObserver )
+		{
+			switch ( inter )
+			{
+				case ItemInteraction item:
+					PruneItemInteraction( item, scenario );
+					break;
+				case TitleInteraction title:
+					PruneTitleInteraction( title, scenario );
+					break;
+				case ThreatInteraction threat:
+					PruneThreatInteraction( threat, scenario );
+					break;
+			}
+
+			if ( inter is InteractionBase ib )
+				CoerceInteractionTokenForScenario( ib, scenario, journeyMap );
+		}
+
+		scenario.RefilterGlobalTilePool();
+	}
+
+	public static void PruneThreatInteraction( ThreatInteraction threat, Scenario scenario )
+	{
+		var monsters = Collection.MONSTERS();
+		var flags = threat.includedEnemies;
+		for ( var i = 0; i < flags.Length && i < monsters.Length; i++ )
+		{
+			if ( !flags[i] )
+				continue;
+			var coll = CollectionForMonsterTypeId( monsters[i].id );
+			if ( coll == null || !scenario.collectionObserver.Contains( coll ) )
+				flags[i] = false;
+		}
+
+		var toRemove = threat.monsterCollection
+			.Where( m =>
+			{
+				var c = CollectionForMonsterTypeId( m.id );
+				return c == null || !scenario.collectionObserver.Contains( c );
+			} )
+			.ToList();
+		foreach ( var m in toRemove )
+			threat.monsterCollection.Remove( m );
+	}
+
+	static Collection? CollectionForMonsterTypeId( int monsterTypeId )
+	{
+		foreach ( var col in new[]
+		         {
+			         Collection.CORE_SET, Collection.VILLAINS_OF_ERIAJAR, Collection.SHADED_PATHS,
+			         Collection.DENIZENS_IN_DARKNESS, Collection.UNFURLING_WAR, Collection.SCORCHERS_OF_THE_WILDS
+		         } )
+		{
+			if ( col.Monsters.Any( m => m.id == monsterTypeId ) )
+				return col;
+		}
+
+		return null;
+	}
 }
