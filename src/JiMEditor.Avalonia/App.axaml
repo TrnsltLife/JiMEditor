@@ -14,5 +14,9 @@
 	<Application.Styles>
 		<FluentTheme />
 		<StyleInclude Source="avares://JiMEditor.Avalonia/Assets/ProjectWindowStyles.axaml"/>
+		<!-- ring.png is linked from sibling JiMEditor/Assets via csproj; taskbar/titlebar for all windows. -->
+		<Style Selector="Window">
+			<Setter Property="Icon" Value="/Assets/ring.png"/>
+		</Style>
 	</Application.Styles>
 </Application>

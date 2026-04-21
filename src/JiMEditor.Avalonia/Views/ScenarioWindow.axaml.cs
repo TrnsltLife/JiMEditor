@@ -1,6 +1,7 @@
 // Ported from: JiMEditor/Views/ScenarioWindow.xaml.cs (2026-04-08) — partial Avalonia port.
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using JiMEditor.Avalonia.EventDialog;
@@ -146,14 +147,89 @@ public partial class ScenarioWindow : Window
 			scenario.coverImage = w.CoverImage;
 	}
 
-	void AddResolutionButton_Click( object? sender, RoutedEventArgs e ) =>
-		MessageBox.Show( "TODO-Avalonia-Reenable: Resolution editor flow is not ported yet.", "Not Yet Implemented", MessageBoxButton.OK, MessageBoxImage.Information );
+	async void AddResolutionButton_Click( object? sender, RoutedEventArgs e ) => await AddResolutionAsync();
 
-	void RemoveResolutionButton_Click( object? sender, RoutedEventArgs e ) =>
-		MessageBox.Show( "TODO-Avalonia-Reenable: Resolution editor flow is not ported yet.", "Not Yet Implemented", MessageBoxButton.OK, MessageBoxImage.Information );
+	async Task AddResolutionAsync()
+	{
+		var data = new TextBookData();
+		data.pages.Add( "Default Text" );
+		data.triggerName = "None";
+		var (accepted, endsSuccess) = await ResolutionEditorWindow.ShowEditAsync( this, scenario, data, isNew: true );
+		if ( !accepted )
+			return;
+		if ( !scenario.AddResolution( data, endsSuccess ) )
+		{
+			MessageBox.Show( "A Resolution with this name already exists.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
+			return;
+		}
 
-	void ResolutionEditButton_Click( object? sender, RoutedEventArgs e ) =>
-		MessageBox.Show( "TODO-Avalonia-Reenable: Resolution editor flow is not ported yet.", "Not Yet Implemented", MessageBoxButton.OK, MessageBoxImage.Information );
+		ResolutionComboBox.SelectedItem = data;
+		scenario.PruneScenarioEnd();
+	}
+
+	async Task<(bool Accepted, bool EndsInSuccess)> RunResolutionEditorWithTranslationTailAsync( TextBookData data, bool isNew )
+	{
+		var originals = data.CaptureStartingValues();
+		var originalPrefix = data.TranslationKeyPrefix();
+		var originalKeyName = data.TranslationKeyName();
+		var dlg = new ResolutionEditorWindow( scenario, data, isNew );
+		await dlg.ShowDialog( this );
+		data.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originals, originalPrefix, originalKeyName );
+		return ( dlg.Accepted, dlg.EndsInSuccess );
+	}
+
+	async void ResolutionEditButton_Click( object? sender, RoutedEventArgs e ) => await EditResolutionAsync();
+
+	async Task EditResolutionAsync()
+	{
+		if ( ResolutionComboBox.SelectedItem is not TextBookData text )
+			return;
+		if ( text.dataName == "None" )
+		{
+			MessageBox.Show( "The [None] Resolution cannot be modified.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
+			return;
+		}
+
+		var (accepted, _) = await ResolutionEditorWindow.ShowEditAsync( this, scenario, text, isNew: false );
+		if ( !accepted )
+			return;
+		scenario.PruneScenarioEnd();
+	}
+
+	void RemoveResolutionButton_Click( object? sender, RoutedEventArgs e )
+	{
+		if ( ResolutionComboBox.SelectedItem is not TextBookData text )
+			return;
+		if ( text.dataName == "None" )
+		{
+			MessageBox.Show( "The [None] Resolution cannot be modified.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
+			return;
+		}
+
+		var ret = MessageBox.Show(
+			"Are you sure you want to delete this Resolution?\n\nALL ITS DATA WILL BE DELETED.",
+			"Delete Resolution",
+			MessageBoxButton.YesNo,
+			MessageBoxImage.Question );
+		if ( ret != MessageBoxResult.Yes )
+			return;
+
+		var removedName = text.dataName;
+		if ( scenario.resolutionObserver.Count > 1 )
+			scenario.RemoveData( text );
+
+		if ( scenario.lastStandFailedResolution == removedName )
+		{
+			scenario.lastStandFailedResolution = "";
+			_suppressLastStandCombo = true;
+			LastStandFailedResolutionComboBox.SelectedItem = null;
+			_suppressLastStandCombo = false;
+		}
+
+		if ( scenario.resolutionObserver.Count >= 1 )
+			ResolutionComboBox.SelectedIndex = 0;
+		scenario.PruneScenarioEnd();
+	}
 
 	void CollectionCheckBox_Changed( object? sender, RoutedEventArgs e )
 	{

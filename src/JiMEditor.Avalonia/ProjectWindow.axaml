@@ -51,7 +51,12 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<StackPanel Orientation="Horizontal">
+		<StackPanel Orientation="Horizontal" Spacing="10">
+			<Image Source="avares://JiMEditor.Avalonia/Assets/ring.png"
+			       Width="32"
+			       Height="32"
+			       VerticalAlignment="Center"
+			       Stretch="Uniform"/>
 			<TextBlock FontSize="30" Text="JiMEditor"/>
 			<TextBlock x:Name="editorVersion"
 			           Classes="heading"

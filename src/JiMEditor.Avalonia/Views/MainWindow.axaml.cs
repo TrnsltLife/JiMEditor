@@ -311,6 +311,26 @@ public partial class MainWindow : Window
 
 	async void AddObjectiveToolbarButton_Click( object? sender, RoutedEventArgs e ) => await AddObjectiveAsync();
 
+	async void AddResolutionToolbarButton_Click( object? sender, RoutedEventArgs e ) => await AddNewResolutionAsync();
+
+	async Task AddNewResolutionAsync()
+	{
+		var data = new TextBookData();
+		data.pages.Add( "Default Text" );
+		data.triggerName = "None";
+		var (accepted, endsSuccess) = await ResolutionEditorWindow.ShowEditAsync( this, scenario, data, isNew: true );
+		if ( !accepted )
+			return;
+		if ( !scenario.AddResolution( data, endsSuccess ) )
+		{
+			MessageBox.Show( "A Resolution with this name already exists.", "Data Error", MessageBoxButton.OK, MessageBoxImage.Error );
+			return;
+		}
+
+		scenario.PruneScenarioEnd();
+		scenario.TriggerTitleChange( true );
+	}
+
 	async Task AddObjectiveAsync()
 	{
 		var ow = new ObjectiveEditorWindow( scenario, new Objective( "Default Short Name - Change This" ) );

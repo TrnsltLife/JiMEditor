@@ -2,6 +2,8 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net9.0-windows</TargetFramework>
+    <!-- Same One Ring artwork as WPF JiMEditor (JiME.csproj); embeds in .exe and Avalonia default window icon. -->
+    <ApplicationIcon>..\..\..\JiMEditor\ring.ico</ApplicationIcon>
     <Nullable>enable</Nullable>
     <UseWpf>true</UseWpf>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>

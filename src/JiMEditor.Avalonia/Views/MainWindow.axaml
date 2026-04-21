@@ -114,6 +114,17 @@
 						<TextBlock Text="New Objective" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
 					</StackPanel>
 				</Button>
+				<Button x:Name="AddResolutionToolbarButton"
+				        Classes="iconbutton"
+				        Height="32"
+				        Padding="4,0,4,0"
+				        Click="AddResolutionToolbarButton_Click"
+				        ToolTip.Tip="New resolution">
+					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/addresolution.png" Width="24" Height="24"/>
+						<TextBlock Text="New Resolution" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
+					</StackPanel>
+				</Button>
 				<Button x:Name="AddEventToolbarButton"
 				        Classes="iconbutton"
 				        Height="32"
