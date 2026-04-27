@@ -51,21 +51,21 @@ public static class ScenarioGraphFullScenarioDocumentBuilder
 				onExistingId( key );
 		}
 
-		AddNode( ScenarioGraphDocumentBuilder.StartNodeId, ScenarioGraphNodeKind.Start, "START" );
+		AddNode( ScenarioGraphDocumentBuilder.StartNodeId, ScenarioGraphNodeKind.Start, "SCENARIO" );
 
 		foreach ( var t in scenario.triggersObserver )
 		{
 			if ( t.dataName == "None" )
 				continue;
 			// Use raw trigger name only (no extra suffix/parenthetical decorations).
-			AddNode( TriggerId( t.dataName ), ScenarioGraphNodeKind.Trigger, t.dataName, "trigger-arrow" );
+			AddNode( TriggerId( t.dataName ), ScenarioGraphNodeKind.Trigger, WithHeader( "Trigger", t.dataName ), "trigger-arrow" );
 		}
 
 		foreach ( var o in scenario.objectiveObserver )
 		{
 			if ( o.dataName == "None" )
 				continue;
-			AddNode( ObjectiveId( o.dataName ), ScenarioGraphNodeKind.Objective, o.dataName );
+			AddNode( ObjectiveId( o.dataName ), ScenarioGraphNodeKind.Objective, WithHeader( "Objective", o.dataName ) );
 		}
 
 		foreach ( var o in scenario.objectiveObserver )
@@ -83,7 +83,7 @@ public static class ScenarioGraphFullScenarioDocumentBuilder
 
 		foreach ( var r in scenario.resolutionObserver )
 		{
-			AddNode( ResolutionId( r.dataName ), ScenarioGraphNodeKind.Resolution, r.dataName );
+			AddNode( ResolutionId( r.dataName ), ScenarioGraphNodeKind.Resolution, WithHeader( "Resolution", r.dataName ), "resolution-rect" );
 		}
 
 		foreach ( var r in scenario.resolutionObserver )
@@ -97,7 +97,7 @@ public static class ScenarioGraphFullScenarioDocumentBuilder
 			if ( x.dataName == "None" )
 				continue;
 			var vId = InteractionId( x.dataName );
-			AddNode( vId, ScenarioGraphNodeKind.Interaction, x.dataName );
+			AddNode( vId, ScenarioGraphNodeKind.Interaction, WithHeader( "Event", x.dataName ), "event-rect" );
 			var groupId = EnsureInteractionGroupFromInteractionName( x.dataName, nodes, ids );
 			if ( groupId != null )
 				AddEdge( groupId, vId, ScenarioGraphEdgeKind.Includes, "includes" );
@@ -189,7 +189,8 @@ public static class ScenarioGraphFullScenarioDocumentBuilder
 		foreach ( var ch in scenario.chapterObserver )
 		{
 			var chId = ChapterId( ch.dataName );
-			var chapterLabel = string.IsNullOrWhiteSpace( ch.dataName ) ? "(Tile block)" : ch.dataName.Trim();
+			var chapterName = string.IsNullOrWhiteSpace( ch.dataName ) ? "(unnamed)" : ch.dataName.Trim();
+			var chapterLabel = WithHeader( "Tile Block", chapterName );
 			var chapterRenderType = scenario.scenarioTypeJourney ? "chapter-hex" : "chapter-square";
 			AddNode( chId, ScenarioGraphNodeKind.Chapter, chapterLabel, chapterRenderType );
 		}
@@ -200,8 +201,10 @@ public static class ScenarioGraphFullScenarioDocumentBuilder
 			foreach ( var tile in ch.tileObserver.OfType<BaseTile>() )
 			{
 				var tileId = TileId( tile.GUID );
-				var tileLabel = tile.idNumber.ToString() + tile.tileSide;
-				var tileRenderType = ( tile.tileType == TileType.Square || tile.tileType == TileType.Battle ) ? "tile-square" : "tile-hex";
+				var tileLabel = WithHeader( "Tile", tile.idNumber.ToString() + tile.tileSide );
+				var tileRenderType = ( tile.tileType == TileType.Battle || tile.idNumber == 998 || tile.idNumber == 999 )
+					? "tile-square"
+					: "tile-hex";
 				AddNode( tileId, ScenarioGraphNodeKind.Tile, tileLabel, tileRenderType );
 				AddEdge( chId, tileId, ScenarioGraphEdgeKind.Contains, "contains" );
 				TryTrigger( tile.triggerName, tr => AddEdge( tileId, tr, ScenarioGraphEdgeKind.ExploreTriggers, "explore triggers" ) );
@@ -237,14 +240,14 @@ public static class ScenarioGraphFullScenarioDocumentBuilder
 			foreach ( var th in scenario.threatObserver.OrderBy( x => x.threshold ) )
 			{
 				var vId = ThreatId( th.dataName + "_" + th.threshold );
-				AddNode( vId, ScenarioGraphNodeKind.ThreatLevel, "Threat Level: " + th.threshold );
+				AddNode( vId, ScenarioGraphNodeKind.ThreatLevel, WithHeader( "Threat", "Level " + th.threshold ), "threat-node" );
 				AddEdge( prevThreatId, vId, ScenarioGraphEdgeKind.ThreatChain, null );
 				prevThreatId = vId;
 				TryEvent( th.triggerName, ev => AddEdge( vId, ev, ScenarioGraphEdgeKind.Initiates, "initiates" ) );
 			}
 
 			var maxId = ThreatId( "MAX THREAT" );
-			AddNode( maxId, ScenarioGraphNodeKind.ThreatLevel, "Max Threat: " + scenario.threatMax );
+			AddNode( maxId, ScenarioGraphNodeKind.ThreatLevel, WithHeader( "Threat", "Max " + scenario.threatMax ), "threat-node" );
 			AddEdge( prevThreatId, maxId, ScenarioGraphEdgeKind.ThreatChain, null );
 		}
 
@@ -262,7 +265,7 @@ public static class ScenarioGraphFullScenarioDocumentBuilder
 		if ( ids.Contains( id ) )
 			return id;
 		ids.Add( id );
-		nodes.Add( new ScenarioGraphNode( id, ScenarioGraphNodeKind.InteractionGroup, groupNameAndNumber ) );
+		nodes.Add( new ScenarioGraphNode( id, ScenarioGraphNodeKind.InteractionGroup, WithHeader( "Event", groupNameAndNumber ), "event-rect" ) );
 		return id;
 	}
 
@@ -286,8 +289,14 @@ public static class ScenarioGraphFullScenarioDocumentBuilder
 	static string TokenLabel( Token token ) =>
 		token.tokenType switch
 		{
-			TokenType.Person => token.personType == PersonType.None ? "Person" : $"Person\n{token.personType}",
-			TokenType.Terrain => token.terrainType == TerrainType.None ? "Terrain" : $"Terrain\n{token.terrainType}",
-			_ => token.tokenType.ToString(),
+			TokenType.Person => WithHeader( "Token", token.personType == PersonType.None ? "Person" : $"Person\n{token.personType}" ),
+			TokenType.Terrain => WithHeader( "Terrain", token.terrainType == TerrainType.None ? "Terrain" : token.terrainType.ToString() ),
+			_ => WithHeader( "Token", token.tokenType.ToString() ),
 		};
+
+	static string WithHeader( string header, string? name )
+	{
+		var trimmed = string.IsNullOrWhiteSpace( name ) ? "(unnamed)" : name.Trim();
+		return $"{header}\n{trimmed}";
+	}
 }

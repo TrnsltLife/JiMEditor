@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Threading;
+using FlowGraph.Core;
 using JiMEditor.Avalonia.ScenarioGraph;
 using JiME;
 
@@ -15,12 +16,17 @@ public partial class ScenarioChapterFlowGraphView : UserControl
 	static readonly TimeSpan RebuildDebounce = TimeSpan.FromMilliseconds( 85 );
 
 	Scenario? _scenario;
-	readonly IScenarioGraphLayoutEngine _layoutEngine = new LayeredRelaxationLayoutEngine();
+	readonly LayeredRelaxationLayoutEngine _layeredLayoutEngine = new();
+	readonly WpfTreeLayoutEngine _wpfTreeLayoutEngine = new();
+	readonly Tree2LayoutEngine _tree2LayoutEngine = new();
+	ScenarioGraphLayoutMode _layoutMode = ScenarioGraphLayoutMode.WpfTree;
+	EdgeType? _forcedEdgeType;
 	IScenarioGraphViewHost? _graphHost;
 	IScenarioGraphInteractionSink? _interactionSink;
 	NotifyCollectionChangedEventHandler? _collectionsChangedHandler;
 	readonly List<(INotifyCollectionChanged Collection, NotifyCollectionChangedEventHandler Handler)> _nestedSubscriptions = new();
 	DispatcherTimer? _rebuildDebounceTimer;
+	int _graphFitGeneration;
 
 	public ScenarioChapterFlowGraphView()
 	{
@@ -32,6 +38,7 @@ public partial class ScenarioChapterFlowGraphView : UserControl
 	{
 		Loaded -= OnLoaded;
 		FlowDotsBackground.TargetCanvas = FlowHostCanvas;
+		ApplyInteractionDefaults();
 		_graphHost = new FlowGraphScenarioGraphViewHost( FlowHostCanvas );
 		_graphHost.SetInteractionSink( _interactionSink );
 		RegisterCustomNodeRenderers();
@@ -113,6 +120,50 @@ public partial class ScenarioChapterFlowGraphView : UserControl
 	void RefreshGraphButton_Click( object? sender, global::Avalonia.Interactivity.RoutedEventArgs e ) =>
 		RefreshFromScenario();
 
+	void TreeLayoutButton_Click( object? sender, global::Avalonia.Interactivity.RoutedEventArgs e )
+	{
+		_layoutMode = ScenarioGraphLayoutMode.WpfTree;
+		RefreshGraphNow();
+	}
+
+	void Tree2LayoutButton_Click( object? sender, global::Avalonia.Interactivity.RoutedEventArgs e )
+	{
+		_layoutMode = ScenarioGraphLayoutMode.Tree2;
+		RefreshGraphNow();
+	}
+
+	void LayeredLayoutButton_Click( object? sender, global::Avalonia.Interactivity.RoutedEventArgs e )
+	{
+		_layoutMode = ScenarioGraphLayoutMode.LayeredRelaxation;
+		RefreshGraphNow();
+	}
+
+	void SmoothStepEdgesButton_Click( object? sender, global::Avalonia.Interactivity.RoutedEventArgs e ) =>
+		ApplyGlobalEdgeType( EdgeType.SmoothStep );
+
+	void StepEdgesButton_Click( object? sender, global::Avalonia.Interactivity.RoutedEventArgs e ) =>
+		ApplyGlobalEdgeType( EdgeType.Step );
+
+	void BezierEdgesButton_Click( object? sender, global::Avalonia.Interactivity.RoutedEventArgs e ) =>
+		ApplyGlobalEdgeType( EdgeType.Bezier );
+
+	void StraightEdgesButton_Click( object? sender, global::Avalonia.Interactivity.RoutedEventArgs e ) =>
+		ApplyGlobalEdgeType( EdgeType.Straight );
+
+	void ApplyGlobalEdgeType( EdgeType edgeType )
+	{
+		_forcedEdgeType = edgeType;
+		RefreshGraphNow();
+	}
+
+	IScenarioGraphLayoutEngine ActiveLayoutEngine =>
+		_layoutMode switch
+		{
+			ScenarioGraphLayoutMode.WpfTree => _wpfTreeLayoutEngine,
+			ScenarioGraphLayoutMode.Tree2 => _tree2LayoutEngine,
+			_ => _layeredLayoutEngine,
+		};
+
 	void RefreshGraphNow()
 	{
 		if ( _scenario == null || _graphHost == null )
@@ -124,14 +175,38 @@ public partial class ScenarioChapterFlowGraphView : UserControl
 		var document = ScenarioGraphDocumentBuilder.Build( _scenario, ScenarioGraphBuildScope.FullScenario );
 		// Keep visual-tree mode so custom polygon renderers (hex/square) apply consistently.
 		// NOTE: do not call DisableSimplifiedRendering() here; it can reset node renderers to defaults.
+		// FlowGraph auto-enables direct rendering when node count >= DirectRenderingNodeThreshold (default 100).
+		// Direct mode bypasses the visual tree: custom NodeRenderers and non-straight edge paths do not apply.
+		ApplyInteractionDefaults();
 		FlowHostCanvas.DisableDirectRendering();
 
-		var layout = _layoutEngine.Layout( document );
+		FlowHostCanvas.StopAllAnimations();
+		unchecked { _graphFitGeneration++; }
+		var fitGen = _graphFitGeneration;
+
+		var layout = ActiveLayoutEngine.Layout( document );
+		layout.ForcedEdgeType = _forcedEdgeType;
 		_graphHost.Present( document, layout );
 
 		Dispatcher.UIThread.Post(
-			() => FlowHostCanvas.FitToViewAnimated( 0.25 ),
+			() =>
+			{
+				if ( fitGen != _graphFitGeneration )
+					return;
+				FlowHostCanvas.FitToViewAnimated( 0.25 );
+			},
 			DispatcherPriority.Loaded );
+	}
+
+	void ApplyInteractionDefaults()
+	{
+		FlowHostCanvas.Settings.IsReadOnly = false;
+		// Scenario graph is read-mostly: keep edge hit area tiny so node click/drag wins.
+		FlowHostCanvas.Settings.EdgeHitAreaWidth = 2;
+		FlowHostCanvas.Settings.EnableEdgeLabelEditing = false;
+		FlowHostCanvas.Settings.EnableNodeLabelEditing = true;
+		// 0 = never auto-switch to direct rendering by node count (see FlowCanvas.RenderElements).
+		FlowHostCanvas.Settings.DirectRenderingNodeThreshold = 0;
 	}
 
 	void WireNestedScenarioCollections()
@@ -206,6 +281,27 @@ public partial class ScenarioChapterFlowGraphView : UserControl
 			fillHex: "#7A3F3F",
 			strokeHex: "#E7A4A4",
 			fontSize: 14,
+			fontWeight: FontWeight.SemiBold ) );
+
+		FlowHostCanvas.NodeRenderers.Register( "event-rect", new ShapeNodeRenderer(
+			shape: ShapeNodeRenderer.NodeShape.Rectangle,
+			fillHex: "#6B4E7A",
+			strokeHex: "#D1B7DE",
+			fontSize: 13,
+			fontWeight: FontWeight.SemiBold ) );
+
+		FlowHostCanvas.NodeRenderers.Register( "resolution-rect", new ShapeNodeRenderer(
+			shape: ShapeNodeRenderer.NodeShape.Rectangle,
+			fillHex: "#3A6A70",
+			strokeHex: "#9DD9E2",
+			fontSize: 13,
+			fontWeight: FontWeight.SemiBold ) );
+
+		FlowHostCanvas.NodeRenderers.Register( "threat-node", new ShapeNodeRenderer(
+			shape: ShapeNodeRenderer.NodeShape.Circle,
+			fillHex: "#7A3F3F",
+			strokeHex: "#E7A4A4",
+			fontSize: 13,
 			fontWeight: FontWeight.SemiBold ) );
 	}
 }

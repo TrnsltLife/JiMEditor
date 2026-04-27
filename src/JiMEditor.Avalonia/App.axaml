@@ -18,5 +18,21 @@
 		<Style Selector="Window">
 			<Setter Property="Icon" Value="/Assets/ring.png"/>
 		</Style>
+		<!-- FlowGraph 0.8 FlowControls buttons: force dark toolbar style -->
+		<Style Selector="Button.flow-control">
+			<Setter Property="Background" Value="#FF121212"/>
+			<Setter Property="BorderBrush" Value="#FF6E6E6E"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="CornerRadius" Value="6"/>
+		</Style>
+		<Style Selector="Button.flow-control:pointerover">
+			<Setter Property="Background" Value="#FF2B2B2B"/>
+		</Style>
+		<Style Selector="Button.flow-control:pressed">
+			<Setter Property="Background" Value="#FF3A3A3A"/>
+		</Style>
+		<Style Selector="Button.flow-control Path">
+			<Setter Property="Stroke" Value="#FFE6E6E6"/>
+		</Style>
 	</Application.Styles>
 </Application>

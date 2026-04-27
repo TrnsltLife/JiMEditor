@@ -43,7 +43,7 @@
 					</DataTemplate>
 				</ComboBox.ItemTemplate>
 			</ComboBox>
-			<StackPanel Orientation="Horizontal" Margin="5" Spacing="0">
+			<StackPanel Orientation="Horizontal" Margin="5,3,5,5" Spacing="0">
 				<Button x:Name="addInteraction"
 				        Classes="sidebarIconButton"
 				        Background="MediumSeaGreen"

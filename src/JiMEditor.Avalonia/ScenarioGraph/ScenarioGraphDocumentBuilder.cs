@@ -23,15 +23,16 @@ public static class ScenarioGraphDocumentBuilder
 	{
 		var nodes = new List<ScenarioGraphNode>
 		{
-			new( StartNodeId, ScenarioGraphNodeKind.Start, "START" ),
+			new( StartNodeId, ScenarioGraphNodeKind.Start, "SCENARIO" ),
 		};
 		var edges = new List<ScenarioGraphEdge>();
 
 		foreach ( var chapter in scenario.chapterObserver )
 		{
 			var id = ScenarioGraphFullScenarioDocumentBuilder.ChapterId( chapter.dataName );
-			var label = string.IsNullOrWhiteSpace( chapter.dataName ) ? "(Tile block)" : chapter.dataName.Trim();
-			nodes.Add( new ScenarioGraphNode( id, ScenarioGraphNodeKind.Chapter, label ) );
+			var name = string.IsNullOrWhiteSpace( chapter.dataName ) ? "(unnamed)" : chapter.dataName.Trim();
+			var label = $"Tile Block\n{name}";
+			nodes.Add( new ScenarioGraphNode( id, ScenarioGraphNodeKind.Chapter, label, "chapter-square" ) );
 
 			if ( IsAutoExploredFromStart( chapter.triggeredBy ) )
 			{

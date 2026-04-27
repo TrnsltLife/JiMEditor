@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>FlowGraph.Avalonia</id>
+    <version>0.1.0</version>
+    <title>FlowGraph for Avalonia</title>
+    <authors>Prismify LLC</authors>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <readme>README.md</readme>
+    <projectUrl>https://github.com/prismify-co/FlowGraph</projectUrl>
+    <description>A .NET/Avalonia node-based graph editor inspired by React Flow. Features include pan/zoom, node dragging, edge connections, grouping, minimap, animations, and more.</description>
+    <copyright>Copyright © 2026 Prismify LLC</copyright>
+    <tags>flowgraph node-editor graph flow diagram avalonia ui visual-programming</tags>
+    <repository type="git" url="https://github.com/prismify-co/FlowGraph" commit="531b7c9bb7002be767033f59df6f2ebe68847695" />
+    <dependencies>
+      <group targetFramework="net9.0">
+        <dependency id="FlowGraph.Core" version="0.1.0" exclude="Build,Analyzers" />
+        <dependency id="Avalonia" version="11.2.2" exclude="Build,Analyzers" />
+        <dependency id="Avalonia.ReactiveUI" version="11.2.2" exclude="Build,Analyzers" />
+        <dependency id="Avalonia.Themes.Fluent" version="11.2.2" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

@@ -1,0 +1,947 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FlowGraph.Core</name>
+    </assembly>
+    <members>
+        <member name="T:FlowGraph.Core.Commands.AlreadyExecutedCommand">
+            <summary>
+            Wraps a command that has already been executed, skipping the initial Execute call.
+            Used when an action was performed through UI and we just need to track it for undo/redo.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Commands.PasteCommand">
+            <summary>
+            Command to paste nodes and edges from clipboard.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Commands.DuplicateCommand">
+            <summary>
+            Command to duplicate nodes and edges.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Commands.CommandHistory">
+            <summary>
+            Manages command history for undo/redo functionality.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Commands.CommandHistory.#ctor(System.Int32)">
+            <summary>
+            Creates a new command history with the specified maximum size.
+            </summary>
+            <param name="maxHistorySize">Maximum number of commands to keep in history. 0 = unlimited.</param>
+        </member>
+        <member name="E:FlowGraph.Core.Commands.CommandHistory.HistoryChanged">
+            <summary>
+            Event raised when the undo/redo state changes.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Commands.CommandHistory.CanUndo">
+            <summary>
+            Gets whether there are commands that can be undone.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Commands.CommandHistory.CanRedo">
+            <summary>
+            Gets whether there are commands that can be redone.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Commands.CommandHistory.UndoCount">
+            <summary>
+            Gets the number of commands in the undo stack.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Commands.CommandHistory.RedoCount">
+            <summary>
+            Gets the number of commands in the redo stack.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Commands.CommandHistory.NextUndoDescription">
+            <summary>
+            Gets the description of the next command to undo, or null if none.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Commands.CommandHistory.NextRedoDescription">
+            <summary>
+            Gets the description of the next command to redo, or null if none.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Commands.CommandHistory.Execute(FlowGraph.Core.Commands.IGraphCommand)">
+            <summary>
+            Executes a command and adds it to the history.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Commands.CommandHistory.Undo">
+            <summary>
+            Undoes the last command.
+            </summary>
+            <returns>True if a command was undone, false if there was nothing to undo.</returns>
+        </member>
+        <member name="M:FlowGraph.Core.Commands.CommandHistory.Redo">
+            <summary>
+            Redoes the last undone command.
+            </summary>
+            <returns>True if a command was redone, false if there was nothing to redo.</returns>
+        </member>
+        <member name="M:FlowGraph.Core.Commands.CommandHistory.Clear">
+            <summary>
+            Clears all command history.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Commands.CompositeCommand">
+            <summary>
+            Command that groups multiple commands into a single undoable operation.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Commands.CompositeCommand.#ctor(System.String,System.Collections.Generic.IEnumerable{FlowGraph.Core.Commands.IGraphCommand})">
+            <summary>
+            Creates a composite command with a custom description.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Commands.CompositeCommand.#ctor(System.String,FlowGraph.Core.Commands.IGraphCommand[])">
+            <summary>
+            Creates a composite command with a custom description.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Commands.AddEdgeCommand">
+            <summary>
+            Command to add an edge to the graph.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Commands.RemoveEdgeCommand">
+            <summary>
+            Command to remove an edge from the graph.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Commands.RemoveEdgesCommand">
+            <summary>
+            Command to remove multiple edges from the graph.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Commands.GroupNodesCommand">
+            <summary>
+            Command to group selected nodes into a new group.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Commands.UngroupNodesCommand">
+            <summary>
+            Command to ungroup nodes from a group.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Commands.ToggleGroupCollapseCommand">
+            <summary>
+            Command to toggle a group's collapsed state.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Commands.AddNodesToGroupCommand">
+            <summary>
+            Command to add nodes to an existing group.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Commands.RemoveNodesFromGroupCommand">
+            <summary>
+            Command to remove nodes from their parent group.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Commands.IGraphCommand">
+            <summary>
+            Interface for reversible commands that support undo/redo.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Commands.IGraphCommand.Description">
+            <summary>
+            Gets a human-readable description of the command.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Commands.IGraphCommand.Execute">
+            <summary>
+            Executes the command.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Commands.IGraphCommand.Undo">
+            <summary>
+            Reverses the command (undo).
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Commands.MoveNodesCommand">
+            <summary>
+            Command to move one or more nodes to new positions.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Commands.MoveNodesCommand.#ctor(FlowGraph.Core.Graph,FlowGraph.Core.Node,FlowGraph.Core.Point,FlowGraph.Core.Point)">
+            <summary>
+            Creates a move command for a single node.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Commands.MoveNodesCommand.#ctor(FlowGraph.Core.Graph,System.Collections.Generic.Dictionary{System.String,FlowGraph.Core.Point},System.Collections.Generic.Dictionary{System.String,FlowGraph.Core.Point})">
+            <summary>
+            Creates a move command for multiple nodes.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Commands.AddNodeCommand">
+            <summary>
+            Command to add a node to the graph.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Commands.RemoveNodeCommand">
+            <summary>
+            Command to remove a node and its connected edges from the graph.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Commands.RemoveNodesCommand">
+            <summary>
+            Command to remove multiple nodes and their connected edges.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Commands.ResizeNodeCommand">
+            <summary>
+            Command to resize a node.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Commands.ResizeNodeCommand.#ctor(FlowGraph.Core.Graph,System.String,System.Nullable{System.Double},System.Nullable{System.Double},System.Nullable{System.Double},System.Nullable{System.Double},FlowGraph.Core.Point,FlowGraph.Core.Point)">
+            <summary>
+            Creates a resize command for a node.
+            </summary>
+            <param name="graph">The graph containing the node.</param>
+            <param name="nodeId">The ID of the node to resize.</param>
+            <param name="oldWidth">The old width (null = default).</param>
+            <param name="oldHeight">The old height (null = default).</param>
+            <param name="newWidth">The new width (null = default).</param>
+            <param name="newHeight">The new height (null = default).</param>
+            <param name="oldPosition">The old position (for corner resizing).</param>
+            <param name="newPosition">The new position (for corner resizing).</param>
+        </member>
+        <member name="M:FlowGraph.Core.Commands.ResizeNodeCommand.#ctor(FlowGraph.Core.Graph,System.String,System.Nullable{System.Double},System.Nullable{System.Double},System.Nullable{System.Double},System.Nullable{System.Double})">
+            <summary>
+            Creates a resize command for a node (without position change).
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Edge">
+            <summary>
+            Represents a connection between two nodes.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Edge.Id">
+            <summary>
+            Unique identifier for the edge.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Edge.Source">
+            <summary>
+            The ID of the source node.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Edge.Target">
+            <summary>
+            The ID of the target node.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Edge.SourcePort">
+            <summary>
+            The ID of the source port on the source node.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Edge.TargetPort">
+            <summary>
+            The ID of the target port on the target node.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Edge.Type">
+            <summary>
+            The visual type of the edge (bezier, straight, step, etc.).
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Edge.MarkerStart">
+            <summary>
+            The marker to display at the start of the edge.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Edge.MarkerEnd">
+            <summary>
+            The marker to display at the end of the edge.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Edge.Label">
+            <summary>
+            Optional label to display on the edge.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Edge.IsSelected">
+            <summary>
+            Whether this edge is currently selected.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Edge.Waypoints">
+            <summary>
+            Optional waypoints for custom edge routing.
+            When set, the edge will pass through these intermediate points.
+            Does not include the start and end points (port positions).
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Edge.AutoRoute">
+            <summary>
+            Whether this edge should use automatic routing to avoid obstacles.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.EdgeType">
+            <summary>
+            Defines the visual style of an edge path.
+            </summary>
+        </member>
+        <member name="F:FlowGraph.Core.EdgeType.Bezier">
+            <summary>
+            A smooth bezier curve (default).
+            </summary>
+        </member>
+        <member name="F:FlowGraph.Core.EdgeType.Straight">
+            <summary>
+            A straight line between points.
+            </summary>
+        </member>
+        <member name="F:FlowGraph.Core.EdgeType.Step">
+            <summary>
+            A path with right-angle turns.
+            </summary>
+        </member>
+        <member name="F:FlowGraph.Core.EdgeType.SmoothStep">
+            <summary>
+            A path with rounded right-angle turns.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.EdgeMarker">
+            <summary>
+            Defines the marker (arrow) style at edge endpoints.
+            </summary>
+        </member>
+        <member name="F:FlowGraph.Core.EdgeMarker.None">
+            <summary>
+            No marker.
+            </summary>
+        </member>
+        <member name="F:FlowGraph.Core.EdgeMarker.Arrow">
+            <summary>
+            An open arrow (lines only).
+            </summary>
+        </member>
+        <member name="F:FlowGraph.Core.EdgeMarker.ArrowClosed">
+            <summary>
+            A filled/closed arrow.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.BulkObservableCollection`1">
+            <summary>
+            An ObservableCollection that can suppress notifications during batch operations.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.BulkObservableCollection`1.AddRange(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Adds a range of items without firing individual notifications.
+            A single Reset notification is fired after all items are added.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Graph.IsBatchLoading">
+            <summary>
+            Gets whether the graph is currently in batch loading mode.
+            During batch loading, collection change notifications are suppressed.
+            </summary>
+        </member>
+        <member name="E:FlowGraph.Core.Graph.BatchLoadCompleted">
+            <summary>
+            Event raised when batch loading completes.
+            Subscribe to this to refresh UI after bulk operations.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Graph.BeginBatchLoad">
+            <summary>
+            Begins batch loading mode. Collection change notifications are suppressed
+            until EndBatchLoad is called. Use this when adding many nodes/edges at once.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Graph.EndBatchLoad">
+            <summary>
+            Ends batch loading mode and raises BatchLoadCompleted event.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Graph.AddNodes(System.Collections.Generic.IEnumerable{FlowGraph.Core.Node})">
+            <summary>
+            Adds multiple nodes at once with a single notification.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Graph.AddEdges(System.Collections.Generic.IEnumerable{FlowGraph.Core.Edge})">
+            <summary>
+            Adds multiple edges at once with a single notification.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.GraphGroupExtensions">
+            <summary>
+            Extension methods for working with node groups in a graph.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.GraphGroupExtensions.GetGroupChildren(FlowGraph.Core.Graph,System.String)">
+            <summary>
+            Gets all nodes that are children of the specified group.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.GraphGroupExtensions.GetGroupChildrenRecursive(FlowGraph.Core.Graph,System.String)">
+            <summary>
+            Gets all nodes that are children of the specified group, recursively.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.GraphGroupExtensions.GetParentGroup(FlowGraph.Core.Graph,FlowGraph.Core.Node)">
+            <summary>
+            Gets the parent group node for a node, if any.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.GraphGroupExtensions.GetAncestorGroups(FlowGraph.Core.Graph,FlowGraph.Core.Node)">
+            <summary>
+            Gets all ancestor group nodes for a node.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.GraphGroupExtensions.IsDescendantOf(FlowGraph.Core.Graph,FlowGraph.Core.Node,System.String)">
+            <summary>
+            Checks if a node is a descendant of a group.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.GraphGroupExtensions.GetGroups(FlowGraph.Core.Graph)">
+            <summary>
+            Gets all group nodes in the graph.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.GraphGroupExtensions.GetTopLevelNodes(FlowGraph.Core.Graph)">
+            <summary>
+            Gets top-level nodes (nodes without a parent group).
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.GraphGroupExtensions.CalculateGroupBounds(FlowGraph.Core.Graph,System.String,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates the bounding box of a group based on its children.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.GraphGroupExtensions.IsEdgeInternalToGroup(FlowGraph.Core.Graph,FlowGraph.Core.Edge,System.String)">
+            <summary>
+            Checks if an edge is internal to a group (both endpoints in the same group).
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.GraphGroupExtensions.IsEdgeCrossingGroup(FlowGraph.Core.Graph,FlowGraph.Core.Edge,System.String)">
+            <summary>
+            Checks if an edge crosses a group boundary (one end inside, one outside).
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.GraphGroupExtensions.GetEdgesCrossingGroup(FlowGraph.Core.Graph,System.String)">
+            <summary>
+            Gets all edges that cross a group boundary.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.GraphGroupExtensions.GetEdgesInternalToGroup(FlowGraph.Core.Graph,System.String)">
+            <summary>
+            Gets all edges that are internal to a group.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Node">
+            <inheritdoc/>
+        </member>
+        <member name="F:FlowGraph.Core.Node._isSelectable">
+            <summary>
+            Whether this node can be selected. Default is true.
+            When false, clicking on the node will not select it.
+            </summary>
+        </member>
+        <member name="F:FlowGraph.Core.Node._isDraggable">
+            <summary>
+            Whether this node can be dragged. Default is true.
+            When false, the node cannot be moved by dragging.
+            </summary>
+        </member>
+        <member name="F:FlowGraph.Core.Node._isDeletable">
+            <summary>
+            Whether this node can be deleted. Default is true.
+            When false, the node cannot be deleted via keyboard or context menu.
+            </summary>
+        </member>
+        <member name="F:FlowGraph.Core.Node._isConnectable">
+            <summary>
+            Whether this node can have new connections. Default is true.
+            When false, new edges cannot be created from/to this node's ports.
+            </summary>
+        </member>
+        <member name="F:FlowGraph.Core.Node._parentGroupId">
+            <summary>
+            The ID of the parent group node, if this node is part of a group.
+            </summary>
+        </member>
+        <member name="F:FlowGraph.Core.Node._isGroup">
+            <summary>
+            Whether this node is a group container.
+            </summary>
+        </member>
+        <member name="F:FlowGraph.Core.Node._isCollapsed">
+            <summary>
+            Whether the group is collapsed (only applicable when IsGroup is true).
+            </summary>
+        </member>
+        <member name="F:FlowGraph.Core.Node._label">
+            <summary>
+            The label/title for this node (useful for groups).
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Node.Type">
+            <inheritdoc cref="F:FlowGraph.Core.Node._type"/>
+        </member>
+        <member name="P:FlowGraph.Core.Node.Position">
+            <inheritdoc cref="F:FlowGraph.Core.Node._position"/>
+        </member>
+        <member name="P:FlowGraph.Core.Node.Width">
+            <inheritdoc cref="F:FlowGraph.Core.Node._width"/>
+        </member>
+        <member name="P:FlowGraph.Core.Node.Height">
+            <inheritdoc cref="F:FlowGraph.Core.Node._height"/>
+        </member>
+        <member name="P:FlowGraph.Core.Node.IsSelected">
+            <inheritdoc cref="F:FlowGraph.Core.Node._isSelected"/>
+        </member>
+        <member name="P:FlowGraph.Core.Node.IsDragging">
+            <inheritdoc cref="F:FlowGraph.Core.Node._isDragging"/>
+        </member>
+        <member name="P:FlowGraph.Core.Node.IsResizable">
+            <inheritdoc cref="F:FlowGraph.Core.Node._isResizable"/>
+        </member>
+        <member name="P:FlowGraph.Core.Node.IsSelectable">
+            <inheritdoc cref="F:FlowGraph.Core.Node._isSelectable"/>
+        </member>
+        <member name="P:FlowGraph.Core.Node.IsDraggable">
+            <inheritdoc cref="F:FlowGraph.Core.Node._isDraggable"/>
+        </member>
+        <member name="P:FlowGraph.Core.Node.IsDeletable">
+            <inheritdoc cref="F:FlowGraph.Core.Node._isDeletable"/>
+        </member>
+        <member name="P:FlowGraph.Core.Node.IsConnectable">
+            <inheritdoc cref="F:FlowGraph.Core.Node._isConnectable"/>
+        </member>
+        <member name="P:FlowGraph.Core.Node.ParentGroupId">
+            <inheritdoc cref="F:FlowGraph.Core.Node._parentGroupId"/>
+        </member>
+        <member name="P:FlowGraph.Core.Node.IsGroup">
+            <inheritdoc cref="F:FlowGraph.Core.Node._isGroup"/>
+        </member>
+        <member name="P:FlowGraph.Core.Node.IsCollapsed">
+            <inheritdoc cref="F:FlowGraph.Core.Node._isCollapsed"/>
+        </member>
+        <member name="P:FlowGraph.Core.Node.Label">
+            <inheritdoc cref="F:FlowGraph.Core.Node._label"/>
+        </member>
+        <member name="T:FlowGraph.Core.PortPosition">
+            <summary>
+            Position of a port on a node.
+            </summary>
+        </member>
+        <member name="F:FlowGraph.Core.PortPosition.Left">
+            <summary>
+            Left side of the node (default for inputs).
+            </summary>
+        </member>
+        <member name="F:FlowGraph.Core.PortPosition.Right">
+            <summary>
+            Right side of the node (default for outputs).
+            </summary>
+        </member>
+        <member name="F:FlowGraph.Core.PortPosition.Top">
+            <summary>
+            Top side of the node.
+            </summary>
+        </member>
+        <member name="F:FlowGraph.Core.PortPosition.Bottom">
+            <summary>
+            Bottom side of the node.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Port.Position">
+            <summary>
+            The position of the port on the node.
+            If null, defaults to Left for inputs and Right for outputs.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Routing.DirectRouter">
+            <summary>
+            Simple edge router that doesn't modify paths (direct connection).
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Routing.EdgeRoutingService">
+            <summary>
+            Provides edge routing services for a graph.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Routing.EdgeRoutingService.IsRoutingEnabled">
+            <summary>
+            Whether automatic routing is enabled.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Routing.EdgeRoutingService.DefaultNodeWidth">
+            <summary>
+            Default node width for routing calculations.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Routing.EdgeRoutingService.DefaultNodeHeight">
+            <summary>
+            Default node height for routing calculations.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Routing.EdgeRoutingService.NodePadding">
+            <summary>
+            Padding around nodes for routing.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Routing.EdgeRoutingService.DirectRouter">
+            <summary>
+            Gets the direct router instance.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Routing.EdgeRoutingService.OrthogonalRouter">
+            <summary>
+            Gets the orthogonal router instance.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Routing.EdgeRoutingService.SmartBezierRouter">
+            <summary>
+            Gets the smart bezier router instance.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Routing.EdgeRoutingService.GetRouter(FlowGraph.Core.EdgeType)">
+            <summary>
+            Gets the appropriate router for an edge type.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Routing.EdgeRoutingService.GetRouterByAlgorithm(System.String,FlowGraph.Core.EdgeType)">
+            <summary>
+            Gets a router by algorithm name.
+            </summary>
+            <param name="algorithm">The algorithm to use (Direct, Orthogonal, SmartBezier).</param>
+            <param name="fallbackEdgeType">Edge type to use for Auto selection.</param>
+        </member>
+        <member name="M:FlowGraph.Core.Routing.EdgeRoutingService.RouteEdge(FlowGraph.Core.Graph,FlowGraph.Core.Edge)">
+            <summary>
+            Routes an edge through a graph, returning waypoints.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Routing.EdgeRoutingService.RouteEdgeWithRouter(FlowGraph.Core.Graph,FlowGraph.Core.Edge,FlowGraph.Core.Routing.IEdgeRouter)">
+            <summary>
+            Routes an edge using a specific router.
+            </summary>
+            <param name="graph">The graph containing the edge.</param>
+            <param name="edge">The edge to route.</param>
+            <param name="router">The router to use.</param>
+        </member>
+        <member name="M:FlowGraph.Core.Routing.EdgeRoutingService.RouteAllEdges(FlowGraph.Core.Graph)">
+            <summary>
+            Routes all edges in a graph.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Routing.EdgeRoutingService.DoesPathIntersectNodes(FlowGraph.Core.Graph,FlowGraph.Core.Edge,System.Collections.Generic.IReadOnlyList{FlowGraph.Core.Point})">
+            <summary>
+            Checks if an edge path intersects any obstacles.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Routing.IEdgeRouter">
+            <summary>
+            Interface for edge routing algorithms.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Routing.IEdgeRouter.Route(FlowGraph.Core.Routing.EdgeRoutingContext,FlowGraph.Core.Edge)">
+            <summary>
+            Calculates waypoints for an edge to route around obstacles.
+            </summary>
+            <param name="context">The routing context containing graph information.</param>
+            <param name="edge">The edge to route.</param>
+            <returns>A list of waypoints (including start and end points).</returns>
+        </member>
+        <member name="T:FlowGraph.Core.Routing.EdgeRoutingContext">
+            <summary>
+            Context information for edge routing.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Routing.EdgeRoutingContext.Graph">
+            <summary>
+            The graph being routed.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Routing.EdgeRoutingContext.DefaultNodeWidth">
+            <summary>
+            Default node width when not specified.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Routing.EdgeRoutingContext.DefaultNodeHeight">
+            <summary>
+            Default node height when not specified.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Routing.EdgeRoutingContext.NodePadding">
+            <summary>
+            Padding around nodes for routing.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Routing.EdgeRoutingContext.GetNodeBounds(FlowGraph.Core.Node)">
+            <summary>
+            Gets the bounding rectangle for a node.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Routing.EdgeRoutingContext.GetObstacles(System.String[])">
+            <summary>
+            Gets all obstacle rectangles (nodes that edges should route around).
+            </summary>
+            <param name="excludeNodeIds">Node IDs to exclude from obstacles (typically source and target).</param>
+        </member>
+        <member name="T:FlowGraph.Core.Routing.Rect">
+            <summary>
+            Represents a rectangle for collision detection.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Routing.Rect.Intersects(FlowGraph.Core.Routing.Rect)">
+            <summary>
+            Checks if this rectangle intersects with another.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Routing.Rect.Contains(FlowGraph.Core.Point)">
+            <summary>
+            Checks if this rectangle contains a point.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Routing.Rect.IntersectsLine(FlowGraph.Core.Point,FlowGraph.Core.Point)">
+            <summary>
+            Checks if a line segment intersects this rectangle.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Routing.Rect.Inflate(System.Double)">
+            <summary>
+            Returns an inflated copy of this rectangle.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Routing.OrthogonalRouter">
+            <summary>
+            Routes edges using orthogonal (right-angle) paths that avoid obstacles.
+            Uses A* pathfinding on a visibility graph.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Routing.OrthogonalRouter.Margin">
+            <summary>
+            Minimum distance to maintain from obstacles.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Routing.OrthogonalRouter.PreferredOffset">
+            <summary>
+            Preferred distance for horizontal segments from source/target.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Routing.SmartBezierRouter">
+            <summary>
+            Routes edges around obstacles using smooth curves.
+            Generates waypoints that can be used to create multi-segment bezier curves.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Routing.SmartBezierRouter.Margin">
+            <summary>
+            Minimum distance to maintain from obstacles.
+            </summary>
+        </member>
+        <member name="P:FlowGraph.Core.Routing.SmartBezierRouter.MinPortOffset">
+            <summary>
+            Minimum horizontal offset from port before routing.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Serialization.GraphSerializationExtensions">
+            <summary>
+            Extension methods for graph serialization.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Serialization.GraphSerializationExtensions.ToJson(FlowGraph.Core.Graph,System.Boolean)">
+            <summary>
+            Serializes the graph to JSON.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Serialization.GraphSerializationExtensions.SaveAsync(FlowGraph.Core.Graph,System.String)">
+            <summary>
+            Saves the graph to a JSON file.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Serialization.GraphSerializationExtensions.Save(FlowGraph.Core.Graph,System.String)">
+            <summary>
+            Saves the graph to a JSON file synchronously.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Serialization.GraphSerializationExtensions.LoadFromJson(System.String)">
+            <summary>
+            Loads a graph from JSON string.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Serialization.GraphSerializationExtensions.LoadFromFileAsync(System.String)">
+            <summary>
+            Loads a graph from a JSON file.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Serialization.GraphSerializationExtensions.LoadFromFile(System.String)">
+            <summary>
+            Loads a graph from a JSON file synchronously.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Serialization.GraphSerializationExtensions.Clone(FlowGraph.Core.Graph)">
+            <summary>
+            Creates a deep copy of the graph via serialization.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Serialization.GraphSerializer">
+            <summary>
+            Serializes and deserializes graphs to/from JSON.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Serialization.GraphSerializer.Serialize(FlowGraph.Core.Graph,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Serializes a graph to a JSON string.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Serialization.GraphSerializer.SerializeToFileAsync(FlowGraph.Core.Graph,System.String,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Serializes a graph to a JSON file.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Serialization.GraphSerializer.Deserialize(System.String,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Deserializes a graph from a JSON string.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Serialization.GraphSerializer.DeserializeFromFileAsync(System.String,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Deserializes a graph from a JSON file.
+            </summary>
+        </member>
+        <member name="M:FlowGraph.Core.Serialization.GraphSerializer.TryValidate(System.String,System.String@)">
+            <summary>
+            Validates JSON without fully deserializing.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Serialization.GraphDto">
+            <summary>
+            Data transfer object for Graph serialization.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Serialization.NodeDto">
+            <summary>
+            Data transfer object for Node serialization.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Serialization.EdgeDto">
+            <summary>
+            Data transfer object for Edge serialization.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Serialization.PortDto">
+            <summary>
+            Data transfer object for Port serialization.
+            </summary>
+        </member>
+        <member name="T:FlowGraph.Core.Serialization.PointDto">
+            <summary>
+            Data transfer object for Point serialization.
+            </summary>
+        </member>
+        <member name="T:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs">
+            <summary>
+            A helper type providing cached, reusable <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instances
+            for all properties generated with <see cref="T:CommunityToolkit.Mvvm.ComponentModel.ObservablePropertyAttribute"/>.
+            </summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Type">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Type" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Position">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Position" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Width">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Width" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Height">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Height" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsSelected">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsSelected" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsDragging">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsDragging" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsResizable">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsResizable" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsSelectable">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsSelectable" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsDraggable">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsDraggable" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsDeletable">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsDeletable" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsConnectable">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsConnectable" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.ParentGroupId">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "ParentGroupId" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsGroup">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsGroup" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsCollapsed">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsCollapsed" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Label">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Label" generated properties.</summary>
+        </member>
+        <member name="T:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs">
+            <summary>
+            A helper type providing cached, reusable <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instances
+            for all properties generated with <see cref="T:CommunityToolkit.Mvvm.ComponentModel.ObservablePropertyAttribute"/>.
+            </summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Type">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Type" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Position">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Position" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Width">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Width" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Height">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Height" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsSelected">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsSelected" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsDragging">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsDragging" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsResizable">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsResizable" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsSelectable">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsSelectable" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsDraggable">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsDraggable" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsDeletable">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsDeletable" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsConnectable">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsConnectable" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.ParentGroupId">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "ParentGroupId" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsGroup">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsGroup" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsCollapsed">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsCollapsed" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Label">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Label" generated properties.</summary>
+        </member>
+    </members>
+</doc>

@@ -18,11 +18,11 @@ This is a list of things we need to do:
   * Implement "dirty" tracking across all dialogs. A lot of work.
 
 * Graph capabilities ported - check if libraries support Mac/Linux:
-  * to NodeEditor? - Verified Windows/Mac/Linux/Web/Android!
+  1. NodeEditor - Verified Windows/Mac/Linux/Web/Android!
     * https://github.com/wieslawsoltes/NodeEditor
-  * to FlowGraph?
+  2. to FlowGraph - Better sample image of styling and color
     * https://github.com/prismify-co/FlowGraph
-  * to AvaloniaGraphControl?
+  3. to AvaloniaGraphControl?
     * https://github.com/Oaz/AvaloniaGraphControl
 
 * Settings Dialog TODO:

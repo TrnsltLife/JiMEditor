@@ -57,6 +57,13 @@ public sealed class ShapeNodeRenderer : DefaultNodeRenderer
 			_minWidth = minWidth ?? 96;
 			_minHeight = minHeight ?? 62;
 		}
+		else if ( _shape == NodeShape.Rectangle )
+		{
+			_defaultWidth = defaultWidth ?? 132;
+			_defaultHeight = defaultHeight ?? 84;
+			_minWidth = minWidth ?? 96;
+			_minHeight = minHeight ?? 62;
+		}
 		else
 		{
 			_defaultWidth = defaultWidth ?? 96;
@@ -68,23 +75,28 @@ public sealed class ShapeNodeRenderer : DefaultNodeRenderer
 
 	protected override Control CreateNodeContent( Node node, NodeRenderContext context )
 	{
-		var designWidth = _defaultWidth;
-		var designHeight = _defaultHeight;
+		var nodeWidth = node.Width ?? _defaultWidth;
+		var nodeHeight = node.Height ?? _defaultHeight;
+		var (shapeWidth, shapeHeight) = ComputeShapeBounds( nodeWidth, nodeHeight );
 
-		var root = new Viewbox
+		// Shapes/text are non-hit-testable so pointer reaches a full-node target; FlowGraph's chrome still handles drag.
+		var underlay = new Border
 		{
-			// Preserve shape aspect ratio (no horizontal/vertical distortion).
-			Stretch = Stretch.Uniform,
-			StretchDirection = StretchDirection.Both,
+			Background = Brushes.Transparent,
+			HorizontalAlignment = global::Avalonia.Layout.HorizontalAlignment.Stretch,
+			VerticalAlignment = global::Avalonia.Layout.VerticalAlignment.Stretch,
+			IsHitTestVisible = true,
 		};
 
 		var surface = new Grid
 		{
-			Width = designWidth,
-			Height = designHeight,
+			Width = shapeWidth,
+			Height = shapeHeight,
+			HorizontalAlignment = global::Avalonia.Layout.HorizontalAlignment.Center,
+			VerticalAlignment = global::Avalonia.Layout.VerticalAlignment.Center,
 		};
 
-		var shape = CreateShape( designWidth, designHeight );
+		var shape = CreateShape( shapeWidth, shapeHeight );
 
 		shape.Fill = _fill;
 		shape.Stroke = _stroke;
@@ -107,8 +119,38 @@ public sealed class ShapeNodeRenderer : DefaultNodeRenderer
 
 		surface.Children.Add( shape );
 		surface.Children.Add( text );
-		root.Child = surface;
+
+		var root = new Grid
+		{
+			Width = nodeWidth,
+			Height = nodeHeight,
+			ClipToBounds = true,
+		};
+		root.Children.Add( underlay );
+		root.Children.Add( surface );
 		return root;
+	}
+
+	(double Width, double Height) ComputeShapeBounds( double nodeWidth, double nodeHeight )
+	{
+		if ( _shape == NodeShape.TriggerArrow )
+			return (nodeWidth, nodeHeight);
+		if ( _shape == NodeShape.Rectangle )
+			return (nodeWidth, nodeHeight);
+
+		// Keep regular flat-top hex ratio while fitting inside the node box.
+		if ( _shape == NodeShape.Hexagon )
+		{
+			const double hexRatio = 2d / 1.7320508075688772d; // 2 / sqrt(3)
+			var wByHeight = nodeHeight * hexRatio;
+			var width = System.Math.Min( nodeWidth, wByHeight );
+			var height = width / hexRatio;
+			return (width, height);
+		}
+
+		// Square/circle/diamond render in a square that must fit inside both axes.
+		var side = System.Math.Min( nodeWidth, nodeHeight );
+		return (side, side);
 	}
 
 	public override double? GetWidth( Node node, FlowGraph.Avalonia.FlowCanvasSettings settings ) => _defaultWidth;
@@ -158,6 +200,7 @@ public sealed class ShapeNodeRenderer : DefaultNodeRenderer
 
 	public enum NodeShape
 	{
+		Rectangle,
 		Square,
 		Hexagon,
 		Circle,

@@ -1,10 +1,15 @@
 using FlowGraph.Core;
+using FlowGraph.Core.Models;
 
 namespace JiMEditor.Avalonia.ScenarioGraph;
 
 /// <summary>Maps JiM <see cref="IScenarioGraphDocument"/> + layout into FlowGraph.Core (adapter boundary from plan).</summary>
 public static class FlowGraphScenarioDocumentMapper
 {
+	// Match FlowGraph examples ("in" / "out"); port screen position comes from <see cref="PortDefinition.Position"/>.
+	const string InputPortId = "in";
+	const string OutputPortId = "out";
+
 	public static Graph ToFlowGraph( IScenarioGraphDocument document, ScenarioGraphLayoutResult layout )
 	{
 		var graph = new Graph();
@@ -15,37 +20,68 @@ public static class FlowGraphScenarioDocumentMapper
 			if ( !layout.Positions.TryGetValue( n.Id, out var pos ) )
 				pos = (0, 0);
 
-			var fgNode = new Node
+			var topDownPorts = layout.UseTopDownFlowPorts;
+			var fgNode = new Node(
+				new NodeDefinition
+				{
+					Id = n.Id,
+					Type = FlowNodeType( n ),
+					Label = n.Label,
+					IsResizable = false,
+					IsDraggable = true,
+					IsSelectable = true,
+					IsConnectable = false,
+					IsDeletable = false,
+					Inputs =
+					[
+						new PortDefinition
+						{
+							Id = InputPortId,
+							Type = "data",
+							Position = topDownPorts ? PortPosition.Top : null,
+						},
+					],
+					Outputs =
+					[
+						new PortDefinition
+						{
+							Id = OutputPortId,
+							Type = "data",
+							Position = topDownPorts ? PortPosition.Bottom : null,
+						},
+					],
+				} )
 			{
-				Id = n.Id,
-				Type = FlowNodeType( n ),
-				Label = n.Label,
 				Position = new Point( pos.X, pos.Y ),
 				Width = layout.DefaultNodeWidth,
 				Height = layout.DefaultNodeHeight,
-				IsResizable = false,
-				IsConnectable = false,
-				IsDeletable = false,
-				Inputs = [new Port { Id = "in", Type = "data" }],
-				Outputs = [new Port { Id = "out", Type = "data" }],
 			};
 			graph.AddNode( fgNode );
 		}
 
-		foreach ( var e in document.Edges )
+		if ( !layout.OmitEdges )
 		{
-			var style = FlowEdgeStyle( e.Kind );
-			graph.AddEdge( new Edge
+			var topDown = layout.UseTopDownFlowPorts;
+			foreach ( var e in document.Edges )
 			{
-				Id = e.Id,
-				Source = e.SourceNodeId,
-				Target = e.TargetNodeId,
-				SourcePort = "out",
-				TargetPort = "in",
-				Label = e.Label,
-				Type = style.Type,
-				MarkerEnd = style.MarkerEnd,
-			} );
+				var style = FlowEdgeStyle( e.Kind, topDown );
+				var edge = new Edge(
+					new EdgeDefinition
+					{
+						Id = e.Id,
+						Source = e.SourceNodeId,
+						Target = e.TargetNodeId,
+						SourcePort = OutputPortId,
+						TargetPort = InputPortId,
+						Label = e.Label,
+						Type = layout.ForcedEdgeType ?? style.Type,
+						MarkerEnd = style.MarkerEnd,
+					} )
+				{
+					IsSelectable = false,
+				};
+				graph.AddEdge( edge );
+			}
 		}
 
 		graph.EndBatchLoad();
@@ -64,13 +100,17 @@ public static class FlowGraphScenarioDocumentMapper
 		};
 	}
 
-	static (EdgeType Type, EdgeMarker MarkerEnd) FlowEdgeStyle( ScenarioGraphEdgeKind kind ) =>
+	static (EdgeType Type, EdgeMarker MarkerEnd) FlowEdgeStyle( ScenarioGraphEdgeKind kind, bool topDownPorts ) =>
 		kind switch
 		{
 			ScenarioGraphEdgeKind.ThreatChain => (EdgeType.Straight, EdgeMarker.None),
 			ScenarioGraphEdgeKind.Contains => (EdgeType.SmoothStep, EdgeMarker.None),
 			ScenarioGraphEdgeKind.ExploresFromStart => (EdgeType.SmoothStep, EdgeMarker.Arrow),
-			ScenarioGraphEdgeKind.Includes => (EdgeType.Step, EdgeMarker.None),
-			_ => (EdgeType.Bezier, EdgeMarker.ArrowClosed),
+			ScenarioGraphEdgeKind.Includes => topDownPorts
+				? (EdgeType.SmoothStep, EdgeMarker.None)
+				: (EdgeType.Step, EdgeMarker.None),
+			_ => topDownPorts
+				? (EdgeType.SmoothStep, EdgeMarker.ArrowClosed)
+				: (EdgeType.Bezier, EdgeMarker.ArrowClosed),
 		};
 }

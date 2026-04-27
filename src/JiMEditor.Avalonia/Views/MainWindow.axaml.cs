@@ -25,6 +25,11 @@ namespace JiMEditor.Avalonia.Views;
 
 public partial class MainWindow : Window, IScenarioGraphInteractionSink
 {
+	const double EditorPaneExpandedWidth = 280;
+	const double EditorPaneCollapsedStripWidth = 36;
+	bool _sidebarPaneExpanded = true;
+	bool _tileBlockPaneExpanded = true;
+
 	public Scenario scenario { get; private set; } = null!;
 
 	/// <summary>Parameterless ctor required by Avalonia XAML; use <see cref="MainWindow(Scenario)"/> at runtime.</summary>
@@ -58,6 +63,74 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 		scenario.PropertyChanged += OnScenarioPropertyChanged;
 		ScenarioChapterFlowGraph.SetInteractionSink( this );
 		ScenarioChapterFlowGraph.Attach( scenario );
+	}
+
+	void SidebarPaneToggleButton_Click( object? sender, RoutedEventArgs e )
+	{
+		_sidebarPaneExpanded = !_sidebarPaneExpanded;
+		ApplySidebarPaneVisualState();
+	}
+
+	void TileBlockPaneToggleButton_Click( object? sender, RoutedEventArgs e )
+	{
+		_tileBlockPaneExpanded = !_tileBlockPaneExpanded;
+		ApplyTileBlockPaneVisualState();
+	}
+
+	void ApplySidebarPaneVisualState()
+	{
+		if ( EditorSplitGrid.ColumnDefinitions.Count < 3 )
+			return;
+		EditorSplitGrid.ColumnDefinitions[0].Width =
+			new GridLength( _sidebarPaneExpanded ? EditorPaneExpandedWidth : EditorPaneCollapsedStripWidth );
+		SidebarContentHost.IsVisible = _sidebarPaneExpanded;
+		SidebarCollapsedStrip.IsVisible = !_sidebarPaneExpanded;
+		SidebarPaneToggleButton.Content = _sidebarPaneExpanded ? "«" : "»";
+		ToolTip.SetTip( SidebarPaneToggleButton, _sidebarPaneExpanded ? "Collapse sidebar" : "Expand sidebar" );
+	}
+
+	void ApplyTileBlockPaneVisualState()
+	{
+		if ( EditorSplitGrid.ColumnDefinitions.Count < 3 )
+			return;
+		EditorSplitGrid.ColumnDefinitions[1].Width =
+			new GridLength( _tileBlockPaneExpanded ? EditorPaneExpandedWidth : EditorPaneCollapsedStripWidth );
+		TileBlockContentHost.IsVisible = _tileBlockPaneExpanded;
+		TileBlockCollapsedStrip.IsVisible = !_tileBlockPaneExpanded;
+		TileBlockPaneToggleButton.Content = _tileBlockPaneExpanded ? "«" : "»";
+		ToolTip.SetTip( TileBlockPaneToggleButton, _tileBlockPaneExpanded ? "Collapse tile blocks" : "Expand tile blocks" );
+	}
+
+	void ExpandSidebarPane()
+	{
+		if ( _sidebarPaneExpanded )
+			return;
+		_sidebarPaneExpanded = true;
+		ApplySidebarPaneVisualState();
+	}
+
+	void ExpandTileBlockPane()
+	{
+		if ( _tileBlockPaneExpanded )
+			return;
+		_tileBlockPaneExpanded = true;
+		ApplyTileBlockPaneVisualState();
+	}
+
+	void SidebarCollapsedStrip_PointerPressed( object? sender, PointerPressedEventArgs e )
+	{
+		if ( !e.GetCurrentPoint( SidebarCollapsedStrip ).Properties.IsLeftButtonPressed )
+			return;
+		ExpandSidebarPane();
+		e.Handled = true;
+	}
+
+	void TileBlockCollapsedStrip_PointerPressed( object? sender, PointerPressedEventArgs e )
+	{
+		if ( !e.GetCurrentPoint( TileBlockCollapsedStrip ).Properties.IsLeftButtonPressed )
+			return;
+		ExpandTileBlockPane();
+		e.Handled = true;
 	}
 
 	void WireSidebarLists()
@@ -396,6 +469,12 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 					var w = new TokenEditorWindow( parentTile, scenario, highlightToken: selectedToken );
 					await w.ShowDialog( this );
 				}
+				break;
+			}
+			case ScenarioGraphNodeKind.ThreatLevel:
+			{
+				var w = new ThreatsWindow( scenario );
+				await w.ShowDialog( this );
 				break;
 			}
 		}

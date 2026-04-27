@@ -5,19 +5,75 @@
              x:Class="JiMEditor.Avalonia.Views.ScenarioChapterFlowGraphView"
              x:CompileBindings="False">
 	<Panel>
+		<Panel.Resources>
+			<SolidColorBrush x:Key="FlowControlsBackground" Color="#FF121212"/>
+			<SolidColorBrush x:Key="FlowControlsBorder" Color="#FF6E6E6E"/>
+			<SolidColorBrush x:Key="FlowControlsButtonHover" Color="#F1F5F9"/>
+			<SolidColorBrush x:Key="FlowControlsButtonPressed" Color="#E2E8F0"/>
+			<SolidColorBrush x:Key="FlowControlsIconStroke" Color="#FFFFFF"/>
+			<SolidColorBrush x:Key="FlowControlsSeparator" Color="#E2E8F0"/>
+		</Panel.Resources>
 		<fgc:FlowBackground x:Name="FlowDotsBackground" Variant="Dots" Gap="20" />
 		<fg:FlowCanvas x:Name="FlowHostCanvas" />
+		<fgc:FlowPanel Position="BottomLeft" Margin="8,0,0,56">
+			<fgc:FlowControls TargetCanvas="{Binding #FlowHostCanvas}"/>
+		</fgc:FlowPanel>
 		<fgc:FlowPanel Position="BottomLeft" Margin="8">
-			<StackPanel Orientation="Horizontal" Spacing="6">
-				<fgc:FlowControls TargetCanvas="{Binding #FlowHostCanvas}" />
-				<Button Content="↻"
-				        Width="32"
-				        Height="32"
-				        FontSize="16"
-				        FontWeight="Bold"
-				        ToolTip.Tip="Refresh graph from Scenario"
-				        Click="RefreshGraphButton_Click" />
-			</StackPanel>
+			<Border Background="#FF121212"
+				BorderBrush="#FF6E6E6E"
+				BorderThickness="1"
+				Padding="4"
+				CornerRadius="3">
+				<StackPanel x:Name="GraphLayoutToolbar"
+							Orientation="Horizontal"
+							Spacing="6">
+					<Button Content="↻"
+							Width="32"
+							Height="32"
+							FontSize="16"
+							FontWeight="Bold"
+							ToolTip.Tip="Refresh graph from Scenario"
+							Click="RefreshGraphButton_Click" />
+					<Button Content="Tree"
+							MinWidth="48"
+							Height="32"
+							Padding="8,0"
+							ToolTip.Tip="Tree layout from START (BFS spanning tree)"
+							Click="TreeLayoutButton_Click" />
+					<Button Content="Tree2"
+							MinWidth="52"
+							Height="32"
+							Padding="8,0"
+							ToolTip.Tip="Tree positions, top/bottom ports only, no edges (layout experiment)"
+							Click="Tree2LayoutButton_Click" />
+					<Button Content="Layers"
+							MinWidth="56"
+							Height="32"
+							Padding="8,0"
+							ToolTip.Tip="Layered relaxation layout (default)"
+							Click="LayeredLayoutButton_Click" />
+					<Button Content="ʃ"
+							Width="32"
+							Height="32"
+							ToolTip.Tip="Smooth Step"
+							Click="SmoothStepEdgesButton_Click" />
+					<Button Content="⍽"
+							Width="32"
+							Height="32"
+							ToolTip.Tip="Step"
+							Click="StepEdgesButton_Click"/>
+					<Button Content="∿"
+							Width="32"
+							Height="32"
+							ToolTip.Tip="Bezier"
+							Click="BezierEdgesButton_Click" />
+					<Button Content="⁄"
+							Width="32"
+							Height="32"
+							ToolTip.Tip="Straight"
+							Click="StraightEdgesButton_Click" />
+				</StackPanel>
+			</Border>
 		</fgc:FlowPanel>
 		<fgc:FlowPanel Position="BottomRight" Margin="8">
 			<fgc:FlowMinimap x:Name="FlowGraphMinimap"
