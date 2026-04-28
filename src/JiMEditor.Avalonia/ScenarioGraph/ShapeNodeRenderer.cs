@@ -1,7 +1,9 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
+using Avalonia.Layout;
 using Avalonia.Media;
+using FlowGraph.Avalonia.Rendering;
 using FlowGraph.Avalonia.Rendering.NodeRenderers;
 using FlowGraph.Core;
 
@@ -12,6 +14,9 @@ namespace JiMEditor.Avalonia.ScenarioGraph;
 /// </summary>
 public sealed class ShapeNodeRenderer : DefaultNodeRenderer
 {
+	const string SelectionOverlayTag = "JiMSelectionOverlay";
+	const string ShapeSurfaceTag = "JiMShapeSurface";
+
 	readonly NodeShape _shape;
 	readonly IBrush _fill;
 	readonly IBrush _stroke;
@@ -73,6 +78,23 @@ public sealed class ShapeNodeRenderer : DefaultNodeRenderer
 		}
 	}
 
+	/// <summary>
+	/// Outer <see cref="Border"/> normally paints a solid theme fill; our shapes provide the fill, and we rely on a
+	/// top overlay for selection so opaque polygons do not hide FlowGraph's rounded selection ring.
+	/// </summary>
+	public override Control CreateNodeVisual( Node node, NodeRenderContext context )
+	{
+		var root = base.CreateNodeVisual( node, context );
+		if ( root is Border b )
+		{
+			// Shape fill + stroke come from CreateNodeContent; selection is the top overlay only.
+			b.Background = Brushes.Transparent;
+			b.BorderBrush = Brushes.Transparent;
+			b.BorderThickness = new Thickness( 0 );
+		}
+		return root;
+	}
+
 	protected override Control CreateNodeContent( Node node, NodeRenderContext context )
 	{
 		var nodeWidth = node.Width ?? _defaultWidth;
@@ -90,6 +112,7 @@ public sealed class ShapeNodeRenderer : DefaultNodeRenderer
 
 		var surface = new Grid
 		{
+			Tag = ShapeSurfaceTag,
 			Width = shapeWidth,
 			Height = shapeHeight,
 			HorizontalAlignment = global::Avalonia.Layout.HorizontalAlignment.Center,
@@ -120,6 +143,21 @@ public sealed class ShapeNodeRenderer : DefaultNodeRenderer
 		surface.Children.Add( shape );
 		surface.Children.Add( text );
 
+		// Hug the shape bounds (same box as the polygon/rect), not the outer node chrome — avoids a large inset gap on hex/circle/etc.
+		var selectionOverlay = new Border
+		{
+			Tag = SelectionOverlayTag,
+			HorizontalAlignment = HorizontalAlignment.Stretch,
+			VerticalAlignment = VerticalAlignment.Stretch,
+			Margin = new Thickness( 0 ),
+			CornerRadius = new CornerRadius( DesignTokens.RadiusLg ),
+			Background = Brushes.Transparent,
+			IsHitTestVisible = false,
+		};
+		selectionOverlay.ZIndex = 100;
+		ApplySelectionOverlayVisual( selectionOverlay, node, context );
+		surface.Children.Add( selectionOverlay );
+
 		var root = new Grid
 		{
 			Width = nodeWidth,
@@ -128,7 +166,54 @@ public sealed class ShapeNodeRenderer : DefaultNodeRenderer
 		};
 		root.Children.Add( underlay );
 		root.Children.Add( surface );
+
 		return root;
+	}
+
+	public override void UpdateSelection( Control visual, Node node, NodeRenderContext context )
+	{
+		if ( visual is Border border )
+		{
+			border.BorderBrush = Brushes.Transparent;
+			border.BorderThickness = new Thickness( 0 );
+		}
+		if ( visual is not Border { Child: Grid contentGrid } )
+			return;
+		foreach ( var child in contentGrid.Children )
+		{
+			if ( child is not Grid surface || !ShapeSurfaceTag.Equals( surface.Tag as string ) )
+				continue;
+			foreach ( var inner in surface.Children )
+			{
+				if ( inner is Border overlay && SelectionOverlayTag.Equals( overlay.Tag as string ) )
+				{
+					ApplySelectionOverlayVisual( overlay, node, context );
+					return;
+				}
+			}
+		}
+	}
+
+	static void ApplySelectionOverlayVisual( Border overlay, Node node, NodeRenderContext context )
+	{
+		if ( node.IsSelected )
+		{
+			overlay.IsVisible = true;
+			overlay.BorderBrush = context.Theme.NodeSelectedBorder;
+			overlay.BorderThickness = new Thickness( DesignTokens.BorderThick );
+		}
+		else if ( node.IsHighlighted )
+		{
+			overlay.IsVisible = true;
+			overlay.BorderBrush = context.Theme.NodeHighlightedBorder;
+			overlay.BorderThickness = new Thickness( DesignTokens.BorderBase );
+		}
+		else
+		{
+			overlay.IsVisible = false;
+			overlay.BorderBrush = Brushes.Transparent;
+			overlay.BorderThickness = new Thickness( 0 );
+		}
 	}
 
 	(double Width, double Height) ComputeShapeBounds( double nodeWidth, double nodeHeight )
@@ -148,7 +233,7 @@ public sealed class ShapeNodeRenderer : DefaultNodeRenderer
 			return (width, height);
 		}
 
-		// Square/circle/diamond render in a square that must fit inside both axes.
+		// Square/circle/diamond/triangle-up render in a square that must fit inside both axes.
 		var side = System.Math.Min( nodeWidth, nodeHeight );
 		return (side, side);
 	}
@@ -174,6 +259,7 @@ public sealed class ShapeNodeRenderer : DefaultNodeRenderer
 				],
 			},
 			NodeShape.Circle => new Ellipse(),
+			NodeShape.EquilateralTriangleUp => new Polygon { Points = BuildEquilateralTriangleUpPoints( width, height ) },
 			NodeShape.Diamond => new Polygon
 			{
 				Points =
@@ -198,12 +284,33 @@ public sealed class ShapeNodeRenderer : DefaultNodeRenderer
 			_ => new Rectangle(),
 		};
 
+	/// <summary>
+	/// Largest equilateral triangle with apex at the top of the box, base horizontal, inside <paramref name="w"/>×<paramref name="h"/>.
+	/// </summary>
+	static global::Avalonia.Point[] BuildEquilateralTriangleUpPoints( double w, double h )
+	{
+		const double sqrt3 = 1.7320508075688772;
+		// Side limited by width (base = w) or by height (apex at y=0, base at y=h => h = s*sqrt(3)/2).
+		var s = System.Math.Min( w, 2d * h / sqrt3 );
+		var triH = s * sqrt3 / 2d;
+		var leftX = ( w - s ) * 0.5;
+		var topY = 0d;
+		var bottomY = topY + triH;
+		return
+		[
+			new global::Avalonia.Point( w * 0.5, topY ),
+			new global::Avalonia.Point( leftX, bottomY ),
+			new global::Avalonia.Point( leftX + s, bottomY ),
+		];
+	}
+
 	public enum NodeShape
 	{
 		Rectangle,
 		Square,
 		Hexagon,
 		Circle,
+		EquilateralTriangleUp,
 		Diamond,
 		TriggerArrow,
 	}

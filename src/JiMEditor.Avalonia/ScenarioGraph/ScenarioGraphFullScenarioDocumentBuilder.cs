@@ -240,14 +240,14 @@ public static class ScenarioGraphFullScenarioDocumentBuilder
 			foreach ( var th in scenario.threatObserver.OrderBy( x => x.threshold ) )
 			{
 				var vId = ThreatId( th.dataName + "_" + th.threshold );
-				AddNode( vId, ScenarioGraphNodeKind.ThreatLevel, WithHeader( "Threat", "Level " + th.threshold ), "threat-node" );
+				AddNode( vId, ScenarioGraphNodeKind.ThreatLevel, WithHeader( "\nThreat", "Level " + th.threshold ), "threat-node" );
 				AddEdge( prevThreatId, vId, ScenarioGraphEdgeKind.ThreatChain, null );
 				prevThreatId = vId;
 				TryEvent( th.triggerName, ev => AddEdge( vId, ev, ScenarioGraphEdgeKind.Initiates, "initiates" ) );
 			}
 
 			var maxId = ThreatId( "MAX THREAT" );
-			AddNode( maxId, ScenarioGraphNodeKind.ThreatLevel, WithHeader( "Threat", "Max " + scenario.threatMax ), "threat-node" );
+			AddNode( maxId, ScenarioGraphNodeKind.ThreatLevel, WithHeader( "\nThreat", "Max " + scenario.threatMax ), "threat-node" );
 			AddEdge( prevThreatId, maxId, ScenarioGraphEdgeKind.ThreatChain, null );
 		}
 
@@ -300,3 +300,4 @@ public static class ScenarioGraphFullScenarioDocumentBuilder
 		return $"{header}\n{trimmed}";
 	}
 }
+

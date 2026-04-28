@@ -45,6 +45,7 @@ public partial class SidebarListView : UserControl, INotifyPropertyChanged
 	bool _showDuplicateButton;
 	bool _showImportButton;
 	bool _showExportButton;
+	bool _suppressNewItemSelectedEvent;
 
 	public bool ShowDuplicateButton
 	{
@@ -140,12 +141,20 @@ public partial class SidebarListView : UserControl, INotifyPropertyChanged
 				SortedItems.Add( o );
 		}
 
-		if ( prev != null && SortedItems.Contains( prev ) )
-			dataListView.SelectedItem = prev;
-		else if ( SortedItems.Count > 0 )
-			dataListView.SelectedIndex = 0;
-		else
-			dataListView.SelectedItem = null;
+		_suppressNewItemSelectedEvent = true;
+		try
+		{
+			if ( prev != null && SortedItems.Contains( prev ) )
+				dataListView.SelectedItem = prev;
+			else if ( SortedItems.Count > 0 )
+				dataListView.SelectedIndex = 0;
+			else
+				dataListView.SelectedItem = null;
+		}
+		finally
+		{
+			_suppressNewItemSelectedEvent = false;
+		}
 
 		UpdateToolbarEnabled();
 	}
@@ -168,6 +177,8 @@ public partial class SidebarListView : UserControl, INotifyPropertyChanged
 	void DataListView_OnSelectionChanged( object? sender, SelectionChangedEventArgs e )
 	{
 		UpdateToolbarEnabled();
+		if ( _suppressNewItemSelectedEvent )
+			return;
 		if ( e.AddedItems.Count != 1 )
 			return;
 		var sel = e.AddedItems[0];

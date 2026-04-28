@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -20,7 +21,7 @@ public partial class ScenarioChapterFlowGraphView : UserControl
 	readonly WpfTreeLayoutEngine _wpfTreeLayoutEngine = new();
 	readonly Tree2LayoutEngine _tree2LayoutEngine = new();
 	ScenarioGraphLayoutMode _layoutMode = ScenarioGraphLayoutMode.WpfTree;
-	EdgeType? _forcedEdgeType;
+	EdgeType? _forcedEdgeType = EdgeType.Bezier;
 	IScenarioGraphViewHost? _graphHost;
 	IScenarioGraphInteractionSink? _interactionSink;
 	NotifyCollectionChangedEventHandler? _collectionsChangedHandler;
@@ -117,6 +118,32 @@ public partial class ScenarioChapterFlowGraphView : UserControl
 
 	public void RefreshFromScenario() => RefreshGraphNow();
 
+	/// <summary>
+	/// If the current graph contains a node with <paramref name="nodeId"/>, selects it, clears other selection, and pans/zooms to center it (WPF sidebar → graph parity).
+	/// </summary>
+	public void TryCenterOnGraphNodeId( string nodeId )
+	{
+		if ( string.IsNullOrEmpty( nodeId ) )
+			return;
+		var graph = FlowHostCanvas.Graph;
+		if ( graph == null )
+			return;
+		var node = graph.Elements.Nodes.FirstOrDefault( n => n.Id == nodeId );
+		if ( node == null )
+			return;
+
+		// Match canvas click semantics: single node selected (and no selected edges).
+		FlowHostCanvas.Selection.DeselectAll();
+		foreach ( var edge in graph.Elements.Edges.Where( ed => ed.IsSelected ) )
+			edge.IsSelected = false;
+		foreach ( var n in graph.Elements.Nodes.Where( x => x.IsSelected ) )
+			n.IsSelected = false;
+		node.IsSelected = true;
+		FlowHostCanvas.Selection.NotifySelectionMayHaveChanged();
+
+		FlowHostCanvas.CenterOnNodeAnimated( node, 0.35, null );
+	}
+
 	void RefreshGraphButton_Click( object? sender, global::Avalonia.Interactivity.RoutedEventArgs e ) =>
 		RefreshFromScenario();
 
@@ -207,6 +234,15 @@ public partial class ScenarioChapterFlowGraphView : UserControl
 		FlowHostCanvas.Settings.EnableNodeLabelEditing = true;
 		// 0 = never auto-switch to direct rendering by node count (see FlowCanvas.RenderElements).
 		FlowHostCanvas.Settings.DirectRenderingNodeThreshold = 0;
+
+		// Edges: FlowGraph virtualizes by testing node bounds vs viewport only. Long edges whose segment
+		// crosses the view but whose endpoints are off-screen would otherwise disappear; disable for this graph.
+		FlowHostCanvas.Settings.EnableVirtualization = false;
+		// Allow zooming out further so the full scenario stays navigable; edges stay logical-thickness under transform.
+		FlowHostCanvas.Settings.MinZoom = 0.03;
+		// Slightly thicker strokes so links remain readable at low zoom (still scaled by canvas transform).
+		FlowHostCanvas.Settings.EdgeStrokeThickness = 2.5;
+		FlowHostCanvas.Settings.EdgeSelectedStrokeThickness = 3.5;
 	}
 
 	void WireNestedScenarioCollections()
@@ -298,7 +334,7 @@ public partial class ScenarioChapterFlowGraphView : UserControl
 			fontWeight: FontWeight.SemiBold ) );
 
 		FlowHostCanvas.NodeRenderers.Register( "threat-node", new ShapeNodeRenderer(
-			shape: ShapeNodeRenderer.NodeShape.Circle,
+			shape: ShapeNodeRenderer.NodeShape.EquilateralTriangleUp,
 			fillHex: "#7A3F3F",
 			strokeHex: "#E7A4A4",
 			fontSize: 13,

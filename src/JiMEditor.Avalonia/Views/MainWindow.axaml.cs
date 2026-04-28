@@ -135,6 +135,10 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 
 	void WireSidebarLists()
 	{
+		objectivesUC.NewItemSelectedEvent += OnObjectiveSidebarSelectionCenterGraph;
+		triggersUC.NewItemSelectedEvent += OnTriggerSidebarSelectionCenterGraph;
+		interactionsUC.NewItemSelectedEvent += OnEventSidebarSelectionCenterGraph;
+
 		interactionsUC.SetItemsSource( scenario.interactionObserver );
 		interactionsUC.onAddEvent += OnAddInteraction;
 		interactionsUC.onRemoveEvent += OnRemoveInteraction;
@@ -174,8 +178,39 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 		translationsUC.onExportEvent += OnExportTranslation;
 	}
 
+	static bool IsRenderableGraphSidebarName( string? dataName ) =>
+		!string.IsNullOrWhiteSpace( dataName ) && dataName != "None";
+
+	void OnObjectiveSidebarSelectionCenterGraph( string dataName )
+	{
+		if ( !IsRenderableGraphSidebarName( dataName ) )
+			return;
+		ScenarioChapterFlowGraph.TryCenterOnGraphNodeId(
+			ScenarioGraphFullScenarioDocumentBuilder.ObjectiveId( dataName ) );
+	}
+
+	void OnTriggerSidebarSelectionCenterGraph( string dataName )
+	{
+		if ( !IsRenderableGraphSidebarName( dataName ) )
+			return;
+		ScenarioChapterFlowGraph.TryCenterOnGraphNodeId(
+			ScenarioGraphFullScenarioDocumentBuilder.TriggerId( dataName ) );
+	}
+
+	void OnEventSidebarSelectionCenterGraph( string dataName )
+	{
+		if ( !IsRenderableGraphSidebarName( dataName ) )
+			return;
+		ScenarioChapterFlowGraph.TryCenterOnGraphNodeId(
+			ScenarioGraphFullScenarioDocumentBuilder.InteractionId( dataName ) );
+	}
+
 	void DetachSidebarLists()
 	{
+		objectivesUC.NewItemSelectedEvent -= OnObjectiveSidebarSelectionCenterGraph;
+		triggersUC.NewItemSelectedEvent -= OnTriggerSidebarSelectionCenterGraph;
+		interactionsUC.NewItemSelectedEvent -= OnEventSidebarSelectionCenterGraph;
+
 		interactionsUC.onAddEvent -= OnAddInteraction;
 		interactionsUC.onRemoveEvent -= OnRemoveInteraction;
 		interactionsUC.onSettingsEvent -= OnSettingsInteraction;
@@ -193,6 +228,7 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 		translationsUC.onSettingsEvent -= OnSettingsTranslation;
 		translationsUC.onImportEvent -= OnImportTranslation;
 		translationsUC.onExportEvent -= OnExportTranslation;
+
 		objectivesUC.onAddEvent -= OnAddObjective;
 		objectivesUC.onRemoveEvent -= OnRemoveObjective;
 		objectivesUC.onSettingsEvent -= OnSettingsObjective;
