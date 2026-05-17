@@ -9,34 +9,25 @@ This is a list of things we need to do:
   * Add Existing Scenario... button needs to work
   * Add Procedurally Generated Scenario... button should launch the random scenario editor
 
+* Rich Text Editor (WYSIWYG)
+  * https://github.com/cuikp/AvRichTextBox
+
 * Main  Window
-  * Enable New Campaign button
-  * Enable Save button
-    * Save should use similar logic to ScenarioCollectionRemovalImpact and remove any disallowed items base on currently selected Collections
-  * Create Save As button?
   * Enable Load button
     * Have its dialog ask if you want to Save First, Open, or Cancel
-  * Enemy Event isn't respecting allowed enemy types based on scenario collections selected
-  * Graph capabilities ported - check if libraries support Mac/Linux:
-    * to FlowGraph?
-      * https://github.com/prismify-co/FlowGraph
-    * to NodeEditor?
-      * https://wieslawsoltes.github.io/NodeEditor/
-    * to AvaloniaGraphControl?
-      * https://github.com/Oaz/AvaloniaGraphControl
+  * Implement "dirty" tracking across all dialogs. A lot of work.
 
-  * Graphic Hex Tile Editor
-    * Journey flow: Tile Editor / Token Editor. Battle scenarios: `TileEditorWindow` opens with square tiles (998/999), 25px drag grid, diamond cell geometry; parity polish may still be needed vs WPF.
-    * Graphic Primitives: https://docs.avaloniaui.net/docs/graphics-animation/drawing-graphics
-    * Shapes & Geometry: https://docs.avaloniaui.net/docs/graphics-animation/shapes-and-geometries
-    * Image Brush: https://docs.avaloniaui.net/docs/graphics-animation/brushes
+* Graph capabilities ported - check if libraries support Mac/Linux:
+  1. NodeEditor - Verified Windows/Mac/Linux/Web/Android!
+    * https://github.com/wieslawsoltes/NodeEditor
+  2. to FlowGraph - Better sample image of styling and color
+    * https://github.com/prismify-co/FlowGraph
+  3. to AvaloniaGraphControl?
+    * https://github.com/Oaz/AvaloniaGraphControl
 
 * Settings Dialog TODO:
   *  Notes on intentionally deferred pieces
-    *  Resolution editor actions (add/remove/edit) are present in layout but currently show:
-      *  TODO-Avalonia-Reenable: Resolution editor flow is not ported yet.
     *  Intro editing is wired to existing StoryTextEditWindow as a practical interim.
-    *  If you want, next I can port the full resolution editor workflow (the WPF TextEditorWindow-based behavior) so those three buttons become fully functional too.
 
 * Enemy Pool Simulation
   * Does not respect maximum enemy count. May have originally been a problem anyways.

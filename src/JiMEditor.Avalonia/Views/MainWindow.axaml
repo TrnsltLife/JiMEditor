@@ -5,6 +5,7 @@
         xmlns:jime="using:JiME"
         xmlns:uc="using:JiMEditor.Avalonia.UserControls"
         xmlns:conv="using:JiMEditor.Avalonia.Converters"
+        xmlns:flowPreview="using:JiMEditor.Avalonia.Views"
         mc:Ignorable="d"
         d:DesignWidth="1200" d:DesignHeight="800"
         x:Class="JiMEditor.Avalonia.Views.MainWindow"
@@ -173,117 +174,229 @@
 			</UniformGrid>
 		</Border>
 
-		<!-- Sidebar + main -->
-		<Grid ColumnDefinitions="280,*">
+		<!-- Sidebar + tile blocks + graph (each pane has a floating collapse/expand control) -->
+		<Grid x:Name="EditorSplitGrid">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="280" MinWidth="0"/>
+				<ColumnDefinition Width="280" MinWidth="0"/>
+				<ColumnDefinition Width="*" MinWidth="200"/>
+			</Grid.ColumnDefinitions>
 			<!-- Left sidebar lists -->
-			<Border Grid.Column="0" Background="{StaticResource bgColorLight}" Padding="4">
-				<ScrollViewer>
-					<StackPanel Spacing="8">
-						<uc:SidebarListView x:Name="objectivesUC"
-						                    Margin="5"
-						                    Title="Objectives"
-						                    ShowDuplicateButton="True"
-						                    ShowImportButton="False"
-						                    ShowExportButton="False"/>
-						<uc:SidebarListView x:Name="interactionsUC"
-						                    Margin="5"
-						                    Title="Events"
-						                    ShowDuplicateButton="True"
-						                    ShowImportButton="True"
-						                    ShowExportButton="True"/>
-						<uc:SidebarListView x:Name="triggersUC"
-						                    Margin="5"
-						                    Title="Triggers"
-						                    ShowDuplicateButton="True"
-						                    ShowImportButton="False"
-						                    ShowExportButton="False"/>
-						<uc:SidebarListView x:Name="activationsUC"
-						                    Margin="5"
-						                    Title="Enemy Attack Groups"
-						                    ShowDuplicateButton="True"
-						                    ShowImportButton="True"
-						                    ShowExportButton="True"/>
-						<uc:SidebarListView x:Name="monsterModifiersUC"
-						                    Margin="5"
-						                    Title="Enemy Bonuses"
-						                    ShowDuplicateButton="True"
-						                    ShowImportButton="True"
-						                    ShowExportButton="True"/>
-						<uc:SidebarListView x:Name="translationsUC"
-						                    Margin="5"
-						                    Title="Translations"
-						                    ShowDuplicateButton="False"
-						                    ShowImportButton="True"
-						                    ShowExportButton="True"/>
-					</StackPanel>
-				</ScrollViewer>
-			</Border>
-
-			<!-- Main: tile block list (WPF) + map / graph placeholder -->
-			<Grid Grid.Column="1" ColumnDefinitions="Auto,*">
-				<ScrollViewer Grid.Column="0"
-				              VerticalScrollBarVisibility="Auto"
-				              HorizontalScrollBarVisibility="Disabled"
-				              VerticalAlignment="Stretch">
-					<ItemsControl Padding="5" ItemsSource="{Binding chapterObserver}" Width="280">
-						<ItemsControl.ItemsPanel>
-							<ItemsPanelTemplate>
-								<WrapPanel Orientation="Vertical"/>
-							</ItemsPanelTemplate>
-						</ItemsControl.ItemsPanel>
-						<ItemsControl.ItemTemplate>
-							<DataTemplate DataType="jime:Chapter">
-								<Border Classes="callout" Margin="0,0,5,5" MinWidth="240">
-									<StackPanel Spacing="4">
-										<TextBlock Text="{Binding dataName}"
-										           Classes="heading"
-										           TextTrimming="CharacterEllipsis"
-										           HorizontalAlignment="Center"/>
-										<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="4">
-											<Button Background="DodgerBlue"
-											        Margin="2,5"
-											        Click="TileEditButton_Click"
-											        DataContext="{Binding}">
-												<TextBlock Foreground="White" Text="Tile Editor..."/>
-											</Button>
-											<Button Background="DodgerBlue"
-											        Margin="2,5"
-											        Click="ChapterPropsButton_Click"
-											        DataContext="{Binding}">
-												<TextBlock Foreground="White" Text="Properties..."/>
-											</Button>
-										</StackPanel>
-										<Button Background="{StaticResource bgCancelDelete}"
-										        HorizontalAlignment="Stretch"
-										        Click="RemoveChapterButton_Click"
-										        DataContext="{Binding}"
-										        IsEnabled="{Binding isStart, Converter={StaticResource chapterStartInvert}}">
-											<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8">
-												<TextBlock Foreground="White" Text="Remove Block" VerticalAlignment="Center"/>
-												<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Width="24"/>
-											</StackPanel>
-										</Button>
-									</StackPanel>
-								</Border>
-							</DataTemplate>
-						</ItemsControl.ItemTemplate>
-					</ItemsControl>
-				</ScrollViewer>
-
-				<Border Grid.Column="1"
-				        Background="#FF1E1E1E"
-				        BorderBrush="{StaticResource bgButtonColor}"
-				        BorderThickness="1"
-				        Margin="8">
-					<TextBlock Text="Map / graph (GraphX not ported — see comment in MainWindow.axaml)"
-					           Foreground="#888"
-					           HorizontalAlignment="Center"
-					           VerticalAlignment="Center"
-					           TextAlignment="Center"
-					           TextWrapping="Wrap"
-					           Margin="16"/>
+			<Grid Grid.Column="0"
+			      Background="{StaticResource bgColorLight}"
+			      ClipToBounds="False">
+				<Border x:Name="SidebarContentHost"
+				        Background="{StaticResource bgColorLight}"
+				        Padding="4,0,4,4">
+					<ScrollViewer x:Name="SidebarScrollViewer">
+						<StackPanel Spacing="0">
+							<TextBlock x:Name="SidebarTitleHorizontal"
+							           Text="Components"
+							           FontWeight="Bold"
+							           FontSize="14"
+							           Foreground="White"
+							           HorizontalAlignment="Stretch"
+							           TextAlignment="Center"
+							           Margin="8,4,8,10"/>
+							<Rectangle Height="1"
+							           Fill="White"
+							           HorizontalAlignment="Stretch"
+							           Margin="4,0,4,10"/>
+							<StackPanel Spacing="8">
+								<uc:SidebarListView x:Name="objectivesUC"
+								                    Margin="5"
+								                    Title="Objectives"
+								                    ShowDuplicateButton="True"
+								                    ShowImportButton="False"
+								                    ShowExportButton="False"/>
+								<uc:SidebarListView x:Name="interactionsUC"
+								                    Margin="5"
+								                    Title="Events"
+								                    ShowDuplicateButton="True"
+								                    ShowImportButton="True"
+								                    ShowExportButton="True"/>
+								<uc:SidebarListView x:Name="triggersUC"
+								                    Margin="5"
+								                    Title="Triggers"
+								                    ShowDuplicateButton="True"
+								                    ShowImportButton="False"
+								                    ShowExportButton="False"/>
+								<uc:SidebarListView x:Name="activationsUC"
+								                    Margin="5"
+								                    Title="Enemy Attack Groups"
+								                    ShowDuplicateButton="True"
+								                    ShowImportButton="True"
+								                    ShowExportButton="True"/>
+								<uc:SidebarListView x:Name="monsterModifiersUC"
+								                    Margin="5"
+								                    Title="Enemy Bonuses"
+								                    ShowDuplicateButton="True"
+								                    ShowImportButton="True"
+								                    ShowExportButton="True"/>
+								<uc:SidebarListView x:Name="translationsUC"
+								                    Margin="5"
+								                    Title="Translations"
+								                    ShowDuplicateButton="False"
+								                    ShowImportButton="True"
+								                    ShowExportButton="True"/>
+							</StackPanel>
+						</StackPanel>
+					</ScrollViewer>
 				</Border>
+				<!-- Collapsed: full strip (behind toggle) expands pane; vertical title uses layout transform. -->
+				<Border x:Name="SidebarCollapsedStrip"
+				        HorizontalAlignment="Stretch"
+				        VerticalAlignment="Stretch"
+				        Background="Transparent"
+				        BorderBrush="#CCFFFFFF"
+				        BorderThickness="0,0,2,0"
+				        Cursor="Hand"
+				        IsVisible="False"
+				        ToolTip.Tip="Click to expand Components"
+				        PointerPressed="SidebarCollapsedStrip_PointerPressed">
+					<LayoutTransformControl HorizontalAlignment="Center"
+					                        VerticalAlignment="Center">
+						<LayoutTransformControl.LayoutTransform>
+							<RotateTransform Angle="-90"/>
+						</LayoutTransformControl.LayoutTransform>
+						<TextBlock Text="Components"
+						           FontWeight="Bold"
+						           FontSize="13"
+						           Foreground="White"
+						           TextWrapping="NoWrap"
+						           TextTrimming="None"
+						           TextAlignment="Center"/>
+					</LayoutTransformControl>
+				</Border>
+				<Button x:Name="SidebarPaneToggleButton"
+				        Classes="iconbutton"
+				        Content="«"
+				        Width="32"
+				        Height="32"
+				        Padding="0"
+				        HorizontalAlignment="Left"
+				        VerticalAlignment="Top"
+				        Margin="6,4,0,0"
+				        Click="SidebarPaneToggleButton_Click"
+				        ToolTip.Tip="Collapse sidebar"/>
 			</Grid>
+
+			<!-- Tile block list + floating toggle -->
+			<Grid Grid.Column="1"
+			      Background="{StaticResource bgColorLight}"
+			      ClipToBounds="False">
+				<Border x:Name="TileBlockContentHost"
+				        Background="{StaticResource bgColorLight}"
+				        Padding="4,0,4,4">
+					<ScrollViewer x:Name="TileBlockScrollViewer"
+					              VerticalScrollBarVisibility="Auto"
+					              HorizontalScrollBarVisibility="Disabled"
+					              VerticalAlignment="Stretch"
+					              Background="{StaticResource bgColorLight}">
+						<StackPanel Spacing="0">
+							<TextBlock x:Name="TileBlockTitleHorizontal"
+							           Text="Tile Blocks"
+							           FontWeight="Bold"
+							           FontSize="14"
+							           Foreground="White"
+							           HorizontalAlignment="Stretch"
+							           TextAlignment="Center"
+							           Margin="8,4,8,10"/>
+							<Rectangle Height="1"
+							           Fill="White"
+							           HorizontalAlignment="Stretch"
+							           Margin="4,0,4,10"/>
+							<ItemsControl Padding="5"
+							              ItemsSource="{Binding chapterObserver}"
+							              HorizontalAlignment="Stretch">
+								<ItemsControl.ItemsPanel>
+									<ItemsPanelTemplate>
+										<WrapPanel Orientation="Vertical"/>
+									</ItemsPanelTemplate>
+								</ItemsControl.ItemsPanel>
+								<ItemsControl.ItemTemplate>
+									<DataTemplate DataType="jime:Chapter">
+										<Border Classes="callout" Margin="0,0,5,5" MinWidth="240">
+											<StackPanel Spacing="4">
+												<TextBlock Text="{Binding dataName}"
+												           Classes="heading"
+												           TextTrimming="CharacterEllipsis"
+												           HorizontalAlignment="Center"/>
+												<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="4">
+													<Button Background="DodgerBlue"
+													        Margin="2,5"
+													        Click="TileEditButton_Click"
+													        DataContext="{Binding}">
+														<TextBlock Foreground="White" Text="Tile Editor..."/>
+													</Button>
+													<Button Background="DodgerBlue"
+													        Margin="2,5"
+													        Click="ChapterPropsButton_Click"
+													        DataContext="{Binding}">
+														<TextBlock Foreground="White" Text="Properties..."/>
+													</Button>
+												</StackPanel>
+												<Button Background="{StaticResource bgCancelDelete}"
+												        HorizontalAlignment="Stretch"
+												        Click="RemoveChapterButton_Click"
+												        DataContext="{Binding}"
+												        IsEnabled="{Binding isStart, Converter={StaticResource chapterStartInvert}}">
+													<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8">
+														<TextBlock Foreground="White" Text="Remove Block" VerticalAlignment="Center"/>
+														<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Width="24"/>
+													</StackPanel>
+												</Button>
+											</StackPanel>
+										</Border>
+									</DataTemplate>
+								</ItemsControl.ItemTemplate>
+							</ItemsControl>
+						</StackPanel>
+					</ScrollViewer>
+				</Border>
+				<Border x:Name="TileBlockCollapsedStrip"
+				        HorizontalAlignment="Stretch"
+				        VerticalAlignment="Stretch"
+				        Background="Transparent"
+				        Cursor="Hand"
+				        IsVisible="False"
+				        ToolTip.Tip="Click to expand Tile Blocks"
+				        PointerPressed="TileBlockCollapsedStrip_PointerPressed">
+					<LayoutTransformControl HorizontalAlignment="Center"
+					                        VerticalAlignment="Center">
+						<LayoutTransformControl.LayoutTransform>
+							<RotateTransform Angle="-90"/>
+						</LayoutTransformControl.LayoutTransform>
+						<TextBlock Text="Tile Blocks"
+						           FontWeight="Bold"
+						           FontSize="13"
+						           Foreground="White"
+						           TextWrapping="NoWrap"
+						           TextTrimming="None"
+						           TextAlignment="Center"/>
+					</LayoutTransformControl>
+				</Border>
+				<Button x:Name="TileBlockPaneToggleButton"
+				        Classes="iconbutton"
+				        Content="«"
+				        Width="32"
+				        Height="32"
+				        Padding="0"
+				        HorizontalAlignment="Left"
+				        VerticalAlignment="Top"
+				        Margin="6,4,0,0"
+				        Click="TileBlockPaneToggleButton_Click"
+				        ToolTip.Tip="Collapse tile blocks"/>
+			</Grid>
+
+			<Border Grid.Column="2"
+			        Background="#FF1E1E1E"
+			        BorderBrush="{StaticResource bgButtonColor}"
+			        BorderThickness="1"
+			        Margin="8"
+			        ClipToBounds="True">
+				<flowPreview:ScenarioChapterFlowGraphView x:Name="ScenarioChapterFlowGraph" />
+			</Border>
 		</Grid>
 	</DockPanel>
 </Window>

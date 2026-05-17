@@ -12,6 +12,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using JiMEditor.Avalonia.EventDialog;
+using JiMEditor.Avalonia.ScenarioGraph;
 using JiMEditor.Avalonia;
 using JiMEditor.Avalonia.Views.Events;
 using JiME;
@@ -22,8 +23,13 @@ using MessageBoxResult = System.Windows.MessageBoxResult;
 
 namespace JiMEditor.Avalonia.Views;
 
-public partial class MainWindow : Window
+public partial class MainWindow : Window, IScenarioGraphInteractionSink
 {
+	const double EditorPaneExpandedWidth = 280;
+	const double EditorPaneCollapsedStripWidth = 36;
+	bool _sidebarPaneExpanded = true;
+	bool _tileBlockPaneExpanded = true;
+
 	public Scenario scenario { get; private set; } = null!;
 
 	/// <summary>Parameterless ctor required by Avalonia XAML; use <see cref="MainWindow(Scenario)"/> at runtime.</summary>
@@ -55,10 +61,84 @@ public partial class MainWindow : Window
 		SyncTitleFromScenario();
 		ScenarioNameEdit.Text = scenario.scenarioName ?? "";
 		scenario.PropertyChanged += OnScenarioPropertyChanged;
+		ScenarioChapterFlowGraph.SetInteractionSink( this );
+		ScenarioChapterFlowGraph.Attach( scenario );
+	}
+
+	void SidebarPaneToggleButton_Click( object? sender, RoutedEventArgs e )
+	{
+		_sidebarPaneExpanded = !_sidebarPaneExpanded;
+		ApplySidebarPaneVisualState();
+	}
+
+	void TileBlockPaneToggleButton_Click( object? sender, RoutedEventArgs e )
+	{
+		_tileBlockPaneExpanded = !_tileBlockPaneExpanded;
+		ApplyTileBlockPaneVisualState();
+	}
+
+	void ApplySidebarPaneVisualState()
+	{
+		if ( EditorSplitGrid.ColumnDefinitions.Count < 3 )
+			return;
+		EditorSplitGrid.ColumnDefinitions[0].Width =
+			new GridLength( _sidebarPaneExpanded ? EditorPaneExpandedWidth : EditorPaneCollapsedStripWidth );
+		SidebarContentHost.IsVisible = _sidebarPaneExpanded;
+		SidebarCollapsedStrip.IsVisible = !_sidebarPaneExpanded;
+		SidebarPaneToggleButton.Content = _sidebarPaneExpanded ? "«" : "»";
+		ToolTip.SetTip( SidebarPaneToggleButton, _sidebarPaneExpanded ? "Collapse sidebar" : "Expand sidebar" );
+	}
+
+	void ApplyTileBlockPaneVisualState()
+	{
+		if ( EditorSplitGrid.ColumnDefinitions.Count < 3 )
+			return;
+		EditorSplitGrid.ColumnDefinitions[1].Width =
+			new GridLength( _tileBlockPaneExpanded ? EditorPaneExpandedWidth : EditorPaneCollapsedStripWidth );
+		TileBlockContentHost.IsVisible = _tileBlockPaneExpanded;
+		TileBlockCollapsedStrip.IsVisible = !_tileBlockPaneExpanded;
+		TileBlockPaneToggleButton.Content = _tileBlockPaneExpanded ? "«" : "»";
+		ToolTip.SetTip( TileBlockPaneToggleButton, _tileBlockPaneExpanded ? "Collapse tile blocks" : "Expand tile blocks" );
+	}
+
+	void ExpandSidebarPane()
+	{
+		if ( _sidebarPaneExpanded )
+			return;
+		_sidebarPaneExpanded = true;
+		ApplySidebarPaneVisualState();
+	}
+
+	void ExpandTileBlockPane()
+	{
+		if ( _tileBlockPaneExpanded )
+			return;
+		_tileBlockPaneExpanded = true;
+		ApplyTileBlockPaneVisualState();
+	}
+
+	void SidebarCollapsedStrip_PointerPressed( object? sender, PointerPressedEventArgs e )
+	{
+		if ( !e.GetCurrentPoint( SidebarCollapsedStrip ).Properties.IsLeftButtonPressed )
+			return;
+		ExpandSidebarPane();
+		e.Handled = true;
+	}
+
+	void TileBlockCollapsedStrip_PointerPressed( object? sender, PointerPressedEventArgs e )
+	{
+		if ( !e.GetCurrentPoint( TileBlockCollapsedStrip ).Properties.IsLeftButtonPressed )
+			return;
+		ExpandTileBlockPane();
+		e.Handled = true;
 	}
 
 	void WireSidebarLists()
 	{
+		objectivesUC.NewItemSelectedEvent += OnObjectiveSidebarSelectionCenterGraph;
+		triggersUC.NewItemSelectedEvent += OnTriggerSidebarSelectionCenterGraph;
+		interactionsUC.NewItemSelectedEvent += OnEventSidebarSelectionCenterGraph;
+
 		interactionsUC.SetItemsSource( scenario.interactionObserver );
 		interactionsUC.onAddEvent += OnAddInteraction;
 		interactionsUC.onRemoveEvent += OnRemoveInteraction;
@@ -98,8 +178,39 @@ public partial class MainWindow : Window
 		translationsUC.onExportEvent += OnExportTranslation;
 	}
 
+	static bool IsRenderableGraphSidebarName( string? dataName ) =>
+		!string.IsNullOrWhiteSpace( dataName ) && dataName != "None";
+
+	void OnObjectiveSidebarSelectionCenterGraph( string dataName )
+	{
+		if ( !IsRenderableGraphSidebarName( dataName ) )
+			return;
+		ScenarioChapterFlowGraph.TryCenterOnGraphNodeId(
+			ScenarioGraphFullScenarioDocumentBuilder.ObjectiveId( dataName ) );
+	}
+
+	void OnTriggerSidebarSelectionCenterGraph( string dataName )
+	{
+		if ( !IsRenderableGraphSidebarName( dataName ) )
+			return;
+		ScenarioChapterFlowGraph.TryCenterOnGraphNodeId(
+			ScenarioGraphFullScenarioDocumentBuilder.TriggerId( dataName ) );
+	}
+
+	void OnEventSidebarSelectionCenterGraph( string dataName )
+	{
+		if ( !IsRenderableGraphSidebarName( dataName ) )
+			return;
+		ScenarioChapterFlowGraph.TryCenterOnGraphNodeId(
+			ScenarioGraphFullScenarioDocumentBuilder.InteractionId( dataName ) );
+	}
+
 	void DetachSidebarLists()
 	{
+		objectivesUC.NewItemSelectedEvent -= OnObjectiveSidebarSelectionCenterGraph;
+		triggersUC.NewItemSelectedEvent -= OnTriggerSidebarSelectionCenterGraph;
+		interactionsUC.NewItemSelectedEvent -= OnEventSidebarSelectionCenterGraph;
+
 		interactionsUC.onAddEvent -= OnAddInteraction;
 		interactionsUC.onRemoveEvent -= OnRemoveInteraction;
 		interactionsUC.onSettingsEvent -= OnSettingsInteraction;
@@ -117,6 +228,7 @@ public partial class MainWindow : Window
 		translationsUC.onSettingsEvent -= OnSettingsTranslation;
 		translationsUC.onImportEvent -= OnImportTranslation;
 		translationsUC.onExportEvent -= OnExportTranslation;
+
 		objectivesUC.onAddEvent -= OnAddObjective;
 		objectivesUC.onRemoveEvent -= OnRemoveObjective;
 		objectivesUC.onSettingsEvent -= OnSettingsObjective;
@@ -304,6 +416,103 @@ public partial class MainWindow : Window
 		{
 			var tw = new TileEditorWindow( scenario, c );
 			await tw.ShowDialog( this );
+		}
+	}
+
+	public async Task OnNodeActivatedAsync( ScenarioGraphNode node )
+	{
+		switch ( node.Kind )
+		{
+			case ScenarioGraphNodeKind.Chapter:
+			{
+				var chapter = scenario.chapterObserver.FirstOrDefault( c =>
+					ScenarioGraphFullScenarioDocumentBuilder.ChapterId( c.dataName ) == node.Id );
+				if ( chapter != null )
+					await OpenChapterPropertiesEditorAsync( chapter );
+				break;
+			}
+			case ScenarioGraphNodeKind.Tile:
+			{
+				BaseTile? selectedTile = null;
+				foreach ( var chapter in scenario.chapterObserver )
+				{
+					selectedTile = chapter.tileObserver
+						.OfType<BaseTile>()
+						.FirstOrDefault( t => ScenarioGraphFullScenarioDocumentBuilder.TileId( t.GUID ) == node.Id );
+					if ( selectedTile != null )
+						break;
+				}
+
+				if ( selectedTile != null )
+				{
+					var w = new TokenEditorWindow( selectedTile, scenario );
+					await w.ShowDialog( this );
+				}
+				break;
+			}
+			case ScenarioGraphNodeKind.Objective:
+			{
+				var objective = scenario.objectiveObserver.FirstOrDefault( o =>
+					ScenarioGraphFullScenarioDocumentBuilder.ObjectiveId( o.dataName ) == node.Id );
+				if ( objective != null )
+					await OpenObjectiveEditorAsync( objective );
+				break;
+			}
+			case ScenarioGraphNodeKind.Trigger:
+			{
+				var trigger = scenario.triggersObserver.FirstOrDefault( t =>
+					ScenarioGraphFullScenarioDocumentBuilder.TriggerId( t.dataName ) == node.Id );
+				if ( trigger != null )
+				{
+					var w = new TriggerEditorWindow( scenario, trigger.dataName );
+					await w.ShowDialog( this );
+				}
+				break;
+			}
+			case ScenarioGraphNodeKind.Interaction:
+			{
+				var interaction = scenario.interactionObserver.FirstOrDefault( i =>
+					ScenarioGraphFullScenarioDocumentBuilder.InteractionId( i.dataName ) == node.Id );
+				if ( interaction != null )
+				{
+					await EventEditorFactory.TryEditInteractionAsync( this, scenario, interaction );
+					interactionsUC.RefreshSortedItems();
+				}
+				break;
+			}
+			case ScenarioGraphNodeKind.Token:
+			{
+				BaseTile? parentTile = null;
+				Token? selectedToken = null;
+				foreach ( var chapter in scenario.chapterObserver )
+				{
+					foreach ( var tile in chapter.tileObserver.OfType<BaseTile>() )
+					{
+						selectedToken = tile.tokenList
+							.FirstOrDefault( tok => ScenarioGraphFullScenarioDocumentBuilder.TokenId( tok.GUID ) == node.Id );
+						if ( selectedToken == null )
+							continue;
+						parentTile = tile;
+						break;
+					}
+
+					if ( parentTile != null )
+						break;
+				}
+
+				if ( parentTile != null && selectedToken != null )
+				{
+					var w = new TokenEditorWindow( parentTile, scenario, highlightToken: selectedToken );
+					await w.ShowDialog( this );
+				}
+				break;
+			}
+			case ScenarioGraphNodeKind.ThreatLevel:
+			{
+				var w = new ThreatsWindow( scenario );
+				await w.ShowDialog( this );
+				break;
+			}
 		}
 	}
 
@@ -1459,6 +1668,8 @@ public partial class MainWindow : Window
 	protected override void OnClosing( WindowClosingEventArgs e )
 	{
 		DetachSidebarLists();
+		ScenarioChapterFlowGraph.SetInteractionSink( null );
+		ScenarioChapterFlowGraph.Detach();
 		if ( scenario != null )
 			scenario.PropertyChanged -= OnScenarioPropertyChanged;
 		base.OnClosing( e );

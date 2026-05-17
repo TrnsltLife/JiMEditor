@@ -1,0 +1,114 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:fg="using:FlowGraph.Avalonia"
+             xmlns:fgc="using:FlowGraph.Avalonia.Controls"
+             x:Class="JiMEditor.Avalonia.Views.ScenarioChapterFlowGraphView"
+             x:CompileBindings="False">
+	<Panel>
+		<Panel.Resources>
+			<SolidColorBrush x:Key="FlowControlsBackground" Color="#F8FAFB"/>
+			<SolidColorBrush x:Key="FlowControlsBorder" Color="#E2E8F0"/>
+			<SolidColorBrush x:Key="FlowControlsButtonHover" Color="#F1F5F9"/>
+			<SolidColorBrush x:Key="FlowControlsButtonPressed" Color="#E2E8F0"/>
+			<SolidColorBrush x:Key="FlowControlsIconStroke" Color="#475569"/>
+			<SolidColorBrush x:Key="FlowControlsSeparator" Color="#E2E8F0"/>
+		</Panel.Resources>
+		<fgc:FlowBackground x:Name="FlowDotsBackground" Variant="Dots" Gap="20" />
+		<fg:FlowCanvas x:Name="FlowHostCanvas" />
+		<fgc:FlowPanel Position="BottomLeft" Margin="8,0,0,56">
+			<fgc:FlowControls TargetCanvas="{Binding #FlowHostCanvas}"/>
+		</fgc:FlowPanel>
+		<fgc:FlowPanel Position="BottomLeft" Margin="8">
+			<Border Background="{DynamicResource FlowControlsBackground}"
+				BorderBrush="{DynamicResource FlowControlsBackground}"
+				BorderThickness="1"
+				Padding="4"
+				CornerRadius="8">
+				<StackPanel x:Name="GraphLayoutToolbar"
+							Orientation="Horizontal"
+							Spacing="6">
+					<StackPanel.Styles>
+						<Style Selector="Button">
+							<Setter Property="Background" Value="{DynamicResource FlowControlsBackground}" />
+							<Setter Property="BorderBrush" Value="{DynamicResource FlowControlsBackground}" />
+							<Setter Property="Foreground" Value="{DynamicResource FlowControlsIconStroke}" />
+							<Setter Property="BorderThickness" Value="1" />
+							<Setter Property="CornerRadius" Value="6" />
+							<Setter Property="HorizontalContentAlignment" Value="Center" />
+							<Setter Property="VerticalContentAlignment" Value="Center" />
+							<Setter Property="Cursor" Value="Hand" />
+						</Style>
+						<Style Selector="Button:pointerover">
+							<Setter Property="Background" Value="{DynamicResource FlowControlsBackground}" />
+							<Setter Property="BorderBrush" Value="{DynamicResource FlowControlsBackground}" />
+							<Setter Property="Foreground" Value="{DynamicResource FlowControlsIconStroke}" />
+						</Style>
+						<Style Selector="Button:pressed">
+							<Setter Property="Background" Value="{DynamicResource FlowControlsBackground}" />
+							<Setter Property="BorderBrush" Value="{DynamicResource FlowControlsBackground}" />
+							<Setter Property="Foreground" Value="{DynamicResource FlowControlsIconStroke}" />
+						</Style>
+						<Style Selector="Button:pointerover /template/ ContentPresenter">
+							<Setter Property="Foreground" Value="{DynamicResource FlowControlsIconStroke}" />
+						</Style>
+						<Style Selector="Button:pressed /template/ ContentPresenter">
+							<Setter Property="Foreground" Value="{DynamicResource FlowControlsIconStroke}" />
+						</Style>
+					</StackPanel.Styles>
+					<Button Content="↻"
+							Width="32"
+							Height="32"
+							FontSize="16"
+							FontWeight="Bold"
+							VerticalAlignment="Center"
+							ToolTip.Tip="Refresh Graph"
+							Click="RefreshGraphButton_Click" />
+					<Button Content="Tree"
+							MinWidth="48"
+							Height="32"
+							Padding="8,0"
+							VerticalAlignment="Center"
+							ToolTip.Tip="Breadth First Search Spanning Tree)"
+							Click="TreeLayoutButton_Click" />
+					<Button Content="Layers"
+							MinWidth="56"
+							Height="32"
+							Padding="8,0"
+							VerticalAlignment="Center"
+							ToolTip.Tip="Layered Relaxation Layout"
+							Click="LayeredLayoutButton_Click" />
+					<Button Content="∿"
+							Width="32"
+							Height="32"
+							VerticalAlignment="Center"
+							ToolTip.Tip="Bezier Edges"
+							Click="BezierEdgesButton_Click" />
+					<Button Content="⁄"
+							Width="32"
+							Height="32"
+							VerticalAlignment="Center"
+							ToolTip.Tip="Straight Edges"
+							Click="StraightEdgesButton_Click" />
+					<Button Content="ʃ"
+							Width="32"
+							Height="32"
+							VerticalAlignment="Center"
+							ToolTip.Tip="Smooth Step Edges"
+							Click="SmoothStepEdgesButton_Click" />
+					<Button Content="⍽"
+							Width="32"
+							Height="32"
+							VerticalAlignment="Center"
+							ToolTip.Tip="Step Edges"
+							Click="StepEdgesButton_Click"/>
+				</StackPanel>
+			</Border>
+		</fgc:FlowPanel>
+		<fgc:FlowPanel Position="BottomRight" Margin="8">
+			<fgc:FlowMinimap x:Name="FlowGraphMinimap"
+			                 Width="200"
+			                 Height="140"
+			                 TargetCanvas="{Binding #FlowHostCanvas}" />
+		</fgc:FlowPanel>
+	</Panel>
+</UserControl>
