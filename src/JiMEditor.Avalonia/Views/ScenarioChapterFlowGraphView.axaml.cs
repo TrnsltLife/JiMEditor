@@ -19,7 +19,6 @@ public partial class ScenarioChapterFlowGraphView : UserControl
 	Scenario? _scenario;
 	readonly LayeredRelaxationLayoutEngine _layeredLayoutEngine = new();
 	readonly WpfTreeLayoutEngine _wpfTreeLayoutEngine = new();
-	readonly Tree2LayoutEngine _tree2LayoutEngine = new();
 	ScenarioGraphLayoutMode _layoutMode = ScenarioGraphLayoutMode.WpfTree;
 	EdgeType? _forcedEdgeType = EdgeType.Bezier;
 	IScenarioGraphViewHost? _graphHost;
@@ -153,12 +152,6 @@ public partial class ScenarioChapterFlowGraphView : UserControl
 		RefreshGraphNow();
 	}
 
-	void Tree2LayoutButton_Click( object? sender, global::Avalonia.Interactivity.RoutedEventArgs e )
-	{
-		_layoutMode = ScenarioGraphLayoutMode.Tree2;
-		RefreshGraphNow();
-	}
-
 	void LayeredLayoutButton_Click( object? sender, global::Avalonia.Interactivity.RoutedEventArgs e )
 	{
 		_layoutMode = ScenarioGraphLayoutMode.LayeredRelaxation;
@@ -187,7 +180,6 @@ public partial class ScenarioChapterFlowGraphView : UserControl
 		_layoutMode switch
 		{
 			ScenarioGraphLayoutMode.WpfTree => _wpfTreeLayoutEngine,
-			ScenarioGraphLayoutMode.Tree2 => _tree2LayoutEngine,
 			_ => _layeredLayoutEngine,
 		};
 

@@ -70,13 +70,6 @@
 							VerticalAlignment="Center"
 							ToolTip.Tip="Breadth First Search Spanning Tree)"
 							Click="TreeLayoutButton_Click" />
-					<Button Content="Tree2"
-							MinWidth="52"
-							Height="32"
-							Padding="8,0"
-							VerticalAlignment="Center"
-							ToolTip.Tip="Tree positions, top/bottom ports only, no edges (layout experiment)"
-							Click="Tree2LayoutButton_Click" />
 					<Button Content="Layers"
 							MinWidth="56"
 							Height="32"
