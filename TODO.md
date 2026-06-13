@@ -13,8 +13,6 @@ This is a list of things we need to do:
   * https://github.com/cuikp/AvRichTextBox
 
 * Main  Window
-  * Enable Load button
-    * Have its dialog ask if you want to Save First, Open, or Cancel
   * Implement "dirty" tracking across all dialogs. A lot of work.
 
 * Graph capabilities ported - check if libraries support Mac/Linux:

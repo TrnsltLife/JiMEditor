@@ -3,7 +3,7 @@
         xmlns:v="using:JiMEditor.Avalonia.Views"
         x:Class="JiMEditor.Avalonia.Views.StoryTextEditWindow"
         x:CompileBindings="False"
-        Title="Edit Campaign Story"
+        Title="Edit Text"
         Width="920"
         Height="640"
         MinWidth="640"

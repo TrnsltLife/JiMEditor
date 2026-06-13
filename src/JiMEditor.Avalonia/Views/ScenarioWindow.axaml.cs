@@ -119,7 +119,7 @@ public partial class ScenarioWindow : Window
 
 	async void SpecialButton_Click( object? sender, RoutedEventArgs e )
 	{
-		var w = new StoryTextEditWindow( scenario.specialInstructions );
+		var w = new StoryTextEditWindow( scenario.specialInstructions, windowTitle: "Edit Scenario Story" );
 		await w.ShowDialog( this );
 		if ( w.Accepted )
 			scenario.specialInstructions = w.StoryText;
@@ -128,7 +128,7 @@ public partial class ScenarioWindow : Window
 	async void EditIntroButton_Click( object? sender, RoutedEventArgs e )
 	{
 		var initial = scenario.introBookData?.pages?.Count > 0 ? scenario.introBookData.pages[0] : "";
-		var w = new StoryTextEditWindow( initial );
+		var w = new StoryTextEditWindow( initial, windowTitle: "Edit Introduction Text" );
 		await w.ShowDialog( this );
 		if ( !w.Accepted )
 			return;

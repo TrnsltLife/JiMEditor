@@ -89,7 +89,7 @@ public partial class CampaignWindow : Window
 
 	async void StoryButton_Click( object? sender, RoutedEventArgs e )
 	{
-		var dlg = new StoryTextEditWindow( campaign.storyText ?? "" );
+		var dlg = new StoryTextEditWindow( campaign.storyText ?? "", windowTitle: "Edit Campaign Story" );
 		await dlg.ShowDialog( this );
 		if ( !dlg.Accepted )
 			return;

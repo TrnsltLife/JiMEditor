@@ -15,9 +15,10 @@ public partial class StoryTextEditWindow : Window
 		InitializeComponent();
 	}
 
-	public StoryTextEditWindow( string? initialStoryText, string? watermark = null )
+	public StoryTextEditWindow( string? initialStoryText, string? watermark = null, string? windowTitle = null )
 		: this()
 	{
+		Title = string.IsNullOrWhiteSpace( windowTitle ) ? "Edit Text" : windowTitle;
 		Editor.Text = initialStoryText ?? "";
 		Editor.Watermark = watermark ?? "";
 	}
