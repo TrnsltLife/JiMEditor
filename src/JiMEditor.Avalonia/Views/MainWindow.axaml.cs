@@ -11,6 +11,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
+using Avalonia.VisualTree;
 using JiMEditor.Avalonia.EventDialog;
 using JiMEditor.Avalonia.ScenarioGraph;
 using JiMEditor.Avalonia;
@@ -27,8 +28,16 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 {
 	const double EditorPaneExpandedWidth = 280;
 	const double EditorPaneCollapsedStripWidth = 36;
+	const double TileBlockDragThreshold = 4;
 	bool _sidebarPaneExpanded = true;
 	bool _tileBlockPaneExpanded = true;
+	Chapter? _tileBlockDragChapter;
+	int _tileBlockDragSourceIndex = -1;
+	Border? _tileBlockDragSourceBorder;
+	Border? _tileBlockDropTargetBorder;
+	Point _tileBlockDragStartPoint;
+	Point _tileBlockDragGhostOffset;
+	bool _tileBlockDragActive;
 
 	public Scenario scenario { get; private set; } = null!;
 
@@ -58,6 +67,7 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 		appVersion.Text = Utils.appVersion;
 		formatVersion.Text = Utils.formatVersion;
 		WireSidebarLists();
+		WireTileBlockDragReorder();
 		SyncTitleFromScenario();
 		ScenarioNameEdit.Text = scenario.scenarioName ?? "";
 		scenario.PropertyChanged += OnScenarioPropertyChanged;
@@ -131,6 +141,169 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 			return;
 		ExpandTileBlockPane();
 		e.Handled = true;
+	}
+
+	void WireTileBlockDragReorder()
+	{
+		TileBlockScrollViewer.PointerMoved += TileBlockDrag_PointerMoved;
+		TileBlockScrollViewer.PointerReleased += TileBlockDrag_PointerReleased;
+	}
+
+	void TileBlockDragHandle_PointerPressed( object? sender, PointerPressedEventArgs e )
+	{
+		if ( !e.GetCurrentPoint( null ).Properties.IsLeftButtonPressed )
+			return;
+		if ( sender is not Control handle || handle.DataContext is not Chapter chapter || chapter.isStart )
+			return;
+
+		var sourceIndex = scenario.chapterObserver.IndexOf( chapter );
+		if ( sourceIndex < 1 )
+			return;
+
+		_tileBlockDragChapter = chapter;
+		_tileBlockDragSourceIndex = sourceIndex;
+		_tileBlockDragStartPoint = e.GetPosition( TileBlockScrollViewer );
+		_tileBlockDragActive = false;
+		_tileBlockDragSourceBorder = FindTileBlockCardBorder( handle );
+		_tileBlockDragSourceBorder?.Classes.Add( "tileBlockDragging" );
+		e.Pointer.Capture( TileBlockScrollViewer );
+		e.Handled = true;
+	}
+
+	void TileBlockDrag_PointerMoved( object? sender, PointerEventArgs e )
+	{
+		if ( _tileBlockDragChapter == null )
+			return;
+
+		var point = e.GetPosition( TileBlockScrollViewer );
+		if ( !_tileBlockDragActive )
+		{
+			var delta = point - _tileBlockDragStartPoint;
+			if ( Math.Abs( delta.X ) < TileBlockDragThreshold && Math.Abs( delta.Y ) < TileBlockDragThreshold )
+				return;
+			_tileBlockDragActive = true;
+			ShowTileBlockDragGhost( e );
+		}
+
+		UpdateTileBlockDragGhostPosition( e );
+		UpdateTileBlockDropTargetHighlight( e );
+		e.Handled = true;
+	}
+
+	void TileBlockDrag_PointerReleased( object? sender, PointerReleasedEventArgs e )
+	{
+		if ( _tileBlockDragChapter == null )
+			return;
+
+		if ( _tileBlockDragActive )
+		{
+			var toIndex = _tileBlockDragSourceIndex;
+			if ( _tileBlockDropTargetBorder?.DataContext is Chapter targetChapter )
+			{
+				toIndex = scenario.chapterObserver.IndexOf( targetChapter );
+				if ( toIndex < 1 )
+					toIndex = 1;
+			}
+
+			scenario.ReorderChapter( _tileBlockDragSourceIndex, toIndex );
+		}
+
+		EndTileBlockDrag( e.Pointer );
+		e.Handled = true;
+	}
+
+	void UpdateTileBlockDropTargetHighlight( PointerEventArgs e )
+	{
+		var border = FindTileBlockCardBorderAt( e );
+		if ( border == _tileBlockDropTargetBorder )
+			return;
+
+		ClearTileBlockDropTargetHighlight();
+		if ( border?.DataContext is Chapter chapter && !chapter.isStart )
+		{
+			_tileBlockDropTargetBorder = border;
+			_tileBlockDropTargetBorder.Classes.Add( "tileBlockDropTarget" );
+		}
+	}
+
+	void ClearTileBlockDropTargetHighlight()
+	{
+		if ( _tileBlockDropTargetBorder == null )
+			return;
+		_tileBlockDropTargetBorder.Classes.Remove( "tileBlockDropTarget" );
+		_tileBlockDropTargetBorder = null;
+	}
+
+	void EndTileBlockDrag( IPointer pointer )
+	{
+		HideTileBlockDragGhost();
+		ClearTileBlockDropTargetHighlight();
+		_tileBlockDragSourceBorder?.Classes.Remove( "tileBlockDragging" );
+		_tileBlockDragSourceBorder = null;
+		_tileBlockDragChapter = null;
+		_tileBlockDragSourceIndex = -1;
+		_tileBlockDragActive = false;
+		if ( pointer.Captured == TileBlockScrollViewer )
+			pointer.Capture( null );
+	}
+
+	Border? FindTileBlockCardBorderAt( PointerEventArgs e )
+	{
+		var position = e.GetPosition( TileBlockItemsControl );
+		if ( TileBlockItemsControl.InputHitTest( position ) is not Visual hit )
+			return null;
+		return FindTileBlockCardBorder( hit );
+	}
+
+	static Border? FindTileBlockCardBorder( Visual visual )
+	{
+		while ( visual != null )
+		{
+			if ( visual is Border border && border.Classes.Contains( "tileBlockCard" ) )
+				return border;
+			visual = visual.GetVisualParent();
+		}
+
+		return null;
+	}
+
+	void ShowTileBlockDragGhost( PointerEventArgs e )
+	{
+		if ( _tileBlockDragSourceBorder == null || _tileBlockDragChapter == null )
+			return;
+
+		var sourceTopLeft = _tileBlockDragSourceBorder.TranslatePoint( new Point( 0, 0 ), TileBlockPaneGrid )
+		                    ?? new Point( 0, 0 );
+		var pointerInPane = e.GetPosition( TileBlockPaneGrid );
+		_tileBlockDragGhostOffset = pointerInPane - sourceTopLeft;
+
+		var bounds = _tileBlockDragSourceBorder.Bounds;
+		TileBlockDragGhost.Width = bounds.Width;
+		TileBlockDragGhost.Height = bounds.Height;
+		TileBlockDragGhostTitle.Text = _tileBlockDragChapter.dataName;
+		UpdateTileBlockDragGhostPosition( e );
+		TileBlockDragGhost.IsVisible = true;
+	}
+
+	void UpdateTileBlockDragGhostPosition( PointerEventArgs e )
+	{
+		if ( !TileBlockDragGhost.IsVisible )
+			return;
+
+		var pointerInPane = e.GetPosition( TileBlockPaneGrid );
+		TileBlockDragGhost.Margin = new Thickness(
+			pointerInPane.X - _tileBlockDragGhostOffset.X,
+			pointerInPane.Y - _tileBlockDragGhostOffset.Y,
+			0,
+			0 );
+	}
+
+	void HideTileBlockDragGhost()
+	{
+		TileBlockDragGhost.IsVisible = false;
+		TileBlockDragGhost.Width = double.NaN;
+		TileBlockDragGhost.Height = double.NaN;
+		TileBlockDragGhostTitle.Text = string.Empty;
 	}
 
 	void WireSidebarLists()

@@ -689,6 +689,24 @@ namespace JiME
 			chapterObserver.Add( chapter );
 		}
 
+		/// <summary>
+		/// Reorders tile blocks in <see cref="chapterObserver"/> and persisted <c>chapters</c> JSON array order.
+		/// Index 0 (Start) is fixed; only indices &gt;= 1 may move.
+		/// </summary>
+		public bool ReorderChapter( int fromIndex, int toIndex )
+		{
+			if ( fromIndex < 1 || fromIndex >= chapterObserver.Count )
+				return false;
+			if ( toIndex < 1 || toIndex >= chapterObserver.Count )
+				return false;
+			if ( fromIndex == toIndex )
+				return false;
+
+			chapterObserver.Move( fromIndex, toIndex );
+			TriggerTitleChange( true );
+			return true;
+		}
+
 		public void AddInteraction( IInteraction interaction )
 		{
 			switch ( interaction.interactionType )

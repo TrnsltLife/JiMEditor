@@ -282,7 +282,8 @@
 			</Grid>
 
 			<!-- Tile block list + floating toggle -->
-			<Grid Grid.Column="1"
+			<Grid x:Name="TileBlockPaneGrid"
+			      Grid.Column="1"
 			      Background="{StaticResource bgColorLight}"
 			      ClipToBounds="False">
 				<Border x:Name="TileBlockContentHost"
@@ -306,7 +307,8 @@
 							           Fill="White"
 							           HorizontalAlignment="Stretch"
 							           Margin="4,0,4,10"/>
-							<ItemsControl Padding="5"
+							<ItemsControl x:Name="TileBlockItemsControl"
+							              Padding="5"
 							              ItemsSource="{Binding chapterObserver}"
 							              HorizontalAlignment="Stretch">
 								<ItemsControl.ItemsPanel>
@@ -316,12 +318,29 @@
 								</ItemsControl.ItemsPanel>
 								<ItemsControl.ItemTemplate>
 									<DataTemplate DataType="jime:Chapter">
-										<Border Classes="callout" Margin="0,0,5,5" MinWidth="240">
+										<Border Classes="callout tileBlockCard" Margin="0,0,5,5" MinWidth="240">
 											<StackPanel Spacing="4">
-												<TextBlock Text="{Binding dataName}"
-												           Classes="heading"
-												           TextTrimming="CharacterEllipsis"
-												           HorizontalAlignment="Center"/>
+												<Grid ColumnDefinitions="Auto,*">
+													<Border Grid.Column="0"
+													        Background="Transparent"
+													        Padding="2,0,4,0"
+													        VerticalAlignment="Center"
+													        Cursor="SizeAll"
+													        IsVisible="{Binding isStart, Converter={StaticResource chapterStartInvert}}"
+													        PointerPressed="TileBlockDragHandle_PointerPressed"
+													        ToolTip.Tip="Drag to reorder">
+														<TextBlock Text="⋮⋮"
+														           Foreground="#AAAAAA"
+														           FontSize="14"
+														           VerticalAlignment="Center"/>
+													</Border>
+													<TextBlock Grid.Column="1"
+													           Text="{Binding dataName}"
+													           Classes="heading"
+													           TextTrimming="CharacterEllipsis"
+													           HorizontalAlignment="Center"
+													           VerticalAlignment="Center"/>
+												</Grid>
 												<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="4">
 													<Button Background="DodgerBlue"
 													        Margin="2,5"
@@ -387,6 +406,20 @@
 				        Margin="6,4,0,0"
 				        Click="TileBlockPaneToggleButton_Click"
 				        ToolTip.Tip="Collapse tile blocks"/>
+				<Border x:Name="TileBlockDragGhost"
+				        Classes="callout tileBlockCard tileBlockDragGhost"
+				        HorizontalAlignment="Left"
+				        VerticalAlignment="Top"
+				        MinWidth="240"
+				        IsVisible="False"
+				        IsHitTestVisible="False"
+				        ZIndex="100">
+					<TextBlock x:Name="TileBlockDragGhostTitle"
+					           Classes="heading"
+					           TextTrimming="CharacterEllipsis"
+					           HorizontalAlignment="Center"
+					           VerticalAlignment="Center"/>
+				</Border>
 			</Grid>
 
 			<Border Grid.Column="2"

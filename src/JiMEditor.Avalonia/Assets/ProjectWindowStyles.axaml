@@ -40,6 +40,26 @@
 		<Setter Property="Background" Value="{StaticResource bgColorLight}"/>
 	</Style>
 
+	<!-- MainWindow Tile Blocks list: white outline on rounded callout cards -->
+	<Style Selector="Border.callout.tileBlockCard">
+		<Setter Property="BorderBrush" Value="White"/>
+		<Setter Property="BorderThickness" Value="1"/>
+	</Style>
+
+	<Style Selector="Border.callout.tileBlockCard.tileBlockDropTarget">
+		<Setter Property="BorderBrush" Value="#FFE8E8E8"/>
+		<Setter Property="BorderThickness" Value="2"/>
+	</Style>
+
+	<Style Selector="Border.callout.tileBlockCard.tileBlockDragging">
+		<Setter Property="Opacity" Value="0.55"/>
+	</Style>
+
+	<Style Selector="Border.callout.tileBlockCard.tileBlockDragGhost">
+		<Setter Property="Opacity" Value="0.92"/>
+		<Setter Property="BoxShadow" Value="0 6 16 0 #88000000"/>
+	</Style>
+
 	<!--
 		FluentTheme's default TabControl looks Win11 / Mica-like; JiMEditor WPF used flat VS-style tabs.
 		Apply Classes="jimeTabStrip" on TabControl to get closer to the reference (dark chrome, selected tab = content bg).
