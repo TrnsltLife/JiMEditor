@@ -275,8 +275,8 @@
 							        Height="44"
 							        HorizontalAlignment="Right"
 							        VerticalAlignment="Center"
-							        IsEnabled="False"
-							        ToolTip.Tip="TODO-Avalonia-Reenable: ZIP packaging">
+							        Click="PackageCampaignButton_Click"
+							        ToolTip.Tip="Create a shareable ZIP in this campaign folder">
 								<StackPanel Orientation="Horizontal" Margin="5,0" Spacing="6">
 									<TextBlock Text="Create Package" Classes="heading" VerticalAlignment="Center"/>
 									<Image Source="avares://JiMEditor.Avalonia/Assets/package.png" Height="32"/>

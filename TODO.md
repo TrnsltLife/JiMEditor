@@ -4,9 +4,6 @@ This is a list of things we need to do:
   * New Random Scenario should launch the random scenario editor
 
 * Campaign window:
-  * The Create Package button needs to work as before
-  * Create and Add New Scenario button needs to work
-  * Add Existing Scenario... button needs to work
   * Add Procedurally Generated Scenario... button should launch the random scenario editor
 
 * Rich Text Editor (WYSIWYG)

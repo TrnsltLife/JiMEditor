@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -320,6 +321,87 @@ public partial class CampaignWindow : Window
 		scenario.projectType = ProjectType.Campaign;
 		var fm = new FileManager( scenario );
 		fm.Save();
+	}
+
+	void PackageCampaignButton_Click( object? sender, RoutedEventArgs e )
+	{
+		SaveCampaign();
+
+		if ( string.IsNullOrWhiteSpace( campaign.campaignName ) )
+		{
+			MessageBox.Show(
+				"The Campaign must have a name before it can be packaged.",
+				"Package Error",
+				MessageBoxButton.OK,
+				MessageBoxImage.Error );
+			return;
+		}
+
+		if ( campaign.scenarioCollection.Count == 0 )
+		{
+			MessageBox.Show(
+				"This Campaign doesn't contain any Scenarios for packaging.",
+				"Package Error",
+				MessageBoxButton.OK,
+				MessageBoxImage.Error );
+			return;
+		}
+
+		var zipFileName = BuildCampaignPackageFileName( campaign.campaignName, campaign.campaignVersion );
+		var zipPath = Path.Combine( _campaignFolder, zipFileName );
+		try
+		{
+			var fi = new FileInfo( zipPath );
+			if ( fi.Exists )
+				fi.Delete();
+
+			using ( var zipStream = new FileStream( zipPath, FileMode.OpenOrCreate ) )
+			using ( var archive = new ZipArchive( zipStream, ZipArchiveMode.Update ) )
+			{
+				AddFileToPackage( archive, Path.Combine( _campaignFolder, campaign.campaignGUID + ".json" ), campaign.campaignGUID + ".json" );
+				foreach ( var item in campaign.scenarioCollection )
+					AddFileToPackage( archive, Path.Combine( _campaignFolder, item.fileName ), item.fileName );
+			}
+
+			MessageBox.Show(
+				"Campaign Package successfully created.\r\n\r\n",
+				"Campaign Packaging Successful",
+				MessageBoxButton.OK,
+				MessageBoxImage.Information );
+		}
+		catch ( Exception ex )
+		{
+			MessageBox.Show(
+				"Could not create the Package ZIP.\r\n\r\nException:\r\n" + ex.Message,
+				"App Exception",
+				MessageBoxButton.OK,
+				MessageBoxImage.Error );
+		}
+	}
+
+	static void AddFileToPackage( ZipArchive archive, string sourcePath, string entryName )
+	{
+		var entry = archive.CreateEntry( entryName, CompressionLevel.Optimal );
+		using var entryStream = entry.Open();
+		using var fileStream = new FileStream( sourcePath, FileMode.Open, FileAccess.Read, FileShare.Read );
+		fileStream.CopyTo( entryStream );
+	}
+
+	/// <summary>{CampaignName}{campaignVersion}.zip — version suffix omitted when blank so prior packages are kept.</summary>
+	static string BuildCampaignPackageFileName( string campaignName, string? campaignVersion )
+	{
+		var namePart = SanitizeFileNameSegment( campaignName );
+		var versionPart = campaignVersion?.Trim() ?? "";
+		if ( versionPart.Length > 0 )
+			versionPart = SanitizeFileNameSegment( versionPart );
+		return namePart + versionPart + ".zip";
+	}
+
+	static string SanitizeFileNameSegment( string name )
+	{
+		var invalid = Path.GetInvalidFileNameChars();
+		var chars = name.Select( c => invalid.Contains( c ) ? '_' : c ).ToArray();
+		return new string( chars ).Trim();
 	}
 
 	void MoveUp_Click( object? sender, RoutedEventArgs e )
