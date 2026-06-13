@@ -100,8 +100,8 @@
 								        Height="44"
 								        HorizontalAlignment="Left"
 								        Margin="0,5,0,0"
-								        IsEnabled="False"
-								        ToolTip.Tip="TODO-Avalonia-Reenable: create new scenario in campaign folder">
+								        Click="CreateNewButton_Click"
+								        ToolTip.Tip="Save a new scenario into this campaign folder">
 									<StackPanel Orientation="Horizontal" Margin="5,0" Spacing="6">
 										<TextBlock Text="Create And Add New Scenario..." Classes="heading" VerticalAlignment="Center"/>
 										<Image Source="avares://JiMEditor.Avalonia/Assets/add2.png" Height="24"/>
@@ -112,8 +112,8 @@
 								        Height="44"
 								        HorizontalAlignment="Left"
 								        Margin="0,5,0,0"
-								        IsEnabled="False"
-								        ToolTip.Tip="TODO-Avalonia-Reenable: OpenFileDialog + add scenario">
+								        Click="AddExistingButton_Click"
+								        ToolTip.Tip="Choose a scenario from Your Journey and add it to this campaign">
 									<StackPanel Orientation="Horizontal" Margin="5,0" Spacing="6">
 										<TextBlock Text="Add Existing Scenario..." Classes="heading" VerticalAlignment="Center"/>
 										<Image Source="avares://JiMEditor.Avalonia/Assets/addpage.png" Height="24"/>
@@ -137,8 +137,7 @@
 						<TextBlock Text="When creating a new Scenario, hold down the CONTROL key to also open the Scenario in the Editor (except for generated scenarios)."
 						           Classes="subText"
 						           TextWrapping="Wrap"
-						           Margin="0,5,0,0"
-						           IsVisible="False"/>
+						           Margin="0,5,0,0"/>
 						<TextBlock Text="Procedural generation opens up a dialog to fine tune generator parameters. You can edit the generated scenarios in the editor after saving."
 						           Classes="subText"
 						           TextWrapping="Wrap"

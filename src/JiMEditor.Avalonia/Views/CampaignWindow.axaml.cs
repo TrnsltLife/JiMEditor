@@ -228,6 +228,100 @@ public partial class CampaignWindow : Window
 		}
 	}
 
+	void CreateNewButton_Click( object? sender, RoutedEventArgs e )
+	{
+		var scenario = new Scenario();
+		scenario.campaignGUID = campaign.campaignGUID;
+		scenario.projectType = ProjectType.Campaign;
+		var doEdit = _controlDown;
+
+		var fm = new FileManager( scenario );
+		if ( !fm.SaveAs( _campaignFolder ) )
+			return;
+
+		var ci = new CampaignItem
+		{
+			scenarioName = scenario.scenarioName,
+			fileName = fm.fileName
+		};
+		campaign.scenarioCollection.Add( ci );
+		scenario.fileName = fm.fileName;
+		SaveCampaign();
+
+		if ( !doEdit )
+			return;
+
+		foreach ( var t in campaign.triggerCollection )
+			scenario.triggersObserver.Add( t );
+
+		scenario.TriggerTitleChange( false );
+		var main = new MainWindow( scenario );
+		if ( global::Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop )
+			desktop.MainWindow = main;
+		main.Show();
+		Close();
+	}
+
+	void AddExistingButton_Click( object? sender, RoutedEventArgs e )
+	{
+		var basePath = UserJourneyPaths.GetBasePath();
+		if ( !Directory.Exists( basePath ) )
+		{
+			var di = Directory.CreateDirectory( basePath );
+			if ( di == null )
+			{
+				MessageBox.Show(
+					"Could not create the scenario project folder.\r\nTried to create: " + basePath,
+					"App Exception",
+					MessageBoxButton.OK,
+					MessageBoxImage.Error );
+				return;
+			}
+		}
+
+		var ofd = new Microsoft.Win32.OpenFileDialog
+		{
+			DefaultExt = ".jime",
+			Title = "Add Scenario to Campaign",
+			Filter = "Journey File (*.jime)|*.jime",
+			InitialDirectory = basePath
+		};
+		if ( ofd.ShowDialog() != true )
+			return;
+
+		var s = FileManager.LoadProject( ofd.SafeFileName );
+		if ( s == null )
+			return;
+
+		var ci = new CampaignItem
+		{
+			scenarioName = s.scenarioName,
+			fileName = ofd.SafeFileName
+		};
+		campaign.scenarioCollection.Add( ci );
+		SaveCampaign();
+
+		var fi = new FileInfo( ofd.FileName );
+		var moveto = Path.Combine( _campaignFolder, ofd.SafeFileName );
+		fi.MoveTo( moveto );
+
+		var scenario = FileManager.LoadProjectFromPath( _campaignFolder, ci.fileName );
+		if ( scenario == null )
+		{
+			MessageBox.Show(
+				"Could not modify the Scenario to use a Campaign.\r\nTried to modify: " + Path.Combine( _campaignFolder, ci.fileName ),
+				"App Exception",
+				MessageBoxButton.OK,
+				MessageBoxImage.Error );
+			return;
+		}
+
+		scenario.campaignGUID = campaign.campaignGUID;
+		scenario.projectType = ProjectType.Campaign;
+		var fm = new FileManager( scenario );
+		fm.Save();
+	}
+
 	void MoveUp_Click( object? sender, RoutedEventArgs e )
 	{
 		var ci = CampaignItemFromSource( e.Source );
