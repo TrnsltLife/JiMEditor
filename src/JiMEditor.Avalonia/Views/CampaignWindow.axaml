@@ -124,8 +124,8 @@
 								        Height="44"
 								        HorizontalAlignment="Left"
 								        Margin="0,5,0,0"
-								        IsEnabled="False"
-								        ToolTip.Tip="TODO-Avalonia-Reenable: ProceduralGeneratorWindow">
+								        Click="AddGeneratedButton_Click"
+								        ToolTip.Tip="Generate a random scenario and add it to this campaign">
 									<StackPanel Orientation="Horizontal" Margin="5,0" Spacing="6">
 										<TextBlock Text="Add Procedurally Generated Scenario..." Classes="heading" VerticalAlignment="Center"/>
 										<Image Source="avares://JiMEditor.Avalonia/Assets/dice.png" Height="24"/>
@@ -141,8 +141,7 @@
 						<TextBlock Text="Procedural generation opens up a dialog to fine tune generator parameters. You can edit the generated scenarios in the editor after saving."
 						           Classes="subText"
 						           TextWrapping="Wrap"
-						           Margin="0,5,0,0"
-						           IsVisible="False"/>
+						           Margin="0,5,0,0"/>
 						<TextBlock Classes="subText"
 						           TextWrapping="Wrap"
 						           Margin="0,5,0,0"

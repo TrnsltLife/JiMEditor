@@ -1,10 +1,8 @@
 This is a list of things we need to do:
 
 * App window: 
-  * New Random Scenario should launch the random scenario editor
 
 * Campaign window:
-  * Add Procedurally Generated Scenario... button should launch the random scenario editor
 
 * Rich Text Editor (WYSIWYG)
   * https://github.com/cuikp/AvRichTextBox
@@ -21,8 +19,6 @@ This is a list of things we need to do:
     * https://github.com/Oaz/AvaloniaGraphControl
 
 * Settings Dialog TODO:
-  *  Notes on intentionally deferred pieces
-    *  Intro editing is wired to existing StoryTextEditWindow as a practical interim.
 
 * Enemy Pool Simulation
   * Does not respect maximum enemy count. May have originally been a problem anyways.

@@ -81,9 +81,20 @@ public partial class ProjectWindow : Window, INotifyPropertyChanged
 		Close();
 	}
 
-	void RandomScenarioButton_Click(object? sender, RoutedEventArgs e)
+	async void RandomScenarioButton_Click( object? sender, RoutedEventArgs e )
 	{
-		// TODO-Avalonia-Reenable: ProceduralGeneratorWindow
+		var procWindow = new ProceduralGeneratorWindow();
+		await procWindow.ShowDialog( this );
+		if ( !procWindow.Accepted || procWindow.Scenario == null )
+			return;
+
+		if ( global::Avalonia.Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop )
+			return;
+
+		var main = new MainWindow( procWindow.Scenario );
+		desktop.MainWindow = main;
+		main.Show();
+		Close();
 	}
 
 	void CampaignButton_Click(object? sender, RoutedEventArgs e)

@@ -1,0 +1,226 @@
+<!-- Ported from: JiMEditor/Views/ProceduralGeneratorWindow.xaml (2026-06-13) -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="using:JiMEditor.Avalonia.Converters"
+        xmlns:proc="using:JiME.Procedural"
+        x:Class="JiMEditor.Avalonia.Views.ProceduralGeneratorWindow"
+        x:CompileBindings="False"
+        Title="Random Scenario Generator"
+        Width="800"
+        MinWidth="760"
+        MaxHeight="850"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource bgColor}">
+
+	<Window.Resources>
+		<conv:ProcLogTypeToBrushConverter x:Key="procLogBrush"/>
+	</Window.Resources>
+
+	<Window.Styles>
+		<Style Selector="TextBox.procField">
+			<Setter Property="Background" Value="#333337"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="#77777d"/>
+			<Setter Property="Padding" Value="6,4"/>
+			<Setter Property="FontSize" Value="16"/>
+		</Style>
+		<Style Selector="ComboBox">
+			<Setter Property="Background" Value="#333337"/>
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+		<Style Selector="CheckBox">
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+	</Window.Styles>
+
+	<StackPanel Margin="5" Spacing="5">
+		<Border x:Name="CampaignNotice"
+		        Classes="callout"
+		        Margin="0,0,0,0"
+		        IsVisible="False">
+			<StackPanel Spacing="4">
+				<TextBlock Text="Campaign GUID" Classes="heading" HorizontalAlignment="Center"/>
+				<TextBlock x:Name="CampaignGuidTextBlock" Classes="heading" HorizontalAlignment="Center"/>
+			</StackPanel>
+		</Border>
+
+		<Grid ColumnDefinitions="Auto,*">
+			<Border Classes="callout" Margin="0,0,5,0">
+				<StackPanel Spacing="6">
+					<StackPanel Orientation="Horizontal" Spacing="10">
+						<TextBlock Text="Random Seed:" Classes="heading" MinWidth="100"/>
+						<TextBox x:Name="SeedTextBox"
+						         Classes="procField"
+						         Text="{Binding Seed}"
+						         MinWidth="175"
+						         VerticalAlignment="Center"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal" Spacing="10">
+						<TextBlock Text="Archetype:" Classes="heading" MinWidth="100"/>
+						<ComboBox x:Name="ArchetypeCombo"
+						          MinWidth="175"
+						          SelectionChanged="ArchetypeCombo_SelectionChanged"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal" Spacing="10">
+						<TextBlock Text="Template:" Classes="heading" MinWidth="100"/>
+						<ComboBox x:Name="TemplateCombo"
+						          MinWidth="175"
+						          SelectionChanged="TemplateCombo_SelectionChanged"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Collections:"
+						           Margin="0,5,0,0"
+						           MinWidth="110"
+						           Classes="heading"
+						           VerticalAlignment="Top"/>
+						<Grid Margin="0,5,0,0" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+							<Rectangle Grid.Row="0" Fill="DarkGreen"/>
+							<StackPanel Grid.Row="0" Orientation="Horizontal">
+								<TextBlock Text="r" Foreground="White" FontSize="20" FontStyle="Italic" Margin="0,0,4,0" Width="20"
+								           FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+								<CheckBox Content="Core Set" FontWeight="Bold" FontStyle="Italic" Foreground="White" IsEnabled="False" IsChecked="True" VerticalAlignment="Center"/>
+							</StackPanel>
+							<Rectangle Grid.Row="1" Fill="SaddleBrown"/>
+							<StackPanel Grid.Row="1" Orientation="Horizontal">
+								<TextBlock Text="v" Foreground="White" FontSize="20" Margin="2,0" Width="20"
+								           FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+								<CheckBox Content="Villains of Eriajar" IsChecked="{Binding Has_VILLAINS_OF_ERIAJAR}" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
+							</StackPanel>
+							<Rectangle Grid.Row="2" Fill="Black"/>
+							<StackPanel Grid.Row="2" Orientation="Horizontal">
+								<TextBlock Text="p" Foreground="White" FontSize="20" Margin="2,0" Width="20"
+								           FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+								<CheckBox Content="Shaded Paths" IsChecked="{Binding Has_SHADED_PATHS}" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
+							</StackPanel>
+							<Rectangle Grid.Row="3" Fill="Purple"/>
+							<StackPanel Grid.Row="3" Orientation="Horizontal">
+								<TextBlock Text="d" Foreground="White" FontSize="20" Margin="2,0" Width="20"
+								           FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+								<CheckBox Content="Denizens in Darkness" IsChecked="{Binding Has_DENIZENS_IN_DARKNESS}" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
+							</StackPanel>
+							<Rectangle Grid.Row="4" Fill="DarkRed"/>
+							<StackPanel Grid.Row="4" Orientation="Horizontal">
+								<TextBlock Text="w" Foreground="White" FontSize="20" Margin="4,0,0,0" Width="20"
+								           FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+								<CheckBox Content="Unfurling War" IsChecked="{Binding Has_UNFURLING_WAR}" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
+							</StackPanel>
+							<Rectangle Grid.Row="5" Fill="YellowGreen"/>
+							<StackPanel Grid.Row="5" Orientation="Horizontal">
+								<TextBlock Text="c" Foreground="White" FontSize="20" Margin="2,0" Width="20"
+								           FontFamily="avares://JiMEditor.Avalonia/Assets/LoTR-JiME-Icons.ttf#LoTR JiME Icons"/>
+								<CheckBox Content="Scorchers of the Wilds" IsChecked="{Binding Has_SCORCHERS_OF_THE_WILDS}" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
+							</StackPanel>
+						</Grid>
+					</StackPanel>
+				</StackPanel>
+			</Border>
+
+			<Border Grid.Column="1" Classes="callout">
+				<Grid ColumnDefinitions="120,Auto,15,180,Auto"
+				      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+					<TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5"
+					           Text="Hover over input boxes to get information about individual parameters."
+					           Classes="subText"/>
+					<TextBlock Grid.Row="1" Grid.Column="0" Text="Min Objectives:" Classes="heading"/>
+					<TextBox Grid.Row="1" Grid.Column="1" Classes="procField" Text="{Binding MinMainStoryObjectiveCount}"
+					         ToolTip.Tip="Minimum number of objectives in the MAIN STORY" MinWidth="40"/>
+					<TextBlock Grid.Row="2" Grid.Column="0" Text="Max Objectives:" Classes="heading"/>
+					<TextBox Grid.Row="2" Grid.Column="1" Classes="procField" Text="{Binding MaxMainStoryObjectiveCount}"
+					         ToolTip.Tip="Maximum number of objectives in the MAIN STORY" MinWidth="40"/>
+					<TextBlock Grid.Row="3" Grid.Column="0" Text="Branching %:" Classes="heading"/>
+					<TextBox Grid.Row="3" Grid.Column="1" Classes="procField" Text="{Binding BranchingProbability}"
+					         ToolTip.Tip="Percentage chance that branches occur on StoryPoint for each Objective. 0% means no branching at all." MinWidth="40"/>
+					<TextBlock Grid.Row="4" Grid.Column="0" Text="Min Branches:" Classes="heading"/>
+					<TextBox Grid.Row="4" Grid.Column="1" Classes="procField" Text="{Binding BranchingMinBranches}"
+					         ToolTip.Tip="If branching, minimum number of branches to have" MinWidth="40"/>
+					<TextBlock Grid.Row="5" Grid.Column="0" Text="Max Branches:" Classes="heading"/>
+					<TextBox Grid.Row="5" Grid.Column="1" Classes="procField" Text="{Binding BranchingMaxBranches}"
+					         ToolTip.Tip="If branching, maximum number of branches to have" MinWidth="40"/>
+					<TextBlock Grid.Row="1" Grid.Column="3" Text="Max Threat:" Classes="heading"/>
+					<TextBox Grid.Row="1" Grid.Column="4" Classes="procField" Text="{Binding MaxThreat}"
+					         ToolTip.Tip="Maximum threat level where the scenario ends" MinWidth="40"/>
+					<TextBlock Grid.Row="2" Grid.Column="3" Text="Min Threat Interval:" Classes="heading"/>
+					<TextBox Grid.Row="2" Grid.Column="4" Classes="procField" Text="{Binding ThreatIntervalMin}"
+					         ToolTip.Tip="Minimum threat interval to next event" MinWidth="40"/>
+					<TextBlock Grid.Row="3" Grid.Column="3" Text="Max Threat Interval:" Classes="heading"/>
+					<TextBox Grid.Row="3" Grid.Column="4" Classes="procField" Text="{Binding ThreatIntervalMax}"
+					         ToolTip.Tip="Maximum threat interval to next event" MinWidth="40"/>
+					<TextBlock Grid.Row="4" Grid.Column="3" Text="Monster Pool Multiplier:" Classes="heading"/>
+					<TextBox Grid.Row="4" Grid.Column="4" Classes="procField" Text="{Binding ThreatDiffMonsterPoolMultiplier}"
+					         ToolTip.Tip="Multiplier to the monster pool size based on threat interval from last event." MinWidth="40"/>
+					<TextBlock Grid.Row="5" Grid.Column="3" Text="(DEBUG) Don't fill Stories:" Classes="heading"/>
+					<CheckBox x:Name="DebugDontFillStoriesCheckBox" Grid.Row="5" Grid.Column="4"
+					          ToolTip.Tip="Stop after generating StoryPoints and before filling them with content."/>
+					<TextBlock Grid.Row="6" Grid.Column="3" Text="(DEBUG) Verbose Checks:" Classes="heading"/>
+					<CheckBox x:Name="DebugVerboseStoryElementCheck" Grid.Row="6" Grid.Column="4"
+					          ToolTip.Tip="If true, story element check prints out much more detailed log."/>
+				</Grid>
+			</Border>
+		</Grid>
+
+		<Border Classes="callout">
+			<Grid RowDefinitions="Auto,*">
+				<TextBlock Grid.Row="0" Text="Generator Logs" Classes="heading"/>
+				<ScrollViewer x:Name="LogScrollViewer" Grid.Row="1" Height="300" VerticalScrollBarVisibility="Auto">
+					<ItemsControl x:Name="LogList">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding Message}"
+								           Foreground="{Binding Type, Converter={StaticResource procLogBrush}}"
+								           FontSize="12"
+								           Margin="4,0,0,0"/>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</ScrollViewer>
+			</Grid>
+		</Border>
+
+		<Border BorderThickness="0,1,0,0" BorderBrush="Silver" Background="#FF46464A" Padding="5">
+			<Grid ColumnDefinitions="*,Auto">
+				<Button x:Name="GenerateButton"
+				        Grid.Column="0"
+				        HorizontalAlignment="Left"
+				        Margin="10"
+				        Background="MediumSeaGreen"
+				        Click="GenerateButton_Click"
+				        ToolTip.Tip="Generate Scenario">
+					<Image Source="avares://JiMEditor.Avalonia/Assets/dice.png" Width="32" Margin="5"/>
+				</Button>
+				<StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="0">
+					<Button x:Name="VisualizeButton"
+					        Margin="10"
+					        Background="MediumSeaGreen"
+					        Click="VisualizeButton_Click"
+					        ToolTip.Tip="Open generated scenario in the editor">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/edit.png" Width="32" Margin="5"/>
+					</Button>
+					<Button x:Name="SaveButton"
+					        Margin="0,10,10,10"
+					        Background="MediumSeaGreen"
+					        Click="SaveButton_Click"
+					        ToolTip.Tip="Save Scenario to File">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/save.png" Width="32" Margin="5"/>
+					</Button>
+					<Button x:Name="OkButton"
+					        Margin="0,10,10,10"
+					        Background="MediumSeaGreen"
+					        Click="OkButton_Click"
+					        IsDefault="True"
+					        ToolTip.Tip="Accept Scenario">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/ok.png" Width="32" Margin="5"/>
+					</Button>
+					<Button x:Name="CancelButton"
+					        Margin="0,10,10,10"
+					        Background="{StaticResource bgCancelDelete}"
+					        Click="CancelButton_Click"
+					        IsCancel="True"
+					        ToolTip.Tip="Cancel generation">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Width="32" Margin="5"/>
+					</Button>
+				</StackPanel>
+			</Grid>
+		</Border>
+	</StackPanel>
+</Window>

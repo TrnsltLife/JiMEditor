@@ -323,6 +323,31 @@ public partial class CampaignWindow : Window
 		fm.Save();
 	}
 
+	async void AddGeneratedButton_Click( object? sender, RoutedEventArgs e )
+	{
+		var procWindow = new ProceduralGeneratorWindow( allowDirectSaving: false );
+		await procWindow.ShowDialog( this );
+		if ( !procWindow.Accepted || procWindow.Scenario == null )
+			return;
+
+		var scenario = procWindow.Scenario;
+		scenario.campaignGUID = campaign.campaignGUID;
+		scenario.projectType = ProjectType.Campaign;
+
+		var fm = new FileManager( scenario );
+		if ( !fm.SaveAs( _campaignFolder ) )
+			return;
+
+		var ci = new CampaignItem
+		{
+			scenarioName = scenario.scenarioName,
+			fileName = fm.fileName
+		};
+		campaign.scenarioCollection.Add( ci );
+		scenario.fileName = fm.fileName;
+		SaveCampaign();
+	}
+
 	void PackageCampaignButton_Click( object? sender, RoutedEventArgs e )
 	{
 		SaveCampaign();
