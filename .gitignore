@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# ignore third_party directory - a place to stache source code etc. that AI needs to reference
+third_party/
+
 #project specific
 TILES/
 
