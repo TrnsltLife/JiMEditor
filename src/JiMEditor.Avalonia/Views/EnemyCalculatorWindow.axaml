@@ -23,7 +23,7 @@
 					<TextBlock x:Name="LeftOversText" Classes="heading" Margin="5,0"/>
 				</StackPanel>
 				<TextBlock Classes="subText" TextWrapping="Wrap"
-				           Text="Simulated encounters are generated using the same algorithm as the Companion App. Hero Count, Difficulty mode and Difficulty Bias affect the scaling of Enemy Events."/>
+				           Text="Simulated encounters use the Companion App pool algorithm, including physical figure limits per monster type, group size caps, and applicable elite modifiers. Hero Count, Difficulty mode and Difficulty Bias affect pool scaling."/>
 				<TextBlock x:Name="SimulatorWarningText" Classes="subText" TextWrapping="Wrap" Foreground="#FFD0A000" Margin="0,4,0,0" IsVisible="False"/>
 				<Grid ColumnDefinitions="*,Auto,Auto">
 					<Button Content="Re-Roll This Encounter" Background="DodgerBlue" Foreground="White" HorizontalAlignment="Left" Height="36" FontWeight="Bold" FontSize="14" Click="RerollButton_OnClick"/>

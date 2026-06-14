@@ -771,6 +771,8 @@ namespace JiME
 	public class MonsterSim
 	{
 		public string dataName { get; set; }
+		public MonsterType monsterType { get; set; }
+		public int groupLimit { get; set; }
 		public int health { get; set; }
 		public int shieldValue { get; set; }
 		public int sorceryValue { get; set; }
