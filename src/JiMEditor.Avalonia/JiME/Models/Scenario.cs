@@ -28,7 +28,7 @@ namespace JiME
 
 		string _scenarioName, _scenarioVersion, _fileName, _objectiveName, _fileVersion, _specialInstructions, _coverImage;
 		string _lastStandFailedResolution; //This value should be the dataName of an item from the resolutionObserver
-		bool _isDirty, _scenarioTypeJourney, _useTileGraphics;
+		bool _isDirty, _scenarioTypeJourney, _useTileGraphics, _ignoreTokenLimits;
 		int _initialScout, _subsequentScout, _threatMax, _loreReward, _xpReward, _shadowFear, _loreStartValue, _xpStartValue;
 		int[] _wallTypes;
 		Guid _scenarioGUID, _campaignGUID;
@@ -268,6 +268,19 @@ namespace JiME
 				PropChanged( "useTileGraphics" );
 			}
 		}
+
+		public bool ignoreTokenLimits
+		{
+			get => _ignoreTokenLimits;
+			set
+			{
+				if ( value != _ignoreTokenLimits )
+				{
+					_ignoreTokenLimits = value;
+					PropChanged( "ignoreTokenLimits" );
+				}
+			}
+		}
 		#endregion
 
 		public Dictionary<string, bool> scenarioEndStatus { get; set; }
@@ -470,6 +483,7 @@ namespace JiME
 			s.coverImage = fm.coverImage;
 			s.lastStandFailedResolution = fm.lastStandFailedResolution;
 			s.useTileGraphics = fm.useTileGraphics;
+			s.ignoreTokenLimits = fm.ignoreTokenLimits;
 			s.scenarioEndStatus = new Dictionary<string, bool>( fm.scenarioEndStatus );
 
 			if ( s.scenarioGUID.ToString() == "00000000-0000-0000-0000-000000000000" )
@@ -505,6 +519,7 @@ namespace JiME
 			shadowFear = 2;
 			fileVersion = Utils.formatVersion;
 			useTileGraphics = true;
+			ignoreTokenLimits = false;
 
 			introBookData = new TextBookData( "Default Introduction Text" );
 			introBookData.pages.Add( "Default Introduction text.\n\nThis text is displayed at the beginning of the Scenario to describe the mission and Objectives.\n\nScenarios have one Introduction Text." );

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
 using Avalonia.Controls.Shapes;
 using Avalonia.Interactivity;
 using Avalonia.Input;
@@ -113,10 +114,21 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 		|| x.dataName == "None"
 		|| ( tile.isStartTile && x.dataName == StartInteraction.DEFAULT_NAME );
 
+	bool CanAddMoreTokens() =>
+		scenario.ignoreTokenLimits || tile.tokenList.Count < tile.tokenCount;
+
 	void UpdateCapacityUi()
 	{
-		CapacityText.Text = $"Token Slots Available: {tile.tokenList.Count} / {tile.tokenCount}";
-		AddTokenButton.IsEnabled = tile.tokenList.Count < tile.tokenCount;
+		var used = tile.tokenList.Count;
+		var max = tile.tokenCount;
+		CapacityText.Inlines.Clear();
+		CapacityText.Inlines.Add( new Run( "Token Slots Used: " ) );
+		var usedRun = new Run( used.ToString() );
+		if ( used > max )
+			usedRun.Foreground = Brushes.Red;
+		CapacityText.Inlines.Add( usedRun );
+		CapacityText.Inlines.Add( new Run( $" / {max}" ) );
+		AddTokenButton.IsEnabled = CanAddMoreTokens();
 		RemoveTokenButton.IsEnabled = selected != null;
 	}
 
@@ -160,7 +172,7 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 
 	void AddTokenButton_Click( object? sender, RoutedEventArgs e )
 	{
-		if ( tile.tokenList.Count >= tile.tokenCount )
+		if ( !CanAddMoreTokens() )
 			return;
 		var t = new Token( TokenType.None );
 		tile.tokenList.Add( t );

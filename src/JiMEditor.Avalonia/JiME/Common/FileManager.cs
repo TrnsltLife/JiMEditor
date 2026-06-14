@@ -44,6 +44,7 @@ namespace JiME
 		public int xpStartValue { get; set; }
 		public int shadowFear { get; set; }
 		public bool useTileGraphics { get; set; }
+		public bool ignoreTokenLimits { get; set; }
 
 		[JsonConverter( typeof( InteractionListConverter ) )]
 		public List<IInteraction> interactions { get; set; }
@@ -86,6 +87,7 @@ namespace JiME
 			xpStartValue = source.xpStartValue;
 			shadowFear = source.shadowFear;
 			useTileGraphics = source.useTileGraphics;
+			ignoreTokenLimits = source.ignoreTokenLimits;
 
 			interactions = source.interactionObserver.ToList();
 			//skip saving campaign triggers
