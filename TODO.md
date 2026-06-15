@@ -1,14 +1,20 @@
 This is a list of things we need to do:
 
-* App window: 
-
-* Campaign window:
 
 * Rich Text Editor (WYSIWYG)
+  * Implement an actual rich text editor instead of the current HTML string and preview
   * https://github.com/cuikp/AvRichTextBox
 
-* Main  Window
+* Dirty Tracking:
   * Implement "dirty" tracking across all dialogs. A lot of work.
+
+* Search
+  * A search function could be implemented
+  * Use the Translation collector as a base since it collects a lot of strings already
+  * Add in non-translation strings like event names and trigger names
+  * Add in the actual translated strings
+  * Put it in a list of items that, when clicked on, open the corresponding window (and tab?)
+  * A lot of work probably
 
 * Graph capabilities ported - check if libraries support Mac/Linux:
   1. NodeEditor - Verified Windows/Mac/Linux/Web/Android!
@@ -18,15 +24,28 @@ This is a list of things we need to do:
   3. to AvaloniaGraphControl?
     * https://github.com/Oaz/AvaloniaGraphControl
 
-* Settings Dialog TODO:
+* Better graphing capabilities
+  * Better algorithm to display more helpfully
 
-* Enemy Pool Simulation
-  * Does not respect maximum enemy count. May have originally been a problem anyways.
-  * In general seems to create too many enemies. What's the normal amount?
-  * Ask AI to look at algorithm in Your Journey to align the simulator to Your Journey.
+* Scenario validity check
+  * Click a button to check the Scenario
+  * Check for missing/invalid properties
+  * Check for missing links (triggers, events)
+  * etc.
+  * Show a dialog to list the problems
+  * Add validity checker functions to each object type
 
-* Translations
-  * I don't think all the Event editors are getting wired up for translations. Need to do this eventually.
+* App window: Done
+
+* Campaign window: Done
+
+* Main  Window: Done
+
+* Settings Dialog TODO: Done
+
+* Enemy Pool Simulation: Done
+
+* Translations: Done
 
 * Verification status (2026-04-19)
   * Journey tile/token `.jime` roundtrip numeric parity is covered by tests in `TileTokenSerializationRoundTripTests`.
