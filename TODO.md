@@ -1,5 +1,10 @@
 This is a list of things we need to do:
+* Tile Gallery:
+  * Needs to be taller by default so scrolling isn't required
 
+* Main  Window:
+  * Clicking the Save icon the first time seems to launch the Save dialog twice.
+  * Item shouldn't show Flavor Text for Token Interaction when no Token is selected. Check other Event types also.
 
 * Rich Text Editor (WYSIWYG)
   * Implement an actual rich text editor instead of the current HTML string and preview
@@ -38,8 +43,6 @@ This is a list of things we need to do:
 * App window: Done
 
 * Campaign window: Done
-
-* Main  Window: Done
 
 * Settings Dialog TODO: Done
 

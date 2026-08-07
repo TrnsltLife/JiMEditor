@@ -119,6 +119,33 @@ namespace JiME
             }
         }
 
+		public void ApplyInteraction( IInteraction interaction )
+		{
+			triggerName = interaction.dataName;
+			if ( interaction is StartInteraction || interaction.dataName == StartInteraction.DEFAULT_NAME )
+			{
+				tokenType = TokenType.Start;
+				personType = PersonType.None;
+				terrainType = TerrainType.None;
+			}
+			else
+			{
+				tokenType = interaction.tokenType;
+				personType = interaction.personType;
+				terrainType = interaction.terrainType;
+			}
+		}
+
+		public void RepairStartPositionFromTriggerName()
+		{
+			if ( triggerName == StartInteraction.DEFAULT_NAME && tokenType != TokenType.Start )
+			{
+				tokenType = TokenType.Start;
+				personType = PersonType.None;
+				terrainType = TerrainType.None;
+			}
+		}
+
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		//shape stuff

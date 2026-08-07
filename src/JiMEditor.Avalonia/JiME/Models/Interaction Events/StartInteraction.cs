@@ -32,5 +32,17 @@ namespace JiME
 			base.CloneInto(interact);
 			return interact;
 		}
+
+		/// <summary>
+		/// JSON may carry InteractionBase defaults (tokenType Search). Restore Start-specific fields after load.
+		/// </summary>
+		public void ApplyStartInteractionDefaults()
+		{
+			interactionType = InteractionType.Start;
+			isTokenInteraction = true;
+			tokenType = TokenType.Start;
+			personType = PersonType.None;
+			terrainType = TerrainType.None;
+		}
 	}
 }

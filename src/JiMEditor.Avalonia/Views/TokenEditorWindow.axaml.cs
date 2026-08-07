@@ -30,6 +30,7 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 	Token? _selected;
 	Token? _dragToken;
 	bool _dragging;
+	bool _suppressInteractionComboSync;
 	Point _dragClickOffset;
 	System.Windows.Vector _lastPos;
 
@@ -74,6 +75,9 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 		KeyDown += TokenEditorWindow_OnKeyDown;
 		TileImage.Source = LoadTileBitmap();
 
+		foreach ( var token in tile.tokenList )
+			token.RepairStartPositionFromTriggerName();
+
 		if ( tile.tokenList.Count > 0 )
 		{
 			selected = highlightToken != null
@@ -94,25 +98,45 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 		RefreshTokenInteractions();
 		if ( selected == null )
 			return;
-		InteractionCombo.SelectedItem = tokenInteractions.FirstOrDefault( x => x.dataName == selected.triggerName );
+		SetInteractionComboSelection(
+			tokenInteractions.FirstOrDefault( x => x.dataName == selected.triggerName ) );
 	}
 
 	void RefreshTokenInteractions()
 	{
-		var previous = InteractionCombo.SelectedItem as IInteraction;
+		var restoreName = selected?.triggerName
+		                  ?? ( InteractionCombo.SelectedItem as IInteraction )?.dataName;
 		tokenInteractions.Clear();
-		foreach ( var interaction in scenario.interactionObserver.Where( IsAllowedTokenInteraction ) )
+		foreach ( var interaction in scenario.interactionObserver
+			          .Where( IsAllowedTokenInteraction )
+			          .OrderBy( x => x.dataName != "None" )
+			          .ThenBy( x => x.dataName ) )
 			tokenInteractions.Add( interaction );
-		var restore = previous != null
-			? tokenInteractions.FirstOrDefault( x => x.dataName == previous.dataName )
-			: null;
-		InteractionCombo.SelectedItem = restore;
+		if ( !string.IsNullOrEmpty( restoreName ) )
+		{
+			SetInteractionComboSelection(
+				tokenInteractions.FirstOrDefault( x => x.dataName == restoreName ) );
+		}
+	}
+
+	void SetInteractionComboSelection( IInteraction? interaction )
+	{
+		_suppressInteractionComboSync = true;
+		try
+		{
+			InteractionCombo.SelectedItem = interaction;
+		}
+		finally
+		{
+			_suppressInteractionComboSync = false;
+		}
 	}
 
 	bool IsAllowedTokenInteraction( IInteraction x ) =>
 		( x.isTokenInteraction && !s_groupSuffix.IsMatch( x.dataName ) && x.dataName != StartInteraction.DEFAULT_NAME )
 		|| x.dataName == "None"
-		|| ( tile.isStartTile && x.dataName == StartInteraction.DEFAULT_NAME );
+		|| ( x.dataName == StartInteraction.DEFAULT_NAME
+		     && ( tile.isStartTile || tile.tokenList.Any( t => t.triggerName == StartInteraction.DEFAULT_NAME ) ) );
 
 	bool CanAddMoreTokens() =>
 		scenario.ignoreTokenLimits || tile.tokenList.Count < tile.tokenCount;
@@ -137,13 +161,14 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 		if ( selected == null )
 		{
 			SelectedTokenText.Text = "No token selected.";
-			InteractionCombo.SelectedItem = null;
+			SetInteractionComboSelection( null );
 			TriggeredByCombo.SelectedItem = null;
 			return;
 		}
 
 		SelectedTokenText.Text = $"{selected.dataName} ({selected.tokenType})";
-		InteractionCombo.SelectedItem = tokenInteractions.FirstOrDefault( x => x.dataName == selected.triggerName );
+		SetInteractionComboSelection(
+			tokenInteractions.FirstOrDefault( x => x.dataName == selected.triggerName ) );
 		if ( TriggeredByCombo.ItemsSource is System.Collections.IEnumerable src )
 			TriggeredByCombo.SelectedItem = src.Cast<Trigger>().FirstOrDefault( t => t.dataName == selected.triggeredByName );
 		HighlightSelection();
@@ -203,12 +228,9 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 
 	void InteractionCombo_OnSelectionChanged( object? sender, SelectionChangedEventArgs e )
 	{
-		if ( selected == null || InteractionCombo.SelectedItem is not IInteraction i )
+		if ( _suppressInteractionComboSync || selected == null || InteractionCombo.SelectedItem is not IInteraction i )
 			return;
-		selected.triggerName = i.dataName;
-		selected.tokenType = i.tokenType;
-		selected.personType = i.personType;
-		selected.terrainType = i.terrainType;
+		selected.ApplyInteraction( i );
 		RebuildTokenCanvas();
 		UpdateSelectedUi();
 	}
@@ -254,13 +276,11 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 				return;
 			scenario.AddInteraction( created );
 			RefreshTokenInteractions();
-			InteractionCombo.SelectedItem = tokenInteractions.FirstOrDefault( x => x.dataName == created.dataName );
+			SetInteractionComboSelection(
+				tokenInteractions.FirstOrDefault( x => x.dataName == created.dataName ) );
 			if ( selected == null )
 				return;
-			selected.triggerName = created.dataName;
-			selected.tokenType = created.tokenType;
-			selected.personType = created.personType;
-			selected.terrainType = created.terrainType;
+			selected.ApplyInteraction( created );
 			RebuildTokenCanvas();
 			UpdateSelectedUi();
 		};

@@ -492,8 +492,29 @@ namespace JiME
 			s.AddDefaultEvents();
 			s.AddDefaultActivations();
 			s.AddDefaultMonsterModifiers();
+			s.RepairStartPositionData();
 
 			return s;
+		}
+
+		void RepairStartPositionData()
+		{
+			foreach ( var interaction in interactionObserver )
+			{
+				if ( interaction is StartInteraction start )
+					start.ApplyStartInteractionDefaults();
+			}
+
+			foreach ( var chapter in chapterObserver )
+			{
+				foreach ( var tile in chapter.tileObserver )
+				{
+					if ( tile is not BaseTile baseTile )
+						continue;
+					foreach ( var token in baseTile.tokenList )
+						token.RepairStartPositionFromTriggerName();
+				}
+			}
 		}
 
 		/// <summary>

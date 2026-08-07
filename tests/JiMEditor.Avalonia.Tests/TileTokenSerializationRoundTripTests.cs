@@ -74,6 +74,118 @@ public class TileTokenSerializationRoundTripTests
 	}
 
 	[Fact]
+	public void StartInteraction_Deserialize_RestoresTokenTypeStart()
+	{
+		ModelTestEnvironment.RunInSta( () =>
+		{
+			ModelTestEnvironment.SetupMinimalUtilsForModelTests();
+
+			const string json = """
+				{
+				  "interactionType": 14,
+				  "dataName": "Starting Position",
+				  "tokenType": 0,
+				  "isTokenInteraction": false
+				}
+				""";
+
+			var start = JsonConvert.DeserializeObject<StartInteraction>( json );
+			Assert.NotNull( start );
+			start!.ApplyStartInteractionDefaults();
+
+			Assert.Equal( TokenType.Start, start.tokenType );
+			Assert.True( start.isTokenInteraction );
+			Assert.Equal( InteractionType.Start, start.interactionType );
+		} );
+	}
+
+	[Fact]
+	public void StartPositionToken_ApplyInteraction_SetsStartTokenType()
+	{
+		ModelTestEnvironment.RunInSta( () =>
+		{
+			ModelTestEnvironment.SetupMinimalUtilsForModelTests();
+
+			var start = new StartInteraction();
+			start.tokenType = TokenType.Search;
+
+			var token = new Token( TokenType.None );
+			token.ApplyInteraction( start );
+
+			Assert.Equal( StartInteraction.DEFAULT_NAME, token.triggerName );
+			Assert.Equal( TokenType.Start, token.tokenType );
+			Assert.Equal( "Start", token.dataName );
+		} );
+	}
+
+	[Fact]
+	public void StartPositionToken_RoundTrip_PreservesStartTokenType()
+	{
+		ModelTestEnvironment.RunInSta( () =>
+		{
+			ModelTestEnvironment.SetupMinimalUtilsForModelTests();
+
+			var scenario = new Scenario( "Start Token Scenario" );
+			var chapter = new Chapter( "Chapter A" );
+			scenario.chapterObserver.Add( chapter );
+
+			var tile = new HexTile( 213, skipBuild: true ) { isStartTile = true };
+			var token = new Token( TokenType.Start )
+			{
+				triggerName = StartInteraction.DEFAULT_NAME,
+				position = new System.Windows.Vector( 200, 220 )
+			};
+			tile.tokenList.Add( token );
+			chapter.AddTile( tile );
+
+			var fm = new FileManager( scenario );
+			var json = JsonConvert.SerializeObject( fm );
+			var deserializedFileManager = JsonConvert.DeserializeObject<FileManager>( json );
+			Assert.NotNull( deserializedFileManager );
+
+			var roundTrippedScenario = Scenario.CreateInstance( deserializedFileManager! );
+			var roundTrippedTile = Assert.IsType<HexTile>(
+				roundTrippedScenario.chapterObserver.Single().tileObserver.Single() );
+			var roundTrippedToken = roundTrippedTile.tokenList.Single();
+
+			Assert.Equal( StartInteraction.DEFAULT_NAME, roundTrippedToken.triggerName );
+			Assert.Equal( TokenType.Start, roundTrippedToken.tokenType );
+
+			var startInteraction = roundTrippedScenario.interactionObserver
+				.First( i => i.dataName == StartInteraction.DEFAULT_NAME );
+			Assert.Equal( TokenType.Start, startInteraction.tokenType );
+		} );
+	}
+
+	[Fact]
+	public void CreateInstance_RepairsStartPositionToken_WhenTokenTypeWasSearch()
+	{
+		ModelTestEnvironment.RunInSta( () =>
+		{
+			ModelTestEnvironment.SetupMinimalUtilsForModelTests();
+
+			var scenario = new Scenario( "Repair Start Scenario" );
+			var chapter = new Chapter( "Chapter A" );
+			scenario.chapterObserver.Add( chapter );
+
+			var tile = new HexTile( 213, skipBuild: true ) { isStartTile = true };
+			tile.tokenList.Add( new Token( TokenType.Search )
+			{
+				triggerName = StartInteraction.DEFAULT_NAME
+			} );
+			chapter.AddTile( tile );
+
+			var fm = new FileManager( scenario );
+			var loaded = Scenario.CreateInstance( fm );
+			var loadedTile = Assert.IsType<HexTile>( loaded.chapterObserver.Single().tileObserver.Single() );
+			var loadedToken = loadedTile.tokenList.Single();
+
+			Assert.Equal( TokenType.Start, loadedToken.tokenType );
+			Assert.Equal( "Start", loadedToken.dataName );
+		} );
+	}
+
+	[Fact]
 	public void JourneyTileToken_RoundTrip_PreservesTokenNumericState()
 	{
 		ModelTestEnvironment.RunInSta( () =>

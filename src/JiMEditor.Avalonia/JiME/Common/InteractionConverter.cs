@@ -71,8 +71,12 @@ namespace JiME
 					interaction = item.ToObject<TitleInteraction>();
 					break;
 				case 14:
-					interaction = item.ToObject<StartInteraction>();
+				{
+					var start = item.ToObject<StartInteraction>();
+					start.ApplyStartInteractionDefaults();
+					interaction = start;
 					break;
+				}
 				case 15:
 					interaction = item.ToObject<CorruptionInteraction>();
 					break;
