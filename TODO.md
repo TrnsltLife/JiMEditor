@@ -40,6 +40,18 @@ This is a list of things we need to do:
   * Show a dialog to list the problems
   * Add validity checker functions to each object type
 
+* Mac executable (MVP — strip WPF, don’t rebuild editors)
+  * Goal: `dotnet publish -r osx-arm64 --self-contained` produces a runnable Mac binary (~1–1.5 weeks focused work)
+  * Flip TFM `net9.0-windows` → `net9.0`; remove `UseWpf`; update tests TFM + `.vscode/launch.json`
+  * Delete/exclude dead WPF: `Commands.cs`, `JiME/Common/Converters.cs`, legacy `Tile.cs`, `WindowExtensions` / WPF `HandleWindow`
+  * Strip WPF visuals from `BaseTile` / `HexTile` / `SquareTile` / `Token` (ctors still build Canvas/Shape/BitmapImage that Avalonia editors ignore); keep data fields; prefer skip-build ctors
+  * Replace `System.Windows.Vector` / `Point` with portable `Vector2` (keep `X`/`Y` for `.jime`); update round-trip tests
+  * Stop WPF image preload in `Utils.Init` (`BitmapImage` / `ImageBrush`); gallery only needs IDs/count
+  * One dialog helper → replace ~25 `System.Windows.MessageBox` call sites
+  * Win32 Open/Save → Avalonia `StorageProvider` (`FileManager`, Import/Export, Campaign add)
+  * Defer: model `Rehydrate`/mouse drag, graph polish, signed/notarized `.app` bundle
+  * See also: `README-MAC.md`, PLAN.md § Mac executable MVP
+
 * App window: Done
 
 * Campaign window: Done

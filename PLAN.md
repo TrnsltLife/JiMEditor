@@ -114,6 +114,30 @@ flowchart LR
 5. **Rich text:** Implement one cross-platform editor that reads/writes the **same pseudo-HTML** as today; add unit tests for round-trip of tricky samples (icons + bold + italic + newlines).
 6. **Graph:** Rebuild visualization or temporarily hide feature behind a flag until a Skia/canvas solution exists.
 7. **Platform QA:** File paths currently assume `Environment.SpecialFolder.MyDocuments` + `"Your Journey"` — validate Linux/macOS locations and permissions.
+8. **Mac executable MVP** (see below): remove residual WPF so `net9.0` + `osx-arm64` publish works.
+
+## Mac executable MVP (strip WPF, don’t rebuild editors)
+
+**Status (2026-08-06):** Avalonia UI largely runs on Windows, but the project is still **Windows-only** (`TargetFramework=net9.0-windows`, `UseWpf=true`). Mac builds fail until WPF is removed from the compile graph. Sibling [JiMEditor](../JiMEditor) asset links remain required on both platforms. Build notes: [README-WIN.md](README-WIN.md), [README-MAC.md](README-MAC.md).
+
+**Strategy:** Strip unused WPF model visuals and dialog APIs. Tile/Token **editors already draw with Avalonia**; model ctors still construct WPF `Canvas`/`Shape`/`BitmapImage` that the UI ignores. Do **not** reimplement WPF geometry inside models.
+
+| Step | Work | Effort |
+|------|------|--------|
+| 1 | Flip TFM to `net9.0`, remove `UseWpf`; update tests TFM + `.vscode/launch.json` | Hours |
+| 2 | Delete/exclude dead WPF: `Commands.cs`, `JiME/Common/Converters.cs`, legacy `Tile.cs`, `WindowExtensions` / WPF `HandleWindow` | Hours |
+| 3 | Strip WPF visuals from `BaseTile` / `HexTile` / `SquareTile` / `Token`; keep data; prefer skip-build ctors | Few days (main chunk) |
+| 4 | Portable `Vector2` (`X`/`Y`) replacing `System.Windows.Vector`/`Point`; update round-trip tests | 1–2 days |
+| 5 | Stop WPF preload in `Utils.Init` (`BitmapImage` / `ImageBrush`); gallery needs IDs/count only | ~½ day |
+| 6 | Dialog helper → replace ~25 `System.Windows.MessageBox` sites | ½–1 day |
+| 7 | Win32 Open/Save → `StorageProvider` (`FileManager`, Import/Export, Campaign add) | ½–1 day |
+| 8 | On Mac: `dotnet publish -r osx-arm64 --self-contained` + smoke test | ~½ day |
+
+**Estimate:** ~**1–1.5 weeks** MVP (compile + run + save/load + tile/token editors). Full cleanup ~2–3 weeks. Signed/notarized `.app` is after MVP.
+
+**Defer:** model `Rehydrate` / mouse `Drag`, graph polish, import/export UX niceties, Gatekeeper notarization.
+
+**Hardest cluster:** tile/token models + `Utils` imaging. MessageBox/TFM are volume, not risk.
 
 ## Event editor port status (Avalonia)
 
