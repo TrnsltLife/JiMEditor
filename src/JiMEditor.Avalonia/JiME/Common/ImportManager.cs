@@ -5,8 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using Microsoft.Win32;
 using Newtonsoft.Json;
 
 namespace JiME
@@ -56,17 +54,16 @@ namespace JiME
 				}
 			}
 
-			OpenFileDialog openFileDialog = new OpenFileDialog();
-			openFileDialog.DefaultExt = ".jime-" + importType.ToLower();
-			openFileDialog.Title = "Export " + importType + " As";
-			openFileDialog.Filter = importType + " File (*.jime-" + importType.ToLower() + ")|*.jime-" + importType.ToLower();
-			openFileDialog.InitialDirectory = basePath;
-			if (openFileDialog.ShowDialog() == true)
-				fileName = openFileDialog.FileName;
-			else
-			{
+			var ext = ".jime-" + importType.ToLower();
+			var picked = FileDialogs.PickOpenFile(
+				title: "Import " + importType,
+				defaultExtension: ext,
+				filterName: importType + " File (*" + ext + ")",
+				filterPattern: "*" + ext,
+				initialDirectory: basePath );
+			if ( string.IsNullOrEmpty( picked ) )
 				return null;
-			}
+			fileName = picked;
 
 			string json = "";
 			try

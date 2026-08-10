@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows;
 using JiMEditor.Avalonia.EventDialog;
-using Microsoft.Win32;
 using Newtonsoft.Json;
 
 namespace JiME
@@ -213,15 +211,16 @@ namespace JiME
 					}
 				}
 
-				SaveFileDialog saveFileDialog = new SaveFileDialog();
-				saveFileDialog.DefaultExt = ".jime";
-				saveFileDialog.Title = saveAs ? "Save Project As" : "Save Project";
-				saveFileDialog.Filter = "Journey File (*.jime)|*.jime";
-				saveFileDialog.InitialDirectory = basePath;
-				if ( saveFileDialog.ShowDialog() == true )
-					fileName = saveFileDialog.FileName;
-				else
+				var picked = FileDialogs.PickSaveFile(
+					saveAs ? "Save Project As" : "Save Project",
+					suggestedFileName: null,
+					defaultExtension: ".jime",
+					filterName: "Journey File (*.jime)",
+					filterPattern: "*.jime",
+					initialDirectory: basePath );
+				if ( string.IsNullOrEmpty( picked ) )
 					return false;
+				fileName = picked;
 			}
 
 			//just use the filename, not the whole path

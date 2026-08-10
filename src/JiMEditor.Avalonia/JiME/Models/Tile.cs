@@ -1,3 +1,4 @@
+// TODO-Avalonia-Delete: legacy WPF Tile model; Avalonia uses HexTile/SquareTile. Compile Remove in csproj (Mac MVP step 2).
 using System;
 using System.ComponentModel;
 using System.Linq;

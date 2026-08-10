@@ -32,7 +32,7 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 	bool _dragging;
 	bool _suppressInteractionComboSync;
 	Point _dragClickOffset;
-	System.Windows.Vector _lastPos;
+	Vector2 _lastPos;
 
 	public Scenario scenario { get; }
 	public BaseTile tile { get; }
@@ -352,7 +352,7 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 			return;
 
 		var p = e.GetPosition( TokenCanvas );
-		var clickPoint = new System.Windows.Vector(
+		var clickPoint = new Vector2(
 			p.X - _dragClickOffset.X,
 			p.Y - _dragClickOffset.Y );
 
@@ -415,7 +415,7 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 			return;
 
 		var last = selected.position;
-		selected.position = new System.Windows.Vector( selected.position.X + dx, selected.position.Y + dy );
+		selected.position = new Vector2( selected.position.X + dx, selected.position.Y + dy );
 		if ( selected.position.X < 0 || selected.position.Y < 0
 		     || ( selected.position.X + shape.Width ) > 512 || ( selected.position.Y + shape.Height ) > 512 )
 		{

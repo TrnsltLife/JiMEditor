@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿// TODO-Avalonia-Delete: WPF RoutedUICommand definitions; unused by Avalonia UI. Compile Remove in csproj (Mac MVP step 2).
+using System.Windows.Input;
 
 namespace JiME
 {

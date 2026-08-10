@@ -1,25 +1,12 @@
 # Build JiMEditor.Avalonia on Mac
 
-Short guide for building / publishing on macOS. Avalonia is cross-platform; **this repo is not Mac-ready yet** (see below).
+Short guide for building / publishing on macOS.
 
-## Current blocker (important)
+## Status
 
-Today the app project targets **Windows-only** .NET + WPF:
+Mac MVP steps 1–7 are done: `net9.0`, no `UseWpf`, portable `Vector2`, Avalonia `MessageBox` / `FileDialogs`. The solution should **`dotnet build`** on Mac once the sibling `JiMEditor` assets repo is present.
 
-- `TargetFramework`: `net9.0-windows`
-- `UseWpf`: `true`
-- Remaining `System.Windows.*` usages (MessageBox, Point/Vector, some tile drawing helpers, etc.)
-
-Until those are removed and the TFM is changed to something like `net9.0`, **`dotnet build` / `dotnet publish` will fail on a Mac.**
-
-Rough work still needed before Mac builds work:
-
-1. Change `JiMEditor.Avalonia.csproj` (and tests) from `net9.0-windows` → `net9.0`.
-2. Remove `<UseWpf>true</UseWpf>`.
-3. Replace remaining WPF APIs with Avalonia / BCL equivalents (dialogs already partly done elsewhere; tile models and `MessageBox` aliases are the main leftovers).
-4. Update `.vscode/launch.json` so `program` points at `…/net9.0/JiMEditor.Avalonia.dll` (not `net9.0-windows`).
-
-The rest of this file assumes that cross-platform work is done (or you are documenting the intended Mac workflow).
+Still deferred: signed/notarized `.app` bundling (see Avalonia macOS docs). Step 8 is Mac publish + smoke test.
 
 ## Prerequisites
 

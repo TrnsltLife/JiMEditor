@@ -1,3 +1,4 @@
+// TODO-Avalonia-Delete: WPF IValueConverter set; Avalonia converters live under Converters/. Compile Remove in csproj (Mac MVP step 2).
 using System;
 using System.Globalization;
 using System.Windows;

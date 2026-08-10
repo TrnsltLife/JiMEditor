@@ -1,14 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows</TargetFramework>
+    <!-- Cross-platform Avalonia TFM (Mac/Linux/Windows). Residual System.Windows usages are being stripped in Mac MVP steps. -->
+    <TargetFramework>net9.0</TargetFramework>
     <!-- Same One Ring artwork as WPF JiMEditor (JiME.csproj); embeds in .exe and Avalonia default window icon. -->
     <ApplicationIcon>..\..\..\JiMEditor\ring.ico</ApplicationIcon>
     <Nullable>enable</Nullable>
-    <UseWpf>true</UseWpf>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+  <!-- Windows-only app host metadata; ignored on non-Windows RIDs. -->
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
 
   <ItemGroup>
@@ -54,5 +57,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="JiME\Models\Visualization\**\*.cs" />
+    <!-- TODO-Avalonia-Delete: dead WPF leftovers excluded for Mac MVP step 2. -->
+    <Compile Remove="JiME\Common\Commands.cs" />
+    <Compile Remove="JiME\Common\Converters.cs" />
+    <Compile Remove="JiME\Models\Tile.cs" />
   </ItemGroup>
 </Project>

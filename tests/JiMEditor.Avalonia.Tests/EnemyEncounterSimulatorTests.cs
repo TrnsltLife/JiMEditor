@@ -4,6 +4,10 @@ using Xunit;
 
 namespace JiMEditor.Avalonia.Tests;
 
+/// <summary>
+/// Guards YourJourney-parity encounter rules from
+/// <c>EnemyInteraction.cs</c> / <see cref="EnemyEncounterSimulator"/> (commit 1077fbc).
+/// </summary>
 public sealed class EnemyEncounterSimulatorTests
 {
 	[Fact]
@@ -11,8 +15,7 @@ public sealed class EnemyEncounterSimulatorTests
 	{
 		ModelTestEnvironment.RunInSta( () =>
 		{
-			ModelTestEnvironment.SetupMinimalUtilsForModelTests();
-			Utils.Init();
+			ModelTestEnvironment.EnsureUtilsInitialized();
 
 			var included = new bool[30];
 			included[(int)MonsterType.HillTroll] = true;
@@ -29,8 +32,7 @@ public sealed class EnemyEncounterSimulatorTests
 	{
 		ModelTestEnvironment.RunInSta( () =>
 		{
-			ModelTestEnvironment.SetupMinimalUtilsForModelTests();
-			Utils.Init();
+			ModelTestEnvironment.EnsureUtilsInitialized();
 
 			var included = new bool[30];
 			included[(int)MonsterType.GoblinScout] = true;
@@ -47,8 +49,7 @@ public sealed class EnemyEncounterSimulatorTests
 	{
 		ModelTestEnvironment.RunInSta( () =>
 		{
-			ModelTestEnvironment.SetupMinimalUtilsForModelTests();
-			Utils.Init();
+			ModelTestEnvironment.EnsureUtilsInitialized();
 
 			var included = new bool[30];
 			included[(int)MonsterType.Ruffian] = true;

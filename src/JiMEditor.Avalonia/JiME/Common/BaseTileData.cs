@@ -1,13 +1,13 @@
-﻿using System;
-using System.Windows;
+﻿// Ported from: JiMEditor/Common/BaseTileData.cs — Point → Vector2 for Mac MVP (2026-08-09).
+using System;
 
 namespace JiME
 {
 	public class BaseTileData
 	{
 		public int id { get; set; }
-		public string coords { get; set; }
-		public string pivot { get; set; }
+		public string coords { get; set; } = "";
+		public string pivot { get; set; } = "";
 		public float rotation { get; set; }
 		public int tileCount;
 		public double width, height;
@@ -20,104 +20,97 @@ namespace JiME
 		/// <summary>
 		/// parses string of coords into absolute vector positions on the canvas
 		/// </summary>
-		public static Point[] ConvertHexCoords( string coords )
+		public static Vector2[] ConvertHexCoords( string coords )
 		{
-			Point[] vectors;
 			string[] array = coords.Split( ' ' );
-			vectors = new Point[array.Length];
+			var vectors = new Vector2[array.Length];
 			for ( int i = 0; i < array.Length; i++ )
 			{
 				string[] xy = array[i].Split( ',' );
 				double x = Utils.hexSnapX[int.Parse( xy[0] ) + 10];
 				double y = Utils.hexSnapY[int.Parse( xy[1] ) + 10];
-				vectors[i] = new Point( x, y );
+				vectors[i] = new Vector2( x, y );
 			}
 			return vectors;
 		}
 
-		public static Point ConvertHexCoord( string coord )
-        {
-			Point vector;
-			string[] xy = coord.Split(',');
-			double x = Utils.hexSnapX[int.Parse(xy[0]) + 10];
-			double y = Utils.hexSnapY[int.Parse(xy[1]) + 10];
-			vector = new Point(x, y);
-			return vector;
+		public static Vector2 ConvertHexCoord( string coord )
+		{
+			string[] xy = coord.Split( ',' );
+			double x = Utils.hexSnapX[int.Parse( xy[0] ) + 10];
+			double y = Utils.hexSnapY[int.Parse( xy[1] ) + 10];
+			return new Vector2( x, y );
 		}
 
 		/// <summary>
 		/// parses string of coords into absolute vector positions on the canvas
 		/// </summary>
-		public static Point[] ConvertSquareCoords(string coords, double width, double height)
+		public static Vector2[] ConvertSquareCoords( string coords, double width, double height )
 		{
 			double subsquareWidth = width / 3;
 			double subsquareHeight = height / 3;
-			Point[] vectors;
-			string[] array = coords.Split(' ');
-			vectors = new Point[array.Length];
-			for (int i = 0; i < array.Length; i++)
+			string[] array = coords.Split( ' ' );
+			var vectors = new Vector2[array.Length];
+			for ( int i = 0; i < array.Length; i++ )
 			{
-				string[] xy = array[i].Split(',');
-				double x = int.Parse(xy[0]) * subsquareWidth + subsquareWidth / 2;
-				double y = int.Parse(xy[1]) * subsquareHeight + subsquareHeight / 2;
-				vectors[i] = new Point(x, y);
+				string[] xy = array[i].Split( ',' );
+				double x = int.Parse( xy[0] ) * subsquareWidth + subsquareWidth / 2;
+				double y = int.Parse( xy[1] ) * subsquareHeight + subsquareHeight / 2;
+				vectors[i] = new Vector2( x, y );
 			}
 			return vectors;
 		}
 
-		public static Point ConvertSquareCoord(string coord, double width, double height)
+		public static Vector2 ConvertSquareCoord( string coord, double width, double height )
 		{
 			double subsquareWidth = width / 3;
 			double subsquareHeight = height / 3;
-			Point vector;
-			string[] xy = coord.Split(',');
-			double x = int.Parse(xy[0]) * subsquareWidth + subsquareWidth / 2;
-			double y = int.Parse(xy[1]) * subsquareHeight + subsquareHeight / 2;
-			vector = new Point(x, y);
-			return vector;
+			string[] xy = coord.Split( ',' );
+			double x = int.Parse( xy[0] ) * subsquareWidth + subsquareWidth / 2;
+			double y = int.Parse( xy[1] ) * subsquareHeight + subsquareHeight / 2;
+			return new Vector2( x, y );
 		}
 
 		/// <summary>
 		/// parses string of coords into an array of Points that represent the hex sections that are present in this tile
 		/// </summary>
-		public static Point[] ExtractCoords( string coords )
-        {
-			//Console.WriteLine("ExtractCoords: " + coords);
-			Point[] vectors;
-			string[] array = coords.Split(' ');
-			vectors = new Point[array.Length];
-			for(int i=0; i < array.Length; i++)
-            {
-				string[] xy = array[i].Split(',');
-				vectors[i] = new Point(int.Parse(xy[0]), int.Parse(xy[1]));
-            }
-			//Sort Points based on X value first then on Y value. So all hexes in the first column come before all hexes in the second column.
-			Array.Sort(vectors, delegate(Point point1, Point point2) {
-				var xComparison = point1.X.CompareTo(point2.X);
-				if (xComparison != 0) { return xComparison; }
-				else return point1.Y.CompareTo(point2.Y);
-            });
-			//Console.WriteLine("Results:       " + String.Join(" ", vectors));
+		public static Vector2[] ExtractCoords( string coords )
+		{
+			string[] array = coords.Split( ' ' );
+			var vectors = new Vector2[array.Length];
+			for ( int i = 0; i < array.Length; i++ )
+			{
+				string[] xy = array[i].Split( ',' );
+				vectors[i] = new Vector2( int.Parse( xy[0] ), int.Parse( xy[1] ) );
+			}
+			Array.Sort( vectors, ( point1, point2 ) =>
+			{
+				var xComparison = point1.X.CompareTo( point2.X );
+				if ( xComparison != 0 )
+					return xComparison;
+				return point1.Y.CompareTo( point2.Y );
+			} );
 			return vectors;
-        }
+		}
 
 		/// <summary>
-		/// Mirror takes a list of hex points and flips or mirrors them horizontally. Useful for generating Side B of a tile once Side A's points have been entered.
+		/// Mirror takes a list of hex points and flips or mirrors them horizontally.
 		/// </summary>
-		public static Point[] Mirror(Point[] sideA)
+		public static Vector2[] Mirror( Vector2[] sideA )
 		{
-			Point[] sideB = new Point[sideA.Length];
+			var sideB = new Vector2[sideA.Length];
 			double maxX = 0;
-			foreach (Point point in sideA)
+			foreach ( Vector2 point in sideA )
 			{
-				if(point.X > maxX) { maxX = point.X; }
+				if ( point.X > maxX )
+					maxX = point.X;
 			}
 			int index = 0;
-			foreach(Point point in sideA)
-            {
-				sideB[index] = new Point(maxX - point.X, point.Y);
+			foreach ( Vector2 point in sideA )
+			{
+				sideB[index] = new Vector2( maxX - point.X, point.Y );
 				index++;
-            }
+			}
 
 			return sideB;
 		}

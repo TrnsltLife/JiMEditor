@@ -48,7 +48,7 @@ dotnet publish src\JiMEditor.Avalonia\JiMEditor.Avalonia.csproj -c Release -r wi
 
 Output:
 
-`src\JiMEditor.Avalonia\bin\Release\net9.0-windows\win-x64\publish\`
+`src\JiMEditor.Avalonia\bin\Release\net9.0\win-x64\publish\`
 
 Run `JiMEditor.Avalonia.exe` from that folder. Use `-r win-arm64` on ARM Windows if needed.
 

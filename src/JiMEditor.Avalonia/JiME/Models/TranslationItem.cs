@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using Newtonsoft.Json;
-using System.Windows.Media;
 
 namespace JiME
 {
@@ -21,16 +20,7 @@ namespace JiME
 		[JsonIgnore]
 		bool _updatedWhileEditing; //item updated during editing (text changed)
 
-
-        [JsonIgnore]
-		public Brush Background
-        {
-			get {
-				return new SolidColorBrush(
-					superfluous ? Colors.Gray :
-					translationOK ? Colors.Green : Colors.DarkOrange); }
-			//original gray background that matches ui: Color.FromRgb(0x46, 0x46, 0x4a)
-		}
+		// TODO-Avalonia-Delete: WPF Brush Background removed; UI uses TranslationItemRowBackgroundConverter.
 
 		public string key
 		{
@@ -55,7 +45,6 @@ namespace JiME
 					_text = value;
 					translationOK = false; //when the text changes, change the translationOK flag to false; it needs to be revalidated by the translator
 					NotifyPropertyChanged("text");
-					NotifyPropertyChanged("Background");
 				}
 			}
 		}
@@ -69,7 +58,6 @@ namespace JiME
 				{
 					_translationOK = value;
 					NotifyPropertyChanged("translationOK");
-					NotifyPropertyChanged(nameof(Background));
 				}
 			}
 		}

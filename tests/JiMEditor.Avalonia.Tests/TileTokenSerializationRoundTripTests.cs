@@ -24,7 +24,7 @@ public class TileTokenSerializationRoundTripTests
 			var tile = new HexTile( 213, skipBuild: true )
 			{
 				tileSide = "B",
-				position = new System.Windows.Vector( 336, 249.4153152 ),
+				position = new Vector2( 336, 249.4153152 ),
 				angle = 105,
 				triggerName = "TileExploredTrigger",
 				isStartTile = true
@@ -133,7 +133,7 @@ public class TileTokenSerializationRoundTripTests
 			var token = new Token( TokenType.Start )
 			{
 				triggerName = StartInteraction.DEFAULT_NAME,
-				position = new System.Windows.Vector( 200, 220 )
+				position = new Vector2( 200, 220 )
 			};
 			tile.tokenList.Add( token );
 			chapter.AddTile( tile );
@@ -199,7 +199,7 @@ public class TileTokenSerializationRoundTripTests
 			var tile = new HexTile( 213, skipBuild: true );
 			var token = new Token( TokenType.Threat )
 			{
-				position = new System.Windows.Vector( 128.5, 384.25 ),
+				position = new Vector2( 128.5, 384.25 ),
 				angle = 45,
 				triggerName = "TokenReveal",
 				triggeredByName = "TokenTriggerBy"

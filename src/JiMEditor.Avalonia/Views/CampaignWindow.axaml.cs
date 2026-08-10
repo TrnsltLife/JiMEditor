@@ -12,10 +12,6 @@ using JiMEditor.Avalonia;
 using JiMEditor.Avalonia.EventDialog;
 using JiME;
 using Newtonsoft.Json;
-using MessageBox = System.Windows.MessageBox;
-using MessageBoxButton = System.Windows.MessageBoxButton;
-using MessageBoxImage = System.Windows.MessageBoxImage;
-using MessageBoxResult = System.Windows.MessageBoxResult;
 
 namespace JiMEditor.Avalonia.Views;
 
@@ -280,30 +276,30 @@ public partial class CampaignWindow : Window
 			}
 		}
 
-		var ofd = new Microsoft.Win32.OpenFileDialog
-		{
-			DefaultExt = ".jime",
-			Title = "Add Scenario to Campaign",
-			Filter = "Journey File (*.jime)|*.jime",
-			InitialDirectory = basePath
-		};
-		if ( ofd.ShowDialog() != true )
+		var picked = FileDialogs.PickOpenFile(
+			title: "Add Scenario to Campaign",
+			defaultExtension: ".jime",
+			filterName: "Journey File (*.jime)",
+			filterPattern: "*.jime",
+			initialDirectory: basePath );
+		if ( string.IsNullOrEmpty( picked ) )
 			return;
 
-		var s = FileManager.LoadProject( ofd.SafeFileName );
+		var safeName = Path.GetFileName( picked );
+		var s = FileManager.LoadProject( safeName );
 		if ( s == null )
 			return;
 
 		var ci = new CampaignItem
 		{
 			scenarioName = s.scenarioName,
-			fileName = ofd.SafeFileName
+			fileName = safeName
 		};
 		campaign.scenarioCollection.Add( ci );
 		SaveCampaign();
 
-		var fi = new FileInfo( ofd.FileName );
-		var moveto = Path.Combine( _campaignFolder, ofd.SafeFileName );
+		var fi = new FileInfo( picked );
+		var moveto = Path.Combine( _campaignFolder, safeName );
 		fi.MoveTo( moveto );
 
 		var scenario = FileManager.LoadProjectFromPath( _campaignFolder, ci.fileName );

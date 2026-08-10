@@ -3,13 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using Avalonia.Platform;
-using System.Windows;
 using System.Linq;
 using Newtonsoft.Json.Linq;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.ComponentModel;
 using Newtonsoft.Json;
 
@@ -57,7 +52,7 @@ namespace JiME
 	{
 		TileType tileType { get; set; }
 		int idNumber { get; set; }
-		Vector position { get; set; }
+		Vector2 position { get; set; }
 	}
 
 	public interface ICommonData
@@ -199,8 +194,8 @@ namespace JiME
         }
 
 		/// <summary>
-		/// Avalonia: run after an editor dialog closes instead of <see cref="HandleWindow"/>, which uses WPF <see cref="Window.ShowDialog()"/>.
-		/// Matches the post-dialog steps in <see cref="HandleWindow"/> (translation key rename + decertify).
+		/// Avalonia: run after an editor dialog closes (translation key rename + decertify).
+		/// Replaces WPF <c>HandleWindow</c> which used <c>Window.ShowDialog()</c> (removed for Mac MVP).
 		/// </summary>
 		public void ApplyTranslationUpdatesAfterEditorDialog(
 			ObservableCollection<Translation> translations,
@@ -212,29 +207,6 @@ namespace JiME
 			DecertifyChangedValues( translations, originalValues, originalKeyName );
 			if ( TranslationKeyName() != originalKeyName )
 				DecertifyChangedValues( translations, originalValues, TranslationKeyName() );
-		}
-
-		public bool? HandleWindow(Window w, ObservableCollection<Translation> translations)
-        {
-			Dictionary<string, string> originalValues = CaptureStartingValues();
-			string originalPrefix = TranslationKeyPrefix();
-			string originalKeyName = TranslationKeyName();
-			bool? result = null;
-			try
-			{
-				result = w.ShowDialog();
-			}
-			catch(Exception e)
-            {
-				Console.WriteLine("Error with HandleWindow for " + w.Title + ". Error: " + e.Message);
-            }
-			UpdateKeysStartingWith(translations, originalPrefix);
-			DecertifyChangedValues(translations, originalValues, originalKeyName); //decertify changed values under the originalKeyName
-			if (TranslationKeyName() != originalKeyName)
-			{
-				DecertifyChangedValues(translations, originalValues, TranslationKeyName()); //decertify changed values under the current key name
-			}
-			return result;
 		}
 	}
 
@@ -335,7 +307,7 @@ namespace JiME
 				PropChanged( "enabled" );
 			}
 		}
-		public SolidColorBrush color;
+		// TODO-Avalonia-Delete: WPF SolidColorBrush color removed; unused by Avalonia gallery.
 		public string side
 		{
 			get { return _side; }
@@ -430,48 +402,18 @@ namespace JiME
 		public static Dictionary<int, BaseTileData> tileDictionaryB { get; set; } = new Dictionary<int, BaseTileData>();
 		public static int tolerance = 25;
 		public static double[] dragSnapX, dragSnapY;
-		/// <summary>Cartesian snap points for legacy <see cref="Tile"/> drag code (WPF editor).</summary>
-		public static IReadOnlyList<Vector> gridSnap { get; private set; } = Array.Empty<Vector>();
+		/// <summary>Cartesian snap points (legacy grid helpers).</summary>
+		public static IReadOnlyList<Vector2> gridSnap { get; private set; } = Array.Empty<Vector2>();
 		//hexSnap is used to convert local to absolute canvas coords (world)
 		public static double[] hexSnapX, hexSnapY;//used in BaseTileData.cs
 		//sqrSnap is used to convert local to absolute canvas coords (world)
 		public static double[] sqrSnapX, sqrSnapY;//used in BaseTileData.cs
-		public static SolidColorBrush[] hexColors;
 		public static bool isLoaded = false;
-		//public static GalleryTile[] galleryTilesA;
-		//public static GalleryTile[] galleryTilesB;
-		public static ImageSource[] tileSourceA, tileSourceB;
+		/// <summary>Number of tile IDs in the gallery (Avalonia loads bitmaps on demand).</summary>
+		public static int tileGalleryCount;
 		public static DefaultStats[] defaultStats;
 		public static DefaultActivations[] defaultActivations;
 		public static IInteraction[] defaultTerrainInteractions;
-
-		/// <summary>
-		/// Loads a PNG from Avalonia embedded assets (avares://{executing assembly}/…) into a WPF <see cref="BitmapImage"/> without pack:// URIs.
-		/// </summary>
-		/// <param name="relativeAssetPath">Forward-slash path after the assembly name, e.g. <c>Assets/Tokens/Human.png</c>.</param>
-		public static BitmapImage BitmapImageFromAvares( string relativeAssetPath )
-		{
-			var asmName = Assembly.GetExecutingAssembly().GetName().Name ?? "JiMEditor.Avalonia";
-			var uri = new Uri( $"avares://{asmName}/{relativeAssetPath}", UriKind.Absolute );
-			using ( var resourceStream = AssetLoader.Open( uri ) )
-			{
-				var ms = new MemoryStream();
-				resourceStream.CopyTo( ms );
-				ms.Position = 0;
-				var img = new BitmapImage();
-				img.BeginInit();
-				img.StreamSource = ms;
-				img.CacheOption = BitmapCacheOption.OnLoad;
-				img.EndInit();
-				img.Freeze();
-				ms.Dispose(); // OnLoad decodes fully; stream not needed after EndInit
-				return img;
-			}
-		}
-
-		/// <summary>WPF <see cref="ImageBrush"/> wrapping <see cref="BitmapImageFromAvares"/>.</summary>
-		public static ImageBrush ImageBrushFromAvares( string relativeAssetPath ) =>
-			new ImageBrush( BitmapImageFromAvares( relativeAssetPath ) );
 
 		public static void Init()
 		{
@@ -488,10 +430,10 @@ namespace JiME
 			for ( int i = 0; i < dragSnapY.Length; i++ )
 				dragSnapY[i] = 55.4256256d / 2 * i;//27.7128128
 
-			var gridList = new List<Vector>( dragSnapX.Length * dragSnapY.Length );
+			var gridList = new List<Vector2>( dragSnapX.Length * dragSnapY.Length );
 			for ( int yi = 0; yi < dragSnapY.Length; yi++ )
 				for ( int xi = 0; xi < dragSnapX.Length; xi++ )
-					gridList.Add( new Vector( dragSnapX[xi], dragSnapY[yi] ) );
+					gridList.Add( new Vector2( dragSnapX[xi], dragSnapY[yi] ) );
 			gridSnap = gridList;
 
 			//max hex area of any composite shape
@@ -516,24 +458,8 @@ namespace JiME
 			for (int i = 0; i < sqrSnapY.Length; i++)
 				sqrSnapY[i] = sqryy + (33d * i);
 
-			hexColors = new SolidColorBrush[5];
-			hexColors[0] = new SolidColorBrush( Colors.SaddleBrown );
-			hexColors[1] = new SolidColorBrush( Colors.DodgerBlue );
-			hexColors[2] = new SolidColorBrush( Colors.SeaGreen );
-			hexColors[3] = new SolidColorBrush( Colors.DarkMagenta );
-			hexColors[4] = new SolidColorBrush( Colors.DarkOrange );
-
-			//create gallery tiles
-			int[] ids = LoadTiles().ToArray();
-			int tileCount = ids.Length;
-			tileSourceA = new ImageSource[tileCount];
-			tileSourceB = new ImageSource[tileCount];
-
-			for ( int i = 0; i < tileCount; i++ )
-			{
-				tileSourceA[i] = BitmapImageFromAvares( $"Assets/TilesA/{ids[i]}.png" );
-				tileSourceB[i] = BitmapImageFromAvares( $"Assets/TilesB/{ids[i]}.png" );
-			}
+			// Gallery count only — Avalonia windows load tile PNGs via AssetLoader as needed.
+			tileGalleryCount = LoadTiles().Count;
 
 			//load default enemy stats
 			defaultStats = LoadDefaultStats().ToArray();
@@ -554,7 +480,7 @@ namespace JiME
 				return high2 + ( value - high1 ) * ( low2 - high2 ) / ( low1 - high1 );
 		}
 
-		public static bool WithinTolerance( this Vector value1, Vector value2, float tolerance )
+		public static bool WithinTolerance( this Vector2 value1, Vector2 value2, float tolerance )
 		{
 			return Math.Abs( value1.X - value2.X ) <= tolerance
 				&& Math.Abs( value1.Y - value2.Y ) <= tolerance;
@@ -681,27 +607,7 @@ namespace JiME
 		}
 	}
 
-	internal static class WindowExtensions
-	{
-		// from winuser.h
-		private const int GWL_STYLE = -16,
-											WS_MAXIMIZEBOX = 0x10000,
-											WS_MINIMIZEBOX = 0x20000;
-
-		[DllImport( "user32.dll" )]
-		extern private static int GetWindowLong( IntPtr hwnd, int index );
-
-		[DllImport( "user32.dll" )]
-		extern private static int SetWindowLong( IntPtr hwnd, int index, int value );
-
-		internal static void HideMinimizeAndMaximizeButtons( this Window window )
-		{
-			IntPtr hwnd = new System.Windows.Interop.WindowInteropHelper( window ).Handle;
-			var currentStyle = GetWindowLong( hwnd, GWL_STYLE );
-
-			SetWindowLong( hwnd, GWL_STYLE, ( currentStyle & ~WS_MAXIMIZEBOX & ~WS_MINIMIZEBOX ) );
-		}
-	}
+	// TODO-Avalonia-Delete: WPF WindowExtensions (user32 HideMinimizeAndMaximizeButtons) removed — unused by Avalonia UI.
 
 	public static class ObservableExtensions
 	{
@@ -739,11 +645,6 @@ namespace JiME
 
 	public static class Extensions
 	{
-		public static Vector ToVector( this Point p )
-		{
-			return new Vector( p.X, p.Y );
-		}
-
 		public static T[] Fill<T>( this T[] arr, T value )
 		{
 			for ( int i = 0; i < arr.Length; i++ )

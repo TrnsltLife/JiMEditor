@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Windows;
 
 namespace JiME
 {
@@ -56,7 +55,7 @@ namespace JiME
 		}
 		public TileType tileType { get; set; }
 		public int idNumber { get; set; }
-		public Vector position { get; set; }
+		public Vector2 position { get; set; }
 
 		public event PropertyChangedEventHandler PropertyChanged;
 

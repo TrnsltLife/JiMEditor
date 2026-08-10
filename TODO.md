@@ -42,14 +42,15 @@ This is a list of things we need to do:
 
 * Mac executable (MVP — strip WPF, don’t rebuild editors)
   * Goal: `dotnet publish -r osx-arm64 --self-contained` produces a runnable Mac binary (~1–1.5 weeks focused work)
-  * Flip TFM `net9.0-windows` → `net9.0`; remove `UseWpf`; update tests TFM + `.vscode/launch.json`
-  * Delete/exclude dead WPF: `Commands.cs`, `JiME/Common/Converters.cs`, legacy `Tile.cs`, `WindowExtensions` / WPF `HandleWindow`
-  * Strip WPF visuals from `BaseTile` / `HexTile` / `SquareTile` / `Token` (ctors still build Canvas/Shape/BitmapImage that Avalonia editors ignore); keep data fields; prefer skip-build ctors
-  * Replace `System.Windows.Vector` / `Point` with portable `Vector2` (keep `X`/`Y` for `.jime`); update round-trip tests
-  * Stop WPF image preload in `Utils.Init` (`BitmapImage` / `ImageBrush`); gallery only needs IDs/count
-  * One dialog helper → replace ~25 `System.Windows.MessageBox` call sites
-  * Win32 Open/Save → Avalonia `StorageProvider` (`FileManager`, Import/Export, Campaign add)
+  * [x] Flip TFM `net9.0-windows` → `net9.0`; remove `UseWpf`; update tests TFM + `.vscode/launch.json`
+  * [x] Delete/exclude dead WPF: `Commands.cs`, `JiME/Common/Converters.cs`, legacy `Tile.cs`, `WindowExtensions` / WPF `HandleWindow`
+  * [x] Strip WPF visuals from `BaseTile` / `HexTile` / `SquareTile` / `Token`; keep data fields; skip-build default
+  * [x] Replace `System.Windows.Vector` / `Point` with portable `Vector2` (keep `X`/`Y` for `.jime`); update editors + round-trip tests
+  * [x] Stop WPF image preload in `Utils.Init`; gallery uses `tileGalleryCount` + on-demand Avalonia bitmaps
+  * [x] One dialog helper → replace ~25 `System.Windows.MessageBox` call sites (`JiME/Common/MessageBox.cs`)
+  * [x] Win32 Open/Save → Avalonia `StorageProvider` (`FileDialogs` + FileManager/Import/Export/Campaign)
   * Defer: model `Rehydrate`/mouse drag, graph polish, signed/notarized `.app` bundle
+  * Next: step 8 — on Mac, `dotnet publish -r osx-arm64 --self-contained` + smoke test
   * See also: `README-MAC.md`, PLAN.md § Mac executable MVP
 
 * App window: Done

@@ -6,7 +6,7 @@
         "type": "coreclr",
         "request": "launch",
         "preLaunchTask": "build-avalonia",
-        "program": "${workspaceFolder}/src/JiMEditor.Avalonia/bin/Debug/net9.0-windows/JiMEditor.Avalonia.dll",
+        "program": "${workspaceFolder}/src/JiMEditor.Avalonia/bin/Debug/net9.0/JiMEditor.Avalonia.dll",
         "args": [],
         "cwd": "${workspaceFolder}/src/JiMEditor.Avalonia",
         "console": "internalConsole",
