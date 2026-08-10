@@ -118,7 +118,7 @@ flowchart LR
 
 ## Mac executable MVP (strip WPF, don’t rebuild editors)
 
-**Status (2026-08-09):** Steps 1–7 done — solution builds on `net9.0` with no WPF/Win32 dialog deps. Remaining MVP: step 8 Mac publish + smoke test. Sibling [JiMEditor](../JiMEditor) asset links remain required on both platforms. Build notes: [README-WIN.md](README-WIN.md), [README-MAC.md](README-MAC.md).
+**Status (2026-08-09):** Steps 1–7 done — solution builds on `net9.0` with no WPF/Win32 dialog deps. Cross-publish `osx-arm64` works from Windows (`publish-mac.ps1` / `publish-mac.sh`); CI uploads that artifact. Remaining MVP: step 8 **run/smoke-test on a Mac**. Sibling [JiMEditor](../JiMEditor) asset links remain required on both platforms. Build notes: [README-WIN.md](README-WIN.md), [README-MAC.md](README-MAC.md).
 
 **Strategy:** Strip unused WPF model visuals and dialog APIs. Tile/Token **editors already draw with Avalonia**; model ctors still construct WPF `Canvas`/`Shape`/`BitmapImage` that the UI ignores. Do **not** reimplement WPF geometry inside models.
 
@@ -131,7 +131,7 @@ flowchart LR
 | 5 | Stop WPF preload in `Utils.Init` (`BitmapImage` / `ImageBrush`); gallery needs IDs/count only | **Done** (with step 3) |
 | 6 | Dialog helper → replace ~25 `System.Windows.MessageBox` sites | **Done** (2026-08-09) |
 | 7 | Win32 Open/Save → `StorageProvider` (`FileManager`, Import/Export, Campaign add) | **Done** (2026-08-09) |
-| 8 | On Mac: `dotnet publish -r osx-arm64 --self-contained` + smoke test | ~½ day |
+| 8 | On Mac: run published binary + smoke test (publish already works from Windows/CI) | ~½ day |
 
 **Estimate:** ~**1–1.5 weeks** MVP (compile + run + save/load + tile/token editors). Full cleanup ~2–3 weeks. Signed/notarized `.app` is after MVP.
 

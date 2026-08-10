@@ -1,0 +1,68 @@
+name: Build
+
+on:
+  push:
+    branches: [main, master, mac-mvp]
+  pull_request:
+    branches: [main, master, mac-mvp]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout JiMEditor-Avalonia
+        uses: actions/checkout@v4
+        with:
+          path: JiMEditor-Avalonia
+
+      # Assets are linked as ../../../JiMEditor from src/JiMEditor.Avalonia/*.csproj
+      - name: Checkout JiMEditor assets sibling
+        uses: actions/checkout@v4
+        with:
+          repository: TrnsltLife/JiMEditor
+          path: JiMEditor
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Build
+        working-directory: JiMEditor-Avalonia
+        run: dotnet build JiMEditor-Avalonia.sln -c Release
+
+      - name: Test
+        working-directory: JiMEditor-Avalonia
+        run: dotnet test JiMEditor-Avalonia.sln -c Release --no-build
+
+  publish-osx-arm64:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - name: Checkout JiMEditor-Avalonia
+        uses: actions/checkout@v4
+        with:
+          path: JiMEditor-Avalonia
+
+      - name: Checkout JiMEditor assets sibling
+        uses: actions/checkout@v4
+        with:
+          repository: TrnsltLife/JiMEditor
+          path: JiMEditor
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Publish osx-arm64
+        working-directory: JiMEditor-Avalonia
+        run: |
+          chmod +x ./publish-mac.sh
+          ./publish-mac.sh osx-arm64
+
+      - name: Upload publish folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: jimeditor-avalonia-osx-arm64
+          path: JiMEditor-Avalonia/src/JiMEditor.Avalonia/bin/Release/net9.0/osx-arm64/publish/

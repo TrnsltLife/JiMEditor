@@ -49,8 +49,9 @@ This is a list of things we need to do:
   * [x] Stop WPF image preload in `Utils.Init`; gallery uses `tileGalleryCount` + on-demand Avalonia bitmaps
   * [x] One dialog helper → replace ~25 `System.Windows.MessageBox` call sites (`JiME/Common/MessageBox.cs`)
   * [x] Win32 Open/Save → Avalonia `StorageProvider` (`FileDialogs` + FileManager/Import/Export/Campaign)
+  * [x] Windows polish: deleted dead WPF files; `publish-mac.sh` / `.ps1`; CI build + osx-arm64 artifact; path hint + STA guard
   * Defer: model `Rehydrate`/mouse drag, graph polish, signed/notarized `.app` bundle
-  * Next: step 8 — on Mac, `dotnet publish -r osx-arm64 --self-contained` + smoke test
+  * Next: step 8 — on a Mac, run published binary / smoke test (cross-publish already works from Windows)
   * See also: `README-MAC.md`, PLAN.md § Mac executable MVP
 
 * App window: Done

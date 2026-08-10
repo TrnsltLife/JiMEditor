@@ -33,7 +33,9 @@ internal static class ModelTestEnvironment
 				threadException = ex;
 			}
 		} );
-		thread.SetApartmentState( ApartmentState.STA );
+		// STA is Windows-only; on Mac/Linux Avalonia tests still run on a dedicated thread.
+		if ( OperatingSystem.IsWindows() )
+			thread.SetApartmentState( ApartmentState.STA );
 		thread.Start();
 		thread.Join();
 		if ( threadException != null )

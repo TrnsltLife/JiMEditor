@@ -38,6 +38,15 @@ dotnet run --project src\JiMEditor.Avalonia\JiMEditor.Avalonia.csproj
 
 Convenience scripts (from repo root): `build.bat`, `run.bat`.
 
+Cross-publish a Mac build from Windows (needs sibling `JiMEditor` assets):
+
+```powershell
+.\publish-mac.ps1              # osx-arm64
+.\publish-mac.ps1 -Rid osx-x64
+```
+
+That produces a folder you can copy to a Mac for smoke testing; see [README-MAC.md](README-MAC.md).
+
 ### Publish a Windows executable
 
 Self-contained folder you can copy elsewhere (includes .NET runtime):
