@@ -93,7 +93,7 @@ public partial class GalleryWindow : Window, INotifyPropertyChanged
 		{
 			_indexOffset = 0;
 			_indexLimit = 2;
-			_tileCount = Utils.tileSourceA!.Length - _indexLimit;
+			_tileCount = Utils.tileGalleryCount - _indexLimit;
 			_galleryTiles = new GalleryTile[_tileCount];
 		}
 		else

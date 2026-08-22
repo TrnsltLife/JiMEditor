@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Avalonia;
-using WinPoint = System.Windows.Point;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Input;
@@ -13,10 +12,6 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using JiME;
-using MessageBox = System.Windows.MessageBox;
-using MessageBoxButton = System.Windows.MessageBoxButton;
-using MessageBoxImage = System.Windows.MessageBoxImage;
-using MessageBoxResult = System.Windows.MessageBoxResult;
 
 namespace JiMEditor.Avalonia.Views;
 
@@ -265,7 +260,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 			snapX = Utils.sqrSnapX.OrderBy( x => Math.Abs( x - centerX ) ).FirstOrDefault();
 			snapY = Utils.sqrSnapY.OrderBy( y => Math.Abs( y - centerY ) ).FirstOrDefault();
 		}
-		selected.position = new System.Windows.Vector( snapX, snapY );
+		selected.position = new Vector2( snapX, snapY );
 		ApplyTileTransform( selected );
 		SyncComboSelection();
 	}
@@ -339,14 +334,14 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 			e.Pointer.Capture( null );
 			return;
 		}
-		var clickPoint = new System.Windows.Vector( p.X - _dragClickOffset.X, p.Y - _dragClickOffset.Y );
+		var clickPoint = new Vector2( p.X - _dragClickOffset.X, p.Y - _dragClickOffset.Y );
 		if ( _isJourney )
 		{
 			var snappedX = Utils.dragSnapX.FirstOrDefault( snapx => Math.Abs( clickPoint.X - snapx ) <= Utils.tolerance );
 			var snappedY = Utils.dragSnapY.FirstOrDefault( snapy => Math.Abs( clickPoint.Y - snapy ) <= Utils.tolerance );
 			if ( Math.Abs( clickPoint.X - snappedX ) <= Utils.tolerance && Math.Abs( clickPoint.Y - snappedY ) <= Utils.tolerance )
 			{
-				_dragTile.position = new System.Windows.Vector( snappedX, snappedY );
+				_dragTile.position = new Vector2( snappedX, snappedY );
 				ApplyTileTransform( _dragTile );
 			}
 		}
@@ -354,7 +349,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 		{
 			var snappedX = (int)( clickPoint.X / SquareDragSnap ) * SquareDragSnap;
 			var snappedY = (int)( clickPoint.Y / SquareDragSnap ) * SquareDragSnap;
-			_dragTile.position = new System.Windows.Vector( snappedX, snappedY );
+			_dragTile.position = new Vector2( snappedX, snappedY );
 			ApplyTileTransform( _dragTile );
 		}
 	}
@@ -404,28 +399,28 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 		else if ( e.Key == Key.Up )
 		{
 			var dy = _isJourney ? HexCellY : SquareDragSnap;
-			selected.position = new System.Windows.Vector( selected.position.X, selected.position.Y - dy );
+			selected.position = new Vector2( selected.position.X, selected.position.Y - dy );
 			ApplyTileTransform( selected );
 			e.Handled = true;
 		}
 		else if ( e.Key == Key.Down )
 		{
 			var dy = _isJourney ? HexCellY : SquareDragSnap;
-			selected.position = new System.Windows.Vector( selected.position.X, selected.position.Y + dy );
+			selected.position = new Vector2( selected.position.X, selected.position.Y + dy );
 			ApplyTileTransform( selected );
 			e.Handled = true;
 		}
 		else if ( e.Key == Key.Left )
 		{
 			var dx = _isJourney ? HexCellX : SquareDragSnap;
-			selected.position = new System.Windows.Vector( selected.position.X - dx, selected.position.Y );
+			selected.position = new Vector2( selected.position.X - dx, selected.position.Y );
 			ApplyTileTransform( selected );
 			e.Handled = true;
 		}
 		else if ( e.Key == Key.Right )
 		{
 			var dx = _isJourney ? HexCellX : SquareDragSnap;
-			selected.position = new System.Windows.Vector( selected.position.X + dx, selected.position.Y );
+			selected.position = new Vector2( selected.position.X + dx, selected.position.Y );
 			ApplyTileTransform( selected );
 			e.Handled = true;
 		}
@@ -660,22 +655,22 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 		{
 			var hexPoints = BaseTileData.ExtractCoords( data.coords );
 			if ( hexPoints.Length > 0 )
-				tile.pathRoot = new System.Windows.Vector( hexPoints[0].X, hexPoints[0].Y );
+				tile.pathRoot = new Vector2( hexPoints[0].X, hexPoints[0].Y );
 		}
 		else if ( tile.tileType == TileType.Square )
 		{
 			var sqrPoints = BaseTileData.ExtractCoords( data.coords );
 			if ( sqrPoints.Length > 0 )
-				tile.pathRoot = new System.Windows.Vector( sqrPoints[0].X, sqrPoints[0].Y );
+				tile.pathRoot = new Vector2( sqrPoints[0].X, sqrPoints[0].Y );
 		}
 	}
 
-	System.Windows.Vector GetTileDims( BaseTile tile )
+	Vector2 GetTileDims( BaseTile tile )
 	{
 		var dict = tile.tileSide == "A" ? Utils.tileDictionary : Utils.tileDictionaryB;
 		if ( !dict.TryGetValue( tile.idNumber, out var data ) )
-			return new System.Windows.Vector( 256, 256 );
-		return new System.Windows.Vector( data.width, data.height );
+			return new Vector2( 256, 256 );
+		return new Vector2( data.width, data.height );
 	}
 
 	Bitmap? LoadTileBitmap( BaseTile tile )
@@ -1021,7 +1016,10 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 		var sqrCenterPositions = BaseTileData.ConvertSquareCoords( sqrdata.coords, dimA.width, dimA.height );
 		var cellCorners = new List<Point[]>();
 		for ( var i = 0; i < sqrdata.tileCount && i < sqrCenterPositions.Length; i++ )
-			cellCorners.Add( SquareDiamondCorners( sqrCenterPositions[i], radius ) );
+		{
+			var c = sqrCenterPositions[i];
+			cellCorners.Add( SquareDiamondCorners( new Point( c.X, c.Y ), radius ) );
+		}
 
 		var honeycomb = new StreamGeometry();
 		using ( var ctx = honeycomb.Open() )
@@ -1097,7 +1095,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 		return new HexGeometries( honeycomb, outline, honeycomb );
 	}
 
-	static Point[] SquareDiamondCorners( WinPoint c, double r )
+	static Point[] SquareDiamondCorners( Point c, double r )
 	{
 		var corners = new Point[4];
 		for ( var k = 0; k < 4; k++ )

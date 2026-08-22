@@ -32,7 +32,7 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 	bool _dragging;
 	bool _suppressInteractionComboSync;
 	Point _dragClickOffset;
-	System.Windows.Vector _lastPos;
+	Vector2 _lastPos;
 
 	public Scenario scenario { get; }
 	public BaseTile tile { get; }
@@ -77,6 +77,9 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 
 		foreach ( var token in tile.tokenList )
 			token.RepairStartPositionFromTriggerName();
+
+		foreach ( var start in scenario.interactionObserver.OfType<StartInteraction>() )
+			start.ApplyStartInteractionDefaults();
 
 		if ( tile.tokenList.Count > 0 )
 		{
@@ -230,6 +233,7 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 	{
 		if ( _suppressInteractionComboSync || selected == null || InteractionCombo.SelectedItem is not IInteraction i )
 			return;
+		// ApplyInteraction sets token fields and, for Starting Position, normalizes the Start event (tokenType Start).
 		selected.ApplyInteraction( i );
 		RebuildTokenCanvas();
 		UpdateSelectedUi();
@@ -276,15 +280,28 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 				return;
 			scenario.AddInteraction( created );
 			RefreshTokenInteractions();
-			SetInteractionComboSelection(
-				tokenInteractions.FirstOrDefault( x => x.dataName == created.dataName ) );
-			if ( selected == null )
-				return;
-			selected.ApplyInteraction( created );
-			RebuildTokenCanvas();
-			UpdateSelectedUi();
+			TryAssignCreatedInteractionToSelectedToken( created );
 		};
 		flyout.Items.Add( item );
+	}
+
+	/// <summary>
+	/// WPF Token Editor only assigns a newly created event when it appears in the filtered combo
+	/// (<see cref="IsAllowedTokenInteraction"/>). Non-token events are added to the scenario only.
+	/// </summary>
+	void TryAssignCreatedInteractionToSelectedToken( IInteraction created )
+	{
+		if ( selected == null || !IsAllowedTokenInteraction( created ) )
+			return;
+
+		var match = tokenInteractions.FirstOrDefault( x => x.dataName == created.dataName );
+		if ( match == null )
+			return;
+
+		SetInteractionComboSelection( match );
+		selected.ApplyInteraction( match );
+		RebuildTokenCanvas();
+		UpdateSelectedUi();
 	}
 
 	async void AddTriggerButton_Click( object? sender, RoutedEventArgs e )
@@ -352,7 +369,7 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 			return;
 
 		var p = e.GetPosition( TokenCanvas );
-		var clickPoint = new System.Windows.Vector(
+		var clickPoint = new Vector2(
 			p.X - _dragClickOffset.X,
 			p.Y - _dragClickOffset.Y );
 
@@ -415,7 +432,7 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 			return;
 
 		var last = selected.position;
-		selected.position = new System.Windows.Vector( selected.position.X + dx, selected.position.Y + dy );
+		selected.position = new Vector2( selected.position.X + dx, selected.position.Y + dy );
 		if ( selected.position.X < 0 || selected.position.Y < 0
 		     || ( selected.position.X + shape.Width ) > 512 || ( selected.position.Y + shape.Height ) > 512 )
 		{

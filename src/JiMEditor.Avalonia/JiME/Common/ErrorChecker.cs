@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows;
 using System.Linq;
 
 namespace JiME
@@ -72,6 +71,13 @@ namespace JiME
 			//no tiles in chapter
 
 			//orphan event names (from renaming)
+
+			// TODO-Avalonia (post-MVP): ErrorChecker is not invoked from the UI yet (see ProceduralGenerator
+			// "use the ErrorChecker after it actually does something"). When pre-flight is wired up, warn
+			// when a tile token's triggerName references an interaction with isTokenInteraction == false
+			// (breaks playback QueryTokenInteraction). Also flag tokens pointing at missing dataNames.
+			// Starting Position: warn when the Start interaction or start tile token has tokenType != Start
+			// (playback may show a spurious Search token with default flavor text).
 
 			Errors = "None Found";
 			errorCount = $"Warnings ({found}):";

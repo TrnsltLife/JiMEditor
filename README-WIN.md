@@ -4,7 +4,7 @@ Short guide for producing a runnable app / executable on Windows.
 
 ## Prerequisites
 
-1. [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) (`dotnet --version` should report 9.x).
+1. **.NET 9 SDK** — this repo targets `net9.0`. Older SDKs are not enough; `dotnet build` fails with `NETSDK1045` until 9.x is installed.
 2. Clone this repo **and** the sibling [JiMEditor](../JiMEditor) repo side by side (tile/token assets are linked from `../JiMEditor/Assets`).
 
 ```
@@ -14,6 +14,25 @@ parent/
 ```
 
 3. VS Code / Cursor: install the **C# Dev Kit** (or **C#**) extension so Run/Debug and tasks work.
+
+### Install .NET 9 SDK (Windows)
+
+Check what you have:
+
+```powershell
+dotnet --list-sdks
+dotnet --version    # should report 9.x after install
+```
+
+**Option A — winget:**
+
+```powershell
+winget install Microsoft.DotNet.SDK.9
+```
+
+**Option B — Official installer:** download **.NET SDK 9.0** for Windows from [dotnet.microsoft.com/download/dotnet/9.0](https://dotnet.microsoft.com/download/dotnet/9.0) and run the installer.
+
+You can keep older SDKs installed; multiple versions coexist. Open a **new terminal** after installing.
 
 ## Visual Studio Code
 
@@ -38,6 +57,15 @@ dotnet run --project src\JiMEditor.Avalonia\JiMEditor.Avalonia.csproj
 
 Convenience scripts (from repo root): `build.bat`, `run.bat`.
 
+Cross-publish a Mac build from Windows (needs sibling `JiMEditor` assets):
+
+```powershell
+.\publish-mac.ps1              # osx-arm64
+.\publish-mac.ps1 -Rid osx-x64
+```
+
+That produces a folder you can copy to a Mac for smoke testing; see [README-MAC.md](README-MAC.md).
+
 ### Publish a Windows executable
 
 Self-contained folder you can copy elsewhere (includes .NET runtime):
@@ -48,7 +76,7 @@ dotnet publish src\JiMEditor.Avalonia\JiMEditor.Avalonia.csproj -c Release -r wi
 
 Output:
 
-`src\JiMEditor.Avalonia\bin\Release\net9.0-windows\win-x64\publish\`
+`src\JiMEditor.Avalonia\bin\Release\net9.0\win-x64\publish\`
 
 Run `JiMEditor.Avalonia.exe` from that folder. Use `-r win-arm64` on ARM Windows if needed.
 

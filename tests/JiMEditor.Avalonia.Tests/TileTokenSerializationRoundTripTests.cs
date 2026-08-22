@@ -1,6 +1,5 @@
 using System.Linq;
 using System.IO;
-using System.Windows;
 using System.Collections.ObjectModel;
 using JiME;
 using Newtonsoft.Json;
@@ -10,6 +9,66 @@ namespace JiMEditor.Avalonia.Tests;
 
 public class TileTokenSerializationRoundTripTests
 {
+	[Fact]
+	public void Vector2_DeserializesWpfCommaSeparatedString()
+	{
+		var v = JsonConvert.DeserializeObject<Vector2>( "\"0,1\"" );
+		Assert.Equal( 0, v.X );
+		Assert.Equal( 1, v.Y );
+
+		v = JsonConvert.DeserializeObject<Vector2>( "\"336,249.4153152\"" );
+		Assert.Equal( 336, v.X, 6 );
+		Assert.Equal( 249.4153152, v.Y, 6 );
+	}
+
+	[Fact]
+	public void Vector2_SerializesAsWpfCommaSeparatedString()
+	{
+		var json = JsonConvert.SerializeObject( new Vector2( 0, 1 ) );
+		Assert.Equal( "\"0,1\"", json );
+	}
+
+	[Fact]
+	public void Vector2_DeserializesObjectAndArrayShapes()
+	{
+		var fromObj = JsonConvert.DeserializeObject<Vector2>( "{\"X\":2,\"Y\":3}" );
+		Assert.Equal( 2, fromObj.X );
+		Assert.Equal( 3, fromObj.Y );
+
+		var fromArr = JsonConvert.DeserializeObject<Vector2>( "[4.5,6.25]" );
+		Assert.Equal( 4.5, fromArr.X );
+		Assert.Equal( 6.25, fromArr.Y );
+	}
+
+	[Fact]
+	public void HexTile_LegacyPathRootString_Deserializes()
+	{
+		// Minimal tile JSON shape as written by WPF (pathRoot / position are "X,Y" strings).
+		const string json = """
+			{
+			  "tileType": 0,
+			  "idNumber": 213,
+			  "tileSide": "A",
+			  "position": "336,249.4153152",
+			  "pathRoot": "0,1",
+			  "angle": 0,
+			  "tokenCount": 1,
+			  "GUID": "00000000-0000-0000-0000-000000000001",
+			  "isStartTile": false,
+			  "triggerName": "None",
+			  "tokenList": [],
+			  "color": 0
+			}
+			""";
+
+		var tile = JsonConvert.DeserializeObject<HexTile>( json );
+		Assert.NotNull( tile );
+		Assert.Equal( 0, tile!.pathRoot.X );
+		Assert.Equal( 1, tile.pathRoot.Y );
+		Assert.Equal( 336, tile.position.X, 6 );
+		Assert.Equal( 249.4153152, tile.position.Y, 6 );
+	}
+
 	[Fact]
 	public void JourneyTile_RoundTrip_PreservesNumericState()
 	{
@@ -24,7 +83,8 @@ public class TileTokenSerializationRoundTripTests
 			var tile = new HexTile( 213, skipBuild: true )
 			{
 				tileSide = "B",
-				position = new System.Windows.Vector( 336, 249.4153152 ),
+				position = new Vector2( 336, 249.4153152 ),
+				pathRoot = new Vector2( 0, 1 ),
 				angle = 105,
 				triggerName = "TileExploredTrigger",
 				isStartTile = true
@@ -32,7 +92,11 @@ public class TileTokenSerializationRoundTripTests
 			chapter.AddTile( tile );
 
 			var fm = new FileManager( scenario );
-			var json = JsonConvert.SerializeObject( fm );
+			var json = JsonConvert.SerializeObject( fm, Formatting.Indented );
+			// WPF Vector TypeConverter wrote "X,Y" strings — keep that on-disk shape.
+			Assert.Contains( "\"0,1\"", json );
+			Assert.Contains( "\"336,249.4153152\"", json );
+
 			var deserializedFileManager = JsonConvert.DeserializeObject<FileManager>( json );
 			Assert.NotNull( deserializedFileManager );
 
@@ -44,6 +108,8 @@ public class TileTokenSerializationRoundTripTests
 			Assert.Equal( "B", roundTrippedTile.tileSide );
 			Assert.Equal( 336, roundTrippedTile.position.X, 6 );
 			Assert.Equal( 249.4153152, roundTrippedTile.position.Y, 6 );
+			Assert.Equal( 0, roundTrippedTile.pathRoot.X );
+			Assert.Equal( 1, roundTrippedTile.pathRoot.Y );
 			Assert.Equal( 105, roundTrippedTile.angle, 6 );
 			Assert.Equal( "TileExploredTrigger", roundTrippedTile.triggerName );
 			Assert.True( roundTrippedTile.isStartTile );
@@ -114,6 +180,8 @@ public class TileTokenSerializationRoundTripTests
 
 			Assert.Equal( StartInteraction.DEFAULT_NAME, token.triggerName );
 			Assert.Equal( TokenType.Start, token.tokenType );
+			Assert.Equal( TokenType.Start, start.tokenType );
+			Assert.True( start.isTokenInteraction );
 			Assert.Equal( "Start", token.dataName );
 		} );
 	}
@@ -133,7 +201,7 @@ public class TileTokenSerializationRoundTripTests
 			var token = new Token( TokenType.Start )
 			{
 				triggerName = StartInteraction.DEFAULT_NAME,
-				position = new System.Windows.Vector( 200, 220 )
+				position = new Vector2( 200, 220 )
 			};
 			tile.tokenList.Add( token );
 			chapter.AddTile( tile );
@@ -154,6 +222,39 @@ public class TileTokenSerializationRoundTripTests
 			var startInteraction = roundTrippedScenario.interactionObserver
 				.First( i => i.dataName == StartInteraction.DEFAULT_NAME );
 			Assert.Equal( TokenType.Start, startInteraction.tokenType );
+		} );
+	}
+
+	[Fact]
+	public void Save_RepairsStartingPositionInteraction_BeforeWrite()
+	{
+		ModelTestEnvironment.RunInSta( () =>
+		{
+			ModelTestEnvironment.SetupMinimalUtilsForModelTests();
+
+			var scenario = new Scenario( "Save Start Repair Scenario" );
+			var start = scenario.interactionObserver.OfType<StartInteraction>().Single();
+			start.tokenType = TokenType.Search;
+			start.isTokenInteraction = false;
+
+			var outPath = Path.Combine( Path.GetTempPath(), "jime-start-repair-save-" + Guid.NewGuid() + ".jime" );
+			try
+			{
+				var ok = FileManager.TryWriteScenarioToPath( scenario, outPath, updateScenarioAfterWrite: false, out var err );
+				Assert.True( ok, err );
+
+				var fm = JsonConvert.DeserializeObject<FileManager>( File.ReadAllText( outPath ) );
+				Assert.NotNull( fm );
+				var startJson = fm!.interactions.Single( i => i.dataName == StartInteraction.DEFAULT_NAME );
+				Assert.Equal( (int)InteractionType.Start, (int)startJson.interactionType );
+				Assert.Equal( TokenType.Start, startJson.tokenType );
+				Assert.True( startJson.isTokenInteraction );
+			}
+			finally
+			{
+				if ( File.Exists( outPath ) )
+					File.Delete( outPath );
+			}
 		} );
 	}
 
@@ -199,7 +300,7 @@ public class TileTokenSerializationRoundTripTests
 			var tile = new HexTile( 213, skipBuild: true );
 			var token = new Token( TokenType.Threat )
 			{
-				position = new System.Windows.Vector( 128.5, 384.25 ),
+				position = new Vector2( 128.5, 384.25 ),
 				angle = 45,
 				triggerName = "TokenReveal",
 				triggeredByName = "TokenTriggerBy"

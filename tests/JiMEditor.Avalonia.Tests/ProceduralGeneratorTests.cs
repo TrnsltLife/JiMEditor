@@ -11,8 +11,7 @@ public sealed class ProceduralGeneratorTests
 	{
 		ModelTestEnvironment.RunInSta( () =>
 		{
-			ModelTestEnvironment.SetupMinimalUtilsForModelTests();
-			Utils.Init();
+			ModelTestEnvironment.EnsureUtilsInitialized();
 
 			var generator = new ProceduralGenerator();
 			var ctx = generator.GenerateScenario( generator.GetDefaultParameters() );

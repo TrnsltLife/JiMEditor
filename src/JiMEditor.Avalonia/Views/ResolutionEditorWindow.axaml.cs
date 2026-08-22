@@ -5,9 +5,6 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using JiME;
 using JiME.TextFormat;
-using MessageBox = System.Windows.MessageBox;
-using MessageBoxButton = System.Windows.MessageBoxButton;
-using MessageBoxImage = System.Windows.MessageBoxImage;
 
 namespace JiMEditor.Avalonia.Views;
 

@@ -3,9 +3,6 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using JiMEditor.Avalonia.Views.Events;
 using JiME;
-using MessageBox = System.Windows.MessageBox;
-using MessageBoxButton = System.Windows.MessageBoxButton;
-using MessageBoxImage = System.Windows.MessageBoxImage;
 
 namespace JiMEditor.Avalonia.EventDialog;
 

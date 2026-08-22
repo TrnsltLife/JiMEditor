@@ -118,24 +118,29 @@ flowchart LR
 
 ## Mac executable MVP (strip WPF, don’t rebuild editors)
 
-**Status (2026-08-06):** Avalonia UI largely runs on Windows, but the project is still **Windows-only** (`TargetFramework=net9.0-windows`, `UseWpf=true`). Mac builds fail until WPF is removed from the compile graph. Sibling [JiMEditor](../JiMEditor) asset links remain required on both platforms. Build notes: [README-WIN.md](README-WIN.md), [README-MAC.md](README-MAC.md).
+**Status (2026-08-09):** Steps 1–7 done — solution builds on `net9.0` with no WPF/Win32 dialog deps. Cross-publish `osx-arm64` works from Windows (`publish-mac.ps1` / `publish-mac.sh`); CI uploads that artifact. Remaining MVP: step 8 **run/smoke-test on a Mac**. Sibling [JiMEditor](../JiMEditor) asset links remain required on both platforms. Build notes: [README-WIN.md](README-WIN.md), [README-MAC.md](README-MAC.md).
 
 **Strategy:** Strip unused WPF model visuals and dialog APIs. Tile/Token **editors already draw with Avalonia**; model ctors still construct WPF `Canvas`/`Shape`/`BitmapImage` that the UI ignores. Do **not** reimplement WPF geometry inside models.
 
 | Step | Work | Effort |
 |------|------|--------|
-| 1 | Flip TFM to `net9.0`, remove `UseWpf`; update tests TFM + `.vscode/launch.json` | Hours |
-| 2 | Delete/exclude dead WPF: `Commands.cs`, `JiME/Common/Converters.cs`, legacy `Tile.cs`, `WindowExtensions` / WPF `HandleWindow` | Hours |
-| 3 | Strip WPF visuals from `BaseTile` / `HexTile` / `SquareTile` / `Token`; keep data; prefer skip-build ctors | Few days (main chunk) |
-| 4 | Portable `Vector2` (`X`/`Y`) replacing `System.Windows.Vector`/`Point`; update round-trip tests | 1–2 days |
-| 5 | Stop WPF preload in `Utils.Init` (`BitmapImage` / `ImageBrush`); gallery needs IDs/count only | ~½ day |
-| 6 | Dialog helper → replace ~25 `System.Windows.MessageBox` sites | ½–1 day |
-| 7 | Win32 Open/Save → `StorageProvider` (`FileManager`, Import/Export, Campaign add) | ½–1 day |
-| 8 | On Mac: `dotnet publish -r osx-arm64 --self-contained` + smoke test | ~½ day |
+| 1 | Flip TFM to `net9.0`, remove `UseWpf`; update tests TFM + `.vscode/launch.json` | **Done** (2026-08-09) |
+| 2 | Delete/exclude dead WPF: `Commands.cs`, `JiME/Common/Converters.cs`, legacy `Tile.cs`, `WindowExtensions` / WPF `HandleWindow` | **Done** (2026-08-09) |
+| 3 | Strip WPF visuals from `BaseTile` / `HexTile` / `SquareTile` / `Token`; keep data; prefer skip-build ctors | **Done** (2026-08-09) |
+| 4 | Portable `Vector2` (`X`/`Y`) replacing `System.Windows.Vector`/`Point`; update round-trip tests | **Done** (with step 3) |
+| 5 | Stop WPF preload in `Utils.Init` (`BitmapImage` / `ImageBrush`); gallery needs IDs/count only | **Done** (with step 3) |
+| 6 | Dialog helper → replace ~25 `System.Windows.MessageBox` sites | **Done** (2026-08-09) |
+| 7 | Win32 Open/Save → `StorageProvider` (`FileManager`, Import/Export, Campaign add) | **Done** (2026-08-09) |
+| 8 | On Mac: run published binary + smoke test (publish already works from Windows/CI) | ~½ day |
 
 **Estimate:** ~**1–1.5 weeks** MVP (compile + run + save/load + tile/token editors). Full cleanup ~2–3 weeks. Signed/notarized `.app` is after MVP.
 
 **Defer:** model `Rehydrate` / mouse `Drag`, graph polish, import/export UX niceties, Gatekeeper notarization.
+
+**Post-MVP backlog:**
+
+- **Token Editor → new event:** When creating an event from Token Editor, only assign it to the token if it passes the same filtered-combo rules as WPF (`isTokenInteraction`, etc.). Non-token events are added to the scenario but not wired to the token. See `TokenEditorWindow.TryAssignCreatedInteractionToSelectedToken`.
+- **Scenario pre-flight (`ErrorChecker`):** Wire `ErrorChecker.CheckErrors` into the UI (not executed today). Include a warning when a token's `triggerName` points at a non-token interaction or a missing event. Warn when Starting Position interaction/tokens have `tokenType` Search instead of Start (spurious Search token in playback). See `ErrorChecker.cs` (`TODO-Avalonia`).
 
 **Hardest cluster:** tile/token models + `Utils` imaging. MessageBox/TFM are volume, not risk.
 

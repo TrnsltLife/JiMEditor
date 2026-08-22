@@ -1,14 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <!-- Same One Ring artwork as WPF JiMEditor (JiME.csproj); embeds in .exe and Avalonia default window icon. -->
     <ApplicationIcon>..\..\..\JiMEditor\ring.ico</ApplicationIcon>
     <Nullable>enable</Nullable>
-    <UseWpf>true</UseWpf>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+  <!-- Windows-only app host metadata; ignored on non-Windows RIDs. -->
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
 
   <ItemGroup>
@@ -53,6 +55,7 @@
     <EmbeddedResource Include="..\..\..\JiMEditor\Procedural\Assets\story-fragments.json" Link="Procedural\Assets\story-fragments.json" />
   </ItemGroup>
   <ItemGroup>
+    <!-- GraphX-era visualization models kept for reference; Avalonia graph lives under ScenarioGraph/. -->
     <Compile Remove="JiME\Models\Visualization\**\*.cs" />
   </ItemGroup>
 </Project>

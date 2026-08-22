@@ -1,4 +1,4 @@
-// Avalonia port: isolate user data from WPF JiMEditor (Documents\Your Journey).
+// Avalonia port: isolate user data from WPF JiMEditor (Documents/Your Journey).
 using System;
 using System.IO;
 
@@ -17,9 +17,11 @@ public static class UserJourneyPaths
 	/// <summary>Window title prefix so Avalonia runs are distinguishable from WPF.</summary>
 	public const string EditorWindowTitlePrefix = "Your Journey Avalonia";
 
-	public static readonly string DocumentsRelativePathHint = "Documents\\" + DocumentFolderName;
+	/// <summary>User-facing relative path hint; separator matches the current OS.</summary>
+	public static string DocumentsRelativePathHint =>
+		Path.Combine( "Documents", DocumentFolderName );
 
-	public static readonly string CampaignScenarioRemovalFootnote =
+	public static string CampaignScenarioRemovalFootnote =>
 		"Removing a Scenario from the Campaign DOES NOT DELETE ITS FILE. The Scenario's file will be moved into the base Scenario folder ("
 		+ DocumentsRelativePathHint
 		+ "). Hold CONTROL while clicking the X button to PERMANENTLY DELETE the file (you will be asked to confirm).";

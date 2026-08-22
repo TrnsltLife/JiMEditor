@@ -4,8 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using Microsoft.Win32;
 using Newtonsoft.Json;
 
 namespace JiME
@@ -40,16 +38,17 @@ namespace JiME
 				}
 			}
 
-			SaveFileDialog saveFileDialog = new SaveFileDialog();
-			saveFileDialog.DefaultExt = ".jime-" + exportType.ToLower();
-			saveFileDialog.Title = "Export " + exportType + " As";
-			saveFileDialog.Filter = exportType + " File (*.jime-" + exportType.ToLower() + ")|*.jime-" + exportType.ToLower();
-			saveFileDialog.InitialDirectory = basePath;
-			saveFileDialog.FileName = suggestedFilename;
-			if (saveFileDialog.ShowDialog() == true)
-				fileName = saveFileDialog.FileName;
-			else
+			var ext = ".jime-" + exportType.ToLower();
+			var picked = FileDialogs.PickSaveFile(
+				title: "Export " + exportType + " As",
+				suggestedFileName: suggestedFilename,
+				defaultExtension: ext,
+				filterName: exportType + " File (*" + ext + ")",
+				filterPattern: "*" + ext,
+				initialDirectory: basePath );
+			if ( string.IsNullOrEmpty( picked ) )
 				return false;
+			fileName = picked;
 
 			//just use the filename, not the whole path
 			FileInfo fi = new FileInfo(fileName);

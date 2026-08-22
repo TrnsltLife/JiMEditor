@@ -17,10 +17,6 @@ using JiMEditor.Avalonia.ScenarioGraph;
 using JiMEditor.Avalonia;
 using JiMEditor.Avalonia.Views.Events;
 using JiME;
-using MessageBox = System.Windows.MessageBox;
-using MessageBoxButton = System.Windows.MessageBoxButton;
-using MessageBoxImage = System.Windows.MessageBoxImage;
-using MessageBoxResult = System.Windows.MessageBoxResult;
 
 namespace JiMEditor.Avalonia.Views;
 
