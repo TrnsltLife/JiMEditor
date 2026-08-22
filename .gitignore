@@ -6,6 +6,9 @@
 # ignore third_party directory - a place to stache source code etc. that AI needs to reference
 third_party/
 
+# macOS Finder metadata
+.DS_Store
+
 #project specific
 TILES/
 

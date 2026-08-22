@@ -4,7 +4,7 @@ Short guide for producing a runnable app / executable on Windows.
 
 ## Prerequisites
 
-1. [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) (`dotnet --version` should report 9.x).
+1. **.NET 9 SDK** — this repo targets `net9.0`. Older SDKs are not enough; `dotnet build` fails with `NETSDK1045` until 9.x is installed.
 2. Clone this repo **and** the sibling [JiMEditor](../JiMEditor) repo side by side (tile/token assets are linked from `../JiMEditor/Assets`).
 
 ```
@@ -14,6 +14,25 @@ parent/
 ```
 
 3. VS Code / Cursor: install the **C# Dev Kit** (or **C#**) extension so Run/Debug and tasks work.
+
+### Install .NET 9 SDK (Windows)
+
+Check what you have:
+
+```powershell
+dotnet --list-sdks
+dotnet --version    # should report 9.x after install
+```
+
+**Option A — winget:**
+
+```powershell
+winget install Microsoft.DotNet.SDK.9
+```
+
+**Option B — Official installer:** download **.NET SDK 9.0** for Windows from [dotnet.microsoft.com/download/dotnet/9.0](https://dotnet.microsoft.com/download/dotnet/9.0) and run the installer.
+
+You can keep older SDKs installed; multiple versions coexist. Open a **new terminal** after installing.
 
 ## Visual Studio Code
 
