@@ -137,6 +137,11 @@ flowchart LR
 
 **Defer:** model `Rehydrate` / mouse `Drag`, graph polish, import/export UX niceties, Gatekeeper notarization.
 
+**Post-MVP backlog:**
+
+- **Token Editor → new event:** When creating an event from Token Editor, only assign it to the token if it passes the same filtered-combo rules as WPF (`isTokenInteraction`, etc.). Non-token events are added to the scenario but not wired to the token. See `TokenEditorWindow.TryAssignCreatedInteractionToSelectedToken`.
+- **Scenario pre-flight (`ErrorChecker`):** Wire `ErrorChecker.CheckErrors` into the UI (not executed today). Include a warning when a token's `triggerName` points at a non-token interaction or a missing event. Warn when Starting Position interaction/tokens have `tokenType` Search instead of Start (spurious Search token in playback). See `ErrorChecker.cs` (`TODO-Avalonia`).
+
 **Hardest cluster:** tile/token models + `Utils` imaging. MessageBox/TFM are volume, not risk.
 
 ## Event editor port status (Avalonia)

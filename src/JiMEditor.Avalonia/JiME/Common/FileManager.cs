@@ -138,6 +138,9 @@ namespace JiME
 				if ( pruneCollectionsBeforeWrite )
 					ScenarioCollectionAvailability.PruneScenarioForEnabledCollections( scenario );
 
+				// Starting Position must serialize as TokenType.Start (not InteractionBase default Search).
+				scenario.RepairStartPositionData();
+
 				var directory = Path.GetDirectoryName( fullDestinationPath );
 				if ( !string.IsNullOrEmpty( directory ) && !Directory.Exists( directory ) )
 					Directory.CreateDirectory( directory );

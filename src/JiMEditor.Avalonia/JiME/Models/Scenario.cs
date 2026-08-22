@@ -497,7 +497,7 @@ namespace JiME
 			return s;
 		}
 
-		void RepairStartPositionData()
+		public void RepairStartPositionData()
 		{
 			foreach ( var interaction in interactionObserver )
 			{

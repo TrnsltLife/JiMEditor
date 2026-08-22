@@ -107,6 +107,9 @@ namespace JiME
 
 		public void ApplyInteraction( IInteraction interaction )
 		{
+			if ( interaction is StartInteraction start )
+				start.ApplyStartInteractionDefaults();
+
 			triggerName = interaction.dataName;
 			if ( interaction is StartInteraction || interaction.dataName == StartInteraction.DEFAULT_NAME )
 			{

@@ -78,6 +78,9 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 		foreach ( var token in tile.tokenList )
 			token.RepairStartPositionFromTriggerName();
 
+		foreach ( var start in scenario.interactionObserver.OfType<StartInteraction>() )
+			start.ApplyStartInteractionDefaults();
+
 		if ( tile.tokenList.Count > 0 )
 		{
 			selected = highlightToken != null
@@ -230,6 +233,7 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 	{
 		if ( _suppressInteractionComboSync || selected == null || InteractionCombo.SelectedItem is not IInteraction i )
 			return;
+		// ApplyInteraction sets token fields and, for Starting Position, normalizes the Start event (tokenType Start).
 		selected.ApplyInteraction( i );
 		RebuildTokenCanvas();
 		UpdateSelectedUi();
@@ -276,15 +280,28 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 				return;
 			scenario.AddInteraction( created );
 			RefreshTokenInteractions();
-			SetInteractionComboSelection(
-				tokenInteractions.FirstOrDefault( x => x.dataName == created.dataName ) );
-			if ( selected == null )
-				return;
-			selected.ApplyInteraction( created );
-			RebuildTokenCanvas();
-			UpdateSelectedUi();
+			TryAssignCreatedInteractionToSelectedToken( created );
 		};
 		flyout.Items.Add( item );
+	}
+
+	/// <summary>
+	/// WPF Token Editor only assigns a newly created event when it appears in the filtered combo
+	/// (<see cref="IsAllowedTokenInteraction"/>). Non-token events are added to the scenario only.
+	/// </summary>
+	void TryAssignCreatedInteractionToSelectedToken( IInteraction created )
+	{
+		if ( selected == null || !IsAllowedTokenInteraction( created ) )
+			return;
+
+		var match = tokenInteractions.FirstOrDefault( x => x.dataName == created.dataName );
+		if ( match == null )
+			return;
+
+		SetInteractionComboSelection( match );
+		selected.ApplyInteraction( match );
+		RebuildTokenCanvas();
+		UpdateSelectedUi();
 	}
 
 	async void AddTriggerButton_Click( object? sender, RoutedEventArgs e )

@@ -180,6 +180,8 @@ public class TileTokenSerializationRoundTripTests
 
 			Assert.Equal( StartInteraction.DEFAULT_NAME, token.triggerName );
 			Assert.Equal( TokenType.Start, token.tokenType );
+			Assert.Equal( TokenType.Start, start.tokenType );
+			Assert.True( start.isTokenInteraction );
 			Assert.Equal( "Start", token.dataName );
 		} );
 	}
@@ -220,6 +222,39 @@ public class TileTokenSerializationRoundTripTests
 			var startInteraction = roundTrippedScenario.interactionObserver
 				.First( i => i.dataName == StartInteraction.DEFAULT_NAME );
 			Assert.Equal( TokenType.Start, startInteraction.tokenType );
+		} );
+	}
+
+	[Fact]
+	public void Save_RepairsStartingPositionInteraction_BeforeWrite()
+	{
+		ModelTestEnvironment.RunInSta( () =>
+		{
+			ModelTestEnvironment.SetupMinimalUtilsForModelTests();
+
+			var scenario = new Scenario( "Save Start Repair Scenario" );
+			var start = scenario.interactionObserver.OfType<StartInteraction>().Single();
+			start.tokenType = TokenType.Search;
+			start.isTokenInteraction = false;
+
+			var outPath = Path.Combine( Path.GetTempPath(), "jime-start-repair-save-" + Guid.NewGuid() + ".jime" );
+			try
+			{
+				var ok = FileManager.TryWriteScenarioToPath( scenario, outPath, updateScenarioAfterWrite: false, out var err );
+				Assert.True( ok, err );
+
+				var fm = JsonConvert.DeserializeObject<FileManager>( File.ReadAllText( outPath ) );
+				Assert.NotNull( fm );
+				var startJson = fm!.interactions.Single( i => i.dataName == StartInteraction.DEFAULT_NAME );
+				Assert.Equal( (int)InteractionType.Start, (int)startJson.interactionType );
+				Assert.Equal( TokenType.Start, startJson.tokenType );
+				Assert.True( startJson.isTokenInteraction );
+			}
+			finally
+			{
+				if ( File.Exists( outPath ) )
+					File.Delete( outPath );
+			}
 		} );
 	}
 
