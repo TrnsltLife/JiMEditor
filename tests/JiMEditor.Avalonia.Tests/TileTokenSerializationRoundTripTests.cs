@@ -1,6 +1,5 @@
 using System.Linq;
 using System.IO;
-using System.Windows;
 using System.Collections.ObjectModel;
 using JiME;
 using Newtonsoft.Json;
@@ -10,6 +9,66 @@ namespace JiMEditor.Avalonia.Tests;
 
 public class TileTokenSerializationRoundTripTests
 {
+	[Fact]
+	public void Vector2_DeserializesWpfCommaSeparatedString()
+	{
+		var v = JsonConvert.DeserializeObject<Vector2>( "\"0,1\"" );
+		Assert.Equal( 0, v.X );
+		Assert.Equal( 1, v.Y );
+
+		v = JsonConvert.DeserializeObject<Vector2>( "\"336,249.4153152\"" );
+		Assert.Equal( 336, v.X, 6 );
+		Assert.Equal( 249.4153152, v.Y, 6 );
+	}
+
+	[Fact]
+	public void Vector2_SerializesAsWpfCommaSeparatedString()
+	{
+		var json = JsonConvert.SerializeObject( new Vector2( 0, 1 ) );
+		Assert.Equal( "\"0,1\"", json );
+	}
+
+	[Fact]
+	public void Vector2_DeserializesObjectAndArrayShapes()
+	{
+		var fromObj = JsonConvert.DeserializeObject<Vector2>( "{\"X\":2,\"Y\":3}" );
+		Assert.Equal( 2, fromObj.X );
+		Assert.Equal( 3, fromObj.Y );
+
+		var fromArr = JsonConvert.DeserializeObject<Vector2>( "[4.5,6.25]" );
+		Assert.Equal( 4.5, fromArr.X );
+		Assert.Equal( 6.25, fromArr.Y );
+	}
+
+	[Fact]
+	public void HexTile_LegacyPathRootString_Deserializes()
+	{
+		// Minimal tile JSON shape as written by WPF (pathRoot / position are "X,Y" strings).
+		const string json = """
+			{
+			  "tileType": 0,
+			  "idNumber": 213,
+			  "tileSide": "A",
+			  "position": "336,249.4153152",
+			  "pathRoot": "0,1",
+			  "angle": 0,
+			  "tokenCount": 1,
+			  "GUID": "00000000-0000-0000-0000-000000000001",
+			  "isStartTile": false,
+			  "triggerName": "None",
+			  "tokenList": [],
+			  "color": 0
+			}
+			""";
+
+		var tile = JsonConvert.DeserializeObject<HexTile>( json );
+		Assert.NotNull( tile );
+		Assert.Equal( 0, tile!.pathRoot.X );
+		Assert.Equal( 1, tile.pathRoot.Y );
+		Assert.Equal( 336, tile.position.X, 6 );
+		Assert.Equal( 249.4153152, tile.position.Y, 6 );
+	}
+
 	[Fact]
 	public void JourneyTile_RoundTrip_PreservesNumericState()
 	{
@@ -25,6 +84,7 @@ public class TileTokenSerializationRoundTripTests
 			{
 				tileSide = "B",
 				position = new Vector2( 336, 249.4153152 ),
+				pathRoot = new Vector2( 0, 1 ),
 				angle = 105,
 				triggerName = "TileExploredTrigger",
 				isStartTile = true
@@ -32,7 +92,11 @@ public class TileTokenSerializationRoundTripTests
 			chapter.AddTile( tile );
 
 			var fm = new FileManager( scenario );
-			var json = JsonConvert.SerializeObject( fm );
+			var json = JsonConvert.SerializeObject( fm, Formatting.Indented );
+			// WPF Vector TypeConverter wrote "X,Y" strings — keep that on-disk shape.
+			Assert.Contains( "\"0,1\"", json );
+			Assert.Contains( "\"336,249.4153152\"", json );
+
 			var deserializedFileManager = JsonConvert.DeserializeObject<FileManager>( json );
 			Assert.NotNull( deserializedFileManager );
 
@@ -44,6 +108,8 @@ public class TileTokenSerializationRoundTripTests
 			Assert.Equal( "B", roundTrippedTile.tileSide );
 			Assert.Equal( 336, roundTrippedTile.position.X, 6 );
 			Assert.Equal( 249.4153152, roundTrippedTile.position.Y, 6 );
+			Assert.Equal( 0, roundTrippedTile.pathRoot.X );
+			Assert.Equal( 1, roundTrippedTile.pathRoot.Y );
 			Assert.Equal( 105, roundTrippedTile.angle, 6 );
 			Assert.Equal( "TileExploredTrigger", roundTrippedTile.triggerName );
 			Assert.True( roundTrippedTile.isStartTile );

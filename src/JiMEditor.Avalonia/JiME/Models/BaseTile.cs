@@ -47,7 +47,7 @@ namespace JiME
 			}
 		}
 		public int color;
-		public Vector2 pathRoot;
+		public Vector2 pathRoot { get; set; }
 		public string triggerName
 		{
 			get => _triggerName;
