@@ -1,14 +1,13 @@
 // Mac MVP step 6: Avalonia replacement for System.Windows.MessageBox (WPF-compatible API).
 using System;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
+using JiMEditor.Avalonia;
 
 namespace JiME
 {
@@ -75,51 +74,59 @@ namespace JiME
 			MessageBoxButton button,
 			MessageBoxImage icon )
 		{
+			if ( ApplicationEnvironment.IsHeadless )
+				return DefaultResult( button );
+
 			var dialog = new MessageDialogWindow( messageBoxText, caption ?? "", button, icon );
 			var owner = GetOwnerWindow();
 
 			if ( owner == null )
-			{
-				// No owner: pump until closed (non-ShowDialog path).
-				var done = false;
-				MessageBoxResult result = DefaultResult( button );
-				dialog.Closed += ( _, _ ) =>
-				{
-					result = dialog.Result;
-					done = true;
-				};
-				dialog.Show();
-				while ( !done )
-				{
-					Dispatcher.UIThread.RunJobs();
-					Thread.Sleep( 1 );
-				}
-				return result;
-			}
+				return ShowWithoutOwner( dialog, button );
 
 			return ShowDialogSync( dialog, owner );
 		}
 
+		static MessageBoxResult ShowWithoutOwner( MessageDialogWindow dialog, MessageBoxButton button )
+		{
+			var frame = new DispatcherFrame();
+			var result = DefaultResult( button );
+			dialog.Closed += ( _, _ ) =>
+			{
+				result = dialog.Result;
+				frame.Continue = false;
+			};
+			dialog.Show();
+			Dispatcher.UIThread.PushFrame( frame );
+			return result;
+		}
+
+		/// <summary>
+		/// WPF-compatible blocking show. Uses a nested <see cref="DispatcherFrame"/> so nested modal
+		/// dialogs (e.g. MessageBox from inside <c>ShowDialog</c>) stay interactive on macOS.
+		/// </summary>
 		static MessageBoxResult ShowDialogSync( MessageDialogWindow dialog, Window owner )
 		{
-			MessageBoxResult result = DefaultResult( dialog.Buttons );
-			var done = false;
+			var frame = new DispatcherFrame();
+			var result = DefaultResult( dialog.Buttons );
 			Exception? fault = null;
 
-			dialog.ShowDialog<MessageBoxResult>( owner ).ContinueWith( t =>
+			_ = Dispatcher.UIThread.InvokeAsync( async () =>
 			{
-				if ( t.IsFaulted )
-					fault = t.Exception?.InnerException ?? t.Exception;
-				else if ( t.IsCompletedSuccessfully )
-					result = t.Result;
-				done = true;
-			}, TaskScheduler.Default );
+				try
+				{
+					result = await dialog.ShowDialog<MessageBoxResult>( owner ).ConfigureAwait( true );
+				}
+				catch ( Exception ex )
+				{
+					fault = ex;
+				}
+				finally
+				{
+					frame.Continue = false;
+				}
+			} );
 
-			while ( !done )
-			{
-				Dispatcher.UIThread.RunJobs();
-				Thread.Sleep( 1 );
-			}
+			Dispatcher.UIThread.PushFrame( frame );
 
 			if ( fault != null )
 				throw fault;

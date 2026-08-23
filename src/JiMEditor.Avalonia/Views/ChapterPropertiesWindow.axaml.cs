@@ -97,8 +97,7 @@ public partial class ChapterPropertiesWindow : Window
 
 	void OnLoaded( object? sender, RoutedEventArgs e )
 	{
-		NameTextBox.Focus();
-		NameTextBox.SelectAll();
+		ApplicationEnvironment.TryFocus( NameTextBox, selectAllText: true );
 		UpdateTexts();
 		RefreshFlavorPreview();
 	}

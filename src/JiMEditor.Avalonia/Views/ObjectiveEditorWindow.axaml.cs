@@ -67,8 +67,7 @@ public partial class ObjectiveEditorWindow : Window, INotifyPropertyChanged
 
 		PopulateEditableFieldsFromObjective();
 		SyncAllTriggerCombosFromObjective();
-		ShortNameTextBox?.Focus();
-		ShortNameTextBox?.SelectAll();
+		ApplicationEnvironment.TryFocus( ShortNameTextBox, selectAllText: true );
 	}
 
 	/// <summary>Reminder and numeric rewards are not bound; push model → UI when the dialog opens.</summary>

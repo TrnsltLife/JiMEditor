@@ -39,8 +39,7 @@ public partial class ScenarioWindow : Window
 	void OnLoaded( object? sender, RoutedEventArgs e )
 	{
 		Loaded -= OnLoaded;
-		NameTextBox.Focus();
-		NameTextBox.SelectAll();
+		ApplicationEnvironment.TryFocus( NameTextBox, selectAllText: true );
 		ResolutionComboBox.ItemsSource = scenario.resolutionObserver;
 		LastStandFailedResolutionComboBox.ItemsSource = scenario.resolutionObserver;
 		ResolutionComboBox.SelectedIndex = scenario.resolutionObserver.Count > 0 ? 0 : -1;

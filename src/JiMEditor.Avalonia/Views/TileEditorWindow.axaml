@@ -48,8 +48,7 @@
 								<ComboBox x:Name="TilePoolCombo"
 								          VerticalAlignment="Center"
 								          MinWidth="210"
-								          HorizontalAlignment="Stretch"
-								          SelectedIndex="0">
+								          HorizontalAlignment="Stretch">
 									<ComboBox.ItemTemplate>
 										<DataTemplate>
 											<StackPanel Orientation="Horizontal" Spacing="4">
