@@ -1,4 +1,4 @@
-// Ported from: JiMEditor/Views/CampaignWindow.xaml.cs (2026-04-05) — Avalonia UI; file dialogs / editors TODO-Avalonia-Reenable.
+// Ported from: JiMEditor/Views/CampaignWindow.xaml.cs (2026-04-05) — Avalonia UI.
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -151,16 +151,15 @@ public partial class CampaignWindow : Window
 		CampaignNameTextBox?.SelectAll();
 	}
 
-	void CampaignWindow_KeyDown( object? sender, KeyEventArgs e )
-	{
-		if ( e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl )
-			_controlDown = true;
-	}
+	void CampaignWindow_KeyDown( object? sender, KeyEventArgs e ) =>
+		_controlDown = EditorHotKeys.HasPrimaryModifier( e );
 
 	void CampaignWindow_KeyUp( object? sender, KeyEventArgs e )
 	{
-		if ( e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl )
+		if ( e.Key is Key.LeftCtrl or Key.RightCtrl or Key.LWin or Key.RWin )
 			_controlDown = false;
+		else
+			_controlDown = EditorHotKeys.HasPrimaryModifier( e );
 	}
 
 	static CampaignItem? CampaignItemFromSource( object? source )
@@ -534,33 +533,53 @@ public partial class CampaignWindow : Window
 	void SaveAndClose_Click( object? sender, RoutedEventArgs e )
 	{
 		SaveCampaign();
-		var pw = new ProjectWindow();
-		if ( global::Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop )
-			desktop.MainWindow = pw;
-		pw.Show();
-		Close();
+		ReturnToProjectWindow();
+	}
+
+	void DeleteCampaignButton_Click( object? sender, RoutedEventArgs e )
+	{
+		var res = MessageBox.Show(
+			"Are you sure you want to permanently delete this Campaign and its shareable Package, if it exists?\r\n\r\nTHIS ACTION CANNOT BE UNDONE.\r\n\r\nAny individual Scenarios added to this Campaign WILL NOT BE DELETED - they will be moved back to the base folder.",
+			"Permanently Delete This Campaign And Its Data?",
+			MessageBoxButton.YesNo,
+			MessageBoxImage.Question );
+		if ( res != MessageBoxResult.Yes )
+			return;
+		MoveScenariosToBaseFolderAndDeleteCampaign();
+		ReturnToProjectWindow();
 	}
 
 	void Cancel_Click( object? sender, RoutedEventArgs e )
 	{
-		var di = new DirectoryInfo( _campaignFolder );
-		if ( di.Exists )
-		{
-			foreach ( var fi in di.GetFiles().Where( f => f.Extension == ".jime" ) )
-			{
-				var s = FileManager.LoadProjectFromPath( _campaignFolder, fi.Name );
-				if ( s == null )
-					continue;
-				s.campaignGUID = Guid.Empty;
-				ScenarioCollectionAvailability.PruneScenarioForEnabledCollections( s );
-				var fm = new FileManager( s );
-				fm.Save();
-			}
+		MoveScenariosToBaseFolderAndDeleteCampaign();
+		ReturnToProjectWindow();
+	}
 
-			if ( Directory.Exists( _campaignFolder ) )
-				Directory.Delete( _campaignFolder, true );
+	/// <summary>WPF <c>cancelButton_Click</c> / <c>deleteCampaign_Click</c>: relocate .jime files, then remove the campaign folder.</summary>
+	void MoveScenariosToBaseFolderAndDeleteCampaign()
+	{
+		var di = new DirectoryInfo( _campaignFolder );
+		if ( !di.Exists )
+			return;
+
+		foreach ( var fi in di.GetFiles().Where( f => f.Extension == ".jime" ) )
+		{
+			var s = FileManager.LoadProjectFromPath( _campaignFolder, fi.Name );
+			if ( s == null )
+				continue;
+			s.campaignGUID = Guid.Empty;
+			s.projectType = ProjectType.Standalone;
+			ScenarioCollectionAvailability.PruneScenarioForEnabledCollections( s );
+			var fm = new FileManager( s );
+			fm.Save();
 		}
 
+		if ( Directory.Exists( _campaignFolder ) )
+			Directory.Delete( _campaignFolder, true );
+	}
+
+	void ReturnToProjectWindow()
+	{
 		var pw = new ProjectWindow();
 		if ( global::Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop )
 			desktop.MainWindow = pw;

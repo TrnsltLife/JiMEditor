@@ -15,6 +15,9 @@ public static class EventEditorFactory
 	/// </summary>
 	public static async Task<bool> TryEditInteractionAsync( Window owner, Scenario scenario, IInteraction interaction )
 	{
+		if ( StartInteractionEditorMessages.TryWarnCannotEdit( interaction ) )
+			return false;
+
 		switch ( interaction )
 		{
 			case DialogInteraction d:

@@ -6,6 +6,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using JiME.TextFormat;
+using JiMEditor.Avalonia;
 
 namespace JiMEditor.Avalonia.Views;
 
@@ -41,6 +42,10 @@ public partial class PseudoHtmlRichEditor : UserControl
 		InitializeComponent();
 		IconToolbarRows.ItemsSource = IconButtonRows;
 		SourceBox.AddHandler( InputElement.KeyDownEvent, SourceBox_OnKeyDown, RoutingStrategies.Tunnel );
+		var mod = EditorHotKeys.PrimaryModifierLabel;
+		ToolTip.SetTip( BoldButton, $"Bold ({mod}+B)" );
+		ToolTip.SetTip( ItalicButton, $"Italic ({mod}+I)" );
+		ToolTip.SetTip( ClearFmtButton, $"Clear formatting ({mod}+Space)" );
 	}
 
 	public string Text
@@ -63,26 +68,31 @@ public partial class PseudoHtmlRichEditor : UserControl
 
 	void SourceBox_OnKeyDown( object? sender, KeyEventArgs e )
 	{
-		if ( !e.KeyModifiers.HasFlag( KeyModifiers.Control ) )
-			return;
-		switch ( e.Key )
+		if ( EditorHotKeys.Matches( e, Key.B ) )
 		{
-			case Key.B:
-				e.Handled = true;
-				ToggleFormatOrWrapEmpty( "<b>", "</b>", JiMePseudoHtmlContentEditing.ApplyBoldToggle );
-				break;
-			case Key.I:
-				e.Handled = true;
-				ToggleFormatOrWrapEmpty( "<i>", "</i>", JiMePseudoHtmlContentEditing.ApplyItalicToggle );
-				break;
-			case Key.Space:
-				e.Handled = true;
-				ApplyClearFormatting();
-				break;
-			case Key.F:
-				e.Handled = true;
-				ToggleFormatOrWrapEmpty( "<font=\"Icon\">", "</font>", JiMePseudoHtmlContentEditing.ApplyIconFontToggle );
-				break;
+			e.Handled = true;
+			ToggleFormatOrWrapEmpty( "<b>", "</b>", JiMePseudoHtmlContentEditing.ApplyBoldToggle );
+			return;
+		}
+
+		if ( EditorHotKeys.Matches( e, Key.I ) )
+		{
+			e.Handled = true;
+			ToggleFormatOrWrapEmpty( "<i>", "</i>", JiMePseudoHtmlContentEditing.ApplyItalicToggle );
+			return;
+		}
+
+		if ( EditorHotKeys.Matches( e, Key.Space ) )
+		{
+			e.Handled = true;
+			ApplyClearFormatting();
+			return;
+		}
+
+		if ( EditorHotKeys.Matches( e, Key.F ) )
+		{
+			e.Handled = true;
+			ToggleFormatOrWrapEmpty( "<font=\"Icon\">", "</font>", JiMePseudoHtmlContentEditing.ApplyIconFontToggle );
 		}
 	}
 

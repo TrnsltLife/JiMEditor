@@ -41,6 +41,7 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 	public MainWindow()
 	{
 		InitializeComponent();
+		AddHandler( InputElement.KeyDownEvent, MainWindow_KeyDown, RoutingStrategies.Tunnel );
 	}
 
 	/// <summary>New standalone scenario (WPF: <c>new MainWindow(Guid.Empty)</c> from project window).</summary>
@@ -507,7 +508,10 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 
 	async void AddTriggerToolbarButton_Click( object? sender, RoutedEventArgs e ) => await AddTriggerAsync();
 
-	async void NewTileBlockToolbarButton_Click( object? sender, RoutedEventArgs e )
+	async void NewTileBlockToolbarButton_Click( object? sender, RoutedEventArgs e ) =>
+		await AddTileBlockAsync();
+
+	async Task AddTileBlockAsync()
 	{
 		var cw = new ChapterPropertiesWindow( scenario, null );
 		var originalValues = cw.chapter.CaptureStartingValues();
@@ -1051,7 +1055,85 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 		new ExportManager().ExportTranslation( scenario.scenarioName, translationForExport );
 	}
 
-	async void ScenarioSettingsButton_Click( object? sender, RoutedEventArgs e )
+	void MainWindow_KeyDown( object? sender, KeyEventArgs e )
+	{
+		if ( scenario == null )
+			return;
+
+		if ( EditorHotKeys.Matches( e, Key.S, KeyModifiers.Alt ) )
+		{
+			e.Handled = true;
+			_ = SaveScenarioSaveAsAsync();
+			return;
+		}
+
+		if ( EditorHotKeys.Matches( e, Key.S ) )
+		{
+			e.Handled = true;
+			_ = SaveScenarioNormalAsync();
+			return;
+		}
+
+		if ( EditorHotKeys.Matches( e, Key.N ) )
+		{
+			e.Handled = true;
+			NewProjectToolbarButton_Click( sender, e );
+			return;
+		}
+
+		if ( EditorHotKeys.Matches( e, Key.O ) )
+		{
+			e.Handled = true;
+			OpenToolbarButton_Click( sender, e );
+			return;
+		}
+
+		if ( EditorHotKeys.MatchesAlt( e, Key.S ) )
+		{
+			e.Handled = true;
+			_ = OpenScenarioSettingsAsync();
+			return;
+		}
+
+		if ( EditorHotKeys.MatchesAlt( e, Key.C ) )
+		{
+			e.Handled = true;
+			_ = AddTileBlockAsync();
+			return;
+		}
+
+		if ( EditorHotKeys.MatchesAlt( e, Key.O ) )
+		{
+			e.Handled = true;
+			_ = AddObjectiveAsync();
+			return;
+		}
+
+		if ( EditorHotKeys.MatchesAlt( e, Key.E ) )
+		{
+			e.Handled = true;
+			OnAddInteraction( AddEventToolbarButton, e );
+			return;
+		}
+
+		if ( EditorHotKeys.MatchesAlt( e, Key.T ) )
+		{
+			e.Handled = true;
+			_ = AddTriggerAsync();
+			return;
+		}
+
+		if ( EditorHotKeys.MatchesAlt( e, Key.X ) )
+		{
+			e.Handled = true;
+			Close();
+		}
+	}
+
+	async void ScenarioSettingsButton_Click( object? sender, RoutedEventArgs e ) =>
+		await OpenScenarioSettingsAsync();
+
+	async Task OpenScenarioSettingsAsync()
 	{
 		var sw = new ScenarioWindow( scenario );
 		await sw.ShowDialog( this );
@@ -1406,6 +1488,8 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 	{
 		if ( interactionsUC.DataListView.SelectedItem is not IInteraction i )
 			return;
+		if ( StartInteractionEditorMessages.TryWarnCannotEdit( i ) )
+			return;
 		await EventEditorFactory.TryEditInteractionAsync( this, scenario, i );
 		interactionsUC.RefreshSortedItems();
 	}
@@ -1421,6 +1505,9 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 				MessageBoxImage.Information );
 			return;
 		}
+
+		if ( StartInteractionEditorMessages.TryWarnCannotDuplicate( src ) )
+			return;
 
 		switch ( src )
 		{
@@ -1646,6 +1733,8 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 	{
 		var interactionItem = new ImportManager().ImportEvent( scenario );
 		if ( interactionItem == null )
+			return;
+		if ( StartInteractionEditorMessages.TryWarnCannotImport( interactionItem ) )
 			return;
 		switch ( interactionItem )
 		{

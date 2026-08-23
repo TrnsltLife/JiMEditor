@@ -12,6 +12,44 @@ This is a list of things we need to do:
 
 * Dirty Tracking:
   * Implement "dirty" tracking across all dialogs. A lot of work.
+  * `Scenario.isDirty` exists and the window title already shows `*` when it is true (`MainWindow.SyncTitleFromScenario`).
+  * It is **not** a reliable “has unsaved edits” flag today. New scenarios start dirty. Save / Save As clear it via `TriggerTitleChange()`. After that, only a few paths set it true again (objective OK, trigger add/rename/delete, new resolution, tile-block reorder). Most editors (events, tiles, tokens, scenario settings, translations, etc.) never mark dirty.
+  * WPF was the same or weaker: it almost never called `TriggerTitleChange(true)` after load, so the close prompt mainly caught unsaved *new* projects.
+  * Prompt before closing the main editor (and before New/Open that would discard the current project) when dirty. Even with incomplete tracking this is useful; once more edit paths set dirty, the prompt covers them automatically.
+  * Prompt copy can match WPF: “The Project has changes that haven't been saved. Are you sure you want to exit without saving?”
+  * Increase `isDirty` coverage so the prompt actually fires after real edits (not only new projects / a handful of dialogs):
+    * Prefer marking dirty in `Scenario` mutators so individual windows cannot forget: `AddInteraction`, `RemoveData`, `AddChapter`, `AddObjective`, `AddTrigger`, `AddResolution`, `AddActivations`, `AddMonsterModifier`, `AddTranslation` (chapter reorder already calls `TriggerTitleChange(true)`).
+    * Also mark dirty on **in-place OK** that mutates an existing object without going through those add/remove methods (event editors, tile/token editors, scenario settings, threats, translations, activations, bonuses).
+    * Events: create, edit, duplicate, import, delete (sidebar + token editor “new event”).
+    * Tile blocks: add / remove / properties; tile editor; token editor; tile pool / random tiles.
+    * Objectives: delete / duplicate (objective editor OK already marks dirty).
+    * Triggers: duplicate (add / rename / delete already mark dirty).
+    * Resolutions: edit / delete from scenario settings (toolbar “new resolution” already marks dirty).
+    * Enemy attack groups and enemy bonuses: add, edit, delete, import.
+    * Translations: add, edit item text, delete, import.
+    * Scenario settings: name, collections, intro / special / cover, scout values, rewards, starting objective, etc.
+    * Threats window and inline scenario-name edit on the main toolbar.
+    * Do **not** mark dirty for export-only or read-only actions (export event, save image, graph pan/zoom, ErrorChecker).
+    * After Save / Save As, keep clearing dirty via `TriggerTitleChange()`; Save Copy must leave dirty unchanged (already the case).
+
+* Keyboard Shortcuts:
+  * [x] Reimplement WPF `MyCommands` gestures on the main editor using the **OS primary modifier** (Ctrl on Windows/Linux, Command on Mac) via `EditorHotKeys` (`KeyModifiers.Control` vs `Meta`).
+  * Text editor (`PseudoHtmlRichEditor`): Ctrl/⌘+B bold, Ctrl/⌘+I italic, Ctrl/⌘+Space clear formatting (WPF Clear button; underline was disabled in WPF). Ctrl/⌘+F toggles Icon font wrap. Tooltips show the OS modifier.
+  * WPF set (wired on `MainWindow` tunnel KeyDown):
+    * Ctrl/Cmd+N — New project (return to project list)
+    * Ctrl/Cmd+O — Open project
+    * Ctrl/Cmd+S — Save
+    * Ctrl/Cmd+Alt+S — Save As
+    * Alt+S — Scenario settings
+    * Alt+C — New tile block
+    * Alt+O — New objective
+    * Alt+E — New event
+    * Alt+T — New trigger
+    * Alt+X — Exit (closes the main editor)
+  * Hold Ctrl/⌘ in Campaign Manager still means permanently delete a scenario (was Ctrl-only).
+
+* Starting Position event:
+  * [x] Match WPF when the user tries to **edit**, **duplicate**, or **import** the Starting Position event (delete was already blocked). Copy lives in `StartInteractionEditorMessages`.
 
 * Search
   * A search function could be implemented
@@ -32,13 +70,11 @@ This is a list of things we need to do:
 * Better graphing capabilities
   * Better algorithm to display more helpfully
 
-* Scenario validity check
-  * Click a button to check the Scenario
-  * Check for missing/invalid properties
-  * Check for missing links (triggers, events)
-  * etc.
-  * Show a dialog to list the problems
-  * Add validity checker functions to each object type
+* Scenario validity check (`ErrorChecker`)
+  * Add a **green checkmark** button on the main window top command bar that launches `ErrorChecker.CheckErrors`.
+  * Advisory only: **non-blocking** for Save / Save As / close. Never prevent saving because of warnings.
+  * Show a dialog listing problems (duplicate names, missing/invalid properties, missing trigger/event links, token `triggerName` pointing at a non-token or missing event, Starting Position token type != Start, etc.).
+  * `ErrorChecker` exists but is not invoked from the UI yet (`ErrorChecker.cs` TODO-Avalonia). Expand the checker as we add per-type validity functions.
 
 * Mac executable (MVP — strip WPF, don’t rebuild editors)
   * Goal: `dotnet publish -r osx-arm64 --self-contained` produces a runnable Mac binary (~1–1.5 weeks focused work)
@@ -56,7 +92,8 @@ This is a list of things we need to do:
 
 * App window: Done
 
-* Campaign window: Done
+* Campaign window: mostly done
+  * [x] **Delete Campaign** — confirm, move scenarios back to the base folder (standalone + empty campaign GUID), delete the campaign folder (including package ZIP), return to the project list.
 
 * Settings Dialog TODO: Done
 
