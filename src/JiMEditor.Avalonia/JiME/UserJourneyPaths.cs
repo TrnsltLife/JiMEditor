@@ -11,8 +11,16 @@ public static class UserJourneyPaths
 {
 	public const string DocumentFolderName = "Your Journey Avalonia";
 
+	static string? _testBasePathOverride;
+
+	/// <summary>Redirect document storage (parity UI tests).</summary>
+	public static void SetTestBasePath( string path ) => _testBasePathOverride = path;
+
+	public static void ClearTestBasePath() => _testBasePathOverride = null;
+
 	public static string GetBasePath() =>
-		Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ), DocumentFolderName );
+		_testBasePathOverride
+		?? Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ), DocumentFolderName );
 
 	/// <summary>Window title prefix so Avalonia runs are distinguishable from WPF.</summary>
 	public const string EditorWindowTitlePrefix = "Your Journey Avalonia";

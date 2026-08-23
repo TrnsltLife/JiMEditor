@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -15,6 +14,21 @@ namespace JiME
 	/// <summary>Synchronous file pickers for legacy JiME managers (WPF dialog call shape).</summary>
 	public static class FileDialogs
 	{
+		static string? _nextSavePath;
+		static string? _nextOpenPath;
+
+		/// <summary>Next <see cref="PickSaveFile"/> returns this path without showing a picker (parity tests).</summary>
+		public static void SetNextSavePath( string path ) => _nextSavePath = path;
+
+		/// <summary>Next <see cref="PickOpenFile"/> returns this path without showing a picker (parity tests).</summary>
+		public static void SetNextOpenPath( string path ) => _nextOpenPath = path;
+
+		public static void ClearTestHooks()
+		{
+			_nextSavePath = null;
+			_nextOpenPath = null;
+		}
+
 		public static string? PickSaveFile(
 			string title,
 			string? suggestedFileName,
@@ -23,6 +37,13 @@ namespace JiME
 			string filterPattern,
 			string? initialDirectory )
 		{
+			if ( _nextSavePath != null )
+			{
+				var path = _nextSavePath;
+				_nextSavePath = null;
+				return path;
+			}
+
 			return RunUiSync( () => PickSaveFileAsync(
 				title, suggestedFileName, defaultExtension, filterName, filterPattern, initialDirectory ) );
 		}
@@ -34,6 +55,13 @@ namespace JiME
 			string filterPattern,
 			string? initialDirectory )
 		{
+			if ( _nextOpenPath != null )
+			{
+				var path = _nextOpenPath;
+				_nextOpenPath = null;
+				return path;
+			}
+
 			return RunUiSync( () => PickOpenFileAsync(
 				title, defaultExtension, filterName, filterPattern, initialDirectory ) );
 		}
@@ -127,23 +155,26 @@ namespace JiME
 			}
 
 			T result = default!;
-			var done = false;
+			var frame = new DispatcherFrame();
 			Exception? fault = null;
 
-			work().ContinueWith( t =>
+			_ = Dispatcher.UIThread.InvokeAsync( async () =>
 			{
-				if ( t.IsFaulted )
-					fault = t.Exception?.InnerException ?? t.Exception;
-				else if ( t.IsCompletedSuccessfully )
-					result = t.Result;
-				done = true;
-			}, TaskScheduler.Default );
+				try
+				{
+					result = await work().ConfigureAwait( true );
+				}
+				catch ( Exception ex )
+				{
+					fault = ex;
+				}
+				finally
+				{
+					frame.Continue = false;
+				}
+			} );
 
-			while ( !done )
-			{
-				Dispatcher.UIThread.RunJobs();
-				Thread.Sleep( 1 );
-			}
+			Dispatcher.UIThread.PushFrame( frame );
 
 			if ( fault != null )
 				throw fault;

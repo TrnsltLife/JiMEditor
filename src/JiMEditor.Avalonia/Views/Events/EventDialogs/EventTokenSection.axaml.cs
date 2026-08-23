@@ -74,17 +74,16 @@ public partial class EventTokenSection : UserControl
 	{
 		if ( _scenario == null || _interaction == null )
 			return;
-		ScenarioCollectionAvailability.CoerceInteractionTokenForScenario( _interaction, _scenario, _scenario.scenarioTypeJourney );
 		var list = ScenarioCollectionAvailability.GetSelectableTokenTypes( _scenario, _scenario.scenarioTypeJourney ).ToList();
+		var current = _interaction.tokenType;
+		if ( !list.Contains( current ) )
+			list.Add( current );
 
 		_suppress = true;
 		try
 		{
 			TokenTypeCombo.ItemsSource = list;
-			if ( list.Contains( _interaction.tokenType ) )
-				TokenTypeCombo.SelectedItem = _interaction.tokenType;
-			else if ( list.Count > 0 )
-				TokenTypeCombo.SelectedItem = list.Contains( TokenType.Search ) ? TokenType.Search : list[0];
+			TokenTypeCombo.SelectedItem = current;
 			SyncTerrainComboForScenario();
 		}
 		finally
@@ -100,13 +99,14 @@ public partial class EventTokenSection : UserControl
 		var terrains = ScenarioCollectionAvailability.GetSelectableTerrainTypes( _scenario ).ToList();
 		if ( terrains.Count == 0 )
 			terrains.Add( TerrainType.Boulder );
+		var current = _interaction.terrainType;
+		if ( !terrains.Contains( current ) )
+			terrains.Insert( 0, current );
 		_suppress = true;
 		try
 		{
 			TerrainTypeCombo.ItemsSource = terrains;
-			if ( !terrains.Contains( _interaction.terrainType ) )
-				_interaction.terrainType = terrains[0];
-			TerrainTypeCombo.SelectedItem = _interaction.terrainType;
+			TerrainTypeCombo.SelectedItem = current;
 		}
 		finally
 		{
@@ -176,7 +176,8 @@ public partial class EventTokenSection : UserControl
 		_interaction.tokenInteractionText = TokenInteractionTextBox.Text ?? "";
 		if ( !_interaction.isTokenInteraction )
 		{
-			if ( _interaction is PersistentInteractionBase p )
+			// Dialog persistent flag lives on the custom tab, not the token row.
+			if ( _interaction is PersistentInteractionBase p && _interaction is not DialogInteraction )
 				p.isPersistent = false;
 			return;
 		}
@@ -229,8 +230,25 @@ public partial class EventTokenSection : UserControl
 
 	void TokenTypeCombo_OnSelectionChanged( object? sender, SelectionChangedEventArgs e )
 	{
-		if ( _suppress )
+		if ( _suppress || _scenario == null || _interaction == null )
 			return;
+		if ( TokenTypeCombo.SelectedItem is TokenType selected )
+		{
+			_interaction.tokenType = selected;
+			ScenarioCollectionAvailability.CoerceInteractionTokenForScenario( _interaction, _scenario, _scenario.scenarioTypeJourney );
+			if ( TokenTypeCombo.SelectedItem is TokenType coerced && coerced != selected )
+			{
+				_suppress = true;
+				try
+				{
+					TokenTypeCombo.SelectedItem = coerced;
+				}
+				finally
+				{
+					_suppress = false;
+				}
+			}
+		}
 		if ( TokenTypeCombo.SelectedItem is TokenType.Terrain )
 			SyncTerrainComboForScenario();
 		UpdateDetailVisibility();
