@@ -1,0 +1,76 @@
+<!-- Scenario validity report from ErrorChecker.CheckErrors (2026-08-23). -->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="JiMEditor.Avalonia.Views.ErrorCheckWindow"
+        x:CompileBindings="False"
+        Title="Scenario Error Check"
+        Width="640"
+        Height="480"
+        MinWidth="420"
+        MinHeight="280"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource bgColor}">
+
+	<Window.Styles>
+		<Style Selector="Button.errorCheckLink">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="Padding" Value="0"/>
+			<Setter Property="Margin" Value="0"/>
+			<Setter Property="Cursor" Value="Hand"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+		</Style>
+		<Style Selector="Button.errorCheckLink:pointerover">
+			<Setter Property="Background" Value="#3a3a3e"/>
+		</Style>
+		<Style Selector="Button.errorCheckLink TextBlock">
+			<Setter Property="Foreground" Value="#6CB4EE"/>
+			<Setter Property="TextDecorations" Value="Underline"/>
+			<Setter Property="FontSize" Value="13"/>
+		</Style>
+	</Window.Styles>
+
+	<Grid RowDefinitions="Auto,*,Auto">
+		<StackPanel Grid.Row="0" Margin="8,8,8,0" Spacing="6">
+			<Border Classes="callout">
+				<TextBlock x:Name="CountText"
+				           Classes="heading"
+				           Text="Warnings (0):"/>
+			</Border>
+			<TextBlock Classes="subText"
+			           TextWrapping="Wrap"
+			Text="Click a highlighted name to open its editor."/>
+		</StackPanel>
+
+		<ScrollViewer Grid.Row="1"
+		              Margin="8"
+		              HorizontalScrollBarVisibility="Disabled"
+		              VerticalScrollBarVisibility="Auto">
+			<StackPanel x:Name="ReportPanel" Spacing="10"/>
+		</ScrollViewer>
+
+		<Border Grid.Row="2"
+		        BorderThickness="0,1,0,0"
+		        BorderBrush="Silver"
+		        Background="#FF46464A">
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="10">
+				<Button Background="DodgerBlue"
+				        Height="44"
+				        Padding="12,0"
+				        Click="CopyAllButton_Click">
+					<TextBlock Text="Copy All" Classes="heading" VerticalAlignment="Center"/>
+				</Button>
+				<Button Background="MediumSeaGreen"
+				        Height="44"
+				        Padding="8,0"
+				        IsDefault="True"
+				        Click="OkButton_Click">
+					<StackPanel Orientation="Horizontal" Spacing="6">
+						<TextBlock Text="OK" Classes="heading" VerticalAlignment="Center"/>
+						<Image Source="avares://JiMEditor.Avalonia/Assets/ok.png" Stretch="Uniform" Width="24" Height="24"/>
+					</StackPanel>
+				</Button>
+			</StackPanel>
+		</Border>
+	</Grid>
+</Window>

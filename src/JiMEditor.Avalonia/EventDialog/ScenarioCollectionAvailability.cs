@@ -276,18 +276,6 @@ public static class ScenarioCollectionAvailability
 			threat.monsterCollection.Remove( m );
 	}
 
-	static Collection? CollectionForMonsterTypeId( int monsterTypeId )
-	{
-		foreach ( var col in new[]
-		         {
-			         Collection.CORE_SET, Collection.VILLAINS_OF_ERIAJAR, Collection.SHADED_PATHS,
-			         Collection.DENIZENS_IN_DARKNESS, Collection.UNFURLING_WAR, Collection.SCORCHERS_OF_THE_WILDS
-		         } )
-		{
-			if ( col.Monsters.Any( m => m.id == monsterTypeId ) )
-				return col;
-		}
-
-		return null;
-	}
+		static Collection? CollectionForMonsterTypeId( int monsterTypeId ) =>
+			Collection.FromMonsterTypeId( monsterTypeId );
 }

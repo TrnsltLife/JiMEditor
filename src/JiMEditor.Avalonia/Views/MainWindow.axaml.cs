@@ -560,39 +560,43 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 		scenario.RemoveData( c );
 	}
 
-	async Task OpenChapterPropertiesEditorAsync( Chapter c )
+	async Task OpenChapterPropertiesEditorAsync( Chapter c, Window? owner = null )
 	{
 		var originalValues = c.CaptureStartingValues();
 		var originalPrefix = c.TranslationKeyPrefix();
 		var originalKeyName = c.TranslationKeyName();
 		var cw = new ChapterPropertiesWindow( scenario, c );
-		await cw.ShowDialog( this );
+		await cw.ShowDialog( owner ?? this );
 		c.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 	}
 
-	async Task OpenChapterTileEditorAsync( Chapter c )
+	async Task OpenChapterTileEditorAsync( Chapter c, Window? owner = null )
 	{
+		owner ??= this;
 		if ( scenario.scenarioTypeJourney )
 		{
 			if ( c.isRandomTiles )
 			{
 				var tp = new TilePoolEditorWindow( scenario, c );
-				await tp.ShowDialog( this );
+				await tp.ShowDialog( owner );
 			}
 			else
 			{
 				var tw = new TileEditorWindow( scenario, c );
-				await tw.ShowDialog( this );
+				await tw.ShowDialog( owner );
 			}
 		}
 		else
 		{
 			var tw = new TileEditorWindow( scenario, c );
-			await tw.ShowDialog( this );
+			await tw.ShowDialog( owner );
 		}
 	}
 
-	public async Task OnNodeActivatedAsync( ScenarioGraphNode node )
+	public Task OnNodeActivatedAsync( ScenarioGraphNode node ) =>
+		OpenScenarioGraphNodeAsync( this, node );
+
+	public async Task OpenScenarioGraphNodeAsync( Window owner, ScenarioGraphNode node )
 	{
 		switch ( node.Kind )
 		{
@@ -601,7 +605,7 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 				var chapter = scenario.chapterObserver.FirstOrDefault( c =>
 					ScenarioGraphFullScenarioDocumentBuilder.ChapterId( c.dataName ) == node.Id );
 				if ( chapter != null )
-					await OpenChapterPropertiesEditorAsync( chapter );
+					await OpenChapterPropertiesEditorAsync( chapter, owner );
 				break;
 			}
 			case ScenarioGraphNodeKind.Tile:
@@ -619,7 +623,7 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 				if ( selectedTile != null )
 				{
 					var w = new TokenEditorWindow( selectedTile, scenario );
-					await w.ShowDialog( this );
+					await w.ShowDialog( owner );
 				}
 				break;
 			}
@@ -628,7 +632,7 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 				var objective = scenario.objectiveObserver.FirstOrDefault( o =>
 					ScenarioGraphFullScenarioDocumentBuilder.ObjectiveId( o.dataName ) == node.Id );
 				if ( objective != null )
-					await OpenObjectiveEditorAsync( objective );
+					await OpenObjectiveEditorAsync( objective, owner );
 				break;
 			}
 			case ScenarioGraphNodeKind.Trigger:
@@ -638,7 +642,7 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 				if ( trigger != null )
 				{
 					var w = new TriggerEditorWindow( scenario, trigger.dataName );
-					await w.ShowDialog( this );
+					await w.ShowDialog( owner );
 				}
 				break;
 			}
@@ -648,7 +652,14 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 					ScenarioGraphFullScenarioDocumentBuilder.InteractionId( i.dataName ) == node.Id );
 				if ( interaction != null )
 				{
-					await EventEditorFactory.TryEditInteractionAsync( this, scenario, interaction );
+					if ( interaction is StartInteraction )
+					{
+						if ( ReferenceEquals( owner, this ) )
+							StartInteractionEditorMessages.TryWarnCannotEdit( interaction );
+						break;
+					}
+
+					await EventEditorFactory.TryEditInteractionAsync( owner, scenario, interaction );
 					interactionsUC.RefreshSortedItems();
 				}
 				break;
@@ -676,14 +687,22 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 				if ( parentTile != null && selectedToken != null )
 				{
 					var w = new TokenEditorWindow( parentTile, scenario, highlightToken: selectedToken );
-					await w.ShowDialog( this );
+					await w.ShowDialog( owner );
 				}
 				break;
 			}
 			case ScenarioGraphNodeKind.ThreatLevel:
 			{
 				var w = new ThreatsWindow( scenario );
-				await w.ShowDialog( this );
+				await w.ShowDialog( owner );
+				break;
+			}
+			case ScenarioGraphNodeKind.Resolution:
+			{
+				var resolution = scenario.resolutionObserver.FirstOrDefault( r =>
+					ScenarioGraphFullScenarioDocumentBuilder.ResolutionId( r.dataName ) == node.Id );
+				if ( resolution != null )
+					await ResolutionEditorWindow.ShowEditAsync( owner, scenario, resolution, isNew: false );
 				break;
 			}
 		}
@@ -943,13 +962,13 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 		await OpenObjectiveEditorAsync( o );
 	}
 
-	async Task OpenObjectiveEditorAsync( Objective o )
+	async Task OpenObjectiveEditorAsync( Objective o, Window? owner = null )
 	{
 		Dictionary<string, string> originalValues = o.CaptureStartingValues();
 		string originalPrefix = o.TranslationKeyPrefix();
 		string originalKeyName = o.TranslationKeyName();
 		var ow = new ObjectiveEditorWindow( scenario, o, false );
-		await ow.ShowDialog( this );
+		await ow.ShowDialog( owner ?? this );
 		o.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 	}
 
@@ -1133,10 +1152,45 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 	async void ScenarioSettingsButton_Click( object? sender, RoutedEventArgs e ) =>
 		await OpenScenarioSettingsAsync();
 
-	async Task OpenScenarioSettingsAsync()
+	async Task OpenScenarioSettingsAsync( Window? owner = null )
 	{
 		var sw = new ScenarioWindow( scenario );
-		await sw.ShowDialog( this );
+		await sw.ShowDialog( owner ?? this );
+	}
+
+	public async Task OpenErrorCheckNavAsync( Window owner, ErrorCheckNav nav )
+	{
+		switch ( nav.Kind )
+		{
+			case ErrorCheckTargetKind.Settings:
+				await OpenScenarioSettingsAsync( owner );
+				return;
+			case ErrorCheckTargetKind.TileEditor:
+			{
+				var chapter = scenario.chapterObserver.FirstOrDefault( c => c.dataName == nav.Name );
+				if ( chapter != null )
+					await OpenChapterTileEditorAsync( chapter, owner );
+				return;
+			}
+			case ErrorCheckTargetKind.Activation:
+			{
+				var group = scenario.activationsObserver.FirstOrDefault( a => a.dataName == nav.Name );
+				if ( group != null )
+				{
+					var readOnly = group.id < MonsterActivations.START_OF_CUSTOM_ACTIVATIONS;
+					var w = new ActivationsEditorWindow( scenario, group, isNew: false, readOnly: readOnly );
+					await w.ShowDialog( owner );
+				}
+				return;
+			}
+			default:
+			{
+				var node = ErrorCheckWindow.ToGraphNode( nav );
+				if ( node != null )
+					await OpenScenarioGraphNodeAsync( owner, node );
+				return;
+			}
+		}
 	}
 
 	async void ThreatsToolbarButton_Click( object? sender, RoutedEventArgs e )
@@ -1172,6 +1226,13 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 	}
 
 	async void SaveSplitButton_Click( object? sender, RoutedEventArgs e ) => await SaveScenarioNormalAsync();
+
+	async void ErrorCheckToolbarButton_Click( object? sender, RoutedEventArgs e )
+	{
+		var checker = new ErrorChecker();
+		checker.CheckErrors( scenario );
+		await new ErrorCheckWindow( checker, scenario, OpenErrorCheckNavAsync ).ShowDialog( this );
+	}
 
 	async void SaveMenuItem_Click( object? sender, RoutedEventArgs e ) => await SaveScenarioNormalAsync();
 

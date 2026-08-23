@@ -71,10 +71,9 @@ This is a list of things we need to do:
   * Better algorithm to display more helpfully
 
 * Scenario validity check (`ErrorChecker`)
-  * Add a **green checkmark** button on the main window top command bar that launches `ErrorChecker.CheckErrors`.
-  * Advisory only: **non-blocking** for Save / Save As / close. Never prevent saving because of warnings.
-  * Show a dialog listing problems (duplicate names, missing/invalid properties, missing trigger/event links, token `triggerName` pointing at a non-token or missing event, Starting Position token type != Start, etc.).
-  * `ErrorChecker` exists but is not invoked from the UI yet (`ErrorChecker.cs` TODO-Avalonia). Expand the checker as we add per-type validity functions.
+  * [x] Green checkmark **Error Check** button on the main command bar (right of Save) runs `ErrorChecker.CheckErrors` and opens a read-only, selectable/copyable report dialog. Advisory only: does not block Save / Save As / close.
+  * Checks today: duplicate names (same type only), missing/invalid event and trigger refs, token links, empty tile blocks, default player-facing placeholder text, and components from Collections not selected in Settings (tiles, tokens, monsters, items, mounts, titles).
+  * Expand later with per-type validity (`CheckInteraction` is still a stub).
 
 * Mac executable (MVP — strip WPF, don’t rebuild editors)
   * Goal: `dotnet publish -r osx-arm64 --self-contained` produces a runnable Mac binary (~1–1.5 weeks focused work)

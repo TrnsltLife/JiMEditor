@@ -193,5 +193,16 @@ namespace JiME
             else if(terrainType <= TerrainType.Trench) { return Collection.UNFURLING_WAR; }
             return null;
         }
+
+        public static Collection? FromMonsterTypeId(int monsterTypeId)
+        {
+            foreach (var col in Values)
+            {
+                if (col.Monsters.Any(m => m.id == monsterTypeId))
+                    return col;
+            }
+
+            return null;
+        }
     }
 }
