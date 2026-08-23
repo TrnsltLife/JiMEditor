@@ -108,8 +108,7 @@ public partial class BaseEventDialogWindow : Window
 
 		ApplyScenarioCollectionAvailability();
 
-		NameGroupSection.NameTextBox.Focus();
-		NameGroupSection.NameTextBox.SelectAll();
+		ApplicationEnvironment.TryFocus( NameGroupSection.NameTextBox, selectAllText: true );
 	}
 
 	/// <summary>

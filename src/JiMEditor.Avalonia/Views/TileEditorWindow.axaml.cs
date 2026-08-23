@@ -80,7 +80,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 			EnsureVisual( t );
 		RedrawAll();
 		UseGraphicsCheck.IsChecked = scenario.useTileGraphics;
-		TileCanvas.Focus();
+		ApplicationEnvironment.TryFocus( TileCanvas );
 
 		KeyDown += TileEditorWindow_OnKeyDown;
 	}
@@ -151,7 +151,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 		if ( _syncingComboSelection )
 			return;
 		selected = InChapterCombo.SelectedItem as BaseTile;
-		TileCanvas.Focus();
+		ApplicationEnvironment.TryFocus( TileCanvas );
 	}
 
 	void SideARadio_OnChecked( object? sender, RoutedEventArgs e ) => SetSelectedSide( "A" );
@@ -296,7 +296,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 	{
 		if ( !e.GetCurrentPoint( TileCanvas ).Properties.IsLeftButtonPressed )
 			return;
-		TileCanvas.Focus();
+		ApplicationEnvironment.TryFocus( TileCanvas );
 		var tile = HitTestTileAt( e.GetPosition( TileCanvas ) );
 		if ( tile == null )
 		{
@@ -638,12 +638,15 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 	void RefreshTilePoolOptions()
 	{
 		scenario.RefilterGlobalTilePool();
+		TilePoolCombo.SelectedItem = null;
+		TilePoolCombo.SelectedIndex = -1;
 		_tilePoolOptions.Clear();
 		foreach ( var id in scenario.filteredGlobalTilePool )
 			_tilePoolOptions.Add( new TilePoolOption( id, Collection.FromTileNumber( id ).FontCharacter ) );
-		TilePoolCombo.ItemsSource = _tilePoolOptions;
+		if ( TilePoolCombo.ItemsSource != _tilePoolOptions )
+			TilePoolCombo.ItemsSource = _tilePoolOptions;
 		if ( _tilePoolOptions.Count > 0 )
-			TilePoolCombo.SelectedIndex = 0;
+			TilePoolCombo.SelectedItem = _tilePoolOptions[0];
 	}
 
 	void EnsurePathRoot( BaseTile tile )
