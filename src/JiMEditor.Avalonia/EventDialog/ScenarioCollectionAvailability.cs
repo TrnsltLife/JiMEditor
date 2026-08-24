@@ -159,6 +159,9 @@ public static class ScenarioCollectionAvailability
 	/// <summary>Token types allowed for the scenario; invalid selections fall back to <see cref="TokenType.Search"/>.</summary>
 	public static void CoerceInteractionTokenForScenario( InteractionBase interaction, Scenario scenario, bool journeyMap )
 	{
+		if ( interaction.interactionType == InteractionType.Start )
+			return;
+
 		var allowed = GetSelectableTokenTypes( scenario, journeyMap );
 		if ( !allowed.Contains( interaction.tokenType ) )
 			interaction.tokenType = TokenType.Search;
@@ -171,6 +174,31 @@ public static class ScenarioCollectionAvailability
 			else if ( !terrains.Contains( interaction.terrainType ) )
 				interaction.terrainType = terrains[0];
 		}
+	}
+
+	public static void CoercePlacedTokenForScenario( Token token, Scenario scenario )
+	{
+		if ( token.triggerName == StartInteraction.DEFAULT_NAME || token.tokenType == TokenType.Start )
+		{
+			token.RepairStartPositionFromTriggerName();
+			return;
+		}
+
+		// Map tokens may be Terrain on Journey scenarios; event token pickers skip Terrain on Journey maps.
+		var allowed = GetSelectableTokenTypes( scenario, journeyMap: false );
+		if ( !allowed.Contains( token.tokenType ) )
+			token.tokenType = TokenType.Search;
+
+		if ( token.tokenType == TokenType.Terrain )
+		{
+			var terrains = GetSelectableTerrainTypes( scenario );
+			if ( terrains.Count == 0 )
+				token.tokenType = TokenType.Search;
+			else if ( !terrains.Contains( token.terrainType ) )
+				token.terrainType = terrains[0];
+		}
+
+		token.UpdateDataName();
 	}
 
 	public static IReadOnlyList<TerrainType> GetSelectableTerrainTypes( Scenario scenario )
@@ -223,7 +251,8 @@ public static class ScenarioCollectionAvailability
 
 	/// <summary>
 	/// Clears enemy / token / item / title picks that belong to collections not enabled on the scenario, including inside
-	/// events that were never opened in the editor. Safe to call repeatedly (e.g. before every save).
+	/// events that were never opened in the editor. Also removes placed tiles from disabled collections and coerces
+	/// tokens that those collections no longer allow. Safe to call repeatedly.
 	/// </summary>
 	public static void PruneScenarioForEnabledCollections( Scenario scenario )
 	{
@@ -249,7 +278,27 @@ public static class ScenarioCollectionAvailability
 				CoerceInteractionTokenForScenario( ib, scenario, journeyMap );
 		}
 
+		foreach ( var chapter in scenario.chapterObserver )
+		{
+			var tilesToRemove = chapter.tileObserver
+				.Where( tile =>
+				{
+					var coll = Collection.FromTileNumber( tile.idNumber );
+					return coll != null && !scenario.collectionObserver.Contains( coll );
+				} )
+				.ToList();
+			foreach ( var tile in tilesToRemove )
+				chapter.tileObserver.Remove( tile );
+
+			foreach ( var tile in chapter.tileObserver.OfType<BaseTile>() )
+			{
+				foreach ( var token in tile.tokenList )
+					CoercePlacedTokenForScenario( token, scenario );
+			}
+		}
+
 		scenario.RefilterGlobalTilePool();
+		scenario.RepairStartPositionData();
 	}
 
 	public static void PruneThreatInteraction( ThreatInteraction threat, Scenario scenario )
@@ -276,6 +325,6 @@ public static class ScenarioCollectionAvailability
 			threat.monsterCollection.Remove( m );
 	}
 
-		static Collection? CollectionForMonsterTypeId( int monsterTypeId ) =>
-			Collection.FromMonsterTypeId( monsterTypeId );
+	static Collection? CollectionForMonsterTypeId( int monsterTypeId ) =>
+		Collection.FromMonsterTypeId( monsterTypeId );
 }

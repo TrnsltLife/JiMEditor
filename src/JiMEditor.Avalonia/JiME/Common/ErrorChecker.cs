@@ -19,6 +19,8 @@ namespace JiME
 
 		public const string DisabledCollectionsHeading = "Components from Collections not selected for this Scenario";
 		public const string DisabledCollectionsSettingsLink = "Enable additional Collections in Settings";
+		public const string DisabledCollectionsPruneLink = "Remove all disabled Collection components";
+		public const string TokenLimitsHeading = "Tiles that ignore token limits";
 
 		string _Errors = "None Found";
 		string _errorCount = "Warnings (0):";
@@ -101,6 +103,7 @@ namespace JiME
 			CheckChapterAndTileTriggers( scenario, warnings, triggers );
 			CheckEmptyChapters( scenario, warnings );
 			CheckDefaultPlayerTexts( scenario, warnings );
+			CheckTokenLimits( scenario, warnings );
 			CheckDisabledCollections( scenario, warnings );
 
 			WarningItems = warnings;
@@ -110,28 +113,38 @@ namespace JiME
 
 		static string FormatErrors( List<ErrorCheckWarning> warnings )
 		{
-			var general = warnings
-				.Where( w => w.Section != ErrorCheckSection.DisabledCollections )
-				.Select( w => w.Text )
-				.ToList();
-			var collections = warnings
-				.Where( w => w.Section == ErrorCheckSection.DisabledCollections )
-				.Select( w => w.Text )
-				.ToList();
-			if ( general.Count == 0 && collections.Count == 0 )
+			var general = Texts( warnings, ErrorCheckSection.General );
+			var tokenLimits = Texts( warnings, ErrorCheckSection.TokenLimits );
+			var collections = Texts( warnings, ErrorCheckSection.DisabledCollections );
+			if ( general.Count == 0 && tokenLimits.Count == 0 && collections.Count == 0 )
 				return "None Found";
 
 			var lines = new List<string>( general );
+			AppendSection( lines, TokenLimitsHeading, tokenLimits );
 			if ( collections.Count > 0 )
 			{
 				if ( lines.Count > 0 )
 					lines.Add( "" );
 				lines.Add( DisabledCollectionsHeading );
 				lines.Add( DisabledCollectionsSettingsLink );
+				lines.Add( DisabledCollectionsPruneLink );
 				lines.AddRange( collections );
 			}
 
 			return string.Join( "\r\n", lines );
+		}
+
+		static List<string> Texts( List<ErrorCheckWarning> warnings, ErrorCheckSection section ) =>
+			warnings.Where( w => w.Section == section ).Select( w => w.Text ).ToList();
+
+		static void AppendSection( List<string> lines, string heading, List<string> items )
+		{
+			if ( items.Count == 0 )
+				return;
+			if ( lines.Count > 0 )
+				lines.Add( "" );
+			lines.Add( heading );
+			lines.AddRange( items );
 		}
 
 		static bool IsPlaceholderName( string? name ) =>
@@ -492,7 +505,8 @@ namespace JiME
 					case TestInteraction test:
 						if ( StartsWithDefault( Page0( test.passBookData ), "Default Pass Text" ) )
 							warnings.Add( new ErrorCheckWarning( owner, T( " still uses the default Pass Text." ) ) );
-						if ( StartsWithDefault( Page0( test.failBookData ), "Default Fail Text" ) )
+						if ( !test.isCumulative
+						     && StartsWithDefault( Page0( test.failBookData ), "Default Fail Text" ) )
 							warnings.Add( new ErrorCheckWarning( owner, T( " still uses the default Fail Text." ) ) );
 						if ( test.isCumulative
 						     && StartsWithDefault( Page0( test.progressBookData ), "Default Progress Text" ) )
@@ -548,6 +562,7 @@ namespace JiME
 				PersistentTokenInteraction => false,
 				RewardInteraction => false,
 				DialogInteraction => false,
+				TextInteraction t => !t.hasActivated,
 				ReplaceTokenInteraction r => !r.noText,
 				_ => true
 			};
@@ -558,6 +573,8 @@ namespace JiME
 			{
 				ConditionalInteraction => false,
 				PersistentTokenInteraction => false,
+				MultiEventInteraction m => !m.isSilent,
+				TextInteraction t => !t.hasActivated,
 				ReplaceTokenInteraction r => !r.noText,
 				_ => true
 			};
@@ -571,6 +588,25 @@ namespace JiME
 
 		static bool IsExactDefault( string? text, string expected ) =>
 			string.Equals( text?.Trim(), expected, StringComparison.Ordinal );
+
+		void CheckTokenLimits( Scenario s, List<ErrorCheckWarning> warnings )
+		{
+			foreach ( var chapter in s.chapterObserver )
+			{
+				foreach ( var tile in chapter.tileObserver.OfType<BaseTile>() )
+				{
+					var used = tile.tokenList.Count;
+					if ( used <= tile.tokenCount )
+						continue;
+					warnings.Add( new ErrorCheckWarning(
+						ErrorCheckSection.TokenLimits,
+						L(
+							$"Tile {tile.idNumber} in tile block \"{chapter.dataName}\"",
+							new ErrorCheckNav( ErrorCheckTargetKind.Tile, id: tile.GUID ) ),
+						T( $" has {used} tokens (limit {tile.tokenCount})." ) ) );
+				}
+			}
+		}
 
 		void CheckDisabledCollections( Scenario s, List<ErrorCheckWarning> warnings )
 		{

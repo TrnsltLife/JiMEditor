@@ -328,78 +328,129 @@ public class TileTokenSerializationRoundTripTests
 	}
 
 	[Fact]
-	public void Save_PrunesCollectionLockedContent_FromScenarioModel_BeforeWrite()
+	public void PruneScenarioForEnabledCollections_RemovesLockedEventsTilesAndTokens()
 	{
-		ModelTestEnvironment.RunInSta( () =>
+		if ( Utils.dragSnapX == null || Utils.dragSnapX.Length < 6 )
 		{
-			ModelTestEnvironment.SetupMinimalUtilsForModelTests();
+			Utils.dragSnapX = [0d, 48d, 96d, 144d, 192d, 240d];
+			Utils.dragSnapY = [0d, 27.7128128d, 55.4256256d, 83.1384384d, 110.8512512d, 138.564064d];
+		}
 
-			var scenario = new Scenario( "Prune Save Scenario" );
-			scenario.collectionObserver.Clear();
-			scenario.collectionObserver.Add( Collection.CORE_SET );
-			scenario.globalTilePool.Clear();
-			scenario.globalTilePool.Add( 100 ); // Core tile
-			scenario.globalTilePool.Add( 213 ); // Shaded Paths tile
+		var scenario = new Scenario( "Prune Scenario" );
+		scenario.collectionObserver.Clear();
+		scenario.collectionObserver.Add( Collection.CORE_SET );
+		scenario.globalTilePool.Clear();
+		scenario.globalTilePool.Add( 100 ); // Core tile
+		scenario.globalTilePool.Add( 213 ); // Shaded Paths tile
 
-			var itemInteraction = new ItemInteraction( "Item Event" )
-			{
-				randomizedItemsCount = 2
-			};
-			itemInteraction.itemList.Add( Items.FromID( 1 )! ); // Core
-			itemInteraction.itemList.Add( Items.FromID( 26 )! ); // Shaded Paths
-			scenario.interactionObserver.Add( itemInteraction );
+		var itemInteraction = new ItemInteraction( "Item Event" )
+		{
+			randomizedItemsCount = 2
+		};
+		itemInteraction.itemList.Add( Items.FromID( 1 )! ); // Core
+		itemInteraction.itemList.Add( Items.FromID( 26 )! ); // Shaded Paths
+		scenario.interactionObserver.Add( itemInteraction );
 
-			var titleInteraction = new TitleInteraction( "Title Event" )
-			{
-				randomizedTitlesCount = 2
-			};
-			titleInteraction.titleList.Add( Titles.FromID( 1 )! ); // Core
-			titleInteraction.titleList.Add( Titles.FromID( 25 )! ); // Shaded Paths
-			scenario.interactionObserver.Add( titleInteraction );
+		var titleInteraction = new TitleInteraction( "Title Event" )
+		{
+			randomizedTitlesCount = 2
+		};
+		titleInteraction.titleList.Add( Titles.FromID( 1 )! ); // Core
+		titleInteraction.titleList.Add( Titles.FromID( 25 )! ); // Shaded Paths
+		scenario.interactionObserver.Add( titleInteraction );
 
-			var threat = new ThreatInteraction( "Threat Event" );
-			threat.includedEnemies[0] = true; // Core
-			threat.includedEnemies[10] = true; // Shaded Paths
-			threat.monsterCollection.Add( new Monster( 0 ) ); // Core
-			threat.monsterCollection.Add( new Monster( 10 ) ); // Shaded Paths
-			scenario.interactionObserver.Add( threat );
+		var threat = new ThreatInteraction( "Threat Event" );
+		threat.includedEnemies[0] = true; // Core
+		threat.includedEnemies[10] = true; // Shaded Paths
+		threat.monsterCollection.Add( new Monster( 0 ) ); // Core
+		threat.monsterCollection.Add( new Monster( 10 ) ); // Shaded Paths
+		scenario.interactionObserver.Add( threat );
 
-			var tokenInteraction = new ItemInteraction( "Token Event" )
-			{
-				isTokenInteraction = true,
-				tokenType = TokenType.Terrain,
-				terrainType = TerrainType.Log // Shaded Paths terrain
-			};
-			scenario.interactionObserver.Add( tokenInteraction );
+		var tokenInteraction = new ItemInteraction( "Token Event" )
+		{
+			isTokenInteraction = true,
+			tokenType = TokenType.Terrain,
+			terrainType = TerrainType.Log // Shaded Paths terrain
+		};
+		scenario.interactionObserver.Add( tokenInteraction );
 
-			var outPath = Path.Combine( Path.GetTempPath(), "jime-prune-save-" + Guid.NewGuid() + ".jime" );
-			try
-			{
-				var ok = FileManager.TryWriteScenarioToPath( scenario, outPath, updateScenarioAfterWrite: false, out var err );
-				Assert.True( ok, err );
+		var chapter = new Chapter( "Start" );
+		var shadedTile = new HexTile( 213, skipBuild: true );
+		shadedTile.tokenList.Add( new Token( TokenType.Terrain ) { terrainType = TerrainType.Log } );
+		chapter.tileObserver.Add( shadedTile );
+		var coreTile = new HexTile( 100, skipBuild: true );
+		coreTile.tokenList.Add( new Token( TokenType.Terrain ) { terrainType = TerrainType.Log } );
+		chapter.tileObserver.Add( coreTile );
+		scenario.chapterObserver.Add( chapter );
 
-				Assert.Single( itemInteraction.itemList );
-				Assert.All( itemInteraction.itemList, i => Assert.Equal( Collection.CORE_SET, Collection.FromID( i.collection ) ) );
+		JiMEditor.Avalonia.EventDialog.ScenarioCollectionAvailability.PruneScenarioForEnabledCollections( scenario );
 
-				Assert.Single( titleInteraction.titleList );
-				Assert.All( titleInteraction.titleList, t => Assert.Equal( Collection.CORE_SET, Collection.FromID( t.collection ) ) );
+		Assert.Single( itemInteraction.itemList );
+		Assert.All( itemInteraction.itemList, i => Assert.Equal( Collection.CORE_SET, Collection.FromID( i.collection ) ) );
 
-				Assert.True( threat.includedEnemies[0] );
-				Assert.False( threat.includedEnemies[10] );
-				Assert.Single( threat.monsterCollection );
-				Assert.Contains( threat.monsterCollection, m => m.id == 0 );
-				Assert.DoesNotContain( threat.monsterCollection, m => m.id == 10 );
+		Assert.Single( titleInteraction.titleList );
+		Assert.All( titleInteraction.titleList, t => Assert.Equal( Collection.CORE_SET, Collection.FromID( t.collection ) ) );
 
-				Assert.Equal( TokenType.Search, tokenInteraction.tokenType );
-				Assert.DoesNotContain( scenario.filteredGlobalTilePool, x => x == 213 );
-				Assert.Contains( 100, scenario.filteredGlobalTilePool );
-			}
-			finally
-			{
-				if ( File.Exists( outPath ) )
-					File.Delete( outPath );
-			}
-		} );
+		Assert.True( threat.includedEnemies[0] );
+		Assert.False( threat.includedEnemies[10] );
+		Assert.Single( threat.monsterCollection );
+		Assert.Contains( threat.monsterCollection, m => m.id == 0 );
+		Assert.DoesNotContain( threat.monsterCollection, m => m.id == 10 );
+
+		Assert.Equal( TokenType.Search, tokenInteraction.tokenType );
+		Assert.DoesNotContain( scenario.filteredGlobalTilePool, x => x == 213 );
+		Assert.Contains( 100, scenario.filteredGlobalTilePool );
+
+		Assert.DoesNotContain( chapter.tileObserver, t => t.idNumber == 213 );
+		var remaining = Assert.IsType<HexTile>( Assert.Single( chapter.tileObserver ) );
+		Assert.Equal( 100, remaining.idNumber );
+		var remainingToken = Assert.Single( remaining.tokenList );
+		Assert.Equal( TokenType.Terrain, remainingToken.tokenType );
+		Assert.NotEqual( TerrainType.Log, remainingToken.terrainType );
+		Assert.Equal( Collection.CORE_SET, Collection.FromTerrainType( remainingToken.terrainType ) );
+	}
+
+	[Fact]
+	public void Save_DoesNotPruneCollectionLockedContent()
+	{
+		if ( Utils.dragSnapX == null || Utils.dragSnapX.Length < 6 )
+		{
+			Utils.dragSnapX = [0d, 48d, 96d, 144d, 192d, 240d];
+			Utils.dragSnapY = [0d, 27.7128128d, 55.4256256d, 83.1384384d, 110.8512512d, 138.564064d];
+		}
+
+		var scenario = new Scenario( "Save Leaves Collection Content" );
+		scenario.collectionObserver.Clear();
+		scenario.collectionObserver.Add( Collection.CORE_SET );
+		scenario.globalTilePool.Clear();
+		scenario.globalTilePool.Add( 100 );
+		scenario.globalTilePool.Add( 213 );
+
+		var itemInteraction = new ItemInteraction( "Item Event" );
+		itemInteraction.itemList.Add( Items.FromID( 1 )! );
+		itemInteraction.itemList.Add( Items.FromID( 26 )! );
+		scenario.interactionObserver.Add( itemInteraction );
+
+		var chapter = new Chapter( "Start" );
+		chapter.tileObserver.Add( new HexTile( 213, skipBuild: true ) );
+		scenario.chapterObserver.Add( chapter );
+
+		var outPath = Path.Combine( Path.GetTempPath(), "jime-no-prune-save-" + Guid.NewGuid() + ".jime" );
+		try
+		{
+			var ok = FileManager.TryWriteScenarioToPath( scenario, outPath, updateScenarioAfterWrite: false, out var err );
+			Assert.True( ok, err );
+
+			Assert.Equal( 2, itemInteraction.itemList.Count );
+			Assert.Contains( itemInteraction.itemList, i => Collection.FromID( i.collection ) == Collection.SHADED_PATHS );
+			Assert.Contains( chapter.tileObserver, t => t.idNumber == 213 );
+			Assert.Contains( 213, scenario.globalTilePool );
+		}
+		finally
+		{
+			if ( File.Exists( outPath ) )
+				File.Delete( outPath );
+		}
 	}
 
 	[Fact]

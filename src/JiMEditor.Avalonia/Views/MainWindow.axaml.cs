@@ -1362,7 +1362,7 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 			var parent = Path.GetDirectoryName( picked );
 			if ( !string.IsNullOrEmpty( parent ) ) Directory.CreateDirectory( parent );
 
-			if ( !FileManager.TryWriteScenarioToPath( scenario, picked, updateScenarioAfterWrite: false, out var err, pruneCollectionsBeforeWrite: false ) )
+			if ( !FileManager.TryWriteScenarioToPath( scenario, picked, updateScenarioAfterWrite: false, out var err ) )
 			{
 				MessageBox.Show(
 					"Could not save a copy of the project file.\r\n\r\n" + err,

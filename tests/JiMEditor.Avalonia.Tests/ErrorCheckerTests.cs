@@ -403,6 +403,7 @@ public class ErrorCheckerTests
 
 		Assert.Contains( ErrorChecker.DisabledCollectionsHeading, checker.Errors );
 		Assert.Contains( ErrorChecker.DisabledCollectionsSettingsLink, checker.Errors );
+		Assert.Contains( ErrorChecker.DisabledCollectionsPruneLink, checker.Errors );
 		Assert.Contains( "Event \"Give Gear\" uses Item \"Ring Mail\" from Shaded Paths.", checker.Errors );
 		Assert.Contains( "Event \"Give Gear\" uses Mount \"Friendly Pony\" from Unfurling War.", checker.Errors );
 		Assert.Contains( "Event \"Give Title\" uses Title \"Treasure Seeker\" from Shaded Paths.", checker.Errors );
@@ -422,6 +423,34 @@ public class ErrorCheckerTests
 		Assert.Contains(
 			checker.WarningItems,
 			w => w.Spans.Any( s => s.Nav?.Kind == ErrorCheckTargetKind.Event && s.Nav.Name == "Give Gear" ) );
+	}
+
+	[Fact]
+	public void PruneScenarioForEnabledCollections_ClearsDisabledCollectionWarnings()
+	{
+		var scenario = CheckScenario();
+
+		var items = new ItemInteraction( "Give Gear" );
+		items.itemList.Add( Items.FromID( 26 )! );
+		scenario.interactionObserver.Add( items );
+
+		var chapter = new Chapter( "Start" );
+		var tile = new HexTile( 213, skipBuild: true );
+		tile.tokenList.Add( new Token( TokenType.Terrain ) { terrainType = TerrainType.Log } );
+		chapter.tileObserver.Add( tile );
+		scenario.chapterObserver.Add( chapter );
+
+		Assert.Contains(
+			ErrorChecker.DisabledCollectionsHeading,
+			RunCheck( scenario ).Errors );
+
+		JiMEditor.Avalonia.EventDialog.ScenarioCollectionAvailability.PruneScenarioForEnabledCollections( scenario );
+
+		var checker = RunCheck( scenario );
+		Assert.DoesNotContain( ErrorChecker.DisabledCollectionsHeading, checker.Errors );
+		Assert.DoesNotContain(
+			checker.WarningItems,
+			w => w.Section == ErrorCheckSection.DisabledCollections );
 	}
 
 	[Fact]
@@ -576,5 +605,130 @@ public class ErrorCheckerTests
 		Assert.Contains(
 			checker.WarningItems,
 			w => w.Spans.Any( s => s.Nav?.Kind == ErrorCheckTargetKind.Activation && s.Nav.Name == "Custom Wolves" ) );
+	}
+
+	[Fact]
+	public void CheckErrors_StatTest_SkipsUnusedFailOrProgressText()
+	{
+		SeedSnapGrids();
+		var scenario = new Scenario( "Check" );
+		UseCustomPlayerText( scenario );
+
+		var progressive = new TestInteraction( "Climb" );
+		progressive.isCumulative = true;
+		scenario.interactionObserver.Add( progressive );
+
+		var simple = new TestInteraction( "Leap" );
+		simple.isCumulative = false;
+		scenario.interactionObserver.Add( simple );
+
+		var checker = new ErrorChecker();
+		checker.CheckErrors( scenario );
+
+		Assert.Contains( "Event \"Climb\" still uses the default Pass Text.", checker.Errors );
+		Assert.DoesNotContain( "Event \"Climb\" still uses the default Fail Text.", checker.Errors );
+		Assert.Contains( "Event \"Climb\" still uses the default Progress Text.", checker.Errors );
+
+		Assert.Contains( "Event \"Leap\" still uses the default Pass Text.", checker.Errors );
+		Assert.Contains( "Event \"Leap\" still uses the default Fail Text.", checker.Errors );
+		Assert.DoesNotContain( "Event \"Leap\" still uses the default Progress Text.", checker.Errors );
+	}
+
+	[Fact]
+	public void CheckErrors_SkipsEventTextWhenSilentlyActivateIsChecked()
+	{
+		SeedSnapGrids();
+		var scenario = new Scenario( "Check" );
+		UseCustomPlayerText( scenario );
+
+		var silent = new MultiEventInteraction( "Chain" );
+		silent.isSilent = true;
+		scenario.interactionObserver.Add( silent );
+
+		var spoken = new MultiEventInteraction( "Announce" );
+		spoken.isSilent = false;
+		scenario.interactionObserver.Add( spoken );
+
+		var checker = new ErrorChecker();
+		checker.CheckErrors( scenario );
+
+		Assert.DoesNotContain( "Event \"Chain\" still uses the default Event Text.", checker.Errors );
+		Assert.Contains( "Event \"Announce\" still uses the default Event Text.", checker.Errors );
+	}
+
+	[Fact]
+	public void CheckErrors_SkipsFlavorAndEventTextWhenTextEventSkipsInteraction()
+	{
+		SeedSnapGrids();
+		var scenario = new Scenario( "Check" );
+		UseCustomPlayerText( scenario );
+
+		var skip = new TextInteraction( "Marker" );
+		skip.isTokenInteraction = true;
+		skip.isPersistent = true;
+		skip.hasActivated = true;
+		scenario.interactionObserver.Add( skip );
+
+		var shown = new TextInteraction( "Notice" );
+		shown.isTokenInteraction = true;
+		shown.isPersistent = true;
+		shown.hasActivated = false;
+		scenario.interactionObserver.Add( shown );
+
+		var checker = new ErrorChecker();
+		checker.CheckErrors( scenario );
+
+		Assert.DoesNotContain( "Event \"Marker\" still uses the default Flavor Text.", checker.Errors );
+		Assert.DoesNotContain( "Event \"Marker\" still uses the default Event Text.", checker.Errors );
+		Assert.Contains( "Event \"Notice\" still uses the default Flavor Text.", checker.Errors );
+		Assert.Contains( "Event \"Notice\" still uses the default Event Text.", checker.Errors );
+	}
+
+	[Fact]
+	public void CheckErrors_ReportsTilesOverCanonicalTokenLimit_EvenWhenLimitsAreIgnored()
+	{
+		var scenario = CheckScenario();
+
+		var over = new HexTile( 100, skipBuild: true );
+		over.tokenList.Add( new Token( TokenType.Search ) );
+		over.tokenList.Add( new Token( TokenType.Person ) );
+		var atLimit = new HexTile( 200, skipBuild: true );
+		atLimit.tokenList.Add( new Token( TokenType.Search ) );
+		atLimit.tokenList.Add( new Token( TokenType.Threat ) );
+
+		var chapter = new Chapter( "Start" );
+		chapter.tileObserver.Add( over );
+		chapter.tileObserver.Add( atLimit );
+		scenario.chapterObserver.Add( chapter );
+
+		foreach ( var ignored in new[] { false, true } )
+		{
+			scenario.ignoreTokenLimits = ignored;
+			var checker = RunCheck( scenario );
+
+			Assert.Contains( ErrorChecker.TokenLimitsHeading, checker.Errors );
+			Assert.Contains( "Tile 100 in tile block \"Start\" has 2 tokens (limit 1).", checker.Errors );
+			Assert.DoesNotContain( "Tile 200 in tile block \"Start\" has", checker.Errors );
+			Assert.Contains(
+				checker.WarningItems,
+				w => w.Section == ErrorCheckSection.TokenLimits
+				     && w.Spans.Any( s => s.Nav?.Kind == ErrorCheckTargetKind.Tile && s.Nav.Id == over.GUID ) );
+		}
+	}
+
+	[Fact]
+	public void CheckErrors_DoesNotReportTilesWithinCanonicalTokenLimit()
+	{
+		var scenario = CheckScenario();
+		var tile = new HexTile( 100, skipBuild: true );
+		tile.tokenList.Add( new Token( TokenType.Search ) );
+		var chapter = new Chapter( "Start" );
+		chapter.tileObserver.Add( tile );
+		scenario.chapterObserver.Add( chapter );
+
+		var checker = RunCheck( scenario );
+
+		Assert.DoesNotContain( ErrorChecker.TokenLimitsHeading, checker.Errors );
+		Assert.DoesNotContain( checker.WarningItems, w => w.Section == ErrorCheckSection.TokenLimits );
 	}
 }

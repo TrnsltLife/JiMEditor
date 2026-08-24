@@ -22,6 +22,7 @@ namespace JiME
 	public enum ErrorCheckSection
 	{
 		General,
+		TokenLimits,
 		DisabledCollections
 	}
 

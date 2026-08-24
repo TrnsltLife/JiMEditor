@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using JiMEditor.Avalonia.EventDialog;
 using JiMEditor.Avalonia.ScenarioGraph;
 using JiME;
 
@@ -40,13 +41,16 @@ public partial class ErrorCheckWindow : Window
 		ReportPanel.Children.Clear();
 
 		var general = _checker.WarningItems
-			.Where( w => w.Section != ErrorCheckSection.DisabledCollections )
+			.Where( w => w.Section == ErrorCheckSection.General )
+			.ToList();
+		var tokenLimits = _checker.WarningItems
+			.Where( w => w.Section == ErrorCheckSection.TokenLimits )
 			.ToList();
 		var collections = _checker.WarningItems
 			.Where( w => w.Section == ErrorCheckSection.DisabledCollections )
 			.ToList();
 
-		if ( general.Count == 0 && collections.Count == 0 )
+		if ( general.Count == 0 && tokenLimits.Count == 0 && collections.Count == 0 )
 		{
 			ReportPanel.Children.Add( new TextBlock
 			{
@@ -59,6 +63,18 @@ public partial class ErrorCheckWindow : Window
 
 		foreach ( var warning in general )
 			ReportPanel.Children.Add( BuildWarningLine( warning ) );
+
+		if ( tokenLimits.Count > 0 )
+		{
+			ReportPanel.Children.Add( new TextBlock
+			{
+				Text = ErrorChecker.TokenLimitsHeading,
+				Classes = { "heading" },
+				TextWrapping = TextWrapping.Wrap
+			} );
+			foreach ( var warning in tokenLimits )
+				ReportPanel.Children.Add( BuildWarningLine( warning ) );
+		}
 
 		if ( collections.Count == 0 )
 			return;
@@ -79,6 +95,15 @@ public partial class ErrorCheckWindow : Window
 		settingsLink.Click += async ( _, _ ) =>
 			await OpenSpanAsync( new ErrorCheckNav( ErrorCheckTargetKind.Settings ) );
 		ReportPanel.Children.Add( settingsLink );
+
+		var pruneLink = new Button
+		{
+			Classes = { "errorCheckLinkDanger" },
+			Content = new TextBlock { Text = ErrorChecker.DisabledCollectionsPruneLink }
+		};
+		ToolTip.SetTip( pruneLink, "Remove components from Collections that are not enabled" );
+		pruneLink.Click += PruneDisabledCollectionsLink_Click;
+		ReportPanel.Children.Add( pruneLink );
 
 		foreach ( var warning in collections )
 			ReportPanel.Children.Add( BuildWarningLine( warning ) );
@@ -112,6 +137,33 @@ public partial class ErrorCheckWindow : Window
 		}
 
 		return tb;
+	}
+
+	void PruneDisabledCollectionsLink_Click( object? sender, RoutedEventArgs e )
+	{
+		if ( _busy )
+			return;
+
+		var confirm = MessageBox.Show(
+			"This removes items, titles, enemies, tokens, and placed tiles that belong to Collections not enabled for this Scenario.\n\nContinue?",
+			"Remove disabled Collection components",
+			MessageBoxButton.YesNo,
+			MessageBoxImage.Question );
+		if ( confirm != MessageBoxResult.Yes )
+			return;
+
+		_busy = true;
+		try
+		{
+			ScenarioCollectionAvailability.PruneScenarioForEnabledCollections( _scenario );
+			_scenario.TriggerTitleChange( true );
+			_checker.CheckErrors( _scenario );
+			RenderReport();
+		}
+		finally
+		{
+			_busy = false;
+		}
 	}
 
 	async Task OpenSpanAsync( ErrorCheckNav nav )
