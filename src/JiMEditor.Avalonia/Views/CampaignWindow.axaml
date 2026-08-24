@@ -292,6 +292,7 @@
 						<TextBlock Text="Campaign Triggers" Classes="heading"/>
 						<StackPanel Orientation="Horizontal" Spacing="8">
 							<ComboBox x:Name="TriggersCombo"
+							          Classes="ignoreDirty"
 							          Width="250"
 							          VerticalAlignment="Center"
 							          ItemsSource="{Binding campaign.triggerCollection}">

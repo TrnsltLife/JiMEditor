@@ -5,8 +5,8 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using JiME;
@@ -51,6 +51,14 @@ public static class ScenarioDirty
 		scenario ??= CurrentScenario;
 		if ( window is null || scenario is null )
 			return;
+		WatchInputs( window, scenario.MarkDirty );
+	}
+
+	/// <summary>Same as <see cref="WatchInputs(Window, Scenario?)"/> but marks any target (campaign or scenario).</summary>
+	public static void WatchInputs( Window window, Action markDirty )
+	{
+		if ( window is null || markDirty is null )
+			return;
 
 		var live = false;
 		bool IsLive() => live;
@@ -58,10 +66,10 @@ public static class ScenarioDirty
 
 		void AttachNow()
 		{
-			AttachTree( window, scenario, IsLive );
-			Dispatcher.UIThread.Post( () => AttachTree( window, scenario, IsLive ), DispatcherPriority.Loaded );
-			// ComboBox/CheckBox bindings often fire SelectionChanged/IsCheckedChanged during the first
-			// layout after Loaded. Wait until the dispatcher is idle so that is not treated as an edit.
+			AttachTree( window, markDirty, IsLive );
+			Dispatcher.UIThread.Post( () => AttachTree( window, markDirty, IsLive ), DispatcherPriority.Loaded );
+			// ComboBox bindings often fire SelectionChanged during the first layout after Loaded.
+			// Wait until the dispatcher is idle so that is not treated as an edit.
 			Dispatcher.UIThread.Post(
 				() => Dispatcher.UIThread.Post( Arm, DispatcherPriority.ContextIdle ),
 				DispatcherPriority.ContextIdle );
@@ -81,16 +89,24 @@ public static class ScenarioDirty
 		}
 	}
 
-	static void AttachTree( Window window, Scenario scenario, Func<bool> isLive )
+	static void AttachTree( Window window, Action markDirty, Func<bool> isLive )
 	{
+		// Unselected TabItem content is in the logical tree but often not the visual tree
+		// (Campaign Settings, event custom tabs). Watch both so later tabs still mark dirty.
+		foreach ( var logical in window.GetLogicalDescendants() )
+		{
+			if ( logical is Control control )
+				TryWatch( window, control, markDirty, isLive );
+		}
+
 		foreach ( var visual in window.GetVisualDescendants() )
 		{
 			if ( visual is Control control )
-				TryWatch( control, scenario, isLive );
+				TryWatch( window, control, markDirty, isLive );
 		}
 	}
 
-	static void TryWatch( Control control, Scenario scenario, Func<bool> isLive )
+	static void TryWatch( Window window, Control control, Action markDirty, Func<bool> isLive )
 	{
 		if ( control.Classes.Contains( IgnoreClass ) )
 			return;
@@ -106,7 +122,7 @@ public static class ScenarioDirty
 		void MarkIfLive()
 		{
 			if ( isLive() )
-				scenario.MarkDirty();
+				markDirty();
 		}
 
 		switch ( control )
@@ -122,8 +138,14 @@ public static class ScenarioDirty
 			case ComboBox combo:
 				combo.SelectionChanged += ( _, _ ) => MarkIfLive();
 				break;
+			case TabControl tab:
+				tab.SelectionChanged += ( _, _ ) =>
+					Dispatcher.UIThread.Post( () => AttachTree( window, markDirty, isLive ), DispatcherPriority.Loaded );
+				break;
 			case CheckBox or RadioButton:
-				( (ToggleButton)control ).IsCheckedChanged += ( _, _ ) => MarkIfLive();
+				// Click is a user gesture. IsCheckedChanged also fires when a tab first materializes
+				// and bindings apply, which would false-dirty on merely opening Settings.
+				( (Button)control ).Click += ( _, _ ) => MarkIfLive();
 				break;
 		}
 	}

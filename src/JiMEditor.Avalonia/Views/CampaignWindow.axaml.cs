@@ -1,5 +1,6 @@
 // Ported from: JiMEditor/Views/CampaignWindow.xaml.cs (2026-04-05) — Avalonia UI.
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -16,10 +17,15 @@ namespace JiMEditor.Avalonia.Views;
 
 public partial class CampaignWindow : Window
 {
+	const string UnsavedCampaignMessage =
+		"The Campaign has changes that haven't been saved. Are you sure you want to exit without saving?";
+
 	public Campaign campaign { get; private set; } = null!;
 
 	string _campaignFolder = "";
 	bool _controlDown;
+	bool _skipDirtyPrompt;
+	CampaignDirtyTracker? _dirtyTracker;
 
 	public CampaignWindow() : this( null )
 	{
@@ -34,24 +40,43 @@ public partial class CampaignWindow : Window
 
 		if ( c == null )
 		{
-			Title = "Campaign Manager - New Campaign";
 			CancelFooterButton.IsVisible = true;
 			DeleteCampaignButton.IsVisible = false;
 		}
 		else
 		{
-			Title = string.IsNullOrWhiteSpace( c.campaignName )
-				? "Campaign Manager - Edit Campaign"
-				: "Campaign Manager - Edit Campaign - " + c.campaignName;
 			CancelFooterButton.IsVisible = false;
 			DeleteCampaignButton.IsVisible = true;
 		}
 
 		SaveCampaign();
+		campaign.ClearDirty();
+		campaign.PropertyChanged += OnCampaignPropertyChanged;
+		_dirtyTracker = CampaignDirty.Attach( campaign );
+		CampaignDirty.WatchInputs( this, campaign );
+		SyncTitle();
 
 		DescriptionTextBox.TextChanged += DescriptionTextBox_OnTextChanged;
 		TriggersCombo.SelectionChanged += ( _, _ ) => UpdateDelTriggerButtonEnabled();
 		UpdateDelTriggerButtonEnabled();
+	}
+
+	void OnCampaignPropertyChanged( object? sender, PropertyChangedEventArgs e )
+	{
+		if ( e.PropertyName is nameof( Campaign.isDirty ) or nameof( Campaign.campaignName ) )
+			SyncTitle();
+	}
+
+	void SyncTitle()
+	{
+		string baseTitle;
+		if ( CancelFooterButton.IsVisible )
+			baseTitle = "Campaign Manager - New Campaign";
+		else if ( string.IsNullOrWhiteSpace( campaign.campaignName ) )
+			baseTitle = "Campaign Manager - Edit Campaign";
+		else
+			baseTitle = "Campaign Manager - Edit Campaign - " + campaign.campaignName;
+		Title = campaign.isDirty ? baseTitle + "*" : baseTitle;
 	}
 
 	void UpdateDelTriggerButtonEnabled() =>
@@ -70,6 +95,7 @@ public partial class CampaignWindow : Window
 		if ( t.IndexOfAny( new[] { '\r', '\n' } ) < 0 )
 			return;
 		_descriptionTextBoxNormalizing = true;
+		using var pause = campaign.PauseDirtyTracking();
 		try
 		{
 			var caret = box.CaretIndex;
@@ -89,11 +115,14 @@ public partial class CampaignWindow : Window
 		await dlg.ShowDialog( this );
 		if ( !dlg.Accepted )
 			return;
-		campaign.storyText = dlg.StoryText;
+		var next = dlg.StoryText ?? "";
+		if ( next == ( campaign.storyText ?? "" ) )
+			return;
+		campaign.storyText = next;
 		StoryStatusTextBlock.Text = string.IsNullOrWhiteSpace( campaign.storyText )
 			? "The Story Text is not set."
 			: "The Story Text is set.";
-		SaveCampaign();
+		campaign.MarkDirty();
 	}
 
 	async void ImageButton_Click( object? sender, RoutedEventArgs e )
@@ -102,7 +131,12 @@ public partial class CampaignWindow : Window
 		await dlg.ShowDialog( this );
 		if ( !dlg.Accepted )
 			return;
-		campaign.coverImage = dlg.CoverImage;
+		var next = string.IsNullOrWhiteSpace( dlg.CoverImage ) ? null : dlg.CoverImage;
+		var previous = string.IsNullOrWhiteSpace( campaign.coverImage ) ? null : campaign.coverImage;
+		if ( next == previous )
+			return;
+		campaign.coverImage = next;
+		campaign.MarkDirty();
 	}
 
 	async void TriggerHelpButton_Click( object? sender, RoutedEventArgs e )
@@ -123,7 +157,6 @@ public partial class CampaignWindow : Window
 		campaign.triggerCollection.Add( t );
 		TriggersCombo.SelectedIndex = campaign.triggerCollection.Count - 1;
 		UpdateDelTriggerButtonEnabled();
-		SaveCampaign();
 	}
 
 	void DelTriggerButton_Click( object? sender, RoutedEventArgs e )
@@ -133,7 +166,6 @@ public partial class CampaignWindow : Window
 		campaign.triggerCollection.Remove( selected );
 		TriggersCombo.SelectedIndex = campaign.triggerCollection.Count > 0 ? 0 : -1;
 		UpdateDelTriggerButtonEnabled();
-		SaveCampaign();
 	}
 
 	void CampaignWindow_Opened( object? sender, EventArgs e )
@@ -142,10 +174,13 @@ public partial class CampaignWindow : Window
 		StoryStatusTextBlock.Text = string.IsNullOrWhiteSpace( campaign.storyText )
 			? "The Story Text is not set."
 			: "The Story Text is set.";
-		if ( TriggersCombo.Items.Count > 0 )
-			TriggersCombo.SelectedIndex = 0;
-		else
-			TriggersCombo.SelectedIndex = -1;
+		using ( campaign.PauseDirtyTracking() )
+		{
+			if ( TriggersCombo.Items.Count > 0 )
+				TriggersCombo.SelectedIndex = 0;
+			else
+				TriggersCombo.SelectedIndex = -1;
+		}
 		UpdateDelTriggerButtonEnabled();
 		CampaignNameTextBox?.SelectAll();
 	}
@@ -194,6 +229,7 @@ public partial class CampaignWindow : Window
 		try
 		{
 			File.WriteAllText( outpath, output );
+			campaign.ClearDirty();
 		}
 		catch ( Exception ex )
 		{
@@ -250,6 +286,7 @@ public partial class CampaignWindow : Window
 			scenario.triggersObserver.Add( t );
 
 		scenario.TriggerTitleChange( false );
+		_skipDirtyPrompt = true;
 		var main = new MainWindow( scenario );
 		if ( global::Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop )
 			desktop.MainWindow = main;
@@ -469,6 +506,7 @@ public partial class CampaignWindow : Window
 			scenario.triggersObserver.Add( t );
 
 		scenario.TriggerTitleChange( false );
+		_skipDirtyPrompt = true;
 		var main = new MainWindow( scenario );
 		if ( global::Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop )
 			desktop.MainWindow = main;
@@ -576,10 +614,33 @@ public partial class CampaignWindow : Window
 
 	void ReturnToProjectWindow()
 	{
+		_skipDirtyPrompt = true;
 		var pw = new ProjectWindow();
 		if ( global::Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop )
 			desktop.MainWindow = pw;
 		pw.Show();
 		Close();
+	}
+
+	protected override void OnClosing( WindowClosingEventArgs e )
+	{
+		if ( !_skipDirtyPrompt && campaign is { isDirty: true } )
+		{
+			if ( MessageBox.Show(
+				     UnsavedCampaignMessage,
+				     "Campaign Changes Not Saved",
+				     MessageBoxButton.YesNo,
+				     MessageBoxImage.Question )
+			     != MessageBoxResult.Yes )
+			{
+				e.Cancel = true;
+				return;
+			}
+		}
+
+		_dirtyTracker?.Dispose();
+		_dirtyTracker = null;
+		campaign.PropertyChanged -= OnCampaignPropertyChanged;
+		base.OnClosing( e );
 	}
 }

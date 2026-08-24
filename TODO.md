@@ -19,7 +19,7 @@ This is a list of things we need to do:
   * Coarse is OK: Cancel after typing may still leave dirty. No undo / no “restored original text” comparison.
   * Save / Save As still clear dirty via `TriggerTitleChange()`. Save Copy leaves it unchanged.
   * Do **not** mark dirty for export-only or graph pan/zoom. Error Check prune still uses `TriggerTitleChange(true)`.
-  * Leftover gaps (obscure editors) can be filled with the same `WatchInputs` one-liner if they show up in use.
+  * [x] Campaign Manager: `Campaign.MarkDirty()` / `ClearDirty()`, collection tracker, WatchInputs on name/version/description/equipment. Prompt on window close. Save and Close (and other SaveCampaign paths) clear dirty. Trigger combo selection is `ignoreDirty`. Cover/reorder, story text OK with a real change, and add/delete campaign triggers mark dirty until save.
 
 * Keyboard Shortcuts:
   * [x] Reimplement WPF `MyCommands` gestures on the main editor using the **OS primary modifier** (Ctrl on Windows/Linux, Command on Mac) via `EditorHotKeys` (`KeyModifiers.Control` vs `Meta`).
