@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using JiMEditor.Avalonia;
 using JiME;
 
 namespace JiMEditor.Avalonia.Views;
@@ -92,15 +93,19 @@ public partial class ThreatsWindow : Window
 	{
 		Loaded -= OnLoaded;
 		LoadThreats();
+		ScenarioDirty.WatchInputs( this, scenario );
 	}
 
 	void OnWindowClosing( object? sender, WindowClosingEventArgs e ) => UpdateThreatPanel();
 
 	void LoadThreats()
 	{
-		var sorted = scenario.threatObserver.OrderBy( key => key.threshold ).ToList();
-		for ( var i = 0; i < sorted.Count; i++ )
-			scenario.threatObserver[i] = sorted[i];
+		using ( scenario.PauseDirtyTracking() )
+		{
+			var sorted = scenario.threatObserver.OrderBy( key => key.threshold ).ToList();
+			for ( var i = 0; i < sorted.Count; i++ )
+				scenario.threatObserver[i] = sorted[i];
+		}
 
 		threatCollection.Clear();
 		foreach ( var t in scenario.threatObserver )
@@ -109,11 +114,14 @@ public partial class ThreatsWindow : Window
 
 	void UpdateThreatPanel()
 	{
-		for ( var i = 0; i < threatCollection.Count; i++ )
-			scenario.threatObserver[i] = threatCollection[i].theThreat;
-		var sorted = scenario.threatObserver.OrderBy( key => key.threshold ).ToList();
-		for ( var i = 0; i < sorted.Count; i++ )
-			scenario.threatObserver[i] = sorted[i];
+		using ( scenario.PauseDirtyTracking() )
+		{
+			for ( var i = 0; i < threatCollection.Count; i++ )
+				scenario.threatObserver[i] = threatCollection[i].theThreat;
+			var sorted = scenario.threatObserver.OrderBy( key => key.threshold ).ToList();
+			for ( var i = 0; i < sorted.Count; i++ )
+				scenario.threatObserver[i] = sorted[i];
+		}
 		LoadThreats();
 	}
 

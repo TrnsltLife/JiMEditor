@@ -8,6 +8,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
+using JiMEditor.Avalonia;
 using JiME;
 
 namespace JiMEditor.Avalonia.Views;
@@ -23,6 +24,7 @@ public partial class CoverImageEditorWindow : Window
 	public CoverImageEditorWindow()
 	{
 		InitializeComponent();
+		Loaded += ( _, _ ) => ScenarioDirty.WatchInputs( this );
 	}
 
 	public CoverImageEditorWindow( string? initialCoverImage ) : this()
@@ -79,6 +81,7 @@ public partial class CoverImageEditorWindow : Window
 			var scaledBytes = ScaleDownIfNeeded( bytes, MaxImageWidth, MaxImageHeight );
 			CoverImage = Convert.ToBase64String( scaledBytes );
 			UpdatePreview();
+			ScenarioDirty.CurrentScenario?.MarkDirty();
 		}
 		catch ( Exception ex )
 		{
@@ -94,6 +97,7 @@ public partial class CoverImageEditorWindow : Window
 	{
 		CoverImage = null;
 		UpdatePreview();
+		ScenarioDirty.CurrentScenario?.MarkDirty();
 	}
 
 	void OkButton_Click( object? sender, RoutedEventArgs e )

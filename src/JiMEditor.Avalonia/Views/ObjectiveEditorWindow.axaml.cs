@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using JiMEditor.Avalonia;
 using JiME;
 
 namespace JiMEditor.Avalonia.Views;
@@ -68,6 +69,7 @@ public partial class ObjectiveEditorWindow : Window, INotifyPropertyChanged
 		PopulateEditableFieldsFromObjective();
 		SyncAllTriggerCombosFromObjective();
 		ApplicationEnvironment.TryFocus( ShortNameTextBox, selectAllText: true );
+		ScenarioDirty.WatchInputs( this, scenario );
 	}
 
 	/// <summary>Reminder and numeric rewards are not bound; push model → UI when the dialog opens.</summary>
@@ -192,6 +194,7 @@ public partial class ObjectiveEditorWindow : Window, INotifyPropertyChanged
 		while ( objective.textBookData.pages.Count < 1 )
 			objective.textBookData.pages.Add( "" );
 		objective.textBookData.pages[0] = dlg.SummaryText;
+		scenario.MarkDirty();
 	}
 
 	void OkButton_Click( object? sender, RoutedEventArgs e )
@@ -216,7 +219,6 @@ public partial class ObjectiveEditorWindow : Window, INotifyPropertyChanged
 		}
 
 		Accepted = true;
-		scenario.TriggerTitleChange( true );
 		Close();
 	}
 

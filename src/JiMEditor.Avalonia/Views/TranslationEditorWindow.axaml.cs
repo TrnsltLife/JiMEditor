@@ -7,6 +7,7 @@ using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using JiMEditor.Avalonia;
 using JiME;
 
 namespace JiMEditor.Avalonia.Views;
@@ -57,6 +58,7 @@ public partial class TranslationEditorWindow : Window, INotifyPropertyChanged
 		// Avoid nested path binding (translation.translationItems); assign once the merged list exists.
 		TranslationItemsControl.ItemsSource = translation.translationItems;
 		LangCodeTextBox.Focus();
+		ScenarioDirty.WatchInputs( this, scenario );
 	}
 
 	void HookTranslationItemChangeTracking()
@@ -94,10 +96,13 @@ public partial class TranslationEditorWindow : Window, INotifyPropertyChanged
 	{
 		Dispatcher.UIThread.Post( () =>
 		{
-			// Force converter re-evaluation for row backgrounds.
-			var source = translation.translationItems;
-			TranslationItemsControl.ItemsSource = null;
-			TranslationItemsControl.ItemsSource = source;
+			// Rebinding row CheckBoxes fires IsCheckedChanged; that is not a user edit.
+			using ( scenario.PauseDirtyTracking() )
+			{
+				var source = translation.translationItems;
+				TranslationItemsControl.ItemsSource = null;
+				TranslationItemsControl.ItemsSource = source;
+			}
 		} );
 	}
 

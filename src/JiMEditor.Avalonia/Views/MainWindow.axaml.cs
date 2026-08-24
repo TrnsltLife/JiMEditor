@@ -35,6 +35,8 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 	Point _tileBlockDragGhostOffset;
 	bool _tileBlockDragActive;
 	bool _fileSaveBusy;
+	bool _skipDirtyPrompt;
+	ScenarioDirtyTracker? _dirtyTracker;
 
 	public Scenario scenario { get; private set; } = null!;
 
@@ -69,6 +71,7 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 		SyncTitleFromScenario();
 		ScenarioNameEdit.Text = scenario.scenarioName ?? "";
 		scenario.PropertyChanged += OnScenarioPropertyChanged;
+		_dirtyTracker = ScenarioDirty.Attach( scenario );
 		ScenarioChapterFlowGraph.SetInteractionSink( this );
 		ScenarioChapterFlowGraph.Attach( scenario );
 		SyncOpenToolbarForCampaign();
@@ -481,7 +484,12 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 			return;
 		}
 
-		scenario.scenarioName = newName;
+		if ( scenario.scenarioName != newName )
+		{
+			scenario.scenarioName = newName;
+			scenario.MarkDirty();
+		}
+
 		ScenarioNameText.IsVisible = true;
 		ScenarioNameEdit.IsVisible = false;
 	}
@@ -1217,12 +1225,9 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 	{
 		if ( scenario.campaignGUID == Guid.Empty )
 			return;
-		if ( MessageBox.Show(
+		if ( !TryConfirmLeaveEditor(
 			     "Are you sure you want to close this Scenario and return to the Campaign?",
-			     "Return to Campaign",
-			     MessageBoxButton.YesNo,
-			     MessageBoxImage.Question )
-		     != MessageBoxResult.Yes )
+			     "Return to Campaign" ) )
 			return;
 
 		if ( Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop )
@@ -1246,8 +1251,7 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 	/// <summary>Ported from WPF <c>CommandOpenProject_Executed</c> / <c>CommandNewProject_Executed</c>: show project list and close this window.</summary>
 	void NavigateToProjectWindow( string message, string title )
 	{
-		if ( MessageBox.Show( message, title, MessageBoxButton.YesNo, MessageBoxImage.Question )
-		     != MessageBoxResult.Yes )
+		if ( !TryConfirmLeaveEditor( message, title ) )
 			return;
 
 		if ( Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop )
@@ -1257,6 +1261,31 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 		desktop.MainWindow = pw;
 		pw.Show();
 		Close();
+	}
+
+	const string UnsavedProjectMessage =
+		"The Project has changes that haven't been saved. Are you sure you want to exit without saving?";
+
+	bool TryConfirmLeaveEditor( string cleanMessage, string cleanTitle )
+	{
+		if ( scenario is { isDirty: true } )
+		{
+			if ( MessageBox.Show(
+				     UnsavedProjectMessage,
+				     "Project Changes Not Saved",
+				     MessageBoxButton.YesNo,
+				     MessageBoxImage.Question )
+			     != MessageBoxResult.Yes )
+				return false;
+			_skipDirtyPrompt = true;
+			return true;
+		}
+
+		if ( MessageBox.Show( cleanMessage, cleanTitle, MessageBoxButton.YesNo, MessageBoxImage.Question )
+		     != MessageBoxResult.Yes )
+			return false;
+		_skipDirtyPrompt = true;
+		return true;
 	}
 
 	async void SaveSplitButton_Click( object? sender, RoutedEventArgs e ) => await SaveScenarioNormalAsync();
@@ -2039,6 +2068,22 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 
 	protected override void OnClosing( WindowClosingEventArgs e )
 	{
+		if ( !_skipDirtyPrompt && scenario is { isDirty: true } )
+		{
+			if ( MessageBox.Show(
+				     UnsavedProjectMessage,
+				     "Project Changes Not Saved",
+				     MessageBoxButton.YesNo,
+				     MessageBoxImage.Question )
+			     != MessageBoxResult.Yes )
+			{
+				e.Cancel = true;
+				return;
+			}
+		}
+
+		_dirtyTracker?.Dispose();
+		_dirtyTracker = null;
 		DetachSidebarLists();
 		ScenarioChapterFlowGraph.SetInteractionSink( null );
 		ScenarioChapterFlowGraph.Detach();

@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using JiMEditor.Avalonia;
 using JiME;
 
 namespace JiMEditor.Avalonia.Views;
@@ -83,6 +84,7 @@ public partial class TriggerEditorWindow : Window
 
 	void Window_Opened( object? sender, EventArgs e )
 	{
+		ScenarioDirty.WatchInputs( this, _scenario );
 		NameTextBox.Focus();
 		NameTextBox.SelectAll();
 	}
@@ -97,7 +99,6 @@ public partial class TriggerEditorWindow : Window
 			var t = _scenario.triggersObserver.FirstOrDefault( x => x.dataName == _oldName );
 			if ( t != null )
 				t.isMultiTrigger = MultiCheckBox.IsChecked == true;
-			_scenario.TriggerTitleChange( true );
 			Accepted = false;
 			Close();
 			return;
@@ -114,7 +115,6 @@ public partial class TriggerEditorWindow : Window
 		{
 			if ( _scenario.RenameTrigger( _oldName, triggerName, MultiCheckBox.IsChecked == true ) )
 			{
-				_scenario.TriggerTitleChange( true );
 				Accepted = true;
 				Close();
 			}
@@ -124,7 +124,6 @@ public partial class TriggerEditorWindow : Window
 
 		if ( _scenario.AddTrigger( triggerName, MultiCheckBox.IsChecked == true ) )
 		{
-			_scenario.TriggerTitleChange( true );
 			Accepted = true;
 			Close();
 		}

@@ -309,6 +309,7 @@ namespace JiME
             activationsObserver.CollectionChanged += handler;
             resolutionObserver.CollectionChanged += handler;
             threatObserver.CollectionChanged += handler;
+			translationObserver.CollectionChanged += handler;
             chapterObserver.CollectionChanged += handler;
             collectionObserver.CollectionChanged += handler;
             globalTilePool.CollectionChanged += handler;
@@ -524,6 +525,42 @@ namespace JiME
 		{
 			isDirty = dirty;
 			titleChangedToken = new Tuple<bool, string, Guid, ProjectType>( isDirty, fileName, Guid.NewGuid(), projectType );
+		}
+
+		int _dirtySuppress;
+
+		/// <summary>Mark the scenario as having unsaved edits (no-op if already dirty or inside <see cref="PauseDirtyTracking"/>).</summary>
+		public void MarkDirty()
+		{
+			if ( _dirtySuppress > 0 || isDirty )
+				return;
+			TriggerTitleChange( true );
+		}
+
+		/// <summary>Ignore collection/input dirty marks while the scenario is being filled programmatically (hydrate, sort-in-place).</summary>
+		public IDisposable PauseDirtyTracking()
+		{
+			_dirtySuppress++;
+			return new DirtySuppressScope( this );
+		}
+
+		void ResumeDirtyTracking()
+		{
+			if ( _dirtySuppress > 0 )
+				_dirtySuppress--;
+		}
+
+		sealed class DirtySuppressScope : IDisposable
+		{
+			Scenario? _scenario;
+
+			public DirtySuppressScope( Scenario scenario ) => _scenario = scenario;
+
+			public void Dispose()
+			{
+				_scenario?.ResumeDirtyTracking();
+				_scenario = null;
+			}
 		}
 
 		void CreateDefaults()

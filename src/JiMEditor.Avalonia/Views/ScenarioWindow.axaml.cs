@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using JiMEditor.Avalonia;
 using JiMEditor.Avalonia.EventDialog;
 using JiME;
 
@@ -56,6 +57,7 @@ public partial class ScenarioWindow : Window
 
 		LoadCollections();
 		LoadCampaignNotice();
+		ScenarioDirty.WatchInputs( this, scenario );
 	}
 
 	void LoadCampaignNotice()
@@ -70,8 +72,11 @@ public partial class ScenarioWindow : Window
 	{
 		if ( !scenario.collectionObserver.Contains( Collection.CORE_SET ) )
 		{
-			scenario.collectionObserver.Add( Collection.CORE_SET );
-			scenario.RefilterGlobalTilePool();
+			using ( scenario.PauseDirtyTracking() )
+			{
+				scenario.collectionObserver.Add( Collection.CORE_SET );
+				scenario.RefilterGlobalTilePool();
+			}
 		}
 
 		_suppressCollectionCheck = true;
@@ -117,7 +122,10 @@ public partial class ScenarioWindow : Window
 		var w = new StoryTextEditWindow( scenario.specialInstructions, windowTitle: "Edit Scenario Story" );
 		await w.ShowDialog( this );
 		if ( w.Accepted )
+		{
 			scenario.specialInstructions = w.StoryText;
+			scenario.MarkDirty();
+		}
 	}
 
 	async void EditIntroButton_Click( object? sender, RoutedEventArgs e )
@@ -132,6 +140,7 @@ public partial class ScenarioWindow : Window
 		if ( scenario.introBookData.pages.Count == 0 )
 			scenario.introBookData.pages.Add( "" );
 		scenario.introBookData.pages[0] = w.StoryText;
+		scenario.MarkDirty();
 	}
 
 	async void ImageButton_Click( object? sender, RoutedEventArgs e )
@@ -139,7 +148,10 @@ public partial class ScenarioWindow : Window
 		var w = new CoverImageEditorWindow( scenario.coverImage );
 		await w.ShowDialog( this );
 		if ( w.Accepted )
+		{
 			scenario.coverImage = w.CoverImage;
+			scenario.MarkDirty();
+		}
 	}
 
 	async void AddResolutionButton_Click( object? sender, RoutedEventArgs e ) => await AddResolutionAsync();

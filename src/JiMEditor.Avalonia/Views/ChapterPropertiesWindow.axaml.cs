@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using JiMEditor.Avalonia;
 using JiME;
 
 namespace JiMEditor.Avalonia.Views;
@@ -100,6 +101,7 @@ public partial class ChapterPropertiesWindow : Window
 		ApplicationEnvironment.TryFocus( NameTextBox, selectAllText: true );
 		UpdateTexts();
 		RefreshFlavorPreview();
+		ScenarioDirty.WatchInputs( this, scenario );
 	}
 
 	void OnClosing( object? sender, WindowClosingEventArgs e )

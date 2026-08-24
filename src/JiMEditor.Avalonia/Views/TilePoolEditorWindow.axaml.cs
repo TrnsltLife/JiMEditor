@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using JiMEditor.Avalonia;
 using JiME;
 
 namespace JiMEditor.Avalonia.Views;
@@ -68,6 +69,7 @@ public partial class TilePoolEditorWindow : Window, INotifyPropertyChanged
 	void OnLoaded( object? sender, RoutedEventArgs e )
 	{
 		StartingTileCheck.IsVisible = chapter.isStart;
+		ScenarioDirty.WatchInputs( this, scenario );
 	}
 
 	bool TryClose() => true;
