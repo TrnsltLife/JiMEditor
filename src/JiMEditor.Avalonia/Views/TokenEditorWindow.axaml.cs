@@ -16,6 +16,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using JiMEditor.Avalonia;
 using JiMEditor.Avalonia.EventDialog;
 using JiME;
 using Rectangle = Avalonia.Controls.Shapes.Rectangle;
@@ -94,6 +95,7 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 		UpdateExploreStatus();
 		UpdateSelectedUi();
 		UpdateCapacityUi();
+		Loaded += ( _, _ ) => ScenarioDirty.WatchInputs( this, scenario );
 	}
 
 	void InteractionsCollectionChanged( object? sender, NotifyCollectionChangedEventArgs e )
@@ -389,6 +391,8 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 
 	void TokenCanvas_OnPointerReleased( object? sender, PointerReleasedEventArgs e )
 	{
+		if ( _dragging )
+			scenario.MarkDirty();
 		_dragging = false;
 		_dragToken = null;
 		e.Pointer.Capture( null );
@@ -441,6 +445,8 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 
 		ApplyTokenTransform( selected );
 		UpdateSelectedUi();
+		if ( selected.position.X != last.X || selected.position.Y != last.Y )
+			scenario.MarkDirty();
 	}
 
 	void RotateSelected( double direction )
@@ -454,6 +460,7 @@ public partial class TokenEditorWindow : Window, INotifyPropertyChanged
 		selected.angle %= 360;
 		ApplyTokenTransform( selected );
 		UpdateSelectedUi();
+		scenario.MarkDirty();
 	}
 
 	void RebuildTokenCanvas()

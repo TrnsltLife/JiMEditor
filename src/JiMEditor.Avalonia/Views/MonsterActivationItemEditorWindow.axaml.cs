@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using JiMEditor.Avalonia;
 using JiME;
 
 namespace JiMEditor.Avalonia.Views;
@@ -58,6 +59,8 @@ public partial class MonsterActivationItemEditorWindow : Window
 			ApplyReadOnlyChrome();
 		else
 			AttackTextBox.Focus();
+		if ( !_readOnly )
+			ScenarioDirty.WatchInputs( this, scenario );
 	}
 
 	void ApplyReadOnlyChrome()

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using JiMEditor.Avalonia;
 using JiME;
 
 namespace JiMEditor.Avalonia.Views;
@@ -53,6 +54,7 @@ public partial class ActivationsEditorWindow : Window, INotifyPropertyChanged
 		{
 			NameTextBox.Focus();
 			NameTextBox.SelectAll();
+			ScenarioDirty.WatchInputs( this, scenario );
 		}
 	}
 
@@ -154,8 +156,11 @@ public partial class ActivationsEditorWindow : Window, INotifyPropertyChanged
 
 	void RefreshItems()
 	{
-		ActivationItemsControl.ItemsSource = null;
-		ActivationItemsControl.ItemsSource = activations.activations;
+		using ( scenario.PauseDirtyTracking() )
+		{
+			ActivationItemsControl.ItemsSource = null;
+			ActivationItemsControl.ItemsSource = activations.activations;
+		}
 		PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( nameof( activations ) ) );
 	}
 }

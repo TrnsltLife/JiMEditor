@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using JiMEditor.Avalonia;
 using JiME;
 using JiME.TextFormat;
 
@@ -70,6 +71,7 @@ public partial class ResolutionEditorWindow : Window
 			success = endVal;
 		SuccessEndRadio.IsChecked = success;
 		FailureEndRadio.IsChecked = !success;
+		ScenarioDirty.WatchInputs( this, _scenario );
 	}
 
 	async void AddTriggerButton_Click( object? sender, RoutedEventArgs e )

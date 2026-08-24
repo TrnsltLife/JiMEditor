@@ -2,6 +2,7 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using JiMEditor.Avalonia;
 using JiME;
 using JiME.TextFormat;
 
@@ -39,6 +40,7 @@ public partial class TranslationItemEditorWindow : Window
 		OriginalMarkupTextBox.Text = original;
 		OriginalPreviewTextBlock.PseudoHtml = original;
 		TranslationRichEditor.Text = translationItem.text ?? "";
+		ScenarioDirty.WatchInputs( this );
 	}
 
 	void OkButton_Click( object? sender, RoutedEventArgs e )

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using JiMEditor.Avalonia;
 using JiMEditor.Avalonia.EventDialog;
 using JiMEditor.Avalonia.Views.Events.EventDialogs;
 using JiME;
@@ -110,6 +111,7 @@ public partial class BaseEventDialogWindow : Window
 		ApplyScenarioCollectionAvailability();
 
 		ApplicationEnvironment.TryFocus( NameGroupSection.NameTextBox, selectAllText: true );
+		ScenarioDirty.WatchInputs( this, Scenario );
 	}
 
 	/// <summary>

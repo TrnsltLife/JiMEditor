@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using JiMEditor.Avalonia;
 using JiMEditor.Avalonia.EventDialog;
 using JiME;
 
@@ -48,6 +49,7 @@ public partial class ScriptedEnemyGroupEditorWindow : Window
 		ScenarioCollectionAvailability.ApplyScriptedEnemyGroupEditor( _scenario, this );
 		EnsureEnabledMonsterTypeSelected();
 		_isInitializing = false;
+		ScenarioDirty.WatchInputs( this, _scenario );
 	}
 
 	/// <summary>If the current monster type was cleared because its collection is disabled, select the first enabled type (WPF parity).</summary>

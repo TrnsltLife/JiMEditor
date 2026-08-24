@@ -5,6 +5,7 @@ using System.Globalization;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using JiMEditor.Avalonia;
 using JiME;
 
 namespace JiMEditor.Avalonia.Views;
@@ -68,6 +69,7 @@ public partial class MonsterModifierEditorWindow : Window, INotifyPropertyChange
 		{
 			NameTextBox?.Focus();
 			NameTextBox?.SelectAll();
+			ScenarioDirty.WatchInputs( this, scenario );
 		}
 	}
 

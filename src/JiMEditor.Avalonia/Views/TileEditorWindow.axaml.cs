@@ -11,6 +11,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using JiMEditor.Avalonia;
 using JiME;
 
 namespace JiMEditor.Avalonia.Views;
@@ -83,6 +84,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 		ApplicationEnvironment.TryFocus( TileCanvas );
 
 		KeyDown += TileEditorWindow_OnKeyDown;
+		Loaded += ( _, _ ) => ScenarioDirty.WatchInputs( this, scenario );
 	}
 
 	void OkButton_Click( object? sender, RoutedEventArgs e ) => Close();
@@ -263,6 +265,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 		selected.position = new Vector2( snapX, snapY );
 		ApplyTileTransform( selected );
 		SyncComboSelection();
+		scenario.MarkDirty();
 	}
 
 	async void TileGalleryButton_Click( object? sender, RoutedEventArgs e )
@@ -356,6 +359,8 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 
 	void TileCanvas_OnPointerReleased( object? sender, PointerReleasedEventArgs e )
 	{
+		if ( _dragging )
+			scenario.MarkDirty();
 		_dragging = false;
 		_dragTile = null;
 		e.Pointer.Capture( null );
@@ -371,6 +376,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 			selected.angle += selected.rotationAngle;
 		selected.angle %= 360;
 		ApplyTileTransform( selected );
+		scenario.MarkDirty();
 	}
 
 	void TileEditorWindow_OnKeyDown( object? sender, KeyEventArgs e )
@@ -382,6 +388,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 			selected.angle += -1 * selected.rotationAngle;
 			selected.angle %= 360;
 			ApplyTileTransform( selected );
+			scenario.MarkDirty();
 			e.Handled = true;
 		}
 		else if ( e.Key == Key.PageDown )
@@ -389,6 +396,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 			selected.angle += selected.rotationAngle;
 			selected.angle %= 360;
 			ApplyTileTransform( selected );
+			scenario.MarkDirty();
 			e.Handled = true;
 		}
 		else if ( e.Key == Key.Delete )
@@ -401,6 +409,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 			var dy = _isJourney ? HexCellY : SquareDragSnap;
 			selected.position = new Vector2( selected.position.X, selected.position.Y - dy );
 			ApplyTileTransform( selected );
+			scenario.MarkDirty();
 			e.Handled = true;
 		}
 		else if ( e.Key == Key.Down )
@@ -408,6 +417,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 			var dy = _isJourney ? HexCellY : SquareDragSnap;
 			selected.position = new Vector2( selected.position.X, selected.position.Y + dy );
 			ApplyTileTransform( selected );
+			scenario.MarkDirty();
 			e.Handled = true;
 		}
 		else if ( e.Key == Key.Left )
@@ -415,6 +425,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 			var dx = _isJourney ? HexCellX : SquareDragSnap;
 			selected.position = new Vector2( selected.position.X - dx, selected.position.Y );
 			ApplyTileTransform( selected );
+			scenario.MarkDirty();
 			e.Handled = true;
 		}
 		else if ( e.Key == Key.Right )
@@ -422,6 +433,7 @@ public partial class TileEditorWindow : Window, INotifyPropertyChanged
 			var dx = _isJourney ? HexCellX : SquareDragSnap;
 			selected.position = new Vector2( selected.position.X + dx, selected.position.Y );
 			ApplyTileTransform( selected );
+			scenario.MarkDirty();
 			e.Handled = true;
 		}
 	}

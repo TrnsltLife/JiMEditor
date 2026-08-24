@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using JiMEditor.Avalonia;
 using JiME.TextFormat;
 
 namespace JiMEditor.Avalonia.Views;
@@ -13,6 +14,7 @@ public partial class ObjectiveSummaryEditWindow : Window
 	public ObjectiveSummaryEditWindow()
 	{
 		InitializeComponent();
+		Loaded += ( _, _ ) => ScenarioDirty.WatchInputs( this );
 	}
 
 	public ObjectiveSummaryEditWindow( string? initialPageText )

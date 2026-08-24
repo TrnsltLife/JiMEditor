@@ -11,28 +11,15 @@ This is a list of things we need to do:
   * https://github.com/cuikp/AvRichTextBox
 
 * Dirty Tracking:
-  * Status today:
-    * `Scenario.isDirty` exists; the title `*` updates via `MainWindow.SyncTitleFromScenario`.
-    * New and loaded projects are cleared to clean (`TriggerTitleChange(false)` in `NewScenarioForEditor`, project/campaign open). The Scenario ctor still sets dirty, then those paths immediately clear it.
-    * Save / Save As clear dirty via `TriggerTitleChange()`. Save Copy already leaves it unchanged.
-    * Only a few edit paths set it true again (objective OK, trigger add/rename/delete, new resolution, tile-block reorder, Error Check prune). Most editors never mark dirty.
-    * WPF was the same or weaker. `AddObserverChangedHandler` exists (WPF used it only to refresh the graph, not dirty). Avalonia MainWindow does not call it yet.
-    * Close / New / Open do **not** prompt yet (`MainWindow.OnClosing` only detaches). WPF copy: “The Project has changes that haven't been saved. Are you sure you want to exit without saving?”
-  * Goal (coarse is OK): any user edit sets `isDirty`. No undo stack, no “typed then restored original text” comparison. Cancel after typing may still leave dirty. Export, graph pan/zoom, Error Check (except prune), Help, Gallery paging until Add, are not edits.
-  * Avalonia has **no** app-wide “any binding changed” hook. Practical knobs:
-    * Control events: `TextBox.TextChanged`, `CheckBox`/`RadioButton.IsCheckedChanged`, `ComboBox.SelectionChanged`, `Slider`/`NumericUpDown.ValueChanged`.
-    * `INotifyPropertyChanged` on models (misses unbound fields until OK commit; `BaseTile.position` is a plain auto-prop so tile drag does not notify).
-    * `ObservableCollection.CollectionChanged` (covers Create/Copy/Import/Delete if they add/remove on observers).
-  * Rejected as too invasive: per-control handlers in every window; sprinkling `TriggerTitleChange(true)` into every `Add*`/`OkButton_Click`.
-  * Recommended (few files, no new methods on every editor):
-    1. **`Scenario.MarkDirty()`** — `TriggerTitleChange(true)` helper. One call site for everything else.
-    2. **CollectionChanged (CRUD)** — one handler from `MainWindow` via existing `AddObserverChangedHandler`. Add `translationObserver`. Do **not** listen to `filteredGlobalTilePool` (refilter is not a user save). Subscribe **after** load so CreateInstance / defaults do not dirty. Covers sidebar create/duplicate/import/delete without touching those handlers. Nested: also subscribe `chapter.tileObserver` and each tile’s `tokenList` (re-hook when chapters/tiles are added) so tile/token add/remove is covered without Tile Editor methods.
-    3. **Input walker (in-place fields)** — one helper, e.g. `ScenarioDirty.WatchInputs(Window, Scenario)`, that walks `GetVisualDescendants()` after `Loaded`/hydrate and subscribes to the control events above. Skip `ListBox`/`ListView` selection, skip `Classes="ignoreDirty"`. One call from `BaseEventDialogWindow.OnWindowLoaded` covers **all** event types. Same one-liner in Scenario / Objective / Threats / Token / Chapter properties / Activations / Modifier / Translation / Resolution / Story text / Cover / Enemy group / Trigger (if not already covered by collections). Attach **after** hydrate so `Populate*FromModel` does not dirty. Over-marks if the user types then Cancel — accepted.
-    4. **Canvas / live editors** — walker misses tile drag (`position` has no INPC). One `MarkDirty()` on tile-drag end (existing drag handler in `TileEditorWindow`) and on token move if that path exists. Do not mark dirty merely for opening the editor.
-    5. **Main toolbar name** — include MainWindow in the walker **or** `MarkDirty()` in `CommitScenarioNameEdit` (one existing method).
-  * Do **not** walk Help, Error Check, Gallery (until Add Selected, which is CollectionChanged), or MessageBox-style windows.
-  * Prompt (independent of coverage, do with or right after layer 2): if `isDirty`, confirm before MainWindow close, New, Open, Return to Campaign. Cancel the close if they say No.
-  * Implementation order: MarkDirty + close prompt → CollectionChanged (CRUD) → input walker on BaseEventDialog + ScenarioWindow → remaining editor Loaded one-liners → tile drag. Stop when the prompt fires for the common edit paths; leftover gaps are OK if they are obscure.
+  * [x] `Scenario.MarkDirty()` + `PauseDirtyTracking()` for programmatic hydrate/sort.
+  * [x] Close / New / Open / Return to Campaign prompt when dirty (WPF copy: “The Project has changes that haven't been saved. Are you sure you want to exit without saving?”).
+  * [x] CollectionChanged tracker (`ScenarioDirty.Attach` from MainWindow): observers including `translationObserver` and nested `chapter.tileObserver` / `tokenList`. Does not listen to `filteredGlobalTilePool`.
+  * [x] Input walker `ScenarioDirty.WatchInputs` on event dialogs, scenario/objective/threats/token/chapter/activations/modifier/translation/resolution/story/cover/enemy group/trigger/tile pool/tile editor. Skip Help, Error Check, Gallery paging. `Classes="ignoreDirty"` to opt out.
+  * [x] Tile/token canvas drag, nudge, and rotate call `MarkDirty()`. Toolbar scenario-name commit marks dirty when the name changes.
+  * Coarse is OK: Cancel after typing may still leave dirty. No undo / no “restored original text” comparison.
+  * Save / Save As still clear dirty via `TriggerTitleChange()`. Save Copy leaves it unchanged.
+  * Do **not** mark dirty for export-only or graph pan/zoom. Error Check prune still uses `TriggerTitleChange(true)`.
+  * [x] Campaign Manager: `Campaign.MarkDirty()` / `ClearDirty()`, collection tracker, WatchInputs on name/version/description/equipment. Prompt on window close. Save and Close (and other SaveCampaign paths) clear dirty. Trigger combo selection is `ignoreDirty`. Cover/reorder, story text OK with a real change, and add/delete campaign triggers mark dirty until save.
 
 * Keyboard Shortcuts:
   * [x] Reimplement WPF `MyCommands` gestures on the main editor using the **OS primary modifier** (Ctrl on Windows/Linux, Command on Mac) via `EditorHotKeys` (`KeyModifiers.Control` vs `Meta`).
