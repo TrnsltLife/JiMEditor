@@ -20,7 +20,7 @@
 				</Button>
 			</Grid>
 		</Border>
-		<Border Grid.Column="1" Classes="callout" Margin="5,0,0,0">
+		<Border x:Name="FlavorTextCallout" Grid.Column="1" Classes="callout" Margin="5,0,0,0">
 			<Grid ColumnDefinitions="*,Auto">
 				<StackPanel Grid.Column="0">
 					<TextBlock x:Name="FlavorTitleText" Classes="heading" Text="Flavor Text For Token Interaction"/>

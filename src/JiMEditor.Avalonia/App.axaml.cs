@@ -17,6 +17,7 @@ public partial class App : Application
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            desktop.Startup += (_, _) => MacDockIcon.ApplyRingIcon();
             desktop.MainWindow = new ProjectWindow();
         }
 

@@ -34,6 +34,11 @@ public partial class EventTextFlavorSection : UserControl
 		EventTextCallout.IsEnabled = enabled;
 	}
 
+	public void SetFlavorTextEnabled( bool enabled )
+	{
+		FlavorTextCallout.IsEnabled = enabled;
+	}
+
 	async void EditEventText_OnClick( object? sender, RoutedEventArgs e )
 	{
 		if ( _interaction == null || _eventReadOnly )

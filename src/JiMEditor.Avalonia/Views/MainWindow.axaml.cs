@@ -34,6 +34,7 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 	Point _tileBlockDragStartPoint;
 	Point _tileBlockDragGhostOffset;
 	bool _tileBlockDragActive;
+	bool _fileSaveBusy;
 
 	public Scenario scenario { get; private set; } = null!;
 
@@ -70,6 +71,14 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 		scenario.PropertyChanged += OnScenarioPropertyChanged;
 		ScenarioChapterFlowGraph.SetInteractionSink( this );
 		ScenarioChapterFlowGraph.Attach( scenario );
+		SyncOpenToolbarForCampaign();
+	}
+
+	void SyncOpenToolbarForCampaign()
+	{
+		var inCampaign = scenario.campaignGUID != Guid.Empty;
+		OpenToolbarButton.IsVisible = !inCampaign;
+		OpenToolbarSplitButton.IsVisible = inCampaign;
 	}
 
 	void SidebarPaneToggleButton_Click( object? sender, RoutedEventArgs e )
@@ -1204,6 +1213,31 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 			"Are you sure you want to close this Project and open a different one?",
 			"Open Project" );
 
+	void ReturnToCampaignMenuItem_Click( object? sender, RoutedEventArgs e )
+	{
+		if ( scenario.campaignGUID == Guid.Empty )
+			return;
+		if ( MessageBox.Show(
+			     "Are you sure you want to close this Scenario and return to the Campaign?",
+			     "Return to Campaign",
+			     MessageBoxButton.YesNo,
+			     MessageBoxImage.Question )
+		     != MessageBoxResult.Yes )
+			return;
+
+		if ( Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop )
+			return;
+
+		var campaign = FileManager.LoadCampaign( scenario.campaignGUID.ToString() );
+		if ( campaign == null )
+			return;
+
+		var cw = new CampaignWindow( campaign );
+		desktop.MainWindow = cw;
+		cw.Show();
+		Close();
+	}
+
 	void NewProjectToolbarButton_Click( object? sender, RoutedEventArgs e ) =>
 		NavigateToProjectWindow(
 			"Are you sure you want to close this Project and start a new one?",
@@ -1234,8 +1268,6 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 		await new ErrorCheckWindow( checker, scenario, OpenErrorCheckNavAsync ).ShowDialog( this );
 	}
 
-	async void SaveMenuItem_Click( object? sender, RoutedEventArgs e ) => await SaveScenarioNormalAsync();
-
 	async void SaveCopyMenuItem_Click( object? sender, RoutedEventArgs e ) => await SaveScenarioCopyAsync();
 
 	async void SaveAsMenuItem_Click( object? sender, RoutedEventArgs e ) => await SaveScenarioSaveAsAsync();
@@ -1246,6 +1278,9 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 	/// </summary>
 	async Task SaveScenarioSaveAsAsync()
 	{
+		if ( _fileSaveBusy )
+			return;
+		_fileSaveBusy = true;
 		try
 		{
 			// WPF: SaveAs() → Save(true, UserJourneyPaths.GetBasePath()) — not the campaign GUID directory.
@@ -1286,6 +1321,10 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 				MessageBoxButton.OK,
 				MessageBoxImage.Error );
 		}
+		finally
+		{
+			_fileSaveBusy = false;
+		}
 	}
 
 	/// <summary>
@@ -1294,6 +1333,9 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 	/// </summary>
 	async Task SaveScenarioNormalAsync()
 	{
+		if ( _fileSaveBusy )
+			return;
+		_fileSaveBusy = true;
 		try
 		{
 			var baseDir = FileManager.GetScenarioSaveDirectory( scenario );
@@ -1337,6 +1379,10 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 				MessageBoxButton.OK,
 				MessageBoxImage.Error );
 		}
+		finally
+		{
+			_fileSaveBusy = false;
+		}
 	}
 
 	/// <summary>Used by <see cref="ScenarioWindow"/> safeguard flow to reuse the existing Save Copy picker and write logic.</summary>
@@ -1345,6 +1391,9 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 	/// <summary>Writes a copy to a user-chosen path; does not change the open document’s <see cref="Scenario.fileName"/> or dirty flag.</summary>
 	async Task<bool> SaveScenarioCopyAsync()
 	{
+		if ( _fileSaveBusy )
+			return false;
+		_fileSaveBusy = true;
 		try
 		{
 			var docs = Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments );
@@ -1381,6 +1430,10 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 				MessageBoxButton.OK,
 				MessageBoxImage.Error );
 			return false;
+		}
+		finally
+		{
+			_fileSaveBusy = false;
 		}
 	}
 

@@ -36,7 +36,8 @@
 						<Image Source="avares://JiMEditor.Avalonia/Assets/newcampaign.png" Width="24" Height="24"/>
 					</StackPanel>
 				</Button>
-				<Button Classes="iconbutton"
+				<Button x:Name="OpenToolbarButton"
+				        Classes="iconbutton"
 				        Height="32"
 				        Padding="4,0,4,0"
 				        Click="OpenToolbarButton_Click"
@@ -45,6 +46,22 @@
 						<Image Source="avares://JiMEditor.Avalonia/Assets/open.png" Width="24" Height="24"/>
 					</StackPanel>
 				</Button>
+				<SplitButton x:Name="OpenToolbarSplitButton"
+				             Classes="iconbutton"
+				             Height="32"
+				             Padding="4,0,4,0"
+				             IsVisible="False"
+				             Click="OpenToolbarButton_Click"
+				             ToolTip.Tip="Open a different project (project list). Ctrl/⌘+O">
+					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/open.png" Width="24" Height="24"/>
+					</StackPanel>
+					<SplitButton.Flyout>
+						<MenuFlyout Placement="BottomEdgeAlignedLeft">
+							<MenuItem Header="Return to Campaign" Click="ReturnToCampaignMenuItem_Click"/>
+						</MenuFlyout>
+					</SplitButton.Flyout>
+				</SplitButton>
 				<SplitButton x:Name="SaveSplitButton"
 				             Classes="iconbutton"
 				             Height="32"
@@ -56,7 +73,6 @@
 					</StackPanel>
 					<SplitButton.Flyout>
 						<MenuFlyout Placement="BottomEdgeAlignedLeft">
-							<MenuItem Header="Save" Click="SaveMenuItem_Click"/>
 							<MenuItem Header="Save As…" Click="SaveAsMenuItem_Click"/>
 							<MenuItem Header="Save Copy…" Click="SaveCopyMenuItem_Click"/>
 						</MenuFlyout>

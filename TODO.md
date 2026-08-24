@@ -11,26 +11,28 @@ This is a list of things we need to do:
   * https://github.com/cuikp/AvRichTextBox
 
 * Dirty Tracking:
-  * Implement "dirty" tracking across all dialogs. A lot of work.
-  * `Scenario.isDirty` exists and the window title already shows `*` when it is true (`MainWindow.SyncTitleFromScenario`).
-  * It is **not** a reliable “has unsaved edits” flag today. New scenarios start dirty. Save / Save As clear it via `TriggerTitleChange()`. After that, only a few paths set it true again (objective OK, trigger add/rename/delete, new resolution, tile-block reorder). Most editors (events, tiles, tokens, scenario settings, translations, etc.) never mark dirty.
-  * WPF was the same or weaker: it almost never called `TriggerTitleChange(true)` after load, so the close prompt mainly caught unsaved *new* projects.
-  * Prompt before closing the main editor (and before New/Open that would discard the current project) when dirty. Even with incomplete tracking this is useful; once more edit paths set dirty, the prompt covers them automatically.
-  * Prompt copy can match WPF: “The Project has changes that haven't been saved. Are you sure you want to exit without saving?”
-  * Increase `isDirty` coverage so the prompt actually fires after real edits (not only new projects / a handful of dialogs):
-    * Prefer marking dirty in `Scenario` mutators so individual windows cannot forget: `AddInteraction`, `RemoveData`, `AddChapter`, `AddObjective`, `AddTrigger`, `AddResolution`, `AddActivations`, `AddMonsterModifier`, `AddTranslation` (chapter reorder already calls `TriggerTitleChange(true)`).
-    * Also mark dirty on **in-place OK** that mutates an existing object without going through those add/remove methods (event editors, tile/token editors, scenario settings, threats, translations, activations, bonuses).
-    * Events: create, edit, duplicate, import, delete (sidebar + token editor “new event”).
-    * Tile blocks: add / remove / properties; tile editor; token editor; tile pool / random tiles.
-    * Objectives: delete / duplicate (objective editor OK already marks dirty).
-    * Triggers: duplicate (add / rename / delete already mark dirty).
-    * Resolutions: edit / delete from scenario settings (toolbar “new resolution” already marks dirty).
-    * Enemy attack groups and enemy bonuses: add, edit, delete, import.
-    * Translations: add, edit item text, delete, import.
-    * Scenario settings: name, collections, intro / special / cover, scout values, rewards, starting objective, etc.
-    * Threats window and inline scenario-name edit on the main toolbar.
-    * Do **not** mark dirty for export-only or read-only actions (export event, save image, graph pan/zoom, ErrorChecker).
-    * After Save / Save As, keep clearing dirty via `TriggerTitleChange()`; Save Copy must leave dirty unchanged (already the case).
+  * Status today:
+    * `Scenario.isDirty` exists; the title `*` updates via `MainWindow.SyncTitleFromScenario`.
+    * New and loaded projects are cleared to clean (`TriggerTitleChange(false)` in `NewScenarioForEditor`, project/campaign open). The Scenario ctor still sets dirty, then those paths immediately clear it.
+    * Save / Save As clear dirty via `TriggerTitleChange()`. Save Copy already leaves it unchanged.
+    * Only a few edit paths set it true again (objective OK, trigger add/rename/delete, new resolution, tile-block reorder, Error Check prune). Most editors never mark dirty.
+    * WPF was the same or weaker. `AddObserverChangedHandler` exists (WPF used it only to refresh the graph, not dirty). Avalonia MainWindow does not call it yet.
+    * Close / New / Open do **not** prompt yet (`MainWindow.OnClosing` only detaches). WPF copy: “The Project has changes that haven't been saved. Are you sure you want to exit without saving?”
+  * Goal (coarse is OK): any user edit sets `isDirty`. No undo stack, no “typed then restored original text” comparison. Cancel after typing may still leave dirty. Export, graph pan/zoom, Error Check (except prune), Help, Gallery paging until Add, are not edits.
+  * Avalonia has **no** app-wide “any binding changed” hook. Practical knobs:
+    * Control events: `TextBox.TextChanged`, `CheckBox`/`RadioButton.IsCheckedChanged`, `ComboBox.SelectionChanged`, `Slider`/`NumericUpDown.ValueChanged`.
+    * `INotifyPropertyChanged` on models (misses unbound fields until OK commit; `BaseTile.position` is a plain auto-prop so tile drag does not notify).
+    * `ObservableCollection.CollectionChanged` (covers Create/Copy/Import/Delete if they add/remove on observers).
+  * Rejected as too invasive: per-control handlers in every window; sprinkling `TriggerTitleChange(true)` into every `Add*`/`OkButton_Click`.
+  * Recommended (few files, no new methods on every editor):
+    1. **`Scenario.MarkDirty()`** — `TriggerTitleChange(true)` helper. One call site for everything else.
+    2. **CollectionChanged (CRUD)** — one handler from `MainWindow` via existing `AddObserverChangedHandler`. Add `translationObserver`. Do **not** listen to `filteredGlobalTilePool` (refilter is not a user save). Subscribe **after** load so CreateInstance / defaults do not dirty. Covers sidebar create/duplicate/import/delete without touching those handlers. Nested: also subscribe `chapter.tileObserver` and each tile’s `tokenList` (re-hook when chapters/tiles are added) so tile/token add/remove is covered without Tile Editor methods.
+    3. **Input walker (in-place fields)** — one helper, e.g. `ScenarioDirty.WatchInputs(Window, Scenario)`, that walks `GetVisualDescendants()` after `Loaded`/hydrate and subscribes to the control events above. Skip `ListBox`/`ListView` selection, skip `Classes="ignoreDirty"`. One call from `BaseEventDialogWindow.OnWindowLoaded` covers **all** event types. Same one-liner in Scenario / Objective / Threats / Token / Chapter properties / Activations / Modifier / Translation / Resolution / Story text / Cover / Enemy group / Trigger (if not already covered by collections). Attach **after** hydrate so `Populate*FromModel` does not dirty. Over-marks if the user types then Cancel — accepted.
+    4. **Canvas / live editors** — walker misses tile drag (`position` has no INPC). One `MarkDirty()` on tile-drag end (existing drag handler in `TileEditorWindow`) and on token move if that path exists. Do not mark dirty merely for opening the editor.
+    5. **Main toolbar name** — include MainWindow in the walker **or** `MarkDirty()` in `CommitScenarioNameEdit` (one existing method).
+  * Do **not** walk Help, Error Check, Gallery (until Add Selected, which is CollectionChanged), or MessageBox-style windows.
+  * Prompt (independent of coverage, do with or right after layer 2): if `isDirty`, confirm before MainWindow close, New, Open, Return to Campaign. Cancel the close if they say No.
+  * Implementation order: MarkDirty + close prompt → CollectionChanged (CRUD) → input walker on BaseEventDialog + ScenarioWindow → remaining editor Loaded one-liners → tile drag. Stop when the prompt fires for the common edit paths; leftover gaps are OK if they are obscure.
 
 * Keyboard Shortcuts:
   * [x] Reimplement WPF `MyCommands` gestures on the main editor using the **OS primary modifier** (Ctrl on Windows/Linux, Command on Mac) via `EditorHotKeys` (`KeyModifiers.Control` vs `Meta`).
