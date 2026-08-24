@@ -31,37 +31,63 @@
 				        Height="32"
 				        Padding="4,0,4,0"
 				        Click="NewProjectToolbarButton_Click"
-				        ToolTip.Tip="New project (return to project list)">
+				        ToolTip.Tip="New project (return to project list). Ctrl/⌘+N">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/newcampaign.png" Width="24" Height="24"/>
 					</StackPanel>
 				</Button>
-				<Button Classes="iconbutton"
+				<Button x:Name="OpenToolbarButton"
+				        Classes="iconbutton"
 				        Height="32"
 				        Padding="4,0,4,0"
 				        Click="OpenToolbarButton_Click"
-				        ToolTip.Tip="Open a different project (project list)">
+				        ToolTip.Tip="Open a different project (project list). Ctrl/⌘+O">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/open.png" Width="24" Height="24"/>
 					</StackPanel>
 				</Button>
+				<SplitButton x:Name="OpenToolbarSplitButton"
+				             Classes="iconbutton"
+				             Height="32"
+				             Padding="4,0,4,0"
+				             IsVisible="False"
+				             Click="OpenToolbarButton_Click"
+				             ToolTip.Tip="Open a different project (project list). Ctrl/⌘+O">
+					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/open.png" Width="24" Height="24"/>
+					</StackPanel>
+					<SplitButton.Flyout>
+						<MenuFlyout Placement="BottomEdgeAlignedLeft">
+							<MenuItem Header="Return to Campaign" Click="ReturnToCampaignMenuItem_Click"/>
+						</MenuFlyout>
+					</SplitButton.Flyout>
+				</SplitButton>
 				<SplitButton x:Name="SaveSplitButton"
 				             Classes="iconbutton"
 				             Height="32"
 				             Padding="4,0,4,0"
 				             Click="SaveSplitButton_Click"
-				             ToolTip.Tip="Save project">
+				             ToolTip.Tip="Save project. Ctrl/⌘+S. Save As: Ctrl/⌘+Alt+S">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/save.png" Width="24" Height="24"/>
 					</StackPanel>
 					<SplitButton.Flyout>
 						<MenuFlyout Placement="BottomEdgeAlignedLeft">
-							<MenuItem Header="Save" Click="SaveMenuItem_Click"/>
 							<MenuItem Header="Save As…" Click="SaveAsMenuItem_Click"/>
 							<MenuItem Header="Save Copy…" Click="SaveCopyMenuItem_Click"/>
 						</MenuFlyout>
 					</SplitButton.Flyout>
 				</SplitButton>
+				<Button Classes="iconbutton"
+				        Height="32"
+				        Padding="4,0,4,0"
+				        Click="ErrorCheckToolbarButton_Click"
+				        ToolTip.Tip="Error Check">
+					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+						<Image Source="avares://JiMEditor.Avalonia/Assets/ok.png" Width="24" Height="24"/>
+						<TextBlock Text="Error Check" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
+					</StackPanel>
+				</Button>
 				<Rectangle Width="1" Height="24" Fill="{StaticResource bgButtonColor}" Margin="4,0"/>
 				<Grid Width="200" VerticalAlignment="Center">
 					<TextBlock x:Name="ScenarioNameText"
@@ -80,7 +106,7 @@
 					         KeyDown="ScenarioNameEdit_KeyDown"
 					         LostFocus="ScenarioNameEdit_LostFocus"/>
 				</Grid>
-				<Button Classes="iconbutton" Height="32" Padding="4,0,4,0" Click="ScenarioSettingsButton_Click" ToolTip.Tip="Edit scenario settings">
+				<Button Classes="iconbutton" Height="32" Padding="4,0,4,0" Click="ScenarioSettingsButton_Click" ToolTip.Tip="Edit scenario settings. Alt+S">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/settings.png" Width="24" Height="24"/>
 						<TextBlock Text="Settings" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
@@ -98,7 +124,7 @@
 				        Height="32"
 				        Padding="4,0,4,0"
 				        Click="NewTileBlockToolbarButton_Click"
-				        ToolTip.Tip="Add tile block">
+				        ToolTip.Tip="Add tile block. Alt+C">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/addtileblock.png" Width="24" Height="24"/>
 						<TextBlock Text="New Tile Block" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
@@ -109,7 +135,7 @@
 				        Height="32"
 				        Padding="4,0,4,0"
 				        Click="AddObjectiveToolbarButton_Click"
-				        ToolTip.Tip="New objective">
+				        ToolTip.Tip="New objective. Alt+O">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/addobjective.png" Width="24" Height="24"/>
 						<TextBlock Text="New Objective" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
@@ -131,7 +157,7 @@
 				        Height="32"
 				        Padding="4,0,4,0"
 				        Click="AddEventToolbarButton_Click"
-				        ToolTip.Tip="New event">
+				        ToolTip.Tip="New event. Alt+E">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/addevent.png" Width="24" Height="24"/>
 						<TextBlock Text="New Event" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
@@ -142,7 +168,7 @@
 				        Height="32"
 				        Padding="4,0,4,0"
 				        Click="AddTriggerToolbarButton_Click"
-				        ToolTip.Tip="New trigger">
+				        ToolTip.Tip="New trigger. Alt+T">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/addtrigger.png" Width="24" Height="24"/>
 						<TextBlock Text="New Trigger" Foreground="White" FontSize="12" Margin="4,6,0,0"/>

@@ -1,4 +1,4 @@
-<!-- Ported from: JiMEditor/Views/CampaignWindow.xaml (2026-04-05) — Avalonia layout parity; some actions TODO-Avalonia-Reenable -->
+<!-- Ported from: JiMEditor/Views/CampaignWindow.xaml (2026-04-05) — Avalonia layout parity -->
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:jime="using:JiME"
@@ -400,8 +400,8 @@
 				        Background="Red"
 				        Height="44"
 				        HorizontalAlignment="Left"
-				        IsEnabled="False"
-				        ToolTip.Tip="TODO-Avalonia-Reenable: delete campaign folder + confirm">
+				        Click="DeleteCampaignButton_Click"
+				        ToolTip.Tip="Permanently delete this campaign folder. Scenarios are moved back to the base folder.">
 					<StackPanel Orientation="Horizontal" Margin="5,0" Spacing="6">
 						<TextBlock Text="Delete Campaign..." Classes="heading" VerticalAlignment="Center"/>
 						<Image Source="avares://JiMEditor.Avalonia/Assets/cancel.png" Height="24"/>

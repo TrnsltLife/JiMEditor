@@ -34,6 +34,7 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 	Point _tileBlockDragStartPoint;
 	Point _tileBlockDragGhostOffset;
 	bool _tileBlockDragActive;
+	bool _fileSaveBusy;
 
 	public Scenario scenario { get; private set; } = null!;
 
@@ -41,6 +42,7 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 	public MainWindow()
 	{
 		InitializeComponent();
+		AddHandler( InputElement.KeyDownEvent, MainWindow_KeyDown, RoutingStrategies.Tunnel );
 	}
 
 	/// <summary>New standalone scenario (WPF: <c>new MainWindow(Guid.Empty)</c> from project window).</summary>
@@ -69,6 +71,14 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 		scenario.PropertyChanged += OnScenarioPropertyChanged;
 		ScenarioChapterFlowGraph.SetInteractionSink( this );
 		ScenarioChapterFlowGraph.Attach( scenario );
+		SyncOpenToolbarForCampaign();
+	}
+
+	void SyncOpenToolbarForCampaign()
+	{
+		var inCampaign = scenario.campaignGUID != Guid.Empty;
+		OpenToolbarButton.IsVisible = !inCampaign;
+		OpenToolbarSplitButton.IsVisible = inCampaign;
 	}
 
 	void SidebarPaneToggleButton_Click( object? sender, RoutedEventArgs e )
@@ -507,7 +517,10 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 
 	async void AddTriggerToolbarButton_Click( object? sender, RoutedEventArgs e ) => await AddTriggerAsync();
 
-	async void NewTileBlockToolbarButton_Click( object? sender, RoutedEventArgs e )
+	async void NewTileBlockToolbarButton_Click( object? sender, RoutedEventArgs e ) =>
+		await AddTileBlockAsync();
+
+	async Task AddTileBlockAsync()
 	{
 		var cw = new ChapterPropertiesWindow( scenario, null );
 		var originalValues = cw.chapter.CaptureStartingValues();
@@ -556,39 +569,43 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 		scenario.RemoveData( c );
 	}
 
-	async Task OpenChapterPropertiesEditorAsync( Chapter c )
+	async Task OpenChapterPropertiesEditorAsync( Chapter c, Window? owner = null )
 	{
 		var originalValues = c.CaptureStartingValues();
 		var originalPrefix = c.TranslationKeyPrefix();
 		var originalKeyName = c.TranslationKeyName();
 		var cw = new ChapterPropertiesWindow( scenario, c );
-		await cw.ShowDialog( this );
+		await cw.ShowDialog( owner ?? this );
 		c.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 	}
 
-	async Task OpenChapterTileEditorAsync( Chapter c )
+	async Task OpenChapterTileEditorAsync( Chapter c, Window? owner = null )
 	{
+		owner ??= this;
 		if ( scenario.scenarioTypeJourney )
 		{
 			if ( c.isRandomTiles )
 			{
 				var tp = new TilePoolEditorWindow( scenario, c );
-				await tp.ShowDialog( this );
+				await tp.ShowDialog( owner );
 			}
 			else
 			{
 				var tw = new TileEditorWindow( scenario, c );
-				await tw.ShowDialog( this );
+				await tw.ShowDialog( owner );
 			}
 		}
 		else
 		{
 			var tw = new TileEditorWindow( scenario, c );
-			await tw.ShowDialog( this );
+			await tw.ShowDialog( owner );
 		}
 	}
 
-	public async Task OnNodeActivatedAsync( ScenarioGraphNode node )
+	public Task OnNodeActivatedAsync( ScenarioGraphNode node ) =>
+		OpenScenarioGraphNodeAsync( this, node );
+
+	public async Task OpenScenarioGraphNodeAsync( Window owner, ScenarioGraphNode node )
 	{
 		switch ( node.Kind )
 		{
@@ -597,7 +614,7 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 				var chapter = scenario.chapterObserver.FirstOrDefault( c =>
 					ScenarioGraphFullScenarioDocumentBuilder.ChapterId( c.dataName ) == node.Id );
 				if ( chapter != null )
-					await OpenChapterPropertiesEditorAsync( chapter );
+					await OpenChapterPropertiesEditorAsync( chapter, owner );
 				break;
 			}
 			case ScenarioGraphNodeKind.Tile:
@@ -615,7 +632,7 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 				if ( selectedTile != null )
 				{
 					var w = new TokenEditorWindow( selectedTile, scenario );
-					await w.ShowDialog( this );
+					await w.ShowDialog( owner );
 				}
 				break;
 			}
@@ -624,7 +641,7 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 				var objective = scenario.objectiveObserver.FirstOrDefault( o =>
 					ScenarioGraphFullScenarioDocumentBuilder.ObjectiveId( o.dataName ) == node.Id );
 				if ( objective != null )
-					await OpenObjectiveEditorAsync( objective );
+					await OpenObjectiveEditorAsync( objective, owner );
 				break;
 			}
 			case ScenarioGraphNodeKind.Trigger:
@@ -634,7 +651,7 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 				if ( trigger != null )
 				{
 					var w = new TriggerEditorWindow( scenario, trigger.dataName );
-					await w.ShowDialog( this );
+					await w.ShowDialog( owner );
 				}
 				break;
 			}
@@ -644,7 +661,14 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 					ScenarioGraphFullScenarioDocumentBuilder.InteractionId( i.dataName ) == node.Id );
 				if ( interaction != null )
 				{
-					await EventEditorFactory.TryEditInteractionAsync( this, scenario, interaction );
+					if ( interaction is StartInteraction )
+					{
+						if ( ReferenceEquals( owner, this ) )
+							StartInteractionEditorMessages.TryWarnCannotEdit( interaction );
+						break;
+					}
+
+					await EventEditorFactory.TryEditInteractionAsync( owner, scenario, interaction );
 					interactionsUC.RefreshSortedItems();
 				}
 				break;
@@ -672,14 +696,22 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 				if ( parentTile != null && selectedToken != null )
 				{
 					var w = new TokenEditorWindow( parentTile, scenario, highlightToken: selectedToken );
-					await w.ShowDialog( this );
+					await w.ShowDialog( owner );
 				}
 				break;
 			}
 			case ScenarioGraphNodeKind.ThreatLevel:
 			{
 				var w = new ThreatsWindow( scenario );
-				await w.ShowDialog( this );
+				await w.ShowDialog( owner );
+				break;
+			}
+			case ScenarioGraphNodeKind.Resolution:
+			{
+				var resolution = scenario.resolutionObserver.FirstOrDefault( r =>
+					ScenarioGraphFullScenarioDocumentBuilder.ResolutionId( r.dataName ) == node.Id );
+				if ( resolution != null )
+					await ResolutionEditorWindow.ShowEditAsync( owner, scenario, resolution, isNew: false );
 				break;
 			}
 		}
@@ -939,13 +971,13 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 		await OpenObjectiveEditorAsync( o );
 	}
 
-	async Task OpenObjectiveEditorAsync( Objective o )
+	async Task OpenObjectiveEditorAsync( Objective o, Window? owner = null )
 	{
 		Dictionary<string, string> originalValues = o.CaptureStartingValues();
 		string originalPrefix = o.TranslationKeyPrefix();
 		string originalKeyName = o.TranslationKeyName();
 		var ow = new ObjectiveEditorWindow( scenario, o, false );
-		await ow.ShowDialog( this );
+		await ow.ShowDialog( owner ?? this );
 		o.ApplyTranslationUpdatesAfterEditorDialog( scenario.translationObserver, originalValues, originalPrefix, originalKeyName );
 	}
 
@@ -1051,10 +1083,123 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 		new ExportManager().ExportTranslation( scenario.scenarioName, translationForExport );
 	}
 
-	async void ScenarioSettingsButton_Click( object? sender, RoutedEventArgs e )
+	void MainWindow_KeyDown( object? sender, KeyEventArgs e )
+	{
+		if ( scenario == null )
+			return;
+
+		if ( EditorHotKeys.Matches( e, Key.S, KeyModifiers.Alt ) )
+		{
+			e.Handled = true;
+			_ = SaveScenarioSaveAsAsync();
+			return;
+		}
+
+		if ( EditorHotKeys.Matches( e, Key.S ) )
+		{
+			e.Handled = true;
+			_ = SaveScenarioNormalAsync();
+			return;
+		}
+
+		if ( EditorHotKeys.Matches( e, Key.N ) )
+		{
+			e.Handled = true;
+			NewProjectToolbarButton_Click( sender, e );
+			return;
+		}
+
+		if ( EditorHotKeys.Matches( e, Key.O ) )
+		{
+			e.Handled = true;
+			OpenToolbarButton_Click( sender, e );
+			return;
+		}
+
+		if ( EditorHotKeys.MatchesAlt( e, Key.S ) )
+		{
+			e.Handled = true;
+			_ = OpenScenarioSettingsAsync();
+			return;
+		}
+
+		if ( EditorHotKeys.MatchesAlt( e, Key.C ) )
+		{
+			e.Handled = true;
+			_ = AddTileBlockAsync();
+			return;
+		}
+
+		if ( EditorHotKeys.MatchesAlt( e, Key.O ) )
+		{
+			e.Handled = true;
+			_ = AddObjectiveAsync();
+			return;
+		}
+
+		if ( EditorHotKeys.MatchesAlt( e, Key.E ) )
+		{
+			e.Handled = true;
+			OnAddInteraction( AddEventToolbarButton, e );
+			return;
+		}
+
+		if ( EditorHotKeys.MatchesAlt( e, Key.T ) )
+		{
+			e.Handled = true;
+			_ = AddTriggerAsync();
+			return;
+		}
+
+		if ( EditorHotKeys.MatchesAlt( e, Key.X ) )
+		{
+			e.Handled = true;
+			Close();
+		}
+	}
+
+	async void ScenarioSettingsButton_Click( object? sender, RoutedEventArgs e ) =>
+		await OpenScenarioSettingsAsync();
+
+	async Task OpenScenarioSettingsAsync( Window? owner = null )
 	{
 		var sw = new ScenarioWindow( scenario );
-		await sw.ShowDialog( this );
+		await sw.ShowDialog( owner ?? this );
+	}
+
+	public async Task OpenErrorCheckNavAsync( Window owner, ErrorCheckNav nav )
+	{
+		switch ( nav.Kind )
+		{
+			case ErrorCheckTargetKind.Settings:
+				await OpenScenarioSettingsAsync( owner );
+				return;
+			case ErrorCheckTargetKind.TileEditor:
+			{
+				var chapter = scenario.chapterObserver.FirstOrDefault( c => c.dataName == nav.Name );
+				if ( chapter != null )
+					await OpenChapterTileEditorAsync( chapter, owner );
+				return;
+			}
+			case ErrorCheckTargetKind.Activation:
+			{
+				var group = scenario.activationsObserver.FirstOrDefault( a => a.dataName == nav.Name );
+				if ( group != null )
+				{
+					var readOnly = group.id < MonsterActivations.START_OF_CUSTOM_ACTIVATIONS;
+					var w = new ActivationsEditorWindow( scenario, group, isNew: false, readOnly: readOnly );
+					await w.ShowDialog( owner );
+				}
+				return;
+			}
+			default:
+			{
+				var node = ErrorCheckWindow.ToGraphNode( nav );
+				if ( node != null )
+					await OpenScenarioGraphNodeAsync( owner, node );
+				return;
+			}
+		}
 	}
 
 	async void ThreatsToolbarButton_Click( object? sender, RoutedEventArgs e )
@@ -1067,6 +1212,31 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 		NavigateToProjectWindow(
 			"Are you sure you want to close this Project and open a different one?",
 			"Open Project" );
+
+	void ReturnToCampaignMenuItem_Click( object? sender, RoutedEventArgs e )
+	{
+		if ( scenario.campaignGUID == Guid.Empty )
+			return;
+		if ( MessageBox.Show(
+			     "Are you sure you want to close this Scenario and return to the Campaign?",
+			     "Return to Campaign",
+			     MessageBoxButton.YesNo,
+			     MessageBoxImage.Question )
+		     != MessageBoxResult.Yes )
+			return;
+
+		if ( Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop )
+			return;
+
+		var campaign = FileManager.LoadCampaign( scenario.campaignGUID.ToString() );
+		if ( campaign == null )
+			return;
+
+		var cw = new CampaignWindow( campaign );
+		desktop.MainWindow = cw;
+		cw.Show();
+		Close();
+	}
 
 	void NewProjectToolbarButton_Click( object? sender, RoutedEventArgs e ) =>
 		NavigateToProjectWindow(
@@ -1091,7 +1261,12 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 
 	async void SaveSplitButton_Click( object? sender, RoutedEventArgs e ) => await SaveScenarioNormalAsync();
 
-	async void SaveMenuItem_Click( object? sender, RoutedEventArgs e ) => await SaveScenarioNormalAsync();
+	async void ErrorCheckToolbarButton_Click( object? sender, RoutedEventArgs e )
+	{
+		var checker = new ErrorChecker();
+		checker.CheckErrors( scenario );
+		await new ErrorCheckWindow( checker, scenario, OpenErrorCheckNavAsync ).ShowDialog( this );
+	}
 
 	async void SaveCopyMenuItem_Click( object? sender, RoutedEventArgs e ) => await SaveScenarioCopyAsync();
 
@@ -1103,6 +1278,9 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 	/// </summary>
 	async Task SaveScenarioSaveAsAsync()
 	{
+		if ( _fileSaveBusy )
+			return;
+		_fileSaveBusy = true;
 		try
 		{
 			// WPF: SaveAs() → Save(true, UserJourneyPaths.GetBasePath()) — not the campaign GUID directory.
@@ -1143,6 +1321,10 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 				MessageBoxButton.OK,
 				MessageBoxImage.Error );
 		}
+		finally
+		{
+			_fileSaveBusy = false;
+		}
 	}
 
 	/// <summary>
@@ -1151,6 +1333,9 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 	/// </summary>
 	async Task SaveScenarioNormalAsync()
 	{
+		if ( _fileSaveBusy )
+			return;
+		_fileSaveBusy = true;
 		try
 		{
 			var baseDir = FileManager.GetScenarioSaveDirectory( scenario );
@@ -1194,6 +1379,10 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 				MessageBoxButton.OK,
 				MessageBoxImage.Error );
 		}
+		finally
+		{
+			_fileSaveBusy = false;
+		}
 	}
 
 	/// <summary>Used by <see cref="ScenarioWindow"/> safeguard flow to reuse the existing Save Copy picker and write logic.</summary>
@@ -1202,6 +1391,9 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 	/// <summary>Writes a copy to a user-chosen path; does not change the open document’s <see cref="Scenario.fileName"/> or dirty flag.</summary>
 	async Task<bool> SaveScenarioCopyAsync()
 	{
+		if ( _fileSaveBusy )
+			return false;
+		_fileSaveBusy = true;
 		try
 		{
 			var docs = Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments );
@@ -1219,7 +1411,7 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 			var parent = Path.GetDirectoryName( picked );
 			if ( !string.IsNullOrEmpty( parent ) ) Directory.CreateDirectory( parent );
 
-			if ( !FileManager.TryWriteScenarioToPath( scenario, picked, updateScenarioAfterWrite: false, out var err, pruneCollectionsBeforeWrite: false ) )
+			if ( !FileManager.TryWriteScenarioToPath( scenario, picked, updateScenarioAfterWrite: false, out var err ) )
 			{
 				MessageBox.Show(
 					"Could not save a copy of the project file.\r\n\r\n" + err,
@@ -1238,6 +1430,10 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 				MessageBoxButton.OK,
 				MessageBoxImage.Error );
 			return false;
+		}
+		finally
+		{
+			_fileSaveBusy = false;
 		}
 	}
 
@@ -1406,6 +1602,8 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 	{
 		if ( interactionsUC.DataListView.SelectedItem is not IInteraction i )
 			return;
+		if ( StartInteractionEditorMessages.TryWarnCannotEdit( i ) )
+			return;
 		await EventEditorFactory.TryEditInteractionAsync( this, scenario, i );
 		interactionsUC.RefreshSortedItems();
 	}
@@ -1421,6 +1619,9 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 				MessageBoxImage.Information );
 			return;
 		}
+
+		if ( StartInteractionEditorMessages.TryWarnCannotDuplicate( src ) )
+			return;
 
 		switch ( src )
 		{
@@ -1646,6 +1847,8 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 	{
 		var interactionItem = new ImportManager().ImportEvent( scenario );
 		if ( interactionItem == null )
+			return;
+		if ( StartInteractionEditorMessages.TryWarnCannotImport( interactionItem ) )
 			return;
 		switch ( interactionItem )
 		{

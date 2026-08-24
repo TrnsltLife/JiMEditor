@@ -32,6 +32,13 @@
 	<Style Selector="Button.iconbutton:pointerover">
 		<Setter Property="Background" Value="#3a3a3e"/>
 	</Style>
+	<Style Selector="SplitButton.iconbutton">
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderThickness" Value="0"/>
+	</Style>
+	<Style Selector="SplitButton.iconbutton:pointerover">
+		<Setter Property="Background" Value="#3a3a3e"/>
+	</Style>
 
 	<!-- MainWindow chapter cards (WPF callout) -->
 	<Style Selector="Border.callout">

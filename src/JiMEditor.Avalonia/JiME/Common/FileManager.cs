@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using JiMEditor.Avalonia.EventDialog;
 using Newtonsoft.Json;
 
 namespace JiME
@@ -129,15 +128,11 @@ namespace JiME
 		/// When false (Save Copy), the open document path and dirty state are unchanged; the file on disk still gets a fresh
 		/// <c>saveDate</c> and a <c>fileName</c> field matching the copy’s basename.
 		/// </summary>
-		/// <param name="pruneCollectionsBeforeWrite">When true (Save / Save As), strips catalog references for disabled collections before serializing. Save Copy passes false so the open document is not mutated.</param>
-		public static bool TryWriteScenarioToPath( Scenario scenario, string fullDestinationPath, bool updateScenarioAfterWrite, out string errorMessage, bool pruneCollectionsBeforeWrite = true )
+		public static bool TryWriteScenarioToPath( Scenario scenario, string fullDestinationPath, bool updateScenarioAfterWrite, out string errorMessage )
 		{
 			errorMessage = "";
 			try
 			{
-				if ( pruneCollectionsBeforeWrite )
-					ScenarioCollectionAvailability.PruneScenarioForEnabledCollections( scenario );
-
 				// Starting Position must serialize as TokenType.Start (not InteractionBase default Search).
 				scenario.RepairStartPositionData();
 

@@ -249,11 +249,11 @@ public partial class ScenarioWindow : Window
 
 		var impact = ScenarioCollectionRemovalImpact.GetImpactForRemovingCollection( scenario, collection );
 		var impactText = CollectionRemovalImpact.FormatForDialog( impact );
-		var body = "ALL THIS COLLECTION'S TILES, TOKENS, ENEMIES, ITEMS, AND TITLES WILL BE REMOVED FROM THE SCENARIO IF YOU REMOVE THIS COLLECTION.\n\n";
+		var body = "This Collection will no longer be enabled for the Scenario. Existing components stay in place until you remove them from Error Check.\n\n";
 		if ( string.IsNullOrWhiteSpace( impactText ) )
-			body += "No matching references were found in Events (tiles elsewhere are not scanned yet).\n\n";
+			body += "No matching references were found in Events, Tokens, or placed Tiles.\n\n";
 		else
-			body += impactText + "\n\n";
+			body += "These references would be removed by \"" + ErrorChecker.DisabledCollectionsPruneLink + "\":\n\n" + impactText + "\n\n";
 		body += "Are you sure you want to remove this Collection from the scenario?";
 		var ret = MessageBox.Show( body, "Remove Collection?", MessageBoxButton.YesNo, MessageBoxImage.Question );
 		if ( ret != MessageBoxResult.Yes )

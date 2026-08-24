@@ -108,6 +108,7 @@ public static class ScenarioCollectionRemovalImpact
 		var list = new List<CollectionRemovalImpact>();
 		foreach ( var inter in scenario.interactionObserver )
 			list.Add( GetImpactFromInteraction( scenario, inter, removed ) );
+		list.Add( CollectPlacedTilesAndTokens( scenario, removed ) );
 		return CollectionRemovalImpact.Merge( list );
 	}
 
@@ -135,6 +136,55 @@ public static class ScenarioCollectionRemovalImpact
 			CollectTokenInteraction( scenario, ib, removed, impact );
 
 		return impact;
+	}
+
+	static CollectionRemovalImpact CollectPlacedTilesAndTokens( Scenario scenario, Collection removed )
+	{
+		var impact = new CollectionRemovalImpact();
+		var afterRemoval = scenario.collectionObserver.Where( c => c != removed ).ToList();
+		foreach ( var chapter in scenario.chapterObserver )
+		{
+			foreach ( var tile in chapter.tileObserver )
+			{
+				var tileColl = Collection.FromTileNumber( tile.idNumber );
+				if ( tileColl == removed )
+					impact.Add( "Tiles", tile.idNumber.ToString() );
+
+				if ( tile is not BaseTile baseTile )
+					continue;
+				foreach ( var token in baseTile.tokenList )
+					CollectRestrictedTokenType( token.tokenType, token.terrainType, removed, afterRemoval, impact );
+			}
+		}
+
+		return impact;
+	}
+
+	static void CollectRestrictedTokenType(
+		TokenType tokenType,
+		TerrainType terrainType,
+		Collection removed,
+		List<Collection> afterRemoval,
+		CollectionRemovalImpact impact )
+	{
+		switch ( tokenType )
+		{
+			case TokenType.DifficultGround:
+				if ( removed.DifficultGround && !afterRemoval.Any( c => c.DifficultGround ) )
+					impact.Add( "Tokens", "Difficult Ground" );
+				break;
+			case TokenType.Fortified:
+				if ( removed.Fortified && !afterRemoval.Any( c => c.Fortified ) )
+					impact.Add( "Tokens", "Fortified" );
+				break;
+			case TokenType.Terrain:
+			{
+				var tc = Collection.FromTerrainType( terrainType );
+				if ( tc == removed )
+					impact.Add( "Tokens", TerrainTokenLabel( terrainType ) );
+				break;
+			}
+		}
 	}
 
 	static void CollectItemInteraction( ItemInteraction item, Collection removed, CollectionRemovalImpact impact )
@@ -183,41 +233,12 @@ public static class ScenarioCollectionRemovalImpact
 			return;
 
 		var afterRemoval = scenario.collectionObserver.Where( c => c != removed ).ToList();
-
-		switch ( interaction.tokenType )
-		{
-			case TokenType.DifficultGround:
-				if ( removed.DifficultGround && !afterRemoval.Any( c => c.DifficultGround ) )
-					impact.Add( "Tokens", "Difficult Ground" );
-				break;
-			case TokenType.Fortified:
-				if ( removed.Fortified && !afterRemoval.Any( c => c.Fortified ) )
-					impact.Add( "Tokens", "Fortified" );
-				break;
-			case TokenType.Terrain:
-			{
-				var tc = Collection.FromTerrainType( interaction.terrainType );
-				if ( tc == removed )
-					impact.Add( "Tokens", TerrainTokenLabel( interaction.terrainType ) );
-				break;
-			}
-		}
+		CollectRestrictedTokenType( interaction.tokenType, interaction.terrainType, removed, afterRemoval, impact );
 	}
 
 	static string TerrainTokenLabel( TerrainType tt ) =>
 		$"Terrain: {tt}";
 
-	static Collection? CollectionForMonsterTypeId( int monsterTypeId )
-	{
-		foreach ( var col in new[]
-		         {
-			         Collection.CORE_SET, Collection.VILLAINS_OF_ERIAJAR, Collection.SHADED_PATHS,
-			         Collection.DENIZENS_IN_DARKNESS, Collection.UNFURLING_WAR, Collection.SCORCHERS_OF_THE_WILDS
-		         } )
-		{
-			if ( col.Monsters.Any( m => m.id == monsterTypeId ) )
-				return col;
-		}
-		return null;
-	}
+	static Collection? CollectionForMonsterTypeId( int monsterTypeId ) =>
+		Collection.FromMonsterTypeId( monsterTypeId );
 }

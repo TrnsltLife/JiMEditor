@@ -3,6 +3,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
@@ -77,9 +78,46 @@ public partial class GalleryWindow : Window, INotifyPropertyChanged
 	void PropChanged( string name ) =>
 		PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( name ) );
 
+	/// <summary>
+	/// Use as much of the current screen as a 2×2 tile page needs, without exceeding the working area.
+	/// A fixed Height is too short on laptops and CenterOwner can follow an off-screen owner after unplugging a monitor.
+	/// </summary>
+	void FitGalleryToWorkingArea()
+	{
+		var screen = Screens?.ScreenFromWindow( this ) ?? Screens?.Primary;
+		if ( screen is null )
+			return;
+
+		var wa = screen.WorkingArea;
+		var scale = screen.Scaling <= 0 ? 1 : screen.Scaling;
+		const double margin = 32;
+		const double desiredWidth = 875;
+		const double desiredHeight = 820;
+
+		var availW = Math.Max( 1, wa.Width / scale - margin );
+		var availH = Math.Max( 1, wa.Height / scale - margin );
+		if ( availW < MinWidth )
+			MinWidth = Math.Max( 320, availW );
+		if ( availH < MinHeight )
+			MinHeight = Math.Max( 280, availH );
+		Width = Math.Min( desiredWidth, availW );
+		Height = Math.Min( desiredHeight, availH );
+
+		var wPx = (int)Math.Round( Width * scale );
+		var hPx = (int)Math.Round( Height * scale );
+		var x = wa.X + Math.Max( 0, ( wa.Width - wPx ) / 2 );
+		var y = wa.Y + Math.Max( 0, ( wa.Height - hPx ) / 2 );
+		if ( x + wPx > wa.X + wa.Width )
+			x = wa.X + Math.Max( 0, wa.Width - wPx );
+		if ( y + hPx > wa.Y + wa.Height )
+			y = wa.Y + Math.Max( 0, wa.Height - hPx );
+		Position = new PixelPoint( x, y );
+	}
+
 	public GalleryWindow()
 	{
 		InitializeComponent();
+		Opened += (_, _) => FitGalleryToWorkingArea();
 	}
 
 	public GalleryWindow( Scenario s, int used, bool allowSideToggle = true )

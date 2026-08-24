@@ -99,6 +99,7 @@ public partial class BaseEventDialogWindow : Window
 		}
 
 		SyncTriggeredByEnabledFromModel();
+		SyncFlavorTextEnabledFromModel();
 		_interactionPropHandler = OnInteractionPropertyChanged;
 		Interaction.PropertyChanged += _interactionPropHandler;
 		var customControl = CreateCustomTab();
@@ -158,13 +159,24 @@ public partial class BaseEventDialogWindow : Window
 	void OnInteractionPropertyChanged( object? sender, PropertyChangedEventArgs e )
 	{
 		if ( e.PropertyName == nameof( InteractionBase.isTokenInteraction ) )
+		{
 			SyncTriggeredByEnabledFromModel();
+			SyncFlavorTextEnabledFromModel();
+		}
 	}
 
 	void SyncTriggeredByEnabledFromModel()
 	{
 		if ( Interaction != null )
 			TriggerSection.SetTriggeredByEnabled( !Interaction.isTokenInteraction );
+	}
+
+	void SyncFlavorTextEnabledFromModel()
+	{
+		if ( Interaction == null )
+			return;
+		TextFlavorSection.SetFlavorTextEnabled(
+			!Config.FlavorReadOnly && Interaction.isTokenInteraction );
 	}
 
 	protected override void OnClosing( WindowClosingEventArgs e )

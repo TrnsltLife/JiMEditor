@@ -8,7 +8,8 @@
         Title="Tile Gallery"
         Width="875"
         MinWidth="640"
-        MinHeight="560"
+        MinHeight="480"
+        CanResize="True"
         WindowStartupLocation="CenterOwner"
         Background="{StaticResource bgColor}">
 
@@ -18,10 +19,11 @@
 	</Window.Resources>
 
 	<Grid RowDefinitions="*,Auto">
-		<ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
-			<Grid Margin="5" ColumnDefinitions="*,Auto">
-				<ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-					<ItemsControl x:Name="items" Padding="5" MinHeight="400" ItemsSource="{Binding tileObserver}">
+		<Grid Grid.Row="0" Margin="5" ColumnDefinitions="*,Auto">
+			<ScrollViewer Grid.Column="0"
+			              HorizontalScrollBarVisibility="Disabled"
+			              VerticalScrollBarVisibility="Auto">
+				<ItemsControl x:Name="items" Padding="5" ItemsSource="{Binding tileObserver}">
 						<ItemsControl.ItemsPanel>
 							<ItemsPanelTemplate>
 								<WrapPanel Orientation="Horizontal"/>
@@ -49,9 +51,9 @@
 							</DataTemplate>
 						</ItemsControl.ItemTemplate>
 					</ItemsControl>
-				</ScrollViewer>
+			</ScrollViewer>
 
-				<Border Grid.Column="1" Width="200" Classes="callout" Margin="10,0,0,0">
+			<Border Grid.Column="1" Width="200" Classes="callout" Margin="10,0,0,0">
 					<StackPanel Spacing="6">
 						<Border Classes="callout" Background="{StaticResource bgColor}">
 							<StackPanel>
@@ -82,8 +84,7 @@
 						</Button>
 					</StackPanel>
 				</Border>
-			</Grid>
-		</ScrollViewer>
+		</Grid>
 
 		<Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Silver" HorizontalAlignment="Stretch" Background="#FF46464A">
 			<Grid ColumnDefinitions="Auto,Auto,Auto,*">
