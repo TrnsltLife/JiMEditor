@@ -21,7 +21,7 @@ namespace JiME
 		/// Save a blog of data to be able to import it into a different scenario. e.g. an Event, a Monster Activation, a Monster Bonus.
 		/// Or save a translation for a langauge so a collaborator can work on it and send it back for later import.
 		/// 
-		/// exportType is a type name like "Event" or "Monster" or "Translation". It will be created in a subfolder of "Your Journey Avalonia/Exports/"
+		/// exportType is a type name like "Event" or "Monster" or "Translation". It will be created in a subfolder of "Your Journey/Exports/"
 		/// jsonOutput the Json serialized form of the object to be exported
 		/// </summary>
 		public bool Save(string exportType, string jsonOutput, string suggestedFilename)

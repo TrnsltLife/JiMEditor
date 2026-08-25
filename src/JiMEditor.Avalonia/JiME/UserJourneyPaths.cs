@@ -1,4 +1,4 @@
-// Avalonia port: isolate user data from WPF JiMEditor (Documents/Your Journey).
+// Avalonia port: same Documents/Your Journey folder as WPF JiMEditor (.jime / campaigns).
 using System;
 using System.IO;
 
@@ -6,10 +6,11 @@ namespace JiME;
 
 /// <summary>
 /// Base folder under <see cref="Environment.SpecialFolder.MyDocuments"/> for this build.
+/// Matches WPF JiMEditor (<c>Documents/Your Journey</c>).
 /// </summary>
 public static class UserJourneyPaths
 {
-	public const string DocumentFolderName = "Your Journey Avalonia";
+	public const string DocumentFolderName = "Your Journey";
 
 	static string? _testBasePathOverride;
 
@@ -22,8 +23,8 @@ public static class UserJourneyPaths
 		_testBasePathOverride
 		?? Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ), DocumentFolderName );
 
-	/// <summary>Window title prefix so Avalonia runs are distinguishable from WPF.</summary>
-	public const string EditorWindowTitlePrefix = "Your Journey Avalonia";
+	/// <summary>Window title prefix (same branding as WPF).</summary>
+	public const string EditorWindowTitlePrefix = "Your Journey";
 
 	/// <summary>User-facing relative path hint; separator matches the current OS.</summary>
 	public static string DocumentsRelativePathHint =>
