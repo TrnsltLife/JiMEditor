@@ -1,0 +1,48 @@
+{
+    "archetypes": [
+        {
+            "Archetype": "OvercomingTheMonster",
+			"Description": "In the stories, this is where the hero must destroy the monster to restore balance to the world.",
+            "Start": {
+                "Comment": "Start of the adventure where we find more information about what is happening",
+                "MustHaveOneOf": [ "FindInfoAboutTarget" ],
+                "CanHaveSomeOf": [ "InvestigateDestruction", "TalkToSurvivors" ],
+                "TakesPlaceInOneOf": [ "Settlement" ]
+            },
+            "Middle": {
+                "Comment": "Buildup towards the big encounter and some way to gain an advantage",
+                "MustHaveOneOf": [ "FindTargetLocation" ],
+                "CanHaveSomeOf": [ "InvestigateDestruction", "TalkToSurvivors", "FindWeaknessInTarget", "FindStrengthInSelf", "AcquireTreasure", "KillMonsters" ],
+                "TakesPlaceInOneOf": [ "Woodlands", "DarkForest", "Ruins" ]
+            },
+            "End": {
+                "Comment": "Usually kill the monster, might also have some other means of dispatching than killing? Possibly target escapes anyway",
+                "MustHaveOneOf": [ "KillAntagonist", "AntagonistRetreats" ],
+                "CanHaveSomeOf": [ "ScoutOutTarget", "InvestigateDestruction" ],
+                "TakesPlaceInOneOf": [ "Cave", "Dungeon", "DarkForest" ]
+            }
+        },
+		{
+            "Archetype": "TheQuest",
+			"Description": "The hero, often accompanied by sidekicks, travels in search of a priceless treasure and must defeat evil and overcome powerful odds, and ends when he gets both the treasure and the girl.",
+            "Start": {
+                "Comment": "Start of the adventure where the adventures are told about the artifact they need to find",
+                "MustHaveOneOf": [ "FindInfoAboutTarget" ],
+                "CanHaveSomeOf": [ "TalkToSurvivors", "FindStrengthInSelf" ],
+                "TakesPlaceInOneOf": [ "Settlement" ]
+            },
+            "Middle": {
+                "Comment": "The getting there part where the adventurers search for clues and the location of the artifact",
+                "MustHaveOneOf": [ "FindTargetLocation" ],
+                "CanHaveSomeOf": [ "KillMonsters", "FindStrengthInSelf" ],
+                "TakesPlaceInOneOf": [ "Woodlands", "DarkForest" ]
+            },
+            "End": {
+                "Comment": "The final challenge of finding/recovering the artifact",
+                "MustHaveOneOf": [ "KillAntagonist", "AcquireTreasure", "ReachFinalDestination" ],
+                "CanHaveSomeOf": [],
+                "TakesPlaceInOneOf": [ "Cave", "Ruins", "Dungeon", "DarkForest" ]
+            }
+        }
+    ]
+}

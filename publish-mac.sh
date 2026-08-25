@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Cross-publish a self-contained Mac build (works from Mac, Windows Git Bash, or CI).
-# Requires: .NET 9 SDK, sibling ../JiMEditor for assets.
+# Requires: .NET 9 SDK.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
@@ -14,11 +14,6 @@ case "$RID" in
     exit 1
     ;;
 esac
-
-if [[ ! -d "$ROOT/../JiMEditor/Assets" ]]; then
-  echo "Missing sibling JiMEditor assets at ../JiMEditor/Assets" >&2
-  exit 1
-fi
 
 dotnet publish "$PROJECT" \
   -c Release \

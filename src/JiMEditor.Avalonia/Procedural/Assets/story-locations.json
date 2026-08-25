@@ -1,0 +1,154 @@
+{
+    "locations": [
+        {
+            "Name": "Woodlands",
+            "KnownTiles": [ 
+				{ "IdAndSide": "100A" },
+				{ "IdAndSide": "101A" },
+				{ "IdAndSide": "102A" },
+				{ "IdAndSide": "103A" },
+				{ "IdAndSide": "200A" },
+				{ "IdAndSide": "201A" },
+				{ "IdAndSide": "202A" },
+				{ "IdAndSide": "203A" },
+				{ "IdAndSide": "204A" },
+				{ "IdAndSide": "205A" },
+				{ "IdAndSide": "206A" },
+				{ "IdAndSide": "207A" },
+				{ "IdAndSide": "208A" },
+				{ "IdAndSide": "209A" },
+				{ "IdAndSide": "225A" },
+				{ "IdAndSide": "227A" },
+				{ "IdAndSide": "300A" },
+				{ "IdAndSide": "301A" },
+				{ "IdAndSide": "302A" },
+				{ "IdAndSide": "303A" },
+				{ "IdAndSide": "304A" },
+				{ "IdAndSide": "305A" },
+				{ "IdAndSide": "306A" },
+				{ "IdAndSide": "307A" },
+				{ "IdAndSide": "308A" },
+				{ "IdAndSide": "314A" },
+				{ "IdAndSide": "316A" },
+				{ "IdAndSide": "320A" },
+				{ "IdAndSide": "400A" },
+				{ "IdAndSide": "401A" },
+				{ "IdAndSide": "402A" },
+				{ "IdAndSide": "403A" },
+				{ "IdAndSide": "301B" },
+				{ "IdAndSide": "302B" },
+				{ "IdAndSide": "304B" },
+				{ "IdAndSide": "305B" },
+				{ "IdAndSide": "308B" },
+				{ "IdAndSide": "403B" }
+            ]
+        },
+		        {
+            "Name": "DarkForest",
+            "KnownTiles": [
+                { "IdAndSide": "104A" },
+				{ "IdAndSide": "210A" },
+				{ "IdAndSide": "211A" },
+				{ "IdAndSide": "212A" },
+				{ "IdAndSide": "213A" },
+				{ "IdAndSide": "214A" },
+				{ "IdAndSide": "215A" },
+				{ "IdAndSide": "216A" },
+				{ "IdAndSide": "217A" },
+				{ "IdAndSide": "218A" },
+				{ "IdAndSide": "219A" },
+				{ "IdAndSide": "220A" },
+				{ "IdAndSide": "221A" },
+				{ "IdAndSide": "223A" },
+				{ "IdAndSide": "224A" },
+				{ "IdAndSide": "226A" },
+				{ "IdAndSide": "309A" },
+				{ "IdAndSide": "310A" },
+				{ "IdAndSide": "311A" },
+				{ "IdAndSide": "312A" },
+				{ "IdAndSide": "313A" },
+				{ "IdAndSide": "315A" },
+				{ "IdAndSide": "317A" },
+				{ "IdAndSide": "318A" },
+				{ "IdAndSide": "404A" },
+				{ "IdAndSide": "100B" },
+				{ "IdAndSide": "101B" },
+				{ "IdAndSide": "200B" },
+				{ "IdAndSide": "201B" },
+				{ "IdAndSide": "202B" },
+				{ "IdAndSide": "203B" },
+				{ "IdAndSide": "205B" },
+				{ "IdAndSide": "206B" },
+				{ "IdAndSide": "209B" },
+				{ "IdAndSide": "218B" },
+				{ "IdAndSide": "219B" },
+				{ "IdAndSide": "220B" },
+				{ "IdAndSide": "221B" },
+				{ "IdAndSide": "222B" },
+				{ "IdAndSide": "313B" },
+				{ "IdAndSide": "319B" }
+				
+            ]
+        },
+        {
+            "Name": "Settlement",
+            "KnownTiles": [
+				{ "IdAndSide": "222A" },
+                { "IdAndSide": "300B" },
+				{ "IdAndSide": "319A" },
+				{ "IdAndSide": "500A" },
+				{ "IdAndSide": "103B" },
+				{ "IdAndSide": "315B" }
+            ]
+        },
+        {
+            "Name": "Cave",
+            "KnownTiles": [
+				{ "IdAndSide": "102B" },
+				{ "IdAndSide": "204B" },
+				{ "IdAndSide": "210B" },
+				{ "IdAndSide": "211B" },
+				{ "IdAndSide": "212B" },
+				{ "IdAndSide": "213B" },
+				{ "IdAndSide": "214B" },
+				{ "IdAndSide": "224B" },
+				{ "IdAndSide": "227B" },
+                { "IdAndSide": "303B" },
+				{ "IdAndSide": "306B" },
+                { "IdAndSide": "307B" },
+				{ "IdAndSide": "309B" },
+				{ "IdAndSide": "310B" },
+				{ "IdAndSide": "311B" },
+				{ "IdAndSide": "314B" },
+				{ "IdAndSide": "320B" },
+				{ "IdAndSide": "401B" },
+				{ "IdAndSide": "404B" }
+            ]
+        },
+        {
+            "Name": "Dungeon",
+            "KnownTiles": [
+				{ "IdAndSide": "104B" },
+				{ "IdAndSide": "207B" },
+				{ "IdAndSide": "208B" },
+				{ "IdAndSide": "215B" },
+				{ "IdAndSide": "216B" },
+				{ "IdAndSide": "217B" },
+				{ "IdAndSide": "223B" },
+				{ "IdAndSide": "225B" },
+				{ "IdAndSide": "226B" },
+				{ "IdAndSide": "312B" },
+				{ "IdAndSide": "316B" },
+				{ "IdAndSide": "402B" },
+				{ "IdAndSide": "500B" }
+            ]
+        },
+        {
+            "Name": "Ruins",
+            "KnownTiles": [
+				{ "IdAndSide": "317B" },
+				{ "IdAndSide": "400B" }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,96 @@
+{
+    "fragments": [
+        {
+            "Name": "FindInfoAboutTarget",
+			"Comment": "",
+            "Interactions": [ 
+				{ "Type": "Dialog", "TokenHint": "Person" },
+				{ "Type": "StatTest", "TokenHint": "Search" }
+			]
+        },
+		{
+            "Name": "InvestigateDestruction",
+			"Comment": "",
+            "Interactions": [ 
+				{ "Type": "StatTest", "TokenHint": "Search" },
+				{ "Type": "Threat", "TokenHint": "Search" }	
+			]
+        },
+		{
+            "Name": "TalkToSurvivors",
+			"Comment": "",
+            "Interactions": [ 
+				{ "Type": "Dialog", "TokenHint": "Person" },
+				{ "Type": "StatTest", "TokenHint": "Search" }
+			]
+        },
+		{
+            "Name": "FindTargetLocation",
+			"Comment": "",
+            "Interactions": [ 
+				{ "Type": "Dialog", "TokenHint": "Person" },
+				{ "Type": "StatTest", "TokenHint": "Search" }	
+			]
+        },
+		{
+            "Name": "FindWeaknessInTarget",
+			"Comment": "",
+            "Interactions": [ 
+				{ "Type": "Dialog", "TokenHint": "Person" },
+				{ "Type": "StatTest", "TokenHint": "Search" }
+			]
+        },
+		{
+            "Name": "FindStrengthInSelf",
+			"Comment": "",
+            "Interactions": [ 
+				{ "Type": "Dialog", "TokenHint": "Person" },
+				{ "Type": "StatTest", "TokenHint": "Search" }	
+			]
+        },
+		{
+            "Name": "KillAntagonist",
+			"Comment": "",
+            "Interactions": [ 
+				{ "Type": "Threat", "TokenHint": "Threat" }	
+			]
+        },
+		{
+            "Name": "KillMonsters",
+			"Comment": "",
+            "Interactions": [ 
+				{ "Type": "Threat", "TokenHint": "Threat" }	
+			]
+        },
+		{
+            "Name": "AntagonistRetreats",
+			"Comment": "",
+            "Interactions": [ 
+				{ "Type": "Threat", "TokenHint": "Threat" }	
+			]
+        },
+		{
+            "Name": "AcquireTreasure",
+			"Comment": "",
+            "Interactions": [ 
+				{ "Type": "StatTest", "TokenHint": "Search" },
+				{ "Type": "Threat", "TokenHint": "Threat" }	
+			]
+        },
+		{
+            "Name": "ReachFinalDestination",
+			"Comment": "",
+            "Interactions": [ 
+				{ "Type": "StatTest", "TokenHint": "Search" },
+				{ "Type": "Threat", "TokenHint": "Threat" }	
+			]
+        },
+		{
+            "Name": "ScoutOutTarget",
+			"Comment": "",
+            "Interactions": [ 
+				{ "Type": "StatTest", "TokenHint": "Search" }	
+			]
+        }
+    ]
+}

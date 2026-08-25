@@ -2,8 +2,8 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net9.0</TargetFramework>
-    <!-- Same One Ring artwork as WPF JiMEditor (JiME.csproj); embeds in .exe and Avalonia default window icon. -->
-    <ApplicationIcon>..\..\..\JiMEditor\ring.ico</ApplicationIcon>
+    <!-- Same One Ring artwork as WPF JiMEditor; embeds in .exe and Avalonia default window icon. -->
+    <ApplicationIcon>ring.ico</ApplicationIcon>
     <Nullable>enable</Nullable>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
@@ -29,30 +29,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AvaloniaResource Include="Assets\**" />
-    <!-- When JiMEditor is a sibling repo, tile PNGs are linked here as avares://…/Assets/TilesA|B/… (avoid duplicating the same paths under local Assets/Tiles*). -->
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\TilesA\**\*.png" Link="Assets\TilesA\%(RecursiveDir)%(Filename)%(Extension)" />
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\TilesB\**\*.png" Link="Assets\TilesB\%(RecursiveDir)%(Filename)%(Extension)" />
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\Tokens\*.png" Link="Assets\Tokens\%(Filename)%(Extension)" />
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\Terrain\*.png" Link="Assets\Terrain\%(Filename)%(Extension)" />
-    <!-- Link all top-level JiMEditor/Assets PNG icons (dialogs, toolbars, enemy editor icons, etc.). -->
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\*.png" Link="Assets\%(Filename)%(Extension)" />
-    <AvaloniaResource Include="..\..\..\JiMEditor\Assets\LoTR-JiME-Icons.ttf" Link="Assets\LoTR-JiME-Icons.ttf" />
+    <AvaloniaResource Include="Assets\**" Exclude="Assets\*.json" />
   </ItemGroup>
 
-  <!-- JiME engine JSON etc. (embedded resources read via Assembly.GetManifestResourceStream) -->
+  <!-- JiME engine JSON (embedded resources read via Assembly.GetManifestResourceStream). -->
   <ItemGroup>
-    <EmbeddedResource Include="..\..\..\JiMEditor\Assets\tiles.json" Link="Assets\tiles.json" />
-    <EmbeddedResource Include="..\..\..\JiMEditor\Assets\hextilesA.json" Link="Assets\hextilesA.json" />
-    <EmbeddedResource Include="..\..\..\JiMEditor\Assets\hextilesB.json" Link="Assets\hextilesB.json" />
-    <EmbeddedResource Include="..\..\..\JiMEditor\Assets\enemy-defaults.json" Link="Assets\enemy-defaults.json" />
-    <EmbeddedResource Include="..\..\..\JiMEditor\Assets\enemy-activation-defaults.json" Link="Assets\enemy-activation-defaults.json" />
-    <EmbeddedResource Include="..\..\..\JiMEditor\Assets\enemy-activation-defaults-original.json" Link="Assets\enemy-activation-defaults-original.json" />
-    <EmbeddedResource Include="..\..\..\JiMEditor\Assets\terrain-interactions.json" Link="Assets\terrain-interactions.json" />
-    <EmbeddedResource Include="..\..\..\JiMEditor\Procedural\Assets\story-archetypes.json" Link="Procedural\Assets\story-archetypes.json" />
-    <EmbeddedResource Include="..\..\..\JiMEditor\Procedural\Assets\story-templates.json" Link="Procedural\Assets\story-templates.json" />
-    <EmbeddedResource Include="..\..\..\JiMEditor\Procedural\Assets\story-locations.json" Link="Procedural\Assets\story-locations.json" />
-    <EmbeddedResource Include="..\..\..\JiMEditor\Procedural\Assets\story-fragments.json" Link="Procedural\Assets\story-fragments.json" />
+    <EmbeddedResource Include="Assets\tiles.json" />
+    <EmbeddedResource Include="Assets\hextilesA.json" />
+    <EmbeddedResource Include="Assets\hextilesB.json" />
+    <EmbeddedResource Include="Assets\enemy-defaults.json" />
+    <EmbeddedResource Include="Assets\enemy-activation-defaults.json" />
+    <EmbeddedResource Include="Assets\enemy-activation-defaults-original.json" />
+    <EmbeddedResource Include="Assets\terrain-interactions.json" />
+    <EmbeddedResource Include="Procedural\Assets\story-archetypes.json" />
+    <EmbeddedResource Include="Procedural\Assets\story-templates.json" />
+    <EmbeddedResource Include="Procedural\Assets\story-locations.json" />
+    <EmbeddedResource Include="Procedural\Assets\story-fragments.json" />
   </ItemGroup>
   <ItemGroup>
     <!-- GraphX-era visualization models kept for reference; Avalonia graph lives under ScenarioGraph/. -->
