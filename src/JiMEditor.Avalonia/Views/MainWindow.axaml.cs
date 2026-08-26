@@ -44,7 +44,23 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 	public MainWindow()
 	{
 		InitializeComponent();
+		WireHotkeyTooltips();
 		AddHandler( InputElement.KeyDownEvent, MainWindow_KeyDown, RoutingStrategies.Tunnel );
+	}
+
+	void WireHotkeyTooltips()
+	{
+		var alt = EditorHotKeys.AltModifierLabel;
+		var primary = EditorHotKeys.PrimaryModifierLabel;
+		ToolTip.SetTip( SaveSplitButton, $"Save project. {primary}+S. Save As: {primary}+{alt}+S" );
+		ToolTip.SetTip( ErrorCheckToolbarButton, $"Run Checks. {EditorHotKeys.AltChord( "C" )}" );
+		ToolTip.SetTip( ScenarioSettingsToolbarButton, $"Edit scenario settings. {EditorHotKeys.AltChord( "S" )}" );
+		ToolTip.SetTip( ThreatsToolbarButton, $"Threat settings. {EditorHotKeys.AltChord( "H" )}" );
+		ToolTip.SetTip( NewTileBlockToolbarButton, $"Add tile block. {EditorHotKeys.AltChord( "B" )}" );
+		ToolTip.SetTip( AddObjectiveToolbarButton, $"New objective. {EditorHotKeys.AltChord( "O" )}" );
+		ToolTip.SetTip( AddResolutionToolbarButton, $"New resolution. {EditorHotKeys.AltChord( "R" )}" );
+		ToolTip.SetTip( AddEventToolbarButton, $"New event. {EditorHotKeys.AltChord( "E" )}" );
+		ToolTip.SetTip( AddTriggerToolbarButton, $"New trigger. {EditorHotKeys.AltChord( "T" )}" );
 	}
 
 	/// <summary>New standalone scenario (WPF: <c>new MainWindow(Guid.Empty)</c> from project window).</summary>
@@ -1131,10 +1147,17 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 			return;
 		}
 
-		if ( EditorHotKeys.MatchesAlt( e, Key.C ) )
+		if ( EditorHotKeys.MatchesAlt( e, Key.B ) )
 		{
 			e.Handled = true;
 			_ = AddTileBlockAsync();
+			return;
+		}
+
+		if ( EditorHotKeys.MatchesAlt( e, Key.C ) )
+		{
+			e.Handled = true;
+			ErrorCheckToolbarButton_Click( sender, new RoutedEventArgs() );
 			return;
 		}
 
@@ -1142,6 +1165,20 @@ public partial class MainWindow : Window, IScenarioGraphInteractionSink
 		{
 			e.Handled = true;
 			_ = AddObjectiveAsync();
+			return;
+		}
+
+		if ( EditorHotKeys.MatchesAlt( e, Key.R ) )
+		{
+			e.Handled = true;
+			_ = AddNewResolutionAsync();
+			return;
+		}
+
+		if ( EditorHotKeys.MatchesAlt( e, Key.H ) )
+		{
+			e.Handled = true;
+			ThreatsToolbarButton_Click( sender, new RoutedEventArgs() );
 			return;
 		}
 

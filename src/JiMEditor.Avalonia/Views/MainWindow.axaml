@@ -7,11 +7,12 @@
         xmlns:conv="using:JiMEditor.Avalonia.Converters"
         xmlns:flowPreview="using:JiMEditor.Avalonia.Views"
         mc:Ignorable="d"
-        d:DesignWidth="1200" d:DesignHeight="800"
+        d:DesignWidth="1400" d:DesignHeight="800"
         x:Class="JiMEditor.Avalonia.Views.MainWindow"
         x:CompileBindings="False"
         Background="{StaticResource bgColor}"
-        Width="1200" Height="750">
+        Width="1400" Height="750"
+        MinWidth="1280">
 
 	<Window.Resources>
 		<conv:BoolInvertValueConverter x:Key="chapterStartInvert"/>
@@ -66,8 +67,7 @@
 				             Classes="iconbutton"
 				             Height="32"
 				             Padding="4,0,4,0"
-				             Click="SaveSplitButton_Click"
-				             ToolTip.Tip="Save project. Ctrl/⌘+S. Save As: Ctrl/⌘+Alt+S">
+				             Click="SaveSplitButton_Click">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/save.png" Width="24" Height="24"/>
 					</StackPanel>
@@ -78,14 +78,14 @@
 						</MenuFlyout>
 					</SplitButton.Flyout>
 				</SplitButton>
-				<Button Classes="iconbutton"
+				<Button x:Name="ErrorCheckToolbarButton"
+				        Classes="iconbutton"
 				        Height="32"
 				        Padding="4,0,4,0"
-				        Click="ErrorCheckToolbarButton_Click"
-				        ToolTip.Tip="Error Check">
+				        Click="ErrorCheckToolbarButton_Click">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/ok.png" Width="24" Height="24"/>
-						<TextBlock Text="Error Check" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
+						<TextBlock Text="Run Checks" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
 					</StackPanel>
 				</Button>
 				<Rectangle Width="1" Height="24" Fill="{StaticResource bgButtonColor}" Margin="4,0"/>
@@ -106,13 +106,21 @@
 					         KeyDown="ScenarioNameEdit_KeyDown"
 					         LostFocus="ScenarioNameEdit_LostFocus"/>
 				</Grid>
-				<Button Classes="iconbutton" Height="32" Padding="4,0,4,0" Click="ScenarioSettingsButton_Click" ToolTip.Tip="Edit scenario settings. Alt+S">
+				<Button x:Name="ScenarioSettingsToolbarButton"
+				        Classes="iconbutton"
+				        Height="32"
+				        Padding="4,0,4,0"
+				        Click="ScenarioSettingsButton_Click">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/settings.png" Width="24" Height="24"/>
 						<TextBlock Text="Settings" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
 					</StackPanel>
 				</Button>
-				<Button Classes="iconbutton" Height="32" Padding="4,0,4,0" Click="ThreatsToolbarButton_Click" ToolTip.Tip="Edit threat settings">
+				<Button x:Name="ThreatsToolbarButton"
+				        Classes="iconbutton"
+				        Height="32"
+				        Padding="4,0,4,0"
+				        Click="ThreatsToolbarButton_Click">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/threat_button.png" Width="24" Height="24"/>
 						<TextBlock Text="Threat" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
@@ -123,8 +131,7 @@
 				        Classes="iconbutton"
 				        Height="32"
 				        Padding="4,0,4,0"
-				        Click="NewTileBlockToolbarButton_Click"
-				        ToolTip.Tip="Add tile block. Alt+C">
+				        Click="NewTileBlockToolbarButton_Click">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/addtileblock.png" Width="24" Height="24"/>
 						<TextBlock Text="New Tile Block" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
@@ -134,8 +141,7 @@
 				        Classes="iconbutton"
 				        Height="32"
 				        Padding="4,0,4,0"
-				        Click="AddObjectiveToolbarButton_Click"
-				        ToolTip.Tip="New objective. Alt+O">
+				        Click="AddObjectiveToolbarButton_Click">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/addobjective.png" Width="24" Height="24"/>
 						<TextBlock Text="New Objective" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
@@ -145,8 +151,7 @@
 				        Classes="iconbutton"
 				        Height="32"
 				        Padding="4,0,4,0"
-				        Click="AddResolutionToolbarButton_Click"
-				        ToolTip.Tip="New resolution">
+				        Click="AddResolutionToolbarButton_Click">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/addresolution.png" Width="24" Height="24"/>
 						<TextBlock Text="New Resolution" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
@@ -156,8 +161,7 @@
 				        Classes="iconbutton"
 				        Height="32"
 				        Padding="4,0,4,0"
-				        Click="AddEventToolbarButton_Click"
-				        ToolTip.Tip="New event. Alt+E">
+				        Click="AddEventToolbarButton_Click">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/addevent.png" Width="24" Height="24"/>
 						<TextBlock Text="New Event" Foreground="White" FontSize="12" Margin="4,6,0,0"/>
@@ -167,8 +171,7 @@
 				        Classes="iconbutton"
 				        Height="32"
 				        Padding="4,0,4,0"
-				        Click="AddTriggerToolbarButton_Click"
-				        ToolTip.Tip="New trigger. Alt+T">
+				        Click="AddTriggerToolbarButton_Click">
 					<StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
 						<Image Source="avares://JiMEditor.Avalonia/Assets/addtrigger.png" Width="24" Height="24"/>
 						<TextBlock Text="New Trigger" Foreground="White" FontSize="12" Margin="4,6,0,0"/>

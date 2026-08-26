@@ -5,7 +5,7 @@
         x:Class="JiMEditor.Avalonia.Views.ScenarioWindow"
         x:CompileBindings="False"
         Title="Scenario Settings"
-        Width="800"
+        Width="850"
         Height="750"
         MinWidth="720"
         MaxHeight="975"

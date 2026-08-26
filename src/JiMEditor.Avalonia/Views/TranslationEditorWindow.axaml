@@ -14,6 +14,30 @@
 
 	<Window.Resources>
 		<conv:TranslationItemRowBackgroundConverter x:Key="TransRowBg"/>
+		<!-- Flat template so Fluent accent blue never replaces the category color. -->
+		<ControlTheme x:Key="TranslationFilterToggleTheme" TargetType="ToggleButton">
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="Padding" Value="4"/>
+			<Setter Property="HorizontalAlignment" Value="Stretch"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="Cursor" Value="Hand"/>
+			<Setter Property="Template">
+				<ControlTemplate>
+					<Border Background="{TemplateBinding Background}"
+					        BorderBrush="{TemplateBinding BorderBrush}"
+					        BorderThickness="{TemplateBinding BorderThickness}"
+					        CornerRadius="2"
+					        Padding="{TemplateBinding Padding}">
+						<ContentPresenter Content="{TemplateBinding Content}"
+						                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+						                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+						                  Foreground="{TemplateBinding Foreground}"/>
+					</Border>
+				</ControlTemplate>
+			</Setter>
+		</ControlTheme>
 	</Window.Resources>
 
 	<Window.Styles>
@@ -26,6 +50,25 @@
 		<Style Selector="ComboBox">
 			<Setter Property="Background" Value="#333337"/>
 			<Setter Property="Foreground" Value="White"/>
+		</Style>
+		<!-- Row colors from TranslationItemRowBackgroundConverter; dim when OFF. -->
+		<Style Selector="ToggleButton.translationFilter">
+			<Setter Property="Opacity" Value="1"/>
+		</Style>
+		<Style Selector="ToggleButton.translationFilter:not(:checked)">
+			<Setter Property="Opacity" Value="0.4"/>
+		</Style>
+		<Style Selector="ToggleButton.translationFilterOk">
+			<Setter Property="Background" Value="#228B22"/>
+		</Style>
+		<Style Selector="ToggleButton.translationFilterSuperfluous">
+			<Setter Property="Background" Value="#808080"/>
+		</Style>
+		<Style Selector="ToggleButton.translationFilterNeeds">
+			<Setter Property="Background" Value="#FF8C00"/>
+		</Style>
+		<Style Selector="ToggleButton#TextFilterModeToggle">
+			<Setter Property="Background" Value="#55555A"/>
 		</Style>
 	</Window.Styles>
 
@@ -57,15 +100,78 @@
 
 				<Border Classes="callout">
 					<Grid ColumnDefinitions="*,Auto">
-						<TextBlock Grid.Column="0" Classes="subText" TextWrapping="Wrap" Text="Edit each string with the pencil; green = marked OK, orange = needs translation or approval, gray = key no longer in scenario."/>
+						<TextBlock Grid.Column="0" Classes="subText" TextWrapping="Wrap" Text="Edit each string with the pencil. Toggle the color buttons to show or hide rows (green = OK, orange = needs translation or approval, gray = key no longer in scenario)."/>
 					</Grid>
 				</Border>
 
 				<Border Classes="callout" Margin="0,2">
 					<Grid ColumnDefinitions="0.33*,0.33*,0.34*">
-						<TextBlock Grid.Column="0" Text="Translation OK" Foreground="White" Background="Green" Padding="4"/>
-						<TextBlock Grid.Column="1" Text="No longer needed / copy?" Foreground="White" Background="Gray" Padding="4" Margin="2,0"/>
-						<TextBlock Grid.Column="2" Text="Needs translation or approval" Foreground="White" Background="DarkOrange" Padding="4"/>
+						<ToggleButton x:Name="FilterOkToggle"
+						              Grid.Column="0"
+						              Theme="{StaticResource TranslationFilterToggleTheme}"
+						              Classes="translationFilter translationFilterOk ignoreDirty"
+						              Content="Translation OK"
+						              IsChecked="True"
+						              ToolTip.Tip="Show or hide translations marked OK"
+						              IsCheckedChanged="FilterToggle_IsCheckedChanged"/>
+						<ToggleButton x:Name="FilterSuperfluousToggle"
+						              Grid.Column="1"
+						              Theme="{StaticResource TranslationFilterToggleTheme}"
+						              Classes="translationFilter translationFilterSuperfluous ignoreDirty"
+						              Content="No longer needed / copy?"
+						              Margin="2,0"
+						              IsChecked="True"
+						              ToolTip.Tip="Show or hide keys no longer in the scenario"
+						              IsCheckedChanged="FilterToggle_IsCheckedChanged"/>
+						<ToggleButton x:Name="FilterNeedsToggle"
+						              Grid.Column="2"
+						              Theme="{StaticResource TranslationFilterToggleTheme}"
+						              Classes="translationFilter translationFilterNeeds ignoreDirty"
+						              Content="Needs translation or approval"
+						              IsChecked="True"
+						              ToolTip.Tip="Show or hide items that still need translation or approval"
+						              IsCheckedChanged="FilterToggle_IsCheckedChanged"/>
+					</Grid>
+				</Border>
+
+				<Border Classes="callout" Margin="0,2">
+					<CheckBox x:Name="HideActivationsCheckBox"
+					          Classes="ignoreDirty"
+					          Content="Hide monster activations"
+					          IsChecked="False"
+					          Foreground="White"
+					          ToolTip.Tip="When checked, hides keys that start with activation."
+					          IsCheckedChanged="TextFilter_Changed"/>
+				</Border>
+
+				<Border Classes="callout" Margin="0,2">
+					<Grid ColumnDefinitions="*,*,*,Auto" ColumnSpacing="6">
+						<TextBox x:Name="KeyFilterTextBox"
+						         Grid.Column="0"
+						         Classes="campaignField ignoreDirty"
+						         Watermark="Key Filter"
+						         TextChanged="TextFilter_Changed"/>
+						<TextBox x:Name="OriginalFilterTextBox"
+						         Grid.Column="1"
+						         Classes="campaignField ignoreDirty"
+						         Watermark="Original Text Filter"
+						         TextChanged="TextFilter_Changed"/>
+						<TextBox x:Name="TranslationFilterTextBox"
+						         Grid.Column="2"
+						         Classes="campaignField ignoreDirty"
+						         Watermark="Translation Text Filter"
+						         TextChanged="TextFilter_Changed"/>
+						<ToggleButton x:Name="TextFilterModeToggle"
+						              Grid.Column="3"
+						              Theme="{StaticResource TranslationFilterToggleTheme}"
+						              Classes="ignoreDirty"
+						              MinWidth="64"
+						              Padding="10,4"
+						              Content="Show"
+						              IsChecked="True"
+						              Background="#55555A"
+						              ToolTip.Tip="Show: keep rows matching any non-empty text filter. Hide: exclude those rows."
+						              IsCheckedChanged="TextFilterModeToggle_IsCheckedChanged"/>
 					</Grid>
 				</Border>
 

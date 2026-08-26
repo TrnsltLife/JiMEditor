@@ -261,7 +261,7 @@ public partial class ScenarioWindow : Window
 
 		var impact = ScenarioCollectionRemovalImpact.GetImpactForRemovingCollection( scenario, collection );
 		var impactText = CollectionRemovalImpact.FormatForDialog( impact );
-		var body = "This Collection will no longer be enabled for the Scenario. Existing components stay in place until you remove them from Error Check.\n\n";
+		var body = "This Collection will no longer be enabled for the Scenario. Existing components stay in place until you remove them from Run Checks.\n\n";
 		if ( string.IsNullOrWhiteSpace( impactText ) )
 			body += "No matching references were found in Events, Tokens, or placed Tiles.\n\n";
 		else

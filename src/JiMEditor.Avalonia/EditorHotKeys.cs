@@ -5,7 +5,8 @@ using Avalonia.Input;
 namespace JiMEditor.Avalonia;
 
 /// <summary>
-/// OS-primary modifier (Control on Windows/Linux, Command/Meta on macOS) plus Alt gestures from WPF JiMEditor.
+/// OS-primary modifier (Control on Windows/Linux, Command/Meta on macOS) plus Alt/Option gestures from WPF JiMEditor.
+/// On macOS, Avalonia reports Option as <see cref="KeyModifiers.Alt"/>; UI labels use "Opt".
 /// </summary>
 public static class EditorHotKeys
 {
@@ -14,6 +15,12 @@ public static class EditorHotKeys
 
 	public static string PrimaryModifierLabel =>
 		OperatingSystem.IsMacOS() ? "⌘" : "Ctrl";
+
+	/// <summary>Option on macOS, Alt elsewhere (matches <see cref="MatchesAlt"/>).</summary>
+	public static string AltModifierLabel =>
+		OperatingSystem.IsMacOS() ? "Opt" : "Alt";
+
+	public static string AltChord( string key ) => $"{AltModifierLabel}+{key}";
 
 	public static bool HasPrimaryModifier( KeyModifiers modifiers ) =>
 		modifiers.HasFlag( PrimaryModifier );

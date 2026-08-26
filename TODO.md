@@ -6,7 +6,7 @@ This is a list of things we need to do:
   * Clicking the Save icon the first time seems to launch the Save dialog twice.
   * Item shouldn't show Flavor Text for Token Interaction when no Token is selected. Check other Event types also.
 
-* Rich Text Editor (WYSIWYG)
+* Rich Text Editor (WYSIWYG) - Postponed or Canceled Because Side-by-side Code + Preview may actually be more helpful
   * Implement an actual rich text editor instead of the current HTML string and preview
   * https://github.com/cuikp/AvRichTextBox
 

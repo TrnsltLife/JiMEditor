@@ -14,6 +14,8 @@ namespace JiMEditor.Avalonia.Views;
 
 public partial class TranslationEditorWindow : Window, INotifyPropertyChanged
 {
+	const string ActivationKeyPrefix = "activation.";
+
 	bool _allowClose;
 	bool _hydrated;
 
@@ -55,10 +57,110 @@ public partial class TranslationEditorWindow : Window, INotifyPropertyChanged
 		_hydrated = true;
 		LangCodeTextBox.Text = translation.dataName ?? "";
 		LangNameTextBox.Text = translation.langName ?? "";
-		// Avoid nested path binding (translation.translationItems); assign once the merged list exists.
-		TranslationItemsControl.ItemsSource = translation.translationItems;
+		// Filters always reset for each open; window instance is created per edit.
+		FilterOkToggle.IsChecked = true;
+		FilterSuperfluousToggle.IsChecked = true;
+		FilterNeedsToggle.IsChecked = true;
+		HideActivationsCheckBox.IsChecked = false;
+		KeyFilterTextBox.Text = "";
+		OriginalFilterTextBox.Text = "";
+		TranslationFilterTextBox.Text = "";
+		TextFilterModeToggle.IsChecked = true;
+		UpdateTextFilterModeToggleLabel();
+		ApplyTranslationListFilter();
 		LangCodeTextBox.Focus();
 		ScenarioDirty.WatchInputs( this, scenario );
+	}
+
+	void FilterToggle_IsCheckedChanged( object? sender, RoutedEventArgs e )
+	{
+		if ( !_hydrated )
+			return;
+		ApplyTranslationListFilter();
+	}
+
+	void TextFilter_Changed( object? sender, RoutedEventArgs e )
+	{
+		if ( !_hydrated )
+			return;
+		ApplyTranslationListFilter();
+	}
+
+	void TextFilterModeToggle_IsCheckedChanged( object? sender, RoutedEventArgs e )
+	{
+		UpdateTextFilterModeToggleLabel();
+		if ( !_hydrated )
+			return;
+		ApplyTranslationListFilter();
+	}
+
+	void UpdateTextFilterModeToggleLabel() =>
+		TextFilterModeToggle.Content = TextFilterModeToggle.IsChecked == true ? "Show" : "Hide";
+
+	/// <summary>
+	/// Filters the list view only. Full list stays in <see cref="translation"/>; OK still saves everything.
+	/// Order: status color toggles → hide activations → text Show/Hide OR filters (empty boxes ignored).
+	/// </summary>
+	void ApplyTranslationListFilter()
+	{
+		if ( translation?.translationItems == null || scenario == null )
+			return;
+
+		var showOk = FilterOkToggle.IsChecked == true;
+		var showSuperfluous = FilterSuperfluousToggle.IsChecked == true;
+		var showNeeds = FilterNeedsToggle.IsChecked == true;
+		var hideActivations = HideActivationsCheckBox.IsChecked == true;
+
+		var keyFilter = ( KeyFilterTextBox.Text ?? "" ).Trim();
+		var originalFilter = ( OriginalFilterTextBox.Text ?? "" ).Trim();
+		var translationFilter = ( TranslationFilterTextBox.Text ?? "" ).Trim();
+		var hasTextFilter = keyFilter.Length > 0 || originalFilter.Length > 0 || translationFilter.Length > 0;
+		var showMatchingText = TextFilterModeToggle.IsChecked == true;
+
+		IEnumerable<TranslationItem> filtered = translation.translationItems.Where( item =>
+		{
+			if ( item.superfluous )
+			{
+				if ( !showSuperfluous )
+					return false;
+			}
+			else if ( item.translationOK )
+			{
+				if ( !showOk )
+					return false;
+			}
+			else if ( !showNeeds )
+			{
+				return false;
+			}
+
+			if ( hideActivations && item.key.StartsWith( ActivationKeyPrefix, StringComparison.OrdinalIgnoreCase ) )
+				return false;
+
+			if ( !hasTextFilter )
+				return true;
+
+			var matchesText = false;
+			if ( keyFilter.Length > 0 && item.key.Contains( keyFilter, StringComparison.OrdinalIgnoreCase ) )
+				matchesText = true;
+			if ( !matchesText && originalFilter.Length > 0 )
+			{
+				var original = defaultTranslation.TryGetValue( item.key, out var def ) ? ( def.text ?? "" ) : "";
+				if ( original.Contains( originalFilter, StringComparison.OrdinalIgnoreCase ) )
+					matchesText = true;
+			}
+			if ( !matchesText && translationFilter.Length > 0
+			     && ( item.text ?? "" ).Contains( translationFilter, StringComparison.OrdinalIgnoreCase ) )
+				matchesText = true;
+
+			return showMatchingText ? matchesText : !matchesText;
+		} );
+
+		using ( scenario.PauseDirtyTracking() )
+		{
+			TranslationItemsControl.ItemsSource = null;
+			TranslationItemsControl.ItemsSource = filtered.ToList();
+		}
 	}
 
 	void HookTranslationItemChangeTracking()
@@ -97,12 +199,7 @@ public partial class TranslationEditorWindow : Window, INotifyPropertyChanged
 		Dispatcher.UIThread.Post( () =>
 		{
 			// Rebinding row CheckBoxes fires IsCheckedChanged; that is not a user edit.
-			using ( scenario.PauseDirtyTracking() )
-			{
-				var source = translation.translationItems;
-				TranslationItemsControl.ItemsSource = null;
-				TranslationItemsControl.ItemsSource = source;
-			}
+			ApplyTranslationListFilter();
 		} );
 	}
 
