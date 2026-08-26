@@ -9,7 +9,10 @@ A Scenario editor for the Journeys in Middle Earth board game. The scenarios are
 ## Download the latest release
 If you just want to download and run the app, grab it here: 
 
-[Download the Newest Release!](https://github.com/TrnsltLife/JiMEditor/releases/tag/v0.40)! New: You can now translate the persistent text of a Text Event. Previous newest feature: You can now specify the Starting Position for Heroes precisely. And you can indicate how much a Hero can Scout at the start of a Scenario and at the start of the Action Phase! 
+[Download the Newest Release!](https://github.com/TrnsltLife/JiMEditor/releases/tag/v0.50)! 
+New: Mac Intel and Mac Apple Silicon downloads now available!
+
+New: You can now translate the persistent text of a Text Event. Previous newest feature: You can now specify the Starting Position for Heroes precisely. And you can indicate how much a Hero can Scout at the start of a Scenario and at the start of the Action Phase! 
 
 Use Item Events to give Trinkets or Mounts to the heroes as rewards, and use Title Events to give the heroes Titles! Featuring tiles from Spreading War, Battle Maps with Terrain Tokens, enemies from all the expansions, enemy attack descriptions, text boxes that allow you to edit with special icons, bold and italic, and more! Now with a Random Scenario Generator, Graph View of the scenario, and ability to package translations of the scenario in a single file.
 
