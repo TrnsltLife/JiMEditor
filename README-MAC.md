@@ -1,14 +1,14 @@
 # Build JiMEditor.Avalonia on Mac
 
-Short guide for building / publishing on macOS.
+Guide for building, running, publishing, and packaging the Avalonia editor on macOS.
 
 ## Status
 
-Mac MVP code steps 1–7 are done (`net9.0`, no WPF). You can **build and cross-publish from Windows or Mac**. Running / smoke-testing the binary still needs a Mac (step 8). Signed `.app` / notarization is deferred.
+Mac MVP code steps 1–7 are done (`net9.0`, no WPF). You can **build and cross-publish from Windows or Mac**. Running / smoke-testing the binary still needs a Mac. **Code signing and notarization** are deferred (unsigned `.app` works for local use; Gatekeeper may require Right-click → Open the first time).
 
 ## Prerequisites
 
-1. **.NET 9 SDK** — this repo targets `net9.0`. Older SDKs (e.g. .NET 7) are not enough; `./build.sh` fails with `NETSDK1045` until 9.x is installed.
+1. **.NET 9 SDK** — this repo targets `net9.0`. Older SDKs fail with `NETSDK1045` until 9.x is installed.
 2. Clone this repo **and** sibling [JiMEditor](../JiMEditor) side by side (tile/token assets are linked from `../JiMEditor/Assets`):
 
 ```
@@ -22,61 +22,95 @@ parent/
 
 ### Install .NET 9 SDK (macOS)
 
-Check what you have:
-
 ```bash
 dotnet --list-sdks
 dotnet --version    # should report 9.x after install
 ```
 
-**Option A — Homebrew** (if you use [Homebrew](https://brew.sh)):
+**Option A — Homebrew:**
 
 ```bash
 brew install --cask dotnet-sdk@9
 ```
 
-**Option B — Official installer:** download **.NET SDK 9.0** for macOS (arm64 or x64) from [dotnet.microsoft.com/download/dotnet/9.0](https://dotnet.microsoft.com/download/dotnet/9.0) and run the `.pkg`.
+**Option B — Official installer:** download **.NET SDK 9.0** for macOS from [dotnet.microsoft.com/download/dotnet/9.0](https://dotnet.microsoft.com/download/dotnet/9.0) and run the `.pkg`.
 
-You can keep older SDKs installed; multiple versions coexist. Open a **new terminal** after installing so `PATH` picks up the new SDK. If `dotnet --version` still shows 7.x, run `which dotnet` and confirm `/usr/local/share/dotnet` (or your install location) is on your `PATH`.
+Open a **new terminal** after installing so `PATH` picks up the SDK.
 
-## Visual Studio Code / Cursor
+---
 
-1. Open the `JiMEditor-Avalonia` folder.
-2. Build:
+## 1. Build
 
-```bash
-./build.sh
-# or: dotnet build JiMEditor-Avalonia.sln
-```
+Compiles the solution. Does **not** produce a redistributable Mac app.
 
-Or **Terminal → Run Build Task…** → `build-avalonia`.
-
-3. Run: `./run.sh` or **Run and Debug** → **JiMEditor.Avalonia** (`F5`).
-
-## Publish a Mac executable
-
-### Convenience scripts
-
-From repo root (works on Mac, or cross-publish from Windows/Linux):
+From the repo root:
 
 ```bash
-./publish-mac.sh            # default: osx-arm64
-./publish-mac.sh osx-x64    # Intel Mac
+./build.sh              # Debug (default)
+./build.sh --release    # Release
 ```
 
-Windows PowerShell:
+Equivalent:
+
+```bash
+dotnet build JiMEditor-Avalonia.sln -c Debug
+dotnet build JiMEditor-Avalonia.sln -c Release
+```
+
+Or in VS Code / Cursor: **Terminal → Run Build Task…** → `build-avalonia`.
+
+You do **not** need `./build.sh --release` before publishing; `./publish-mac.sh` builds Release as part of publish.
+
+---
+
+## 2. Run (dev)
+
+Runs the editor from source (builds if needed):
+
+```bash
+./run.sh              # Debug
+./run.sh --release    # Release
+```
+
+Or **Run and Debug** → **JiMEditor.Avalonia** (`F5`).
+
+---
+
+## 3. Publish
+
+Creates a **self-contained** Release build for a Mac architecture (includes the .NET runtime). Output is a folder of DLLs plus the `JiMEditor.Avalonia` native host.
+
+By default, `./publish-mac.sh` also **packages** a `.app` (see [§4 Package](#4-package)). Use `--no-bundle` if you only want the publish folder.
+
+```bash
+./publish-mac.sh                 # osx-arm64 + Your Journey Editor.app
+./publish-mac.sh osx-x64         # Intel Mac
+./publish-mac.sh --no-bundle     # publish folder only (no .app)
+./publish-mac.sh osx-x64 --no-bundle
+```
+
+Windows PowerShell (publish only; see `publish-mac.ps1` — bundling is via `bundle-mac-app.sh` on Unix/Mac):
 
 ```powershell
 .\publish-mac.ps1
 .\publish-mac.ps1 -Rid osx-x64
 ```
 
-Output:
+### Publish output
 
-`src/JiMEditor.Avalonia/bin/Release/net9.0/osx-arm64/publish/`  
-(or `…/osx-x64/publish/`)
+| RID | Folder |
+|-----|--------|
+| Apple Silicon (default) | `src/JiMEditor.Avalonia/bin/Release/net9.0/osx-arm64/publish/` |
+| Intel | `src/JiMEditor.Avalonia/bin/Release/net9.0/osx-x64/publish/` |
 
-On a Mac, run `./JiMEditor.Avalonia` from that folder (`chmod +x` if needed).
+Run from Terminal (keep the whole folder together):
+
+```bash
+cd src/JiMEditor.Avalonia/bin/Release/net9.0/osx-arm64/publish
+./JiMEditor.Avalonia
+```
+
+Finder does **not** treat the bare `JiMEditor.Avalonia` binary as a double-clickable app — use the `.app` package below for that.
 
 ### Manual `dotnet publish`
 
@@ -85,7 +119,73 @@ dotnet publish src/JiMEditor.Avalonia/JiMEditor.Avalonia.csproj \
   -c Release -r osx-arm64 --self-contained true -p:UseAppHost=true
 ```
 
-For a double-clickable **`.app` bundle**, signing, and notarization, see [Avalonia macOS deployment](https://docs.avaloniaui.net/docs/deployment/macos). A raw `publish` folder is enough for local testing.
+---
+
+## 4. Package
+
+Wraps the publish folder into a double-clickable **`Your Journey Editor.app`** (Avalonia [macOS deployment](https://docs.avaloniaui.net/docs/deployment/macos) layout: `Info.plist`, `Contents/MacOS/`, ring icon as `.icns`).
+
+### Usual path (publish + package together)
+
+```bash
+./publish-mac.sh            # or: ./publish-mac.sh osx-x64
+```
+
+Produces:
+
+```
+src/JiMEditor.Avalonia/bin/Release/net9.0/osx-arm64/
+  publish/                     # self-contained files
+  Your Journey Editor.app/     # double-clickable bundle
+```
+
+Open it:
+
+```bash
+open "src/JiMEditor.Avalonia/bin/Release/net9.0/osx-arm64/Your Journey Editor.app"
+```
+
+Or double-click **Your Journey Editor** in Finder. First launch of an **unsigned** build may need **Right-click → Open**.
+
+### Package only (re-wrap an existing publish)
+
+If you already published (or used `--no-bundle`):
+
+```bash
+./bundle-mac-app.sh              # wraps osx-arm64/publish
+./bundle-mac-app.sh osx-x64
+./bundle-mac-app.sh /path/to/publish
+```
+
+### Packaging assets
+
+| File | Role |
+|------|------|
+| `packaging/macos/Info.plist` | Bundle id, display name, executable name |
+| `packaging/macos/ring.icns` | Finder / Dock icon (from `src/JiMEditor.Avalonia/ring.ico`) |
+| `packaging/macos/make-ring-icns.py` | Regenerates `ring.icns` on a Mac (`sips` + `iconutil`) |
+
+```bash
+python3 packaging/macos/make-ring-icns.py
+```
+
+Signing, notarization, and DMG installers are not automated yet; see the Avalonia docs when you are ready to distribute outside your machine.
+
+---
+
+## Quick reference
+
+| Goal | Command |
+|------|---------|
+| Compile Debug | `./build.sh` |
+| Compile Release | `./build.sh --release` |
+| Run from source | `./run.sh` or `./run.sh --release` |
+| Publish + `.app` (Apple Silicon) | `./publish-mac.sh` |
+| Publish + `.app` (Intel) | `./publish-mac.sh osx-x64` |
+| Publish folder only | `./publish-mac.sh --no-bundle` |
+| Re-package `.app` | `./bundle-mac-app.sh` |
+
+---
 
 ## CI
 
