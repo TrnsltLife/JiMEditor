@@ -18,16 +18,29 @@ New: You can now translate the persistent text of a Text Event. Previous newest 
 
 Use Item Events to give Trinkets or Mounts to the heroes as rewards, and use Title Events to give the heroes Titles! Featuring tiles from Spreading War, Battle Maps with Terrain Tokens, enemies from all the expansions, enemy attack descriptions, text boxes that allow you to edit with special icons, bold and italic, and more! Now with a Random Scenario Generator, Graph View of the scenario, and ability to package translations of the scenario in a single file.
 
-## Mac Installation
+## Mac Installation of the unsigned app
+### First Steps
 1. Download the file for your Mac architecture: Apple Silicon (arm64) or Intel (x64).
 2. Unzip the file you downloaded, if it wasn't unzipped automatically.
-3. Because this app is not signed with an Apple developer id account, it won't run without you telling Gatekeeper to allow it to run. Here's how to do that.
-4. Open a Terminal in the folder that contains the contents you just unzipped, including the Your Journey Editor.app file (name may vary by version) and the YourJourneyEditor-RunMeFirst.command file.
-5. You can open a terminal by right clicking on the folder in the Finder and choosing "New Terminal at Folder".
-6. Type: ./YourJourneyEditor-RunMeFirst.command
-7. This will run the script to disable Gatekeeper on the app. You should then be able to double click the app to launch it.
-8. You could also skip the script and directly type the command: xattr -cr "Your Journey Editor"*.app
-9. Once you have completed these steps, you should be able to double-click the "Your Journey Editor" app and it should launch.
+3. Double-click the Your Journey Editor app to try to launch it.
+4. It probably won't run and you may see a message like: "Your Journey Editor" is damaged and can't be opened. You should move it to the Trash. Move to Trash / Cancel.
+5. Click Cancel, so it doesn't throw the app in the Trash.
+6. Because this app is not signed with an Apple developer id account, it won't run without you telling Gatekeeper to allow it to run. Here's how to do that.
+
+### Installation Option 1: System Settings
+1. Open System Settings > Privacy & Security
+2. Scroll toward the bottom of that window, past the "Security" heading, and look for an item like: "Your Journey Editor" was blocked to protect your Mac.
+3. If you see that item, click the Open Anyway button.
+4. It should allow you to double-click the app and launch it now and in the future.
+5. You may have to allow downloads of future version in the same way.
+
+### Installation Option 2: Run script instructing Gatekeeper to allow this app
+1. Open a Terminal in the folder that contains the contents you just unzipped, including the Your Journey Editor.app file (name may vary by version) and the YourJourneyEditor-RunMeFirst.command file.
+2. You can open a terminal by right clicking on the folder in the Finder and choosing "New Terminal at Folder".
+3. Type: ./YourJourneyEditor-RunMeFirst.command
+4. This will run the script to disable Gatekeeper on the app. You should then be able to double click the app to launch it.
+5. You could also skip the script and directly type the command: xattr -cr "Your Journey Editor"*.app
+6. Once you have completed these steps, you should be able to double-click the "Your Journey Editor" app and it should launch.
 
 Note that save files will be stored inside your Documents folder in a folder called /Your Journey.
 
