@@ -83,8 +83,8 @@ Creates a **self-contained** Release build for a Mac architecture (includes the 
 By default, `./publish-mac.sh` also **packages** a `.app` (see [§4 Package](#4-package)). Use `--no-bundle` if you only want the publish folder.
 
 ```bash
-./publish-mac.sh                 # osx-arm64 + Your Journey Editor.app
-./publish-mac.sh osx-x64         # Intel Mac
+./publish-mac.sh                 # osx-arm64 + Your Journey Editor v{version} Apple Silicon.app
+./publish-mac.sh osx-x64         # Intel Mac → … v{version} Intel.app
 ./publish-mac.sh --no-bundle     # publish folder only (no .app)
 ./publish-mac.sh osx-x64 --no-bundle
 ```
@@ -98,10 +98,12 @@ Windows PowerShell (publish only; see `publish-mac.ps1` — bundling is via `bun
 
 ### Publish output
 
-| RID | Folder |
-|-----|--------|
-| Apple Silicon (default) | `src/JiMEditor.Avalonia/bin/Release/net9.0/osx-arm64/publish/` |
-| Intel | `src/JiMEditor.Avalonia/bin/Release/net9.0/osx-x64/publish/` |
+| RID | Folder | Packaged `.app` name |
+|-----|--------|----------------------|
+| `osx-arm64` (default) | `…/osx-arm64/publish/` | `Your Journey Editor v0.50 Apple Silicon.app` |
+| `osx-x64` | `…/osx-x64/publish/` | `Your Journey Editor v0.50 Intel.app` |
+
+Version comes from `Utils.appVersion` in `src/JiMEditor.Avalonia/JiME/Common/Common.cs` (e.g. `"0.50"` → `v0.50`). Arch labels follow common Mac naming: **Apple Silicon** (arm64) and **Intel** (x64).
 
 Run from Terminal (keep the whole folder together):
 
@@ -123,7 +125,11 @@ dotnet publish src/JiMEditor.Avalonia/JiMEditor.Avalonia.csproj \
 
 ## 4. Package
 
-Wraps the publish folder into a double-clickable **`Your Journey Editor.app`** (Avalonia [macOS deployment](https://docs.avaloniaui.net/docs/deployment/macos) layout: `Info.plist`, `Contents/MacOS/`, ring icon as `.icns`).
+Wraps the publish folder into a double-clickable **`.app`** (Avalonia [macOS deployment](https://docs.avaloniaui.net/docs/deployment/macos) layout: `Info.plist`, `Contents/MacOS/`, ring icon as `.icns`).
+
+The bundle folder is named:
+
+`Your Journey Editor v{version} {Apple Silicon|Intel}.app`
 
 ### Usual path (publish + package together)
 
@@ -131,21 +137,21 @@ Wraps the publish folder into a double-clickable **`Your Journey Editor.app`** (
 ./publish-mac.sh            # or: ./publish-mac.sh osx-x64
 ```
 
-Produces:
+Produces (example for current `appVersion = "0.50"`):
 
 ```
 src/JiMEditor.Avalonia/bin/Release/net9.0/osx-arm64/
-  publish/                     # self-contained files
-  Your Journey Editor.app/     # double-clickable bundle
+  publish/                                          # self-contained files
+  Your Journey Editor v0.50 Apple Silicon.app/      # double-clickable bundle
 ```
 
 Open it:
 
 ```bash
-open "src/JiMEditor.Avalonia/bin/Release/net9.0/osx-arm64/Your Journey Editor.app"
+open "src/JiMEditor.Avalonia/bin/Release/net9.0/osx-arm64/Your Journey Editor v0.50 Apple Silicon.app"
 ```
 
-Or double-click **Your Journey Editor** in Finder. First launch of an **unsigned** build may need **Right-click → Open**.
+Or double-click the app in Finder. First launch of an **unsigned** build may need **Right-click → Open**.
 
 ### Package only (re-wrap an existing publish)
 
@@ -161,7 +167,7 @@ If you already published (or used `--no-bundle`):
 
 | File | Role |
 |------|------|
-| `packaging/macos/Info.plist` | Bundle id, display name, executable name |
+| `packaging/macos/Info.plist` | Bundle id, display name, executable name (version stamped at package time) |
 | `packaging/macos/ring.icns` | Finder / Dock icon (from `src/JiMEditor.Avalonia/ring.ico`) |
 | `packaging/macos/make-ring-icns.py` | Regenerates `ring.icns` on a Mac (`sips` + `iconutil`) |
 
