@@ -5,7 +5,9 @@
 #   ./bundle-mac-app.sh osx-x64
 #   ./bundle-mac-app.sh /path/to/publish
 #
-# Output name: "Your Journey Editor v{appVersion} {Apple Silicon|Intel}.app"
+# Output:
+#   "Your Journey Editor v{appVersion} {Apple Silicon|Intel}.app"  (local, unzipped)
+#   "YourJourneyEditor-v{appVersion}-mac-{arm64|x64}.zip"         (app + RunMeFirst.command)
 # Version is read from Utils.appVersion in JiME/Common/Common.cs.
 #
 # Expects publish output from ./publish-mac.sh (or equivalent).
@@ -18,6 +20,7 @@ EXEC_NAME="JiMEditor.Avalonia"
 PACKAGING="$ROOT/packaging/macos"
 INFO_PLIST="$PACKAGING/Info.plist"
 ICON_ICNS="$PACKAGING/ring.icns"
+RUNME_COMMAND="$PACKAGING/YourJourneyEditor-RunMeFirst.command"
 COMMON_CS="$ROOT/src/JiMEditor.Avalonia/JiME/Common/Common.cs"
 
 read_app_version() {
@@ -98,14 +101,28 @@ if [[ ! -f "$ICON_ICNS" ]]; then
 	fi
 fi
 
+if [[ ! -f "$RUNME_COMMAND" ]]; then
+	echo "Missing $RUNME_COMMAND" >&2
+	exit 1
+fi
+
+if ! command -v zip >/dev/null 2>&1; then
+	echo "zip is required to create the release archive" >&2
+	exit 1
+fi
+
 VERSION="$(read_app_version)"
 ARCH_LABEL="$(arch_label_for_rid "$RID")"
 APP_NAME="${APP_BASE_NAME} v${VERSION} ${ARCH_LABEL}"
+# RID osx-arm64 / osx-x64 → zip suffix mac-arm64 / mac-x64
+ZIP_ARCH="${RID#osx-}"
+ZIP_NAME="YourJourneyEditor-v${VERSION}-mac-${ZIP_ARCH}.zip"
 
 # Place the .app next to the publish folder
 # (e.g. …/osx-arm64/Your Journey Editor v0.50 Apple Silicon.app).
 PARENT="$(cd "$PUBLISH/.." && pwd)"
 APP_DIR="${PARENT}/${APP_NAME}.app"
+ZIP_PATH="${PARENT}/${ZIP_NAME}"
 rm -rf "$APP_DIR"
 mkdir -p "$APP_DIR/Contents/MacOS" "$APP_DIR/Contents/Resources"
 
@@ -121,6 +138,22 @@ cp "$ICON_ICNS" "$APP_DIR/Contents/Resources/ring.icns"
 cp -a "$PUBLISH"/. "$APP_DIR/Contents/MacOS/"
 chmod +x "$APP_DIR/Contents/MacOS/$EXEC_NAME" || true
 
+# Release zip: .app + Gatekeeper helper (sibling paths; keep local .app unzipped for testing).
+STAGE="$(mktemp -d "${TMPDIR:-/tmp}/jimeditor-mac-zip.XXXXXX")"
+cleanup_stage() { rm -rf "$STAGE"; }
+trap cleanup_stage EXIT
+cp -a "$APP_DIR" "$STAGE/"
+cp "$RUNME_COMMAND" "$STAGE/YourJourneyEditor-RunMeFirst.command"
+chmod +x "$STAGE/YourJourneyEditor-RunMeFirst.command"
+rm -f "$ZIP_PATH"
+(
+	cd "$STAGE"
+	zip -r -y "$ZIP_PATH" "${APP_NAME}.app" "YourJourneyEditor-RunMeFirst.command"
+)
+
 echo "Bundled: $APP_DIR"
-echo "Double-click in Finder, or: open \"$APP_DIR\""
-echo "Note: unsigned builds may need Right-click → Open the first time (Gatekeeper)."
+echo "Release zip: $ZIP_PATH"
+echo "  (contains ${APP_NAME}.app + YourJourneyEditor-RunMeFirst.command)"
+echo "Local test: open \"$APP_DIR\""
+echo "GitHub: upload the .zip. Downloaders should run YourJourneyEditor-RunMeFirst.command once"
+echo "  (clears Gatekeeper quarantine on unsigned builds; Right-click → Open if the script is blocked)."

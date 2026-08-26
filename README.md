@@ -3,6 +3,8 @@
 ## [Your Journey Patreon](http://www.patreon.com/YourJourneyRPG)
 
 # JiMEditor - v0.50 - Now for *Mac* as well as Windows!
+(See info on Mac installation below!)
+
 A Scenario editor for the Journeys in Middle Earth board game. The scenarios are playable in the companion playback app, [Your Journey](https://github.com/TrnsltLife/your-journey), forked from [GlowPuff's original project](https://github.com/GlowPuff/JiMEditor) with new tiles from [Celstra](https://github.com/Celstra/JiMEditor).
 
 
@@ -15,6 +17,19 @@ New: Mac Intel and Mac Apple Silicon downloads now available!
 New: You can now translate the persistent text of a Text Event. Previous newest feature: You can now specify the Starting Position for Heroes precisely. And you can indicate how much a Hero can Scout at the start of a Scenario and at the start of the Action Phase! 
 
 Use Item Events to give Trinkets or Mounts to the heroes as rewards, and use Title Events to give the heroes Titles! Featuring tiles from Spreading War, Battle Maps with Terrain Tokens, enemies from all the expansions, enemy attack descriptions, text boxes that allow you to edit with special icons, bold and italic, and more! Now with a Random Scenario Generator, Graph View of the scenario, and ability to package translations of the scenario in a single file.
+
+## Mac Installation
+1. Download the file for your Mac architecture: Apple Silicon (arm64) or Intel (x64).
+2. Unzip the file you downloaded, if it wasn't unzipped automatically.
+3. Because this app is not signed with an Apple developer id account, it won't run without you telling Gatekeeper to allow it to run. Here's how to do that.
+4. Open a Terminal in the folder that contains the contents you just unzipped, including the Your Journey Editor.app file (name may vary by version) and the YourJourneyEditor-RunMeFirst.command file.
+5. You can open a terminal by right clicking on the folder in the Finder and choosing "New Terminal at Folder".
+6. Type: ./YourJourneyEditor-RunMeFirst.command
+7. This will run the script to disable Gatekeeper on the app. You should then be able to double click the app to launch it.
+8. You could also skip the script and directly type the command: xattr -cr "Your Journey Editor"*.app
+9. Once you have completed these steps, you should be able to double-click the "Your Journey Editor" app and it should launch.
+
+Note that save files will be stored inside your Documents folder in a folder called /Your Journey.
 
 ## Documentation
 You can find documentation for the app [in GlowPuff's Wiki](https://github.com/GlowPuff/JiMEditor/wiki). Although it is somewhat out of date at this point, it should still get you started.

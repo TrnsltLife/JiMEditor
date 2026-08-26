@@ -2,8 +2,8 @@
 # Cross-publish a self-contained Mac build, then wrap it in a double-clickable .app.
 # Requires: .NET 9 SDK. App bundling works on any OS; ring.icns generation needs a Mac once.
 #
-#   ./publish-mac.sh              # osx-arm64 + Your Journey Editor v{ver} Apple Silicon.app
-#   ./publish-mac.sh osx-x64      # … v{ver} Intel.app
+#   ./publish-mac.sh              # osx-arm64 .app + YourJourneyEditor-v{ver}-mac-arm64.zip
+#   ./publish-mac.sh osx-x64      # Intel .app + …-mac-x64.zip
 #   ./publish-mac.sh --no-bundle  # publish folder only
 set -euo pipefail
 

@@ -100,8 +100,8 @@ Windows PowerShell (publish only; see `publish-mac.ps1` — bundling is via `bun
 
 | RID | Folder | Packaged `.app` name |
 |-----|--------|----------------------|
-| `osx-arm64` (default) | `…/osx-arm64/publish/` | `Your Journey Editor v0.50 Apple Silicon.app` |
-| `osx-x64` | `…/osx-x64/publish/` | `Your Journey Editor v0.50 Intel.app` |
+| `osx-arm64` (default) | `…/osx-arm64/publish/` | `Your Journey Editor v0.50 Apple Silicon.app` + `YourJourneyEditor-v0.50-mac-arm64.zip` |
+| `osx-x64` | `…/osx-x64/publish/` | `Your Journey Editor v0.50 Intel.app` + `YourJourneyEditor-v0.50-mac-x64.zip` |
 
 Version comes from `Utils.appVersion` in `src/JiMEditor.Avalonia/JiME/Common/Common.cs` (e.g. `"0.50"` → `v0.50`). Arch labels follow common Mac naming: **Apple Silicon** (arm64) and **Intel** (x64).
 
@@ -142,16 +142,19 @@ Produces (example for current `appVersion = "0.50"`):
 ```
 src/JiMEditor.Avalonia/bin/Release/net9.0/osx-arm64/
   publish/                                          # self-contained files
-  Your Journey Editor v0.50 Apple Silicon.app/      # double-clickable bundle
+  Your Journey Editor v0.50 Apple Silicon.app/      # local double-clickable bundle
+  YourJourneyEditor-v0.50-mac-arm64.zip             # upload this to GitHub Releases
 ```
 
-Open it:
+The **`.zip`** contains the `.app` plus `YourJourneyEditor-RunMeFirst.command` (clears Gatekeeper quarantine on unsigned downloads). The **`.app`** stays unzipped beside it for local testing.
+
+Open locally:
 
 ```bash
 open "src/JiMEditor.Avalonia/bin/Release/net9.0/osx-arm64/Your Journey Editor v0.50 Apple Silicon.app"
 ```
 
-Or double-click the app in Finder. First launch of an **unsigned** build may need **Right-click → Open**.
+Or double-click the app in Finder. For **GitHub downloads**, unzip the release archive, run **`YourJourneyEditor-RunMeFirst.command`** once (Right-click → Open if macOS blocks the script), then open the app. Unsigned builds often show as “damaged” until that helper runs.
 
 ### Package only (re-wrap an existing publish)
 
@@ -174,6 +177,8 @@ If you already published (or used `--no-bundle`):
 ```bash
 python3 packaging/macos/make-ring-icns.py
 ```
+
+Helper script source: [`packaging/macos/YourJourneyEditor-RunMeFirst.command`](packaging/macos/YourJourneyEditor-RunMeFirst.command) (copied into each release zip by `bundle-mac-app.sh`).
 
 Signing, notarization, and DMG installers are not automated yet; see the Avalonia docs when you are ready to distribute outside your machine.
 
