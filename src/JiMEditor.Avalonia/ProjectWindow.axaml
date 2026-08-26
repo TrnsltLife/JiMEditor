@@ -57,7 +57,7 @@
 			       Height="32"
 			       VerticalAlignment="Center"
 			       Stretch="Uniform"/>
-			<TextBlock FontSize="30" Text="JiMEditor"/>
+			<TextBlock FontSize="30" Text="Your Journey Editor"/>
 			<TextBlock x:Name="editorVersion"
 			           Classes="heading"
 			           VerticalAlignment="Bottom"

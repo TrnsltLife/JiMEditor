@@ -23,8 +23,8 @@ public static class UserJourneyPaths
 		_testBasePathOverride
 		?? Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ), DocumentFolderName );
 
-	/// <summary>Window title prefix (same branding as WPF).</summary>
-	public const string EditorWindowTitlePrefix = "Your Journey";
+	/// <summary>Window title prefix for the project list and main editor.</summary>
+	public const string EditorWindowTitlePrefix = "Your Journey Editor";
 
 	/// <summary>User-facing relative path hint; separator matches the current OS.</summary>
 	public static string DocumentsRelativePathHint =>
